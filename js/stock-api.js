@@ -104,8 +104,8 @@ const StockAPI = {
      */
     async _fetchMayaDirectly(id) {
         const endpoints = [
-            `https://mayaapi.tase.co.il/api/company/tradedata?companyId=${id}`,
-            `https://mayaapi.tase.co.il/api/fund/details?fundId=${id}`
+            `https://mayaapi.tase.co.il/api/fund/details?fundId=${id}`,
+            `https://mayaapi.tase.co.il/api/company/tradedata?companyId=${id}`
         ];
         for (const url of endpoints) {
             try {
@@ -113,13 +113,17 @@ const StockAPI = {
                     headers: { 'X-Maya-With': 'allow' },
                     signal: AbortSignal.timeout(8000)
                 });
-                if (!response.ok) continue;
+                if (!response.ok) {
+                    console.error(`[TASE Maya] ${url} → HTTP ${response.status}`);
+                    continue;
+                }
                 const data = await response.json();
-                console.log(`[TASE Maya] Raw response from ${url}:`, JSON.stringify(data).slice(0, 500));
+                console.error(`[TASE Maya] Raw response from ${url}:`, JSON.stringify(data).slice(0, 600));
                 const parsed = this._parseMayaPrice(data);
                 if (parsed) return parsed;
+                console.error(`[TASE Maya] Could not parse price from response. Full data:`, data);
             } catch (e) {
-                console.warn(`[TASE Maya] Direct fetch failed for ${url}:`, e.message);
+                console.error(`[TASE Maya] fetch failed for ${url}:`, e.message);
             }
         }
         return null;
