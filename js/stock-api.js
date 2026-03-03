@@ -1,14 +1,16 @@
 /**
- * Stock API Module - Fetches stock data from Yahoo Finance
+ * Stock API Module - Fetches stock data from Yahoo Finance + TASE
  */
 const StockAPI = {
     YAHOO_URL: 'https://query2.finance.yahoo.com/v8/finance/chart',
+    TASE_API_URL: 'https://api.tase.co.il/api',
     PROXY_URLS: [
         'https://api.allorigins.win/raw?url=',
         'https://corsproxy.io/?url=',
         'https://api.codetabs.com/v1/proxy/?quest='
     ],
     _currentProxyIndex: 0,
+    _taseIdCache: {},
 
     /**
      * Format symbol for Yahoo Finance API
@@ -61,7 +63,100 @@ const StockAPI = {
     },
 
     /**
-     * Fetch stock data including historical prices for MA150 calculation
+     * Resolve TASE security ID for a symbol (cached)
+     * @param {string} symbol - Symbol with or without .TA
+     * @returns {Promise<number>} TASE security ID
+     */
+    async _resolveTaseId(symbol) {
+        const cleanSymbol = symbol.replace(/\.TA$/i, '').toUpperCase();
+
+        if (this._taseIdCache[cleanSymbol] !== undefined) {
+            return this._taseIdCache[cleanSymbol];
+        }
+
+        const url = `${this.TASE_API_URL}/security/search?str=${encodeURIComponent(cleanSymbol)}&lang=1`;
+        const data = await this._fetchWithFallback(url);
+
+        // TASE API may return an array or an object with a results list
+        const results = Array.isArray(data) ? data : (data.results || data.securities || data.items || []);
+        if (!results.length) throw new Error(`No TASE results for ${cleanSymbol}`);
+
+        const securityId = results[0].securityId || results[0].SecurityId || results[0].id;
+        if (securityId === undefined || securityId === null) {
+            throw new Error(`No securityId in TASE response for ${cleanSymbol}`);
+        }
+
+        this._taseIdCache[cleanSymbol] = securityId;
+        return securityId;
+    },
+
+    /**
+     * Fetch live price from TASE official API
+     * @param {string} symbol - Israeli stock symbol (e.g. 'LEUMI.TA')
+     * @returns {Promise<Object>} Live price data in ILS
+     */
+    async fetchTaseLivePrice(symbol) {
+        const id = await this._resolveTaseId(symbol);
+        const url = `${this.TASE_API_URL}/security/data?securityId=${id}`;
+        const data = await this._fetchWithFallback(url);
+
+        const rawPrice = data.lastPrice ?? data.LastPrice ?? data.tradePrice;
+        if (rawPrice === undefined || rawPrice === null) {
+            throw new Error('No price in TASE response');
+        }
+
+        // TASE prices are in agora (1/100 ILS); prices > 100000 are already in ILS
+        const currentPrice = rawPrice > 100000 ? rawPrice : rawPrice / 100;
+
+        const rawPrevClose = data.previousClose ?? data.PreviousClose ?? data.basePrice;
+        const previousClose = rawPrevClose != null
+            ? (rawPrevClose > 100000 ? rawPrevClose : rawPrevClose / 100)
+            : null;
+
+        const priceChange = previousClose !== null ? currentPrice - previousClose : 0;
+        const priceChangePercent = previousClose ? (priceChange / previousClose) * 100 : 0;
+
+        return { currentPrice, previousClose, priceChange, priceChangePercent, currency: 'ILS' };
+    },
+
+    /**
+     * Fetch historical prices from Yahoo (for MA150 calculation)
+     * @param {string} symbol - Stock symbol
+     * @returns {Promise<Object>} Historical data + MA150
+     */
+    async _fetchYahooHistorical(symbol) {
+        const detectedMarket = this.detectMarket(symbol);
+        const formattedSymbol = this.formatSymbol(symbol, detectedMarket);
+        const yahooUrl = `${this.YAHOO_URL}/${encodeURIComponent(formattedSymbol)}?interval=1d&range=1y&includePrePost=false`;
+        const data = await this._fetchWithFallback(yahooUrl);
+
+        if (!data.chart || !data.chart.result || data.chart.result.length === 0) {
+            throw new Error('No historical data found');
+        }
+
+        const result = data.chart.result[0];
+        const quotes = result.indicators.quote[0];
+        const timestamps = result.timestamp || [];
+
+        const historicalData = [];
+        for (let i = 0; i < timestamps.length; i++) {
+            if (quotes.close[i] !== null) {
+                historicalData.push({ date: new Date(timestamps[i] * 1000), close: quotes.close[i] });
+            }
+        }
+
+        const closePrices = historicalData.map(d => d.close);
+        return {
+            historicalPrices: closePrices,
+            historicalData,
+            ma150: this.calculateMA150(closePrices),
+            ma150Series: this.calculateMA150Series(historicalData)
+        };
+    },
+
+    /**
+     * Fetch stock data including historical prices for MA150 calculation.
+     * Uses TASE as primary source for Israeli stocks, falls back to Yahoo.
      * @param {string} symbol - Stock symbol
      * @param {string} market - Market code ('US' or 'IL')
      * @returns {Promise<Object>} Stock data with price and MA150
@@ -70,6 +165,37 @@ const StockAPI = {
         const detectedMarket = market || this.detectMarket(symbol);
         const formattedSymbol = this.formatSymbol(symbol, detectedMarket);
 
+        // Try TASE API first for Israeli stocks
+        if (detectedMarket === 'IL') {
+            try {
+                const live = await this.fetchTaseLivePrice(symbol);
+                const historical = await this._fetchYahooHistorical(symbol);
+
+                const ma150Position = historical.ma150 !== null
+                    ? (live.currentPrice > historical.ma150 ? 'above' : 'below')
+                    : null;
+                const ma150PositionPercent = historical.ma150 !== null
+                    ? ((live.currentPrice - historical.ma150) / historical.ma150) * 100
+                    : null;
+
+                return {
+                    symbol: formattedSymbol,
+                    originalSymbol: symbol,
+                    market: detectedMarket,
+                    ...live,
+                    ...historical,
+                    ma150Position,
+                    ma150PositionPercent,
+                    source: 'TASE',
+                    lastUpdate: new Date().toISOString(),
+                    success: true
+                };
+            } catch (e) {
+                console.warn('TASE API failed, falling back to Yahoo:', e.message);
+            }
+        }
+
+        // Yahoo Finance (primary for US, fallback for IL)
         try {
             const yahooUrl = `${this.YAHOO_URL}/${encodeURIComponent(formattedSymbol)}?interval=1d&range=1y&includePrePost=false`;
             const data = await this._fetchWithFallback(yahooUrl);
@@ -185,6 +311,52 @@ const StockAPI = {
             });
         }
         return ma150Series;
+    },
+
+    /**
+     * Check if markets are currently open using browser Intl timezone API
+     * @param {string[]} markets - Markets to check (['IL', 'US'])
+     * @returns {{ taseOpen: boolean, nyseOpen: boolean, anyOpen: boolean }}
+     */
+    isMarketOpen(markets = ['IL', 'US']) {
+        const now = new Date();
+        let taseOpen = false;
+        let nyseOpen = false;
+
+        // TASE: Sun–Thu 09:30–17:35 Asia/Jerusalem
+        if (markets.includes('IL')) {
+            const il = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
+            const ilMin = il.getHours() * 60 + il.getMinutes();
+            taseOpen = il.getDay() <= 4 &&
+                       ilMin >= 9 * 60 + 30 && ilMin < 17 * 60 + 35;
+        }
+
+        // NYSE: Mon–Fri 09:30–16:00 America/New_York
+        if (markets.includes('US')) {
+            const et = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+            const etMin = et.getHours() * 60 + et.getMinutes();
+            nyseOpen = et.getDay() >= 1 && et.getDay() <= 5 &&
+                       etMin >= 9 * 60 + 30 && etMin < 16 * 60;
+        }
+
+        return { taseOpen, nyseOpen, anyOpen: taseOpen || nyseOpen };
+    },
+
+    /**
+     * Get list of markets from a holdings array
+     * @param {Array} holdings - Array of holding objects with symbol property
+     * @returns {string[]} Array of market codes present in holdings
+     */
+    getMarketsFromHoldings(holdings) {
+        if (!holdings || !Array.isArray(holdings) || holdings.length === 0) {
+            return ['IL', 'US'];
+        }
+        const markets = new Set();
+        holdings.forEach(h => {
+            const symbol = (h.symbol || '').toString();
+            markets.add(this.detectMarket(symbol));
+        });
+        return [...markets];
     },
 
     /**

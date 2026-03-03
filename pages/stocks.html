@@ -282,6 +282,7 @@
                         <a href="reports.html" class="nav-link" data-category="reports">
                             <span class="icon">📋</span>
                             <span data-i18n="nav.reports">דוחות</span>
+                    <li class="nav-item"><a href="health-score.html" class="nav-link"><span class="icon">🩺</span><span data-i18n="nav.healthScore">בריאות פיננסית</span></a></li>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -365,6 +366,8 @@
                     <input type="checkbox" id="autoRefreshToggle" onchange="toggleAutoRefresh()" checked>
                     <span style="font-size: 0.9rem; color: var(--color-text-secondary);" data-i18n="stocks.autoRefresh">רענון אוטומטי</span>
                 </label>
+                <span id="marketStatusBadge" style="font-size:0.85rem; padding: 4px 10px; border-radius: 20px; display:none;"></span>
+                <span id="nextRefreshCountdown" style="font-size:0.8rem; color: var(--color-text-secondary);"></span>
             </div>
 
             <!-- Holdings Table -->
@@ -924,6 +927,7 @@
 
         // State
         let refreshInterval = null;
+        let countdownInterval = null;
         let priceCache = {};
         let isRefreshing = false;
         let searchTimeout = null;
@@ -1432,18 +1436,85 @@
         }
 
         function startAutoRefresh() {
-            const settings = StockAlerts.getSettings();
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
+            stopAutoRefresh();
+            function tick() {
+                const data = Storage.getStocks();
+                const markets = StockAPI.getMarketsFromHoldings(data.holdings);
+                const status = StockAPI.isMarketOpen(markets);
+                updateMarketStatusBadge(status);
+                if (status.anyOpen) {
+                    refreshAllPrices();
+                    const settings = StockAlerts.getSettings();
+                    refreshInterval = setTimeout(tick, settings.refreshInterval * 1000);
+                    startCountdown(settings.refreshInterval);
+                } else {
+                    // Market closed — check again in 5 minutes
+                    refreshInterval = setTimeout(tick, 5 * 60 * 1000);
+                    startCountdown(5 * 60);
+                }
             }
-            refreshInterval = setInterval(refreshAllPrices, settings.refreshInterval * 1000);
+            tick();
         }
 
         function stopAutoRefresh() {
             if (refreshInterval) {
-                clearInterval(refreshInterval);
+                clearTimeout(refreshInterval);
                 refreshInterval = null;
             }
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            const countdownEl = document.getElementById('nextRefreshCountdown');
+            if (countdownEl) countdownEl.textContent = '';
+            const badge = document.getElementById('marketStatusBadge');
+            if (badge) badge.style.display = 'none';
+        }
+
+        function updateMarketStatusBadge(status) {
+            const badge = document.getElementById('marketStatusBadge');
+            if (!badge) return;
+            badge.style.display = 'inline-block';
+            if (status.taseOpen && status.nyseOpen) {
+                badge.textContent = '🟢 שני שווקים פתוחים';
+                badge.style.background = 'rgba(34, 197, 94, 0.15)';
+                badge.style.color = '#22c55e';
+            } else if (status.taseOpen) {
+                badge.textContent = '🟢 בורסת ת"א פתוחה';
+                badge.style.background = 'rgba(34, 197, 94, 0.15)';
+                badge.style.color = '#22c55e';
+            } else if (status.nyseOpen) {
+                badge.textContent = '🟢 NYSE פתוח';
+                badge.style.background = 'rgba(34, 197, 94, 0.15)';
+                badge.style.color = '#22c55e';
+            } else {
+                badge.textContent = '🔴 שווקים סגורים';
+                badge.style.background = 'rgba(156, 163, 175, 0.15)';
+                badge.style.color = 'var(--color-text-secondary)';
+            }
+        }
+
+        function startCountdown(seconds) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            const el = document.getElementById('nextRefreshCountdown');
+            if (!el) return;
+            let remaining = seconds;
+            function update() {
+                if (remaining <= 0) {
+                    el.textContent = '';
+                    return;
+                }
+                if (remaining >= 60) {
+                    const m = Math.floor(remaining / 60);
+                    const s = remaining % 60;
+                    el.textContent = `עדכון בעוד ${m}:${String(s).padStart(2, '0')}`;
+                } else {
+                    el.textContent = `עדכון בעוד ${remaining} שנ'`;
+                }
+                remaining--;
+            }
+            update();
+            countdownInterval = setInterval(update, 1000);
         }
 
         function toggleAutoRefresh() {
