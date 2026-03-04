@@ -188,6 +188,7 @@
                     <li class="nav-item"><a href="subscriptions.html" class="nav-link" data-category="subscriptions"><span class="icon">🔄</span><span data-i18n="nav.subscriptions">תשלומים קבועים</span></a></li>
                     <li class="nav-item"><a href="goals.html" class="nav-link"><span class="icon">🎯</span><span data-i18n="nav.goals">יעדי חיסכון</span></a></li>
                     <li class="nav-item"><a href="reports.html" class="nav-link"><span class="icon">📋</span><span data-i18n="nav.reports">דוחות</span></a></li>
+                    <li class="nav-item"><a href="health-score.html" class="nav-link"><span class="icon">🩺</span><span data-i18n="nav.healthScore">בריאות פיננסית</span></a></li>
                     <li class="nav-item"><a href="profile.html" class="nav-link"><span class="icon">👤</span><span data-i18n="nav.profile">פרופיל פיננסי</span></a></li>
                     <li class="nav-item"><a href="settings.html" class="nav-link active"><span class="icon">⚙️</span><span data-i18n="nav.settings">הגדרות</span></a></li>
                 </ul>
@@ -377,6 +378,39 @@
                         <span data-i18n="settings.loadSampleBtn">טען דוגמה</span>
                     </button>
                 </div>
+            </div>
+
+            <!-- Credit Card Bookmarklet -->
+            <div class="settings-section">
+                <h2>🔖 ייבוא מאתרי אשראי</h2>
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <span>סימניית ייבוא חכם</span>
+                        <span>גרור לסרגל הסימניות פעם אחת — לחץ עליה בכל פעם שתרצה לייבא עסקאות</span>
+                    </div>
+                    <a id="bookmarkletLink" href="#"
+                       style="border: 2px dashed var(--color-border); padding: 8px 16px; border-radius: 8px;
+                              cursor: grab; text-decoration: none; color: var(--color-text); font-size: 14px;
+                              display:inline-flex; align-items:center; gap:6px; user-select:none;">
+                        🔖 FinSight ייבוא
+                    </a>
+                </div>
+                <div class="setting-row" style="flex-wrap:wrap; gap:8px;">
+                    <span style="color:var(--color-text-secondary); font-size:13px;">נתמך:</span>
+                    <span class="badge">כאל ✅</span>
+                    <span class="badge">מקס ✅</span>
+                    <span class="badge">ישראכרט ✅</span>
+                </div>
+                <details style="margin-top:12px;">
+                    <summary style="cursor:pointer; color:var(--color-text-secondary); font-size:13px;">איך מגדירים?</summary>
+                    <ol style="font-size:13px; color:var(--color-text-secondary); margin-top:8px; padding-right:20px; line-height:2;">
+                        <li>ודא שסרגל הסימניות מוצג בדפדפן (Ctrl+Shift+B)</li>
+                        <li>גרור את הכפתור "🔖 FinSight ייבוא" לסרגל</li>
+                        <li>כנס לאתר כאל / מקס / ישראכרט ועבור לדף העסקאות</li>
+                        <li>לחץ על הסימניה — תראה הודעת אישור</li>
+                        <li>חזור לפינסייט → דף <strong>כרטיסי אשראי</strong> → לחץ "ייבוא מסימניה"</li>
+                    </ol>
+                </details>
             </div>
 
             <!-- App Lock (PIN) -->
@@ -893,6 +927,111 @@
                 App.notify(I18n.t('settings.testError'), 'error');
             }
         }
+
+        // Set bookmarklet href
+        (function() {
+            var code = (function() {
+                var host = location.hostname;
+                var source, sourceName;
+                if (host.includes('cal-online')) { source = 'cal'; sourceName = 'כאל'; }
+                else if (host.includes('max.co.il') || host.includes('max-finance')) { source = 'max'; sourceName = 'מקס'; }
+                else if (host.includes('isracard')) { source = 'isracard'; sourceName = 'ישראכרט'; }
+                else { source = 'unknown'; sourceName = host; }
+
+                // Score tables by transaction-like content
+                var tables = Array.from(document.querySelectorAll('table'));
+                var dateRe = /\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}/;
+                var amtRe = /[\d,]+\.\d{2}/;
+                var best = null, bestScore = 0;
+                tables.forEach(function(t) {
+                    var text = t.innerText;
+                    var score = (text.match(dateRe) || []).length + (text.match(amtRe) || []).length;
+                    if (score > bestScore) { bestScore = score; best = t; }
+                });
+                if (bestScore < 3 || !best) {
+                    alert('לא נמצאה טבלת עסקאות בדף זה. נווט לדף העסקאות ונסה שוב.');
+                    return;
+                }
+
+                // Find header row
+                var rows = Array.from(best.querySelectorAll('tr'));
+                var headerIdx = -1, headerCells = [];
+                for (var i = 0; i < rows.length; i++) {
+                    var cells = Array.from(rows[i].querySelectorAll('th,td')).map(function(c) { return c.innerText.trim(); });
+                    var joined = cells.join(' ').toLowerCase();
+                    if (joined.includes('תאריך') || joined.includes('date')) {
+                        headerIdx = i; headerCells = cells; break;
+                    }
+                }
+                if (headerIdx === -1) {
+                    alert('לא נמצאה שורת כותרות בטבלה.');
+                    return;
+                }
+
+                // Detect columns
+                var dateCol = -1, merchantCol = -1, chargeCol = -1, amountCol = -1;
+                headerCells.forEach(function(h, i) {
+                    var l = h.toLowerCase();
+                    if (dateCol === -1 && (l.includes('תאריך') || l.includes('date'))) dateCol = i;
+                    if (merchantCol === -1 && (l.includes('שם') || l.includes('עסק') || l.includes('תיאור') || l.includes('merchant'))) merchantCol = i;
+                    if (l.includes('חיוב') || l.includes('סכום חיוב')) chargeCol = i;
+                    else if (amountCol === -1 && (l.includes('סכום') || l.includes('amount'))) amountCol = i;
+                });
+                var amtCol = chargeCol !== -1 ? chargeCol : amountCol;
+                if (dateCol === -1 || amtCol === -1) {
+                    alert('לא זוהו עמודות תאריך/סכום בטבלה.');
+                    return;
+                }
+
+                // Parse rows
+                var txns = [];
+                for (var j = headerIdx + 1; j < rows.length; j++) {
+                    var cells2 = Array.from(rows[j].querySelectorAll('td')).map(function(c) { return c.innerText.trim(); });
+                    if (!cells2[dateCol]) continue;
+                    var rawDate = cells2[dateCol];
+                    var dm = rawDate.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/);
+                    if (!dm) continue;
+                    var d = dm[1].padStart(2,'0'), mo = dm[2].padStart(2,'0'), y = dm[3].length === 2 ? '20'+dm[3] : dm[3];
+                    var isoDate = y+'-'+mo+'-'+d;
+                    var rawAmt = cells2[amtCol] || '';
+                    var amt = parseFloat(rawAmt.replace(/[^\d.]/g, ''));
+                    if (isNaN(amt) || amt === 0) continue;
+                    var desc = merchantCol !== -1 && cells2[merchantCol] ? cells2[merchantCol] : rawDate;
+                    txns.push({ date: isoDate, description: desc, amount: amt });
+                }
+                if (txns.length === 0) {
+                    alert('לא נמצאו עסקאות תקינות בטבלה.');
+                    return;
+                }
+
+                var payload = JSON.stringify({ __finsight: true, source: source, sourceName: sourceName, transactions: txns, exportedAt: new Date().toISOString() });
+
+                // Copy to clipboard
+                function showOverlay(count) {
+                    var el = document.createElement('div');
+                    el.id = '__finsight_overlay';
+                    el.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999999;background:#1e293b;color:#fff;padding:20px 24px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:Arial,sans-serif;font-size:15px;direction:rtl;max-width:320px;';
+                    el.innerHTML = '<div style="font-size:22px;margin-bottom:8px;">✅</div><div style="font-weight:bold;margin-bottom:6px;">הועתקו ' + count + ' עסקאות!</div><div style="color:#94a3b8;font-size:13px;">חזור לפינסייט ולחץ "ייבוא מסימניה"</div><button onclick="this.parentNode.remove()" style="position:absolute;top:8px;left:8px;background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;">×</button>';
+                    el.style.position = 'fixed';
+                    document.body.appendChild(el);
+                    setTimeout(function() { if (el.parentNode) el.remove(); }, 8000);
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(payload).then(function() { showOverlay(txns.length); }).catch(function() {
+                        prompt('העתק את הנתונים ידנית (Ctrl+A, Ctrl+C):', payload);
+                    });
+                } else {
+                    prompt('העתק את הנתונים ידנית (Ctrl+A, Ctrl+C):', payload);
+                    showOverlay(txns.length);
+                }
+            }).toString();
+
+            // Wrap as IIFE for bookmarklet
+            var iife = '(' + code + ')()';
+            var link = document.getElementById('bookmarkletLink');
+            if (link) link.href = 'javascript:' + iife;
+        })();
     </script>
 </body>
 </html>

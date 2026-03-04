@@ -291,6 +291,7 @@
                         <a href="reports.html" class="nav-link" data-category="reports">
                             <span class="icon">📋</span>
                             <span data-i18n="nav.reports">דוחות</span>
+                    <li class="nav-item"><a href="health-score.html" class="nav-link"><span class="icon">🩺</span><span data-i18n="nav.healthScore">בריאות פיננסית</span></a></li>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -399,6 +400,10 @@
                             <span data-i18n="credit.importImage">ייבוא מתמונה</span>
                         </button>
                         <input type="file" id="smartImportInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="smartImportFile(event)">
+                        <button class="btn btn-secondary btn-sm" onclick="importFromBookmarklet()">
+                            <span>📋</span>
+                            <span>ייבוא מסימניה</span>
+                        </button>
                         <button class="btn btn-danger btn-sm" onclick="deleteAllExpenses()">
                             <span>🗑️</span>
                             <span data-i18n="credit.deleteAll">מחק הכל</span>
@@ -1572,6 +1577,39 @@
 
             return expenses;
         }
+
+        async function importFromBookmarklet() {
+            try {
+                var text = await navigator.clipboard.readText();
+                var data = JSON.parse(text);
+                if (!data.__finsight || !Array.isArray(data.transactions)) {
+                    App.notify('הקליפבורד לא מכיל נתוני FinSight. לחץ על הסימניה באתר האשראי תחילה.', 'error');
+                    return;
+                }
+                var items = data.transactions.map(function(tx) {
+                    return { date: tx.date, description: tx.description, amount: tx.amount, category: 'other', isRecurring: false };
+                });
+                App.notify('נטענו ' + items.length + ' עסקאות מ-' + (data.sourceName || data.source), 'success');
+                importExpensesFromSmartImport(items);
+            } catch(e) {
+                if (e.name === 'SyntaxError') App.notify('תוכן הקליפבורד אינו תקין.', 'error');
+                else App.notify('לא ניתן לקרוא מהקליפבורד. נסה Ctrl+V על הדף.', 'error');
+            }
+        }
+
+        document.addEventListener('paste', function(e) {
+            var text = e.clipboardData.getData('text');
+            if (!text.includes('__finsight')) return;
+            try {
+                var data = JSON.parse(text);
+                if (!data.__finsight || !Array.isArray(data.transactions)) return;
+                e.preventDefault();
+                var items = data.transactions.map(function(tx) {
+                    return { date: tx.date, description: tx.description, amount: tx.amount, category: 'other', isRecurring: false };
+                });
+                importExpensesFromSmartImport(items);
+            } catch(e) {}
+        });
     </script>
 </body>
 </html>
