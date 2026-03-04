@@ -1578,6 +1578,18 @@
             return expenses;
         }
 
+        function mapBookmarkletCategory(raw) {
+            var r = (raw || '').toLowerCase();
+            if (r.includes('מזון') || r.includes('אוכל') || r.includes('מסעדה') || r.includes('מסעדות') || r.includes('food')) return 'food';
+            if (r.includes('תחבורה') || r.includes('דלק') || r.includes('רכב') || r.includes('transport')) return 'transport';
+            if (r.includes('קניות') || r.includes('shopping')) return 'shopping';
+            if (r.includes('בידור') || r.includes('בילוי') || r.includes('entertainment')) return 'entertainment';
+            if (r.includes('חשבון') || r.includes('ביטוח') || r.includes('תשלום') || r.includes('bills')) return 'bills';
+            if (r.includes('בריאות') || r.includes('רפואה') || r.includes('health')) return 'health';
+            if (r.includes('חינוך') || r.includes('education')) return 'education';
+            return 'other';
+        }
+
         function processBookmarkletText(text) {
             try {
                 var data = JSON.parse(text);
@@ -1586,7 +1598,7 @@
                     return;
                 }
                 var items = data.transactions.map(function(tx) {
-                    return { date: tx.date, description: tx.description, amount: tx.amount, category: 'other', isRecurring: false };
+                    return { date: tx.date, description: tx.description, amount: tx.amount, category: mapBookmarkletCategory(tx.categoryRaw), isRecurring: false };
                 });
                 App.notify('נטענו ' + items.length + ' עסקאות מ-' + (data.sourceName || data.source), 'success');
                 importExpensesFromSmartImport(items);
