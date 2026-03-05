@@ -1578,15 +1578,63 @@
             return expenses;
         }
 
-        function mapBookmarkletCategory(raw) {
+        function mapBookmarkletCategory(raw, description) {
             var r = (raw || '').toLowerCase();
-            if (r.includes('מזון') || r.includes('אוכל') || r.includes('מסעדה') || r.includes('מסעדות') || r.includes('food')) return 'food';
-            if (r.includes('תחבורה') || r.includes('דלק') || r.includes('רכב') || r.includes('transport')) return 'transport';
-            if (r.includes('קניות') || r.includes('shopping')) return 'shopping';
-            if (r.includes('בידור') || r.includes('בילוי') || r.includes('entertainment')) return 'entertainment';
-            if (r.includes('חשבון') || r.includes('ביטוח') || r.includes('תשלום') || r.includes('bills')) return 'bills';
-            if (r.includes('בריאות') || r.includes('רפואה') || r.includes('health')) return 'health';
-            if (r.includes('חינוך') || r.includes('education')) return 'education';
+            var d = (description || '').toLowerCase();
+
+            // Match against category name from the site
+            if (r.includes('מזון') || r.includes('אוכל') || r.includes('מסעדה') || r.includes('מסעדות') ||
+                r.includes('סופרמרקט') || r.includes('קפה') || r.includes('בית קפה') || r.includes('food'))
+                return 'food';
+            if (r.includes('תחבורה') || r.includes('דלק') || r.includes('תחנת') || r.includes('תחנות') ||
+                r.includes('רכב') || r.includes('חניה') || r.includes('transport'))
+                return 'transport';
+            if (r.includes('קניות') || r.includes('חנות') || r.includes('חנויות') || r.includes('shopping'))
+                return 'shopping';
+            if (r.includes('בידור') || r.includes('בילוי') || r.includes('פנאי') ||
+                r.includes('ספורט') || r.includes('entertainment'))
+                return 'entertainment';
+            if (r.includes('ביטוח') || r.includes('תקשורת') || r.includes('סלולר') ||
+                r.includes('חשמל') || r.includes('מים') || r.includes('ארנונה') ||
+                r.includes('חשבון') || r.includes('תשלום') || r.includes('bills'))
+                return 'bills';
+            if (r.includes('בריאות') || r.includes('רפואה') || r.includes('פארמ') ||
+                r.includes('קופת') || r.includes('שיניים') || r.includes('health'))
+                return 'health';
+            if (r.includes('חינוך') || r.includes('לימוד') || r.includes('קורס') || r.includes('education'))
+                return 'education';
+            if (r.includes('נסיעות') || r.includes('טיסה') || r.includes('מלון') || r.includes('travel'))
+                return 'entertainment';
+
+            // Fallback: infer from business name
+            if (d.includes('שופרסל') || d.includes('רמי לוי') || d.includes('מגה') ||
+                d.includes('ויקטורי') || d.includes('קו קופה') || d.includes('יינות ביתן') ||
+                d.includes('חצי חינם') || d.includes('מינימרקט') ||
+                d.includes('ארומה') || d.includes('קפה') || d.includes('מקדונלד') ||
+                d.includes('פיצה') || d.includes('סושי') || d.includes('שווארמה') ||
+                d.includes('מסעדה') || d.includes('בית קפה') || d.includes('סטייק') ||
+                d.includes('המבורגר') || d.includes('פלאפל') || d.includes('מאפה'))
+                return 'food';
+            if (d.includes('פז') || d.includes('סונול') || d.includes('דלק') ||
+                d.includes('גז') || d.includes('תחנת') || d.includes('חניה') ||
+                d.includes('פרקינג') || d.includes('רכבת') || d.includes('אגד') ||
+                d.includes('מונית') || d.includes('גט') || d.includes('יאנגו'))
+                return 'transport';
+            if (d.includes('הוט') || d.includes('yes ') || d.includes('בזק') ||
+                d.includes('סלקום') || d.includes('פרטנר') || d.includes('אורנג') ||
+                d.includes('גולן טלקום') || d.includes('012') ||
+                d.includes('netflix') || d.includes('spotify') || d.includes('apple'))
+                return 'bills';
+            if (d.includes('מכבי') || d.includes('כללית') || d.includes('לאומית') ||
+                d.includes('מאוחדת') || d.includes('בית חולים') || d.includes('רופא') ||
+                d.includes('פארמ') || d.includes('סופר פארם') || d.includes('super-pharm') ||
+                d.includes('אופטיקה') || d.includes('שיניים'))
+                return 'health';
+            if (d.includes('אוניברסיטה') || d.includes('מכללה') || d.includes('גן ') ||
+                d.includes('בית ספר') || d.includes('קורס') || d.includes('udemy') ||
+                d.includes('coursera'))
+                return 'education';
+
             return 'other';
         }
 
@@ -1598,7 +1646,7 @@
                     return;
                 }
                 var items = data.transactions.map(function(tx) {
-                    return { date: tx.date, description: tx.description, amount: tx.amount, category: mapBookmarkletCategory(tx.categoryRaw), isRecurring: false };
+                    return { date: tx.date, description: tx.description, amount: tx.amount, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
                 });
 
                 // Update categories for already-imported transactions that were saved as 'other'
