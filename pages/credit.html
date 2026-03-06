@@ -1691,12 +1691,13 @@
                 var ilsCurrencies = ['', 'ils', 'nis', '₪', 'שקל', 'שח'];
                 function isForeign(tx) {
                     var cur = (tx.currency || '').toLowerCase().trim();
-                    if (cur === 'ils' || cur === 'nis' || cur === '₪' || cur === 'שח' || cur === 'שקל') return false;
-                    if (cur && cur !== '') return true;
                     var desc = (tx.description || '').trim();
-                    // Hebrew text = definitely ILS
+                    // Hebrew description = definitely ILS
                     if (/[\u0590-\u05FF]/.test(desc)) return false;
-                    // Table-fallback: ends with foreign country code (e.g. " BR", " US")
+                    // Explicit non-ILS currency (e.g. BRL from Angular path)
+                    if (cur && cur !== 'ils' && cur !== 'nis' && cur !== '₪' && cur !== 'שח' && cur !== 'שקל') return true;
+                    // Table-fallback: description ends with foreign country code (overrides currency field
+                    // because Max table may show ₪ in another column causing false ILS detection)
                     if (/\s[A-Z]{2}$/.test(desc) && !/\sIL$/.test(desc)) return true;
                     return false;
                 }
