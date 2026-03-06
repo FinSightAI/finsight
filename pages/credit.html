@@ -1582,29 +1582,35 @@
             var r = (raw || '').toLowerCase();
             var d = (description || '').toLowerCase();
 
-            // Match against category name from the site
-            if (r.includes('מזון') || r.includes('אוכל') || r.includes('מסעדה') || r.includes('מסעדות') ||
-                r.includes('סופרמרקט') || r.includes('קפה') || r.includes('בית קפה') || r.includes('food'))
+            // Match against category name from the site (including Max real category strings)
+            if (r.includes('מסעדות') || r.includes('קפה') || r.includes('מזון') ||
+                r.includes('אוכל') || r.includes('סופרמרקט') || r.includes('בית קפה') || r.includes('food'))
                 return 'food';
-            if (r.includes('תחבורה') || r.includes('דלק') || r.includes('תחנת') || r.includes('תחנות') ||
-                r.includes('רכב') || r.includes('חניה') || r.includes('transport'))
+            if (r.includes('תחבורה') || r.includes('רכבים') || r.includes('תחנות דלק') ||
+                r.includes('תחנת') || r.includes('חניה') || r.includes('transport'))
                 return 'transport';
-            if (r.includes('קניות') || r.includes('חנות') || r.includes('חנויות') || r.includes('shopping'))
-                return 'shopping';
+            if (r.includes('טיסות') || r.includes('תיירות') || r.includes('נסיעות') ||
+                r.includes('מלון') || r.includes('travel'))
+                return 'entertainment';
             if (r.includes('בידור') || r.includes('בילוי') || r.includes('פנאי') ||
                 r.includes('ספורט') || r.includes('entertainment'))
                 return 'entertainment';
-            if (r.includes('ביטוח') || r.includes('תקשורת') || r.includes('סלולר') ||
-                r.includes('חשמל') || r.includes('מים') || r.includes('ארנונה') ||
-                r.includes('חשבון') || r.includes('תשלום') || r.includes('bills'))
+            if (r.includes('תקשורת') || r.includes('סלולר') || r.includes('ביטוח') ||
+                r.includes('חשמל') || r.includes('גז') || r.includes('מים') ||
+                r.includes('ארנונה') || r.includes('חשבון') || r.includes('תשלום') || r.includes('bills'))
                 return 'bills';
-            if (r.includes('בריאות') || r.includes('רפואה') || r.includes('פארמ') ||
+            if (r.includes('דלק'))
+                return 'transport';
+            if (r.includes('רפואה') || r.includes('מרקחת') || r.includes('בריאות') ||
+                r.includes('קוסמטיקה') || r.includes('טיפוח') || r.includes('פארמ') ||
                 r.includes('קופת') || r.includes('שיניים') || r.includes('health'))
                 return 'health';
+            if (r.includes('אופנה') || r.includes('קניות') || r.includes('חנות') ||
+                r.includes('חנויות') || r.includes('מחשבים') || r.includes('אלקטרוניקה') ||
+                r.includes('shopping'))
+                return 'shopping';
             if (r.includes('חינוך') || r.includes('לימוד') || r.includes('קורס') || r.includes('education'))
                 return 'education';
-            if (r.includes('נסיעות') || r.includes('טיסה') || r.includes('מלון') || r.includes('travel'))
-                return 'entertainment';
 
             // Fallback: infer from business name (Hebrew)
             if (d.includes('שופרסל') || d.includes('רמי לוי') || d.includes('מגה') ||
@@ -1683,9 +1689,15 @@
                 }
                 var foreignCount = 0;
                 var ilsCurrencies = ['', 'ils', 'nis', '₪', 'שקל', 'שח'];
-                var items = data.transactions.filter(function(tx) {
+                function isForeign(tx) {
                     var cur = (tx.currency || '').toLowerCase().trim();
-                    if (cur && !ilsCurrencies.includes(cur)) { foreignCount++; return false; }
+                    if (cur && !ilsCurrencies.includes(cur)) return true;
+                    // Fallback: Max descriptions end with " BR" / " US" etc. for foreign transactions
+                    var desc = (tx.description || '').trim();
+                    return /\s[A-Z]{2}$/.test(desc) && !/\sIL$/.test(desc);
+                }
+                var items = data.transactions.filter(function(tx) {
+                    if (isForeign(tx)) { foreignCount++; return false; }
                     return true;
                 }).map(function(tx) {
                     return { date: tx.date, description: tx.description, amount: tx.amount, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
