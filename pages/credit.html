@@ -724,9 +724,10 @@
                     var flag2 = getCurrencyFlag(exp.currency);
                     foreignInfo = '<span title="' + exp.currency + '">' + flag2 + ' ' + exp.currency + '</span>';
                 } else if (countryCode && countryCode !== 'IL') {
-                    // No currency info but has foreign country in description - check for exchange rate
+                    // No currency info but has foreign country in description
                     var rateInfo = exp.exchangeRate ? ' (' + exp.exchangeRate + ')' : '';
-                    foreignInfo = '<span>' + getCountryFlag(countryCode) + rateInfo + '</span>';
+                    var cLabel = countryCode === 'BR' ? ' BRL' : countryCode === 'US' ? ' USD' : '';
+                    foreignInfo = '<span>' + getCountryFlag(countryCode) + cLabel + rateInfo + '</span>';
                 }
 
                 return `
@@ -1692,11 +1693,7 @@
                     return;
                 }
                 var items = data.transactions.map(function(tx) {
-                    var cur = (tx.currency || '').toUpperCase();
-                    if (!cur) {
-                        if (/\bBRL\b/.test(tx.currency || '') || /\s+BR$/.test(tx.description)) cur = 'BRL';
-                        else cur = 'ILS';
-                    }
+                    var cur = (tx.currency || '').toUpperCase() || 'ILS';
                     return { date: tx.date, description: tx.description, amount: tx.amount, currency: cur, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
                 });
 
