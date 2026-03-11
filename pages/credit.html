@@ -1692,7 +1692,11 @@
                     return;
                 }
                 var items = data.transactions.map(function(tx) {
-                    var cur = (tx.currency || '').toUpperCase() || 'ILS';
+                    var cur = (tx.currency || '').toUpperCase();
+                    if (!cur) {
+                        if (/\bBRL\b/.test(tx.currency || '') || /\s+BR$/.test(tx.description)) cur = 'BRL';
+                        else cur = 'ILS';
+                    }
                     return { date: tx.date, description: tx.description, amount: tx.amount, currency: cur, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
                 });
 
