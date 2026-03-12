@@ -90,30 +90,39 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request)
-                    .then((response) => {
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
+    const url = new URL(event.request.url);
+    const isHTML = url.pathname.endsWith('.html') || url.pathname.endsWith('/') || url.pathname === '';
+
+    if (isHTML) {
+        // Always fetch HTML fresh from network, fall back to cache when offline
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => {
+                    if (response && response.status === 200) {
                         const responseToCache = response.clone();
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
-                        return response;
-                    });
-            })
-            .catch(() => {
-                // Return offline page if available (use relative path to match cache)
-                return caches.match('./index.html') || caches.match('./');
-            })
-    );
+                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+                    }
+                    return response;
+                })
+                .catch(() => caches.match(event.request) || caches.match('./index.html'))
+        );
+    } else {
+        // Cache-first for JS/CSS/images
+        event.respondWith(
+            caches.match(event.request)
+                .then((response) => {
+                    if (response) return response;
+                    return fetch(event.request)
+                        .then((response) => {
+                            if (!response || response.status !== 200 || response.type !== 'basic') return response;
+                            const responseToCache = response.clone();
+                            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+                            return response;
+                        });
+                })
+                .catch(() => caches.match('./index.html'))
+        );
+    }
 });
