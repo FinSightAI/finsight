@@ -716,9 +716,9 @@
                     // Has foreign currency info
                     var origAmount = exp.originalAmount || exp.amount;
                     var flag = countryCode ? getCountryFlag(countryCode) : getCurrencyFlag(exp.originalCurrency);
-                    var rate = exp.exchangeRate || (origAmount > 0 ? (exp.amount / origAmount).toFixed(2) : '');
+                    var rate = exp.exchangeRate || '';
                     var rateText = rate ? ' (' + rate + ')' : '';
-                    foreignInfo = '<span title="' + exp.originalCurrency + rateText + '">' + flag + ' ' + origAmount.toLocaleString() + rateText + '</span>';
+                    foreignInfo = '<span title="' + exp.originalCurrency + rateText + '">' + flag + ' ' + origAmount.toLocaleString('he-IL', {minimumFractionDigits:2,maximumFractionDigits:2}) + ' ' + exp.originalCurrency + rateText + '</span>';
                 } else if (exp.currency && exp.currency !== 'ILS') {
                     // Bookmarklet-imported foreign currency transaction
                     var flag2 = getCurrencyFlag(exp.currency);
@@ -1694,7 +1694,10 @@
                 }
                 var items = data.transactions.map(function(tx) {
                     var cur = (tx.currency || '').toUpperCase() || 'ILS';
-                    return { date: tx.date, description: tx.description, amount: tx.amount, currency: cur, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
+                    var item = { date: tx.date, description: tx.description, amount: tx.amount, currency: cur, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
+                    if (tx.originalCurrency) item.originalCurrency = tx.originalCurrency;
+                    if (tx.originalAmount) item.originalAmount = tx.originalAmount;
+                    return item;
                 });
 
                 // Update categories for already-imported transactions that were saved as 'other'
