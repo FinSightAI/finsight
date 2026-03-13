@@ -36,6 +36,18 @@
             font-size: 1.1rem;
             letter-spacing: 2px;
         }
+        .hours-sub {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+            font-weight: normal;
+        }
+        #hoursToggleBtn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
         .month-selector {
             display: flex;
             align-items: center;
@@ -428,6 +440,14 @@
                     </select>
                     <input type="text" id="searchFilter" placeholder="🔍 חיפוש לפי תיאור..." data-i18n-placeholder="credit.searchByDesc" oninput="loadExpenses()">
                     <button class="btn btn-secondary btn-sm" onclick="clearFilters()" data-i18n="credit.clearFilter">נקה סינון</button>
+                    <button class="btn btn-secondary btn-sm" id="hoursToggleBtn" onclick="toggleHoursMode()" title="הצג שעות עבודה">⏱️</button>
+                </div>
+                <div id="hoursRateRow" style="display:none; margin-top:10px; display:none; align-items:center; gap:10px; font-size:0.85rem; color:var(--color-text-secondary);">
+                    <span>שכר שעתי:</span>
+                    <input type="number" id="hourlyRateInput" min="1" placeholder="₪ לשעה"
+                        style="width:110px;padding:6px 10px;border:1px solid var(--color-border);border-radius:8px;background:var(--color-bg);color:var(--color-text-primary);font-size:0.9rem;"
+                        oninput="saveHourlyRate(this.value); loadExpenses()">
+                    <span style="font-size:0.75rem;">(ברוטו או נטו — לפי בחירתך)</span>
                 </div>
                 <div class="table-container">
                     <table>
@@ -597,6 +617,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             App.currentPage = 'credit';
             initMonthSelector();
+            initHoursMode();
             loadCards();
             loadExpenses();
             renderRecurringSummary();
@@ -737,7 +758,7 @@
                         <td>${I18n.t('credit.categories.' + exp.category)}</td>
                         <td>${exp.description}${exp.isRecurring ? ' 🔄' : ''}</td>
                         <td>${foreignInfo}</td>
-                        <td class="negative">${I18n.formatCurrency(exp.amount, exp.currency || 'ILS')}</td>
+                        <td class="negative">${I18n.formatCurrency(exp.amount, exp.currency || 'ILS')}${fmtHours(exp.amount, exp.currency, getHourlyRate())}</td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn btn-secondary btn-sm" onclick="editExpense('${exp.id}')" title="${I18n.t('common.edit')}">✏️</button>
@@ -1293,6 +1314,40 @@
             document.getElementById('categoryFilter').value = '';
             document.getElementById('searchFilter').value = '';
             loadExpenses();
+        }
+
+        // Hours-worked mode
+        function getHourlyRate() {
+            return parseFloat(localStorage.getItem('finance_hourly_rate')) || 0;
+        }
+        function saveHourlyRate(v) {
+            localStorage.setItem('finance_hourly_rate', v);
+        }
+        function isHoursModeOn() {
+            return localStorage.getItem('finance_hours_mode') === '1';
+        }
+        function toggleHoursMode() {
+            const on = !isHoursModeOn();
+            localStorage.setItem('finance_hours_mode', on ? '1' : '0');
+            document.getElementById('hoursToggleBtn').classList.toggle('active', on);
+            const row = document.getElementById('hoursRateRow');
+            row.style.display = on ? 'flex' : 'none';
+            if (on && !getHourlyRate()) document.getElementById('hourlyRateInput').focus();
+            loadExpenses();
+        }
+        function initHoursMode() {
+            const on = isHoursModeOn();
+            const rate = getHourlyRate();
+            document.getElementById('hoursToggleBtn').classList.toggle('active', on);
+            document.getElementById('hoursRateRow').style.display = on ? 'flex' : 'none';
+            if (rate) document.getElementById('hourlyRateInput').value = rate;
+        }
+        function fmtHours(amount, currency, rate) {
+            if (!isHoursModeOn() || !rate || (currency || 'ILS') !== 'ILS') return '';
+            const h = amount / rate;
+            if (h < 0.1) return '';
+            const display = h >= 10 ? h.toFixed(1) : h.toFixed(1);
+            return `<span class="hours-sub">= ${display} שע׳</span>`;
         }
 
         function updateBudgetProgress(spent) {
