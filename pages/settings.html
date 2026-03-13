@@ -526,6 +526,75 @@
                 </div>
             </div>
 
+            <!-- Summary Sender -->
+            <div class="settings-section" id="summarySenderSection">
+                <h2>📤 סיכום פיננסי אוטומטי</h2>
+
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <span>הפעל שליחה אוטומטית</span>
+                        <span>קבל סיכום שבועי/חודשי של כל הנכסים שלך</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="summaryEnabled" onchange="saveSummarySettings()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div id="summaryOptions" style="display:none;">
+                    <div class="setting-row">
+                        <div class="setting-label">
+                            <span>תדירות</span>
+                        </div>
+                        <select id="summaryFrequency" onchange="onSummaryFreqChange()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
+                            <option value="weekly">שבועי</option>
+                            <option value="monthly">חודשי</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-row" id="summaryDayOfWeekRow">
+                        <div class="setting-label">
+                            <span>יום בשבוע</span>
+                        </div>
+                        <select id="summaryDayOfWeek" onchange="saveSummarySettings()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
+                            <option value="0">ראשון</option>
+                            <option value="1">שני</option>
+                            <option value="2">שלישי</option>
+                            <option value="3">רביעי</option>
+                            <option value="4">חמישי</option>
+                            <option value="5" selected>שישי</option>
+                            <option value="6">שבת</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-row" id="summaryDayOfMonthRow" style="display:none;">
+                        <div class="setting-label">
+                            <span>יום בחודש</span>
+                        </div>
+                        <input type="number" id="summaryDayOfMonth" min="1" max="28" value="1" onchange="saveSummarySettings()" style="width:80px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:center;">
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-label">
+                            <span>מספר WhatsApp</span>
+                            <span>כולל קידומת מדינה, לדוגמה: 972501234567</span>
+                        </div>
+                        <input type="tel" id="summaryPhone" placeholder="972501234567" onchange="saveSummarySettings()" style="width:160px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;">
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-label">
+                            <span>כתובת מייל</span>
+                        </div>
+                        <input type="email" id="summaryEmail" placeholder="me@example.com" onchange="saveSummarySettings()" style="width:200px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;">
+                    </div>
+
+                    <div style="margin-top:15px;">
+                        <button class="btn btn-primary" onclick="previewSummaryNow()">👁️ תצוגה מקדימה עכשיו</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Danger Zone -->
             <div class="settings-section danger-zone">
                 <h2>⚠️ <span data-i18n="settings.dangerZone">אזור סכנה</span></h2>
@@ -610,6 +679,7 @@
     <script src="../js/firebase-config.js"></script>
     <script src="../js/crypto.js"></script>
     <script src="../js/auth.js"></script>
+    <script src="../js/summary-sender.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             App.currentPage = 'settings';
@@ -618,6 +688,7 @@
             loadNotificationSettings();
             loadPinSettings();
             loadSecurityStatus();
+            loadSummarySettings();
         });
 
         function loadSecurityStatus() {
@@ -925,6 +996,46 @@
                 App.notify(I18n.t('settings.testSent'), 'success');
             } else {
                 App.notify(I18n.t('settings.testError'), 'error');
+            }
+        }
+
+        // Summary Sender Settings
+        function loadSummarySettings() {
+            const s = Storage.getSummarySchedule();
+            document.getElementById('summaryEnabled').checked = s.enabled;
+            document.getElementById('summaryFrequency').value = s.frequency || 'weekly';
+            document.getElementById('summaryDayOfWeek').value = s.dayOfWeek !== undefined ? s.dayOfWeek : 5;
+            document.getElementById('summaryDayOfMonth').value = s.dayOfMonth || 1;
+            document.getElementById('summaryPhone').value = s.recipientPhone || '';
+            document.getElementById('summaryEmail').value = s.recipientEmail || '';
+            document.getElementById('summaryOptions').style.display = s.enabled ? 'block' : 'none';
+            onSummaryFreqChange();
+        }
+
+        function saveSummarySettings() {
+            const s = {
+                enabled: document.getElementById('summaryEnabled').checked,
+                frequency: document.getElementById('summaryFrequency').value,
+                dayOfWeek: parseInt(document.getElementById('summaryDayOfWeek').value),
+                dayOfMonth: parseInt(document.getElementById('summaryDayOfMonth').value) || 1,
+                recipientPhone: document.getElementById('summaryPhone').value.trim(),
+                recipientEmail: document.getElementById('summaryEmail').value.trim(),
+                lastSentDate: Storage.getSummarySchedule().lastSentDate
+            };
+            Storage.saveSummarySchedule(s);
+            document.getElementById('summaryOptions').style.display = s.enabled ? 'block' : 'none';
+            App.notify('הגדרות נשמרו', 'success');
+        }
+
+        function onSummaryFreqChange() {
+            const freq = document.getElementById('summaryFrequency').value;
+            document.getElementById('summaryDayOfWeekRow').style.display = freq === 'weekly' ? 'flex' : 'none';
+            document.getElementById('summaryDayOfMonthRow').style.display = freq === 'monthly' ? 'flex' : 'none';
+        }
+
+        function previewSummaryNow() {
+            if (typeof SummarySender !== 'undefined') {
+                SummarySender.showPreviewModal();
             }
         }
 

@@ -24,7 +24,8 @@ const Storage = {
         DISMISSED_TIPS: 'finance_dismissed_tips',
         LOANS: 'finance_loans',
         CREDIT_SCORE: 'finance_credit_score',
-        SUBSCRIPTIONS: 'finance_subscriptions'
+        SUBSCRIPTIONS: 'finance_subscriptions',
+        SUMMARY_SCHEDULE: 'finance_summary_schedule'
     },
 
     /**
@@ -363,6 +364,9 @@ const Storage = {
         const holding = data.holdings.find(h => h.symbol === symbol);
         if (holding) {
             holding.currentPrice = currentPrice;
+            // Clear stale broker-import snapshots so fresh price is used for display
+            delete holding.valueILS;
+            delete holding.profitILS;
             this.saveStocks(data);
             return holding;
         }
@@ -696,6 +700,7 @@ const Storage = {
             loans: this.getLoans(),
             creditScore: this.getCreditScore(),
             subscriptions: this.getSubscriptions(),
+            summarySchedule: this.getSummarySchedule(),
             exportDate: new Date().toISOString()
         };
     },
@@ -717,6 +722,7 @@ const Storage = {
         if (data.loans) this.saveLoans(data.loans);
         if (data.creditScore) this.saveCreditScore(data.creditScore);
         if (data.subscriptions) this.saveSubscriptions(data.subscriptions);
+        if (data.summarySchedule) this.saveSummarySchedule(data.summarySchedule);
     },
 
     // Summary calculations
@@ -753,6 +759,21 @@ const Storage = {
 
     getTotalFundsValue() {
         return this.getMyFunds().reduce((sum, f) => sum + (f.value || f.currentValue || 0), 0);
+    },
+
+    getTotalLoansBalance() {
+        return this.getLoans().reduce((sum, l) => sum + (l.remainingBalance || l.amount || 0), 0);
+    },
+
+    getSummarySchedule() {
+        return this.get(this.KEYS.SUMMARY_SCHEDULE) || {
+            enabled: false, frequency: 'weekly', dayOfWeek: 5,
+            dayOfMonth: 1, lastSentDate: null, recipientPhone: '', recipientEmail: ''
+        };
+    },
+
+    saveSummarySchedule(data) {
+        this.set(this.KEYS.SUMMARY_SCHEDULE, data);
     },
 
     getNetWorth() {

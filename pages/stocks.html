@@ -1018,14 +1018,19 @@
                     // Calculate or use imported ILS values
                     let valueILS, profitILS, profitInCurrency;
 
-                    if (h.valueILS && h.valueILS > 0) {
-                        // Use imported values from broker
+                    if (cached.currentPrice) {
+                        // Fresh live price — always recalculate to reflect current market
+                        const valueInCurrency = currentPrice * h.quantity;
+                        valueILS = valueInCurrency * rate;
+                        profitInCurrency = (currentPrice - h.avgPrice) * h.quantity;
+                        profitILS = profitInCurrency * rate;
+                    } else if (h.valueILS && h.valueILS > 0) {
+                        // No live price yet — use imported broker snapshot as fallback
                         valueILS = h.valueILS;
                         profitILS = h.profitILS || 0;
-                        // Calculate profit in currency from ILS
                         profitInCurrency = profitILS / rate;
                     } else {
-                        // Calculate for manual stocks
+                        // Manual stock, no live price
                         const valueInCurrency = currentPrice * h.quantity;
                         valueILS = valueInCurrency * rate;
                         profitInCurrency = (currentPrice - h.avgPrice) * h.quantity;
@@ -1896,7 +1901,11 @@
                 const currentPrice = cached.currentPrice || h.currentPrice || h.avgPrice;
 
                 let valueILS, profitILS;
-                if (h.valueILS && h.valueILS > 0) {
+                if (cached.currentPrice) {
+                    const valueInCurrency = currentPrice * h.quantity;
+                    valueILS = valueInCurrency * rate;
+                    profitILS = (currentPrice - h.avgPrice) * h.quantity * rate;
+                } else if (h.valueILS && h.valueILS > 0) {
                     valueILS = h.valueILS;
                     profitILS = h.profitILS || 0;
                 } else {

@@ -163,6 +163,34 @@
 
         <!-- Main Content -->
         <main class="main-content">
+
+            <!-- Summary Sender Banner -->
+            <div id="summarySenderBanner">
+                <span class="banner-icon">📤</span>
+                <span class="banner-text">הגיע הזמן לשלוח את הסיכום הפיננסי שלך</span>
+                <div class="banner-actions">
+                    <button class="btn btn-sm" style="background:white;color:#059669;font-weight:600;" onclick="SummarySender.showPreviewModal()">שלח עכשיו</button>
+                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;" onclick="SummarySender.dismissBanner()">אחר כך</button>
+                </div>
+            </div>
+
+            <!-- Summary Preview Modal -->
+            <div id="summaryPreviewModal">
+                <div class="modal">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                        <h3>📊 סיכום פיננסי</h3>
+                        <button class="modal-close" onclick="SummarySender.closeModal()" style="background:none;border:none;color:var(--color-text-secondary);font-size:1.5rem;cursor:pointer;">&times;</button>
+                    </div>
+                    <pre id="summaryPreviewText"></pre>
+                    <div class="summary-share-btns">
+                        <button id="summaryShareWhatsApp" class="btn btn-primary">💬 WhatsApp</button>
+                        <button id="summaryShareEmail" class="btn btn-secondary">📧 מייל</button>
+                        <button id="summaryShareNative" class="btn btn-secondary" style="display:none;">↑ שתף</button>
+                        <button id="summaryCopyBtn" class="btn btn-secondary">📋 העתק</button>
+                    </div>
+                </div>
+            </div>
+
             <header class="page-header">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                     <div>
@@ -342,6 +370,57 @@
         </div>
     </div>
 
+    <style>
+        /* Summary Sender Banner */
+        #summarySenderBanner {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        #summarySenderBanner .banner-icon { font-size: 1.5rem; }
+        #summarySenderBanner .banner-text { flex: 1; }
+        #summarySenderBanner .banner-actions { display: flex; gap: 8px; }
+
+        /* Summary Preview Modal */
+        #summaryPreviewModal {
+            display: none;
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        #summaryPreviewModal .modal {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        #summaryPreviewModal h3 { margin-bottom: 15px; }
+        #summaryPreviewText {
+            background: var(--color-bg-hover);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            direction: rtl;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            max-height: 40vh;
+            overflow-y: auto;
+        }
+        .summary-share-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+    </style>
     <script src="js/storage.js"></script>
     <script src="js/pin-lock.js"></script>
     <script src="js/i18n.js"></script>
@@ -358,6 +437,7 @@
     <script src="js/firebase-config.js"></script>
     <script src="js/crypto.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/summary-sender.js"></script>
     <script src="data/sample-data.js"></script>
     <script>
         // Dashboard specific initialization
@@ -367,6 +447,7 @@
             App.updateDashboard();
             Charts.updateMonthlyExpenses();
             loadRecentTransactions();
+            SummarySender.checkAndShowBanner();
         });
 
         function loadRecentTransactions() {
