@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <title>אופטימיזטור פנסיה - FinSight</title>
+    <link rel="icon" type="image/png" href="../img/logo.png">
+    <link rel="stylesheet" href="../css/app.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .optimizer-container { max-width: 1100px; margin: 0 auto; }
+
+        .top-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 900px) { .top-grid { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--color-border);
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group { margin-bottom: 16px; }
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-bg);
+            color: var(--color-text-primary);
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .fee-section {
+            background: var(--color-bg);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 4px;
+            border: 1px solid var(--color-border);
+        }
+        .fee-section h3 {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* Summary boxes */
+        .summary-boxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) { .summary-boxes { grid-template-columns: 1fr 1fr; } }
+
+        .summary-box {
+            background: var(--color-bg);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid var(--color-border);
+            text-align: center;
+        }
+        .summary-box.highlight {
+            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(139,92,246,0.1));
+            border-color: var(--color-primary);
+        }
+        .summary-box .label { font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 4px; }
+        .summary-box .value { font-size: 1.2rem; font-weight: 700; color: var(--color-text-primary); }
+        .summary-box .sub { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px; }
+        .summary-box.highlight .value { color: var(--color-primary); font-size: 1.4rem; }
+
+        /* Tracks table */
+        .tracks-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .tracks-table th {
+            text-align: right;
+            padding: 10px 12px;
+            background: var(--color-bg);
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 0.8rem;
+        }
+        .tracks-table td { padding: 12px 12px; border-bottom: 1px solid var(--color-border); }
+        .tracks-table tr:last-child td { border-bottom: none; }
+        .tracks-table tr.current-track { background: rgba(16,185,129,0.06); }
+        .tracks-table tr.best-track { background: rgba(139,92,246,0.06); }
+        .tracks-table tr:hover { background: var(--color-bg-hover); cursor: pointer; }
+
+        .track-name { font-weight: 600; color: var(--color-text-primary); }
+        .track-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-right: 6px;
+            font-weight: 600;
+        }
+        .badge-current { background: rgba(16,185,129,0.15); color: var(--color-primary); }
+        .badge-best { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+        .badge-low { background: rgba(239,68,68,0.12); color: #ef4444; }
+
+        .delta-positive { color: var(--color-positive); font-weight: 600; }
+        .delta-negative { color: var(--color-negative); }
+        .delta-zero { color: var(--color-text-secondary); }
+
+        .return-bar-wrap { display: flex; align-items: center; gap: 8px; }
+        .return-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--color-border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .return-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+
+        /* Insight box */
+        .insight-box {
+            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08));
+            border: 1px solid var(--color-primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .insight-box strong { color: var(--color-primary); }
+
+        /* Fee impact */
+        .fee-impact {
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+        }
+        .fee-impact strong { color: #f59e0b; }
+
+        .chart-wrap { position: relative; height: 280px; }
+
+        .monthly-pension {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <header class="app-header">
+        <button class="btn-back" onclick="history.back()">→</button>
+        <h1>🎯 אופטימיזטור פנסיה</h1>
+        <div></div>
+    </header>
+
+    <main class="main-content">
+        <div class="optimizer-container">
+
+            <div class="top-grid">
+                <!-- Inputs -->
+                <div class="card">
+                    <h2>⚙️ הפרטים שלך</h2>
+
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>גיל נוכחי</label>
+                            <input type="number" id="currentAge" value="35" min="18" max="66" oninput="recalc()">
+                        </div>
+                        <div class="input-group">
+                            <label>גיל פרישה</label>
+                            <input type="number" id="retirementAge" value="67" min="60" max="75" oninput="recalc()">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>חיסכון פנסיוני נוכחי (₪)</label>
+                        <input type="number" id="currentSavings" value="150000" min="0" oninput="recalc()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>הפקדה חודשית כוללת (עובד + מעסיק + פיצויים) (₪)</label>
+                        <input type="number" id="monthlyContrib" value="3500" min="0" oninput="recalc()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>מסלול השקעה נוכחי</label>
+                        <select id="currentTrack" onchange="recalc()">
+                            <option value="general">מסלול כללי</option>
+                            <option value="stocks">מסלול מניות</option>
+                            <option value="bonds">מסלול אגרות חוב</option>
+                            <option value="gov">מסלול ממשלתי</option>
+                            <option value="passive">מסלול פאסיבי / מחקה</option>
+                            <option value="halakha">מסלול הלכה</option>
+                        </select>
+                    </div>
+
+                    <div class="fee-section">
+                        <h3>דמי ניהול נוכחיים</h3>
+                        <div class="input-row">
+                            <div class="input-group" style="margin-bottom:0">
+                                <label>מהפקדה (%)</label>
+                                <input type="number" id="feeDeposit" value="1.5" min="0" max="6" step="0.1" oninput="recalc()">
+                            </div>
+                            <div class="input-group" style="margin-bottom:0">
+                                <label>מצבירה (% לשנה)</label>
+                                <input type="number" id="feeAccum" value="0.5" min="0" max="1.05" step="0.05" oninput="recalc()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group" style="margin-top:16px; margin-bottom:0">
+                        <label>התאמה לאינפלציה</label>
+                        <select id="inflation" onchange="recalc()">
+                            <option value="0">ללא (ערכים נומינליים)</option>
+                            <option value="3">3% אינפלציה שנתית</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="card">
+                    <h2>📈 צמיחה צפויה לפרישה</h2>
+                    <div class="chart-wrap">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="card" style="margin-top: 20px;">
+                <h2>💰 השוואת מסלולים</h2>
+
+                <div class="summary-boxes" id="summaryBoxes"></div>
+
+                <div style="overflow-x: auto;">
+                    <table class="tracks-table">
+                        <thead>
+                            <tr>
+                                <th>מסלול</th>
+                                <th>תשואה ממוצעת</th>
+                                <th>צבירה בפרישה</th>
+                                <th>פנסיה חודשית משוערת</th>
+                                <th>הפרש ממסלול הנוכחי</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tracksTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="insight-box" id="insightBox"></div>
+                <div class="fee-impact" id="feeImpact"></div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../js/app.js"></script>
+<script>
+const TRACKS = [
+    { id: 'gov',      name: 'ממשלתי',           return: 3.0,  color: '#94a3b8', desc: 'אג"ח ממשלתיות בלבד — בטוח מאוד, תשואה נמוכה' },
+    { id: 'bonds',    name: 'אגרות חוב',         return: 4.5,  color: '#60a5fa', desc: 'רוב האפיק באג"ח — סולידי' },
+    { id: 'halakha',  name: 'הלכה',              return: 5.8,  color: '#fbbf24', desc: 'השקעה לפי הלכה — ללא ריבית' },
+    { id: 'general',  name: 'כללי',              return: 7.5,  color: '#34d399', desc: 'תמהיל מניות + אג"ח — ברירת מחדל לרוב' },
+    { id: 'stocks',   name: 'מניות',             return: 9.2,  color: '#f97316', desc: 'בעיקר מניות — תנודתי, פוטנציאל גבוה' },
+    { id: 'passive',  name: 'פאסיבי / מחקה',    return: 9.8,  color: '#a78bfa', desc: 'עוקב מדדים (S&P / ת"א) — עמלות נמוכות' },
+];
+
+let chart = null;
+
+function projectSavings(pv, monthlyDeposit, annualReturnPct, depositFeePct, accumFeePct, months) {
+    const netDeposit = monthlyDeposit * (1 - depositFeePct / 100);
+    const netAnnualRate = (annualReturnPct - accumFeePct) / 100;
+    const r = netAnnualRate / 12;
+    if (Math.abs(r) < 1e-9) {
+        return pv + netDeposit * months;
+    }
+    return pv * Math.pow(1 + r, months) + netDeposit * ((Math.pow(1 + r, months) - 1) / r);
+}
+
+function fmt(n) {
+    if (n >= 1e6) return '₪' + (n / 1e6).toFixed(2) + 'M';
+    return '₪' + Math.round(n).toLocaleString('he-IL');
+}
+
+function fmtFull(n) {
+    return '₪' + Math.round(n).toLocaleString('he-IL');
+}
+
+function recalc() {
+    const currentAge   = parseInt(document.getElementById('currentAge').value) || 35;
+    const retireAge    = parseInt(document.getElementById('retirementAge').value) || 67;
+    const pv           = parseFloat(document.getElementById('currentSavings').value) || 0;
+    const monthlyDep   = parseFloat(document.getElementById('monthlyContrib').value) || 0;
+    const feeDeposit   = parseFloat(document.getElementById('feeDeposit').value) || 0;
+    const feeAccum     = parseFloat(document.getElementById('feeAccum').value) || 0;
+    const currentTrack = document.getElementById('currentTrack').value;
+    const inflationRate = parseFloat(document.getElementById('inflation').value) || 0;
+
+    const yearsLeft = Math.max(retireAge - currentAge, 1);
+    const months = yearsLeft * 12;
+
+    // Compute projections
+    const results = TRACKS.map(t => {
+        const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, months);
+        // Inflation-adjusted real value
+        const real = inflationRate > 0 ? gross / Math.pow(1 + inflationRate / 100, yearsLeft) : gross;
+        return { ...t, gross, real, display: inflationRate > 0 ? real : gross };
+    });
+
+    const currentResult = results.find(r => r.id === currentTrack) || results[3];
+    const bestResult = [...results].sort((a, b) => b.display - a.display)[0];
+
+    // Chart
+    buildChart(results, currentTrack, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate);
+
+    // Summary boxes
+    const monthlyPension = (amount) => Math.round(amount / 240);
+    const boxes = document.getElementById('summaryBoxes');
+    const gainVsBest = bestResult.display - currentResult.display;
+    boxes.innerHTML = `
+        <div class="summary-box">
+            <div class="label">מסלול נוכחי (${currentResult.name})</div>
+            <div class="value">${fmt(currentResult.display)}</div>
+            <div class="sub">~${fmtFull(monthlyPension(currentResult.display))} / חודש</div>
+        </div>
+        <div class="summary-box highlight">
+            <div class="label">🏆 המסלול הטוב ביותר (${bestResult.name})</div>
+            <div class="value">${fmt(bestResult.display)}</div>
+            <div class="sub">~${fmtFull(monthlyPension(bestResult.display))} / חודש</div>
+        </div>
+        <div class="summary-box ${gainVsBest > 0 ? '' : ''}">
+            <div class="label">פוטנציאל רווח</div>
+            <div class="value" style="color: ${gainVsBest > 0 ? 'var(--color-positive)' : 'var(--color-text-secondary)'}">
+                ${gainVsBest > 0 ? '+' + fmt(gainVsBest) : 'במסלול הטוב ביותר'}
+            </div>
+            <div class="sub">${gainVsBest > 0 ? 'יותר בפרישה אם תעבור' : ''}${currentResult.id === bestResult.id ? '✅ אתה כבר במסלול הטוב!' : ''}</div>
+        </div>
+    `;
+
+    // Table
+    const maxReturn = Math.max(...TRACKS.map(t => t.return));
+    const tbody = document.getElementById('tracksTableBody');
+    const sorted = [...results].sort((a, b) => b.display - a.display);
+    tbody.innerHTML = sorted.map(r => {
+        const isCurrent = r.id === currentTrack;
+        const isBest = r.id === bestResult.id;
+        const delta = r.display - currentResult.display;
+        const deltaStr = isCurrent ? '<span class="delta-zero">— נוכחי</span>' :
+            delta > 0 ? `<span class="delta-positive">+${fmt(delta)}</span>` :
+            `<span class="delta-negative">${fmt(delta)}</span>`;
+        const barW = Math.round((r.return / maxReturn) * 100);
+        return `<tr class="${isCurrent ? 'current-track' : ''} ${isBest && !isCurrent ? 'best-track' : ''}" onclick="selectTrack('${r.id}')">
+            <td>
+                ${isCurrent ? '<span class="track-badge badge-current">נוכחי</span>' : ''}
+                ${isBest && !isCurrent ? '<span class="track-badge badge-best">מומלץ</span>' : ''}
+                <span class="track-name">${r.name}</span><br>
+                <span style="font-size:0.75rem;color:var(--color-text-secondary)">${r.desc}</span>
+            </td>
+            <td>
+                <div class="return-bar-wrap">
+                    <span style="min-width:36px;font-weight:600">${r.return}%</span>
+                    <div class="return-bar"><div class="return-bar-fill" style="width:${barW}%;background:${r.color}"></div></div>
+                </div>
+            </td>
+            <td style="font-weight:600">${fmtFull(r.display)}</td>
+            <td class="monthly-pension">~${fmtFull(monthlyPension(r.display))} / חודש</td>
+            <td>${deltaStr}</td>
+        </tr>`;
+    }).join('');
+
+    // Insight
+    const insight = document.getElementById('insightBox');
+    if (currentResult.id === bestResult.id) {
+        insight.innerHTML = `✅ <strong>כל הכבוד!</strong> אתה כבר במסלול עם הפוטנציאל הגבוה ביותר — ${bestResult.name}. המשך כך.`;
+    } else {
+        const extraMonthly = monthlyPension(bestResult.display) - monthlyPension(currentResult.display);
+        insight.innerHTML = `💡 מעבר מ<strong>${currentResult.name}</strong> ל<strong>${bestResult.name}</strong> עשוי להוסיף <strong>${fmt(gainVsBest)}</strong> לחיסכון שלך בגיל ${retireAge} — כ-<strong>${fmtFull(extraMonthly)} יותר בחודש</strong> בפנסיה. זו החלטה שכדאי לבחון עם יועץ פנסיוני.`;
+    }
+
+    // Fee impact
+    const feeImpact = document.getElementById('feeImpact');
+    const withLowFee = projectSavings(pv, monthlyDep, currentResult.return, 0, 0.1, months);
+    const feeWaste = (inflationRate > 0 ? withLowFee / Math.pow(1 + inflationRate / 100, yearsLeft) : withLowFee) - currentResult.display;
+    if (feeWaste > 5000) {
+        feeImpact.innerHTML = `⚠️ <strong>השפעת דמי ניהול:</strong> דמי הניהול שלך (${feeDeposit}% מהפקדה + ${feeAccum}% מצבירה) "שורפים" כ-<strong>${fmt(feeWaste)}</strong> לאורך ${yearsLeft} שנים. ניהול של 0% מהפקדה + 0.1% מצבירה (קרנות פאסיביות) יכול לחסוך סכום זה.`;
+    } else {
+        feeImpact.innerHTML = `✅ <strong>דמי הניהול שלך סבירים</strong> — ${feeDeposit}% מהפקדה ו-${feeAccum}% מצבירה.`;
+    }
+}
+
+function selectTrack(id) {
+    document.getElementById('currentTrack').value = id;
+    recalc();
+}
+
+function buildChart(results, currentTrackId, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate) {
+    const labels = [];
+    for (let y = 0; y <= yearsLeft; y += Math.max(1, Math.floor(yearsLeft / 10))) labels.push('שנה ' + y);
+    if (labels[labels.length - 1] !== 'שנה ' + yearsLeft) labels.push('שנה ' + yearsLeft);
+
+    const datasets = results.map(t => {
+        const data = labels.map(l => {
+            const y = parseInt(l.replace('שנה ', ''));
+            const m = y * 12;
+            const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, m);
+            return inflationRate > 0 ? gross / Math.pow(1 + inflationRate / 100, y) : gross;
+        });
+        const isCurrent = t.id === currentTrackId;
+        return {
+            label: t.name,
+            data,
+            borderColor: t.color,
+            backgroundColor: 'transparent',
+            borderWidth: isCurrent ? 3 : 1.5,
+            borderDash: isCurrent ? [] : [4, 3],
+            pointRadius: isCurrent ? 3 : 0,
+            tension: 0.4,
+        };
+    });
+
+    if (chart) chart.destroy();
+    chart = new Chart(document.getElementById('growthChart'), {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#888',
+                        font: { size: 11 },
+                        boxWidth: 14,
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ' ' + ctx.dataset.label + ': ₪' + Math.round(ctx.raw).toLocaleString('he-IL'),
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        color: '#888',
+                        callback: v => v >= 1e6 ? '₪' + (v / 1e6).toFixed(1) + 'M' : '₪' + (v / 1000).toFixed(0) + 'K',
+                        font: { size: 10 },
+                    },
+                    grid: { color: 'rgba(128,128,128,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#888', font: { size: 10 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// Init
+recalc();
+</script>
+</body>
+</html>
