@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <title>סיפור השבוע - FinSight</title>
+    <link rel="icon" type="image/png" href="../img/logo.png">
+    <link rel="stylesheet" href="../css/app.css">
+    <style>
+        .story-container { max-width: 720px; margin: 0 auto; }
+
+        /* API Key setup */
+        .api-setup {
+            background: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid var(--color-border);
+            text-align: center;
+        }
+        .api-setup h2 { color: var(--color-primary); margin-bottom: 10px; }
+        .api-setup p { color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6; }
+        .api-input-row { display: flex; gap: 10px; }
+        .api-input-row input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: var(--color-bg);
+            color: var(--color-text-primary);
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+        .api-input-row input:focus { outline: none; border-color: var(--color-primary); }
+
+        /* Controls */
+        .controls-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .controls-row select {
+            padding: 10px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: var(--color-bg-card);
+            color: var(--color-text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .generate-btn {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .generate-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,0.3); }
+        .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* Loading */
+        .loading-wrap {
+            text-align: center;
+            padding: 60px 20px;
+            display: none;
+        }
+        .loading-dots { font-size: 2rem; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.3 } }
+        .loading-text { color: var(--color-text-secondary); margin-top: 12px; font-size: 0.9rem; }
+
+        /* Story card */
+        .story-card {
+            background: var(--color-bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            display: none;
+        }
+
+        .story-header {
+            padding: 24px 28px 18px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08));
+            border-bottom: 1px solid var(--color-border);
+        }
+        .story-header .week-label {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+        .story-header h2 {
+            font-size: 1.4rem;
+            color: var(--color-text-primary);
+            margin: 0;
+            line-height: 1.3;
+        }
+        .story-header .mood-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .mood-excellent { background: rgba(16,185,129,0.15); color: var(--color-positive); }
+        .mood-good { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .mood-warning { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .mood-critical { background: rgba(239,68,68,0.15); color: var(--color-negative); }
+
+        .story-body { padding: 24px 28px; }
+
+        .story-main {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--color-text-primary);
+            margin-bottom: 20px;
+        }
+
+        .story-sections { display: flex; flex-direction: column; gap: 12px; }
+
+        .story-section {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            background: var(--color-bg);
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        .section-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+        .section-content { flex: 1; }
+        .section-label { font-size: 0.72rem; color: var(--color-text-secondary); font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
+        .section-text { font-size: 0.92rem; color: var(--color-text-primary); line-height: 1.5; }
+
+        /* Quick stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 500px) { .quick-stats { grid-template-columns: 1fr 1fr; } }
+        .quick-stat {
+            background: var(--color-bg);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .quick-stat .qs-label { font-size: 0.7rem; color: var(--color-text-secondary); margin-bottom: 3px; }
+        .quick-stat .qs-value { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
+
+        .story-footer {
+            padding: 14px 28px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Error */
+        .error-box {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.25);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: var(--color-negative);
+            font-size: 0.9rem;
+            display: none;
+            margin-bottom: 16px;
+        }
+
+        /* Key row */
+        .key-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+        }
+        .key-row span { flex: 1; }
+        .key-change-btn {
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 4px 10px;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            font-size: 0.78rem;
+        }
+        .key-change-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <header class="app-header">
+        <button class="btn-back" onclick="history.back()">→</button>
+        <h1>✨ סיפור השבוע</h1>
+        <div></div>
+    </header>
+
+    <main class="main-content">
+        <div class="story-container">
+
+            <!-- API Setup (shown when no key) -->
+            <div class="api-setup" id="apiSetup">
+                <div style="font-size:3rem;margin-bottom:16px">🤖</div>
+                <h2>חבר את Claude AI</h2>
+                <p>הכנס את מפתח ה-API של Anthropic כדי לקבל סיכום שבועי אישי של ההוצאות שלך.<br>
+                המפתח נשמר אצלך בדפדפן בלבד ולא נשלח לשום שרת.</p>
+                <div class="api-input-row">
+                    <input type="password" id="apiKeyInput" placeholder="sk-ant-api..." autocomplete="off">
+                    <button class="btn btn-primary" onclick="saveApiKey()">התחבר</button>
+                </div>
+                <p style="margin-top:12px;font-size:0.78rem">
+                    <a href="https://console.anthropic.com" target="_blank" style="color:var(--color-primary)">קבל מפתח API בחינם באתר Anthropic ←</a>
+                </p>
+            </div>
+
+            <!-- Main UI (shown when key exists) -->
+            <div id="mainUI" style="display:none">
+                <div class="key-row">
+                    <span>🔑 מחובר ל-Claude AI</span>
+                    <button class="key-change-btn" onclick="changeKey()">שנה מפתח</button>
+                </div>
+
+                <div class="controls-row">
+                    <select id="rangeSelect">
+                        <option value="7">7 ימים אחרונים</option>
+                        <option value="14">14 ימים אחרונים</option>
+                        <option value="30">חודש אחרון</option>
+                        <option value="0">החודש הנוכחי</option>
+                    </select>
+                    <button class="generate-btn" id="generateBtn" onclick="generateStory()">
+                        <span>✨</span> <span id="btnText">ספר לי את השבוע שלי</span>
+                    </button>
+                </div>
+
+                <div class="error-box" id="errorBox"></div>
+                <div class="loading-wrap" id="loadingWrap">
+                    <div class="loading-dots">✨</div>
+                    <div class="loading-text">Claude קורא את ההוצאות שלך...</div>
+                </div>
+
+                <div class="story-card" id="storyCard">
+                    <div class="story-header">
+                        <div class="week-label" id="weekLabel"></div>
+                        <h2 id="storyHeadline"></h2>
+                        <span class="mood-badge" id="moodBadge"></span>
+                    </div>
+                    <div class="story-body">
+                        <div class="quick-stats" id="quickStats"></div>
+                        <div class="story-main" id="storyMain"></div>
+                        <div class="story-sections" id="storySections"></div>
+                    </div>
+                    <div class="story-footer">
+                        <span id="storyTimestamp"></span>
+                        <span style="color:var(--color-primary);cursor:pointer" onclick="generateStory()">↻ רענן</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="../js/app.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/i18n.js"></script>
+<script>
+const AI_KEY_STORAGE = 'finance_ai_api_key';
+const AI_CACHE_KEY   = 'finance_ai_story_cache';
+
+function getApiKey() { return localStorage.getItem(AI_KEY_STORAGE) || ''; }
+
+function init() {
+    const key = getApiKey();
+    document.getElementById('apiSetup').style.display = key ? 'none' : 'block';
+    document.getElementById('mainUI').style.display   = key ? 'block' : 'none';
+    if (key) loadCachedStory();
+}
+
+function saveApiKey() {
+    const val = document.getElementById('apiKeyInput').value.trim();
+    if (!val.startsWith('sk-ant-')) {
+        alert('המפתח צריך להתחיל ב-sk-ant-');
+        return;
+    }
+    localStorage.setItem(AI_KEY_STORAGE, val);
+    init();
+}
+
+function changeKey() {
+    localStorage.removeItem(AI_KEY_STORAGE);
+    init();
+}
+
+function loadCachedStory() {
+    try {
+        const cached = JSON.parse(localStorage.getItem(AI_CACHE_KEY) || 'null');
+        if (cached && cached.result) {
+            renderStory(cached.result, cached.stats, cached.range, new Date(cached.ts));
+        }
+    } catch(e) {}
+}
+
+function gatherData(days) {
+    const now = new Date();
+    let from;
+    if (days === 0) {
+        from = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else {
+        from = new Date(now.getTime() - days * 86400000);
+    }
+
+    const cc = Storage.getCreditCards();
+    const expenses = (cc.expenses || []).filter(e => new Date(e.date) >= from);
+    const budget = cc.budget || {};
+
+    // Aggregate
+    const totalILS = expenses
+        .filter(e => (e.currency || 'ILS') === 'ILS')
+        .reduce((s, e) => s + e.amount, 0);
+
+    const byCategory = {};
+    expenses.forEach(e => {
+        const cat = e.category || 'other';
+        byCategory[cat] = (byCategory[cat] || 0) + e.amount;
+    });
+    const topCat = Object.entries(byCategory).sort((a,b) => b[1]-a[1])[0];
+
+    const sorted = [...expenses].sort((a,b) => b.amount - a.amount);
+    const biggest = sorted[0];
+
+    // Days left in month / budget
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+    const dayOfMonth = now.getDate();
+    const daysLeft = daysInMonth - dayOfMonth;
+    const monthTotal = (cc.expenses || [])
+        .filter(e => {
+            const d = new Date(e.date);
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear() && (e.currency||'ILS')==='ILS';
+        })
+        .reduce((s,e) => s+e.amount, 0);
+    const budgetTotal = budget.total || 0;
+    const budgetLeft = budgetTotal > 0 ? budgetTotal - monthTotal : null;
+
+    // Country breakdown
+    const countries = {};
+    expenses.forEach(e => {
+        const m = e.description && e.description.match(/\s+([A-Z]{2})$/);
+        if (m) countries[m[1]] = (countries[m[1]]||0) + e.amount;
+        else countries['IL'] = (countries['IL']||0) + e.amount;
+    });
+
+    return {
+        from: from.toLocaleDateString('he-IL'),
+        to: now.toLocaleDateString('he-IL'),
+        count: expenses.length,
+        totalILS,
+        topCat: topCat ? { name: topCat[0], amount: topCat[1] } : null,
+        biggest: biggest ? { desc: biggest.description, amount: biggest.amount, currency: biggest.currency||'ILS', date: biggest.date } : null,
+        budgetLeft,
+        budgetTotal,
+        daysLeft,
+        monthTotal,
+        countries,
+        expenses: sorted.slice(0, 15).map(e => ({
+            date: e.date,
+            desc: e.description,
+            amount: e.amount,
+            currency: e.currency || 'ILS',
+            category: e.category
+        }))
+    };
+}
+
+function buildPrompt(data) {
+    const lines = [
+        `תאריכים: ${data.from} עד ${data.to}`,
+        `מספר עסקאות: ${data.count}`,
+        `סך הוצאות (ILS): ₪${Math.round(data.totalILS).toLocaleString('he-IL')}`,
+    ];
+    if (data.topCat) lines.push(`קטגוריה מובילה: ${data.topCat.name} (₪${Math.round(data.topCat.amount).toLocaleString('he-IL')})`);
+    if (data.biggest) lines.push(`ההוצאה הגדולה: ${data.biggest.desc} — ${data.biggest.amount} ${data.biggest.currency} (${data.biggest.date})`);
+    if (data.budgetLeft !== null) lines.push(`תקציב חודשי: ₪${data.budgetTotal.toLocaleString('he-IL')} | נשאר: ₪${Math.round(data.budgetLeft).toLocaleString('he-IL')} ל-${data.daysLeft} ימים`);
+
+    const countryList = Object.entries(data.countries).map(([c,v]) => `${c}: ₪${Math.round(v)}`).join(', ');
+    if (countryList) lines.push(`פירוט לפי מדינה: ${countryList}`);
+
+    lines.push('', '15 העסקאות הגדולות:');
+    data.expenses.forEach(e => lines.push(`  ${e.date} | ${e.desc} | ${e.amount} ${e.currency} | ${e.category||''}`));
+
+    return `אתה יועץ פיננסי אישי חכם ומחובר. קיבלת נתוני הוצאות של משתמש.
+
+${lines.join('\n')}
+
+ענה בJSON בלבד (ללא markdown, ללא טקסט מחוץ ל-JSON):
+{
+  "headline": "כותרת קצרה ומעניינת לתקופה זו (עד 8 מילים, עברית)",
+  "story": "2-3 משפטים שמתארים את ההוצאות בצורה אישית, חמה וספציפית עם מספרים ושמות. עברית.",
+  "highlight": "תובנה מעניינת אחת שמצאת — משהו שהמשתמש אולי לא שם לב אליו. עברית.",
+  "tip": "טיפ אחד מעשי ורלוונטי לנתונים הספציפיים האלה. עברית.",
+  "mood": "exactly one of: excellent / good / warning / critical"
+}`;
+}
+
+async function generateStory() {
+    const apiKey = getApiKey();
+    if (!apiKey) return;
+
+    const days = parseInt(document.getElementById('rangeSelect').value);
+    const data = gatherData(days);
+
+    if (data.count === 0) {
+        showError('לא נמצאו עסקאות בתקופה הנבחרת. יבא עסקאות תחילה.');
+        return;
+    }
+
+    setLoading(true);
+    hideError();
+
+    try {
+        const prompt = buildPrompt(data);
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+                'content-type': 'application/json',
+                'anthropic-dangerous-allow-browser': 'true'
+            },
+            body: JSON.stringify({
+                model: 'claude-haiku-4-5-20251001',
+                max_tokens: 600,
+                messages: [{ role: 'user', content: prompt }]
+            })
+        });
+
+        if (!resp.ok) {
+            const err = await resp.json().catch(() => ({}));
+            throw new Error(err.error?.message || `שגיאת API: ${resp.status}`);
+        }
+
+        const json = await resp.json();
+        const raw = json.content?.[0]?.text || '';
+
+        // Parse JSON from response (strip any accidental markdown)
+        const cleaned = raw.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+        const result = JSON.parse(cleaned);
+
+        // Cache
+        localStorage.setItem(AI_CACHE_KEY, JSON.stringify({ result, stats: data, range: days, ts: new Date().toISOString() }));
+        renderStory(result, data, days, new Date());
+
+    } catch(e) {
+        showError('שגיאה: ' + (e.message || e));
+    } finally {
+        setLoading(false);
+    }
+}
+
+function renderStory(result, data, days, ts) {
+    const moodMap = {
+        excellent: { text: '🟢 מצוין', cls: 'mood-excellent' },
+        good:      { text: '🔵 טוב', cls: 'mood-good' },
+        warning:   { text: '🟡 שים לב', cls: 'mood-warning' },
+        critical:  { text: '🔴 חריגה', cls: 'mood-critical' }
+    };
+    const mood = moodMap[result.mood] || moodMap.good;
+
+    document.getElementById('weekLabel').textContent = days === 0 ? 'החודש הנוכחי' : `${days} הימים האחרונים · ${data.from} – ${data.to}`;
+    document.getElementById('storyHeadline').textContent = result.headline || '';
+
+    const badge = document.getElementById('moodBadge');
+    badge.textContent = mood.text;
+    badge.className = 'mood-badge ' + mood.cls;
+
+    // Quick stats
+    const qs = document.getElementById('quickStats');
+    const budgetPct = data.budgetTotal > 0 ? Math.round(data.monthTotal / data.budgetTotal * 100) : null;
+    qs.innerHTML = `
+        <div class="quick-stat">
+            <div class="qs-label">סך הוצאות</div>
+            <div class="qs-value">₪${Math.round(data.totalILS).toLocaleString('he-IL')}</div>
+        </div>
+        <div class="quick-stat">
+            <div class="qs-label">עסקאות</div>
+            <div class="qs-value">${data.count}</div>
+        </div>
+        ${budgetPct !== null ? `
+        <div class="quick-stat">
+            <div class="qs-label">מהתקציב</div>
+            <div class="qs-value" style="color:${budgetPct>90?'var(--color-negative)':budgetPct>70?'#f59e0b':'var(--color-positive)'}">${budgetPct}%</div>
+        </div>` : `
+        <div class="quick-stat">
+            <div class="qs-label">ממוצע ליום</div>
+            <div class="qs-value">₪${data.count > 0 ? Math.round(data.totalILS / Math.max(days||30,1)).toLocaleString('he-IL') : 0}</div>
+        </div>`}
+    `;
+
+    document.getElementById('storyMain').textContent = result.story || '';
+
+    const sections = document.getElementById('storySections');
+    sections.innerHTML = `
+        <div class="story-section">
+            <div class="section-icon">💡</div>
+            <div class="section-content">
+                <div class="section-label">תובנה</div>
+                <div class="section-text">${result.highlight || ''}</div>
+            </div>
+        </div>
+        <div class="story-section">
+            <div class="section-icon">🎯</div>
+            <div class="section-content">
+                <div class="section-label">טיפ</div>
+                <div class="section-text">${result.tip || ''}</div>
+            </div>
+        </div>
+        ${data.budgetLeft !== null ? `
+        <div class="story-section">
+            <div class="section-icon">${data.budgetLeft < 0 ? '🚨' : data.budgetLeft < data.budgetTotal * 0.1 ? '⚠️' : '📊'}</div>
+            <div class="section-content">
+                <div class="section-label">תקציב</div>
+                <div class="section-text">
+                    ${data.budgetLeft >= 0
+                        ? `נשאר ₪${Math.round(data.budgetLeft).toLocaleString('he-IL')} מתוך ₪${data.budgetTotal.toLocaleString('he-IL')} — ל-${data.daysLeft} ימים נוספים בחודש`
+                        : `חרגת ב-₪${Math.round(Math.abs(data.budgetLeft)).toLocaleString('he-IL')} מהתקציב החודשי`}
+                </div>
+            </div>
+        </div>` : ''}
+    `;
+
+    document.getElementById('storyTimestamp').textContent = 'עודכן: ' + ts.toLocaleString('he-IL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+
+    document.getElementById('storyCard').style.display = 'block';
+}
+
+function setLoading(on) {
+    document.getElementById('loadingWrap').style.display = on ? 'block' : 'none';
+    document.getElementById('generateBtn').disabled = on;
+    document.getElementById('btnText').textContent = on ? 'מייצר...' : 'ספר לי את השבוע שלי';
+    if (on) document.getElementById('storyCard').style.display = 'none';
+}
+
+function showError(msg) {
+    const el = document.getElementById('errorBox');
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+function hideError() { document.getElementById('errorBox').style.display = 'none'; }
+
+init();
+</script>
+</body>
+</html>
