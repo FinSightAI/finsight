@@ -256,6 +256,27 @@ const StockAPI = {
         const detectedMarket = market || this.detectMarket(symbol);
         const formattedSymbol = this.formatSymbol(symbol, detectedMarket);
 
+        // Check GitHub Actions daily price cache (works for any symbol stored there)
+        if (detectedMarket !== 'IL') {
+            try {
+                const res = await fetch(`./data/tase-prices.json?v=${Math.floor(Date.now() / 300000)}`);
+                if (res.ok) {
+                    const cache = await res.json();
+                    const entry = cache[formattedSymbol] || cache[symbol.toUpperCase()];
+                    if (entry?.currentPrice) {
+                        console.log(`[cache] ${formattedSymbol}: ${entry.currentPrice} (${entry.lastUpdate})`);
+                        return {
+                            symbol: formattedSymbol, originalSymbol: symbol, market: detectedMarket,
+                            ...entry,
+                            historicalPrices: [], historicalData: [], ma150: null, ma150Series: [],
+                            ma150Position: null, ma150PositionPercent: null,
+                            source: 'cache', success: true
+                        };
+                    }
+                }
+            } catch {}
+        }
+
         // Try TASE API first for Israeli stocks
         if (detectedMarket === 'IL') {
             try {
