@@ -773,6 +773,10 @@
                         <label data-i18n="stocks.currentPrice">מחיר נוכחי</label>
                         <input type="number" class="form-control" id="newPrice" min="0.01" step="0.01" required>
                     </div>
+                    <a id="taseNAVLink" href="#" target="_blank" rel="noopener"
+                       style="display:none; font-size:0.85rem; color:var(--color-primary);">
+                        📊 פתח עמוד קרן ב-TASE לשווי עדכני
+                    </a>
                 </form>
             </div>
             <div class="modal-footer">
@@ -1815,6 +1819,19 @@
         function openUpdatePriceModal(symbol, currentPrice) {
             document.getElementById('updateSymbol').value = symbol;
             document.getElementById('newPrice').value = currentPrice;
+
+            // For TASE numeric IDs — add a quick link to TASE website for current NAV
+            const taseId = symbol.replace(/\.TA$/i, '');
+            const taseLink = document.getElementById('taseNAVLink');
+            if (taseLink) {
+                if (/^\d+$/.test(taseId)) {
+                    taseLink.href = `https://www.tase.co.il/he/market_data/fund/${taseId}/about`;
+                    taseLink.style.display = 'inline';
+                } else {
+                    taseLink.style.display = 'none';
+                }
+            }
+
             document.getElementById('updatePriceModal').classList.add('active');
         }
 
