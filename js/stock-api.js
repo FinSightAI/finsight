@@ -48,22 +48,16 @@ const StockAPI = {
      * Fetch URL through CORS proxy with fallback
      */
     async _fetchWithFallback(targetUrl) {
-        const startIndex = this._currentProxyIndex;
-        for (let i = 0; i < this.PROXY_URLS.length; i++) {
-            const proxyIndex = (startIndex + i) % this.PROXY_URLS.length;
-            const proxy = this.PROXY_URLS[proxyIndex];
-            const url = `${proxy}${encodeURIComponent(targetUrl)}`;
-            try {
-                const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const data = await response.json();
-                this._currentProxyIndex = proxyIndex;
-                return data;
-            } catch (e) {
-                console.warn(`Proxy ${proxyIndex} failed:`, proxy, e.message);
-            }
-        }
-        throw new Error('All proxies failed');
+        // Run all proxies in parallel — resolves on first success, fails only when all fail
+        return Promise.any(
+            this.PROXY_URLS.map((proxy, i) => {
+                const url = `${proxy}${encodeURIComponent(targetUrl)}`;
+                return fetch(url, { signal: AbortSignal.timeout(5000) })
+                    .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+                    .then(data => { this._currentProxyIndex = i; return data; })
+                    .catch(e => { console.warn(`Proxy ${i} failed:`, proxy, e.message); throw e; });
+            })
+        ).catch(() => { throw new Error('All proxies failed'); });
     },
 
     /**
