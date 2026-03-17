@@ -259,14 +259,20 @@ const StockAPI = {
                     const cache = await res.json();
                     const entry = cache[formattedSymbol] || cache[symbol.toUpperCase()];
                     if (entry?.currentPrice) {
-                        console.log(`[cache] ${formattedSymbol}: ${entry.currentPrice} (${entry.lastUpdate})`);
-                        return {
-                            symbol: formattedSymbol, originalSymbol: symbol, market: detectedMarket,
-                            ...entry,
-                            historicalPrices: [], historicalData: [], ma150: null, ma150Series: [],
-                            ma150Position: null, ma150PositionPercent: null,
-                            source: 'cache', success: true
-                        };
+                        const ageHours = entry.lastUpdate
+                            ? (Date.now() - new Date(entry.lastUpdate).getTime()) / 3600000
+                            : 999;
+                        if (ageHours < 8) {
+                            console.log(`[cache] ${formattedSymbol}: ${entry.currentPrice} (${entry.lastUpdate})`);
+                            return {
+                                symbol: formattedSymbol, originalSymbol: symbol, market: detectedMarket,
+                                ...entry,
+                                historicalPrices: [], historicalData: [], ma150: null, ma150Series: [],
+                                ma150Position: null, ma150PositionPercent: null,
+                                source: 'cache', success: true
+                            };
+                        }
+                        console.log(`[cache] ${formattedSymbol}: cache stale (${ageHours.toFixed(1)}h), fetching live`);
                     }
                 }
             } catch {}
