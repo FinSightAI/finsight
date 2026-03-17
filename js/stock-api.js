@@ -4,7 +4,7 @@
 const StockAPI = {
     // Cloudflare Worker proxy — set your worker URL here after deploying workers/yahoo-proxy.js
     // e.g. 'https://finsight-yahoo.YOUR-SUBDOMAIN.workers.dev/v8/finance/chart'
-    CF_WORKER_URL: '',
+    CF_WORKER_URL: 'https://lucky-hill-f215.ofirshamir57.workers.dev',
 
     YAHOO_URLS: [
         'https://query1.finance.yahoo.com/v8/finance/chart',
