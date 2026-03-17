@@ -100,6 +100,34 @@ const StockAPI = {
     },
 
     /**
+     * Fetch Maya API via Cloudflare Worker (bypasses CORS + browser restrictions).
+     * Worker route: /maya/* → https://mayaapi.tase.co.il/api/*
+     */
+    async _fetchMayaViaWorker(id) {
+        if (!this.CF_WORKER_URL) return null;
+        const workerBase = this.CF_WORKER_URL.replace(/\/v8\/finance\/chart$/, '');
+        const endpoints = [
+            `${workerBase}/maya/fund/details?fundId=${id}`,
+            `${workerBase}/maya/company/tradedata?companyId=${id}`,
+        ];
+        for (const url of endpoints) {
+            try {
+                const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+                if (!r.ok) continue;
+                const data = await r.json();
+                const parsed = this._parseMayaPrice(data);
+                if (parsed) {
+                    console.log(`[TASE Worker] ${id}: ₪${parsed.currentPrice}`);
+                    return parsed;
+                }
+            } catch (e) {
+                console.warn(`[TASE Worker] ${url} failed:`, e.message);
+            }
+        }
+        return null;
+    },
+
+    /**
      * Try to fetch from Maya API directly (no proxy).
      * First attempts a plain GET (no custom headers = no CORS preflight).
      * If the server returns CORS Allow-Origin, this works without any proxy.
@@ -195,7 +223,11 @@ const StockAPI = {
             }
         } catch {}
 
-        // 2. Try Maya API directly (no proxy) — works only if server allows plain CORS
+        // 2. Try Maya via Cloudflare Worker (no CORS issues, works for all users)
+        const workerResult = await this._fetchMayaViaWorker(id);
+        if (workerResult) return workerResult;
+
+        // 3. Try Maya API directly (no proxy) — works only if server allows plain CORS
         const mayaResult = await this._fetchMayaDirectly(id);
         if (mayaResult) return mayaResult;
 
