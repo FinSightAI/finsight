@@ -369,6 +369,12 @@
     <script src="../js/auth.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        App.currentPage = 'healthScore';
+        I18n.init();
+        renderHealthScore();
+    });
+
+    document.addEventListener('languageChanged', () => {
         renderHealthScore();
     });
 
@@ -471,9 +477,9 @@
         const hasStocks = stocks.holdings.length > 0 || Storage.getTotalStocksValue() > 0;
         const investScore = (hasPension ? 8 : 0) + (hasTraining ? 6 : 0) + (hasStocks ? 6 : 0);
         const investDetails = [
-            hasPension ? '✓ פנסיה' : '✗ פנסיה',
-            hasTraining ? '✓ השתלמות' : '✗ השתלמות',
-            hasStocks ? '✓ מניות' : '✗ מניות'
+            (hasPension ? '✓ ' : '✗ ') + t('funds.pensionFund'),
+            (hasTraining ? '✓ ' : '✗ ') + t('nav.trainingFunds'),
+            (hasStocks ? '✓ ' : '✗ ') + t('nav.stocks')
         ].join(' · ');
         result.categories.push({
             key: 'investments', icon: '📈',

@@ -1135,7 +1135,11 @@ const I18n = {
                 debtDesc: 'עומס החזרי הלוואות',
                 investmentsDesc: 'גיוון וצמיחה',
                 networthDesc: 'שווי נקי כולל',
-                pts: 'נקודות'
+                pts: 'נקודות',
+                debtFree: 'ללא חוב',
+                spendingRatio: 'מהכנסה',
+                ofIncome: 'מהכנסה',
+                needsIncomeData: 'נדרש נתון הכנסה בפרופיל'
             }
         },
         en: {
@@ -2268,7 +2272,11 @@ const I18n = {
                 debtDesc: 'Loan repayment burden',
                 investmentsDesc: 'Diversification & growth',
                 networthDesc: 'Total net worth',
-                pts: 'pts'
+                pts: 'pts',
+                debtFree: 'Debt free',
+                spendingRatio: 'of income',
+                ofIncome: 'of income',
+                needsIncomeData: 'Income data required in profile'
             }
         },
         pt: {
@@ -2657,6 +2665,38 @@ const I18n = {
                 pinTooShort: 'O PIN deve ter 4-6 dígitos',
                 appLockDesc: 'Proteja seus dados com um código PIN',
                 lockoutMessage: 'Tente novamente em {time}'
+            },
+            healthScore: {
+                title: 'Saúde Financeira',
+                subtitle: 'Visão geral da sua situação financeira',
+                totalScore: 'Pontuação Total',
+                outOf: 'de 100',
+                gradeA: 'Excelente',
+                gradeB: 'Bom',
+                gradeC: 'Regular',
+                gradeD: 'Precisa Melhorar',
+                gradeF: 'Fraco',
+                savings: 'Poupança',
+                spending: 'Gastos',
+                debt: 'Dívida',
+                investments: 'Investimentos',
+                networth: 'Patrimônio Líquido',
+                breakdown: 'Detalhamento por Categoria',
+                recommendations: 'Recomendações',
+                noRecommendations: 'Parabéns! Sem recomendações no momento',
+                completeProfile: 'Complete seu perfil financeiro para uma pontuação mais precisa',
+                na: 'N/D',
+                emergencyMonths: 'meses de reserva',
+                savingsDesc: 'Cobertura do fundo de emergência',
+                spendingDesc: 'Relação gastos/renda',
+                debtDesc: 'Carga de pagamento de empréstimos',
+                investmentsDesc: 'Diversificação e crescimento',
+                networthDesc: 'Patrimônio líquido total',
+                pts: 'pts',
+                debtFree: 'Sem dívidas',
+                spendingRatio: 'da renda',
+                ofIncome: 'da renda',
+                needsIncomeData: 'Dados de renda necessários no perfil'
             },
             security: {
                 badgeEncrypted: '🛡️ Dados Criptografados',
