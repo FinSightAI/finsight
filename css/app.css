@@ -376,7 +376,7 @@ body.ltr .nav-submenu {
 }
 
 .summary-card .value {
-    font-size: clamp(1rem, 1.4vw, 1.6rem);
+    font-size: clamp(1.2rem, 1.8vw, 2rem);
     font-weight: bold;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -799,7 +799,7 @@ body.ltr .mobile-lang-switcher {
     }
 
     .summary-card .value {
-        font-size: clamp(0.85rem, 3.5vw, 1.2rem);
+        font-size: clamp(1rem, 4vw, 1.4rem);
     }
 
     .modal {
