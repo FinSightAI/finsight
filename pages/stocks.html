@@ -2968,21 +2968,29 @@
                 })
                 .filter(h => h.weight > 0.001);
 
+            console.log('[portfolio benchmark] holdings:', holdingsWithWeight.map(h => `${h.symbol}(${(h.weight*100).toFixed(1)}%)`).join(', '));
+
             // Fetch historical data for each holding in parallel (with cache)
             const histMap = {};
             await Promise.all(holdingsWithWeight.map(async h => {
                 try {
                     const cached = getCachedBenchmark(h.symbol, range);
                     if (cached && cached.success && cached.historicalData.length > 0) {
-                        histMap[h.symbol] = cached.historicalData; return;
+                        histMap[h.symbol] = cached.historicalData;
+                        console.log('[portfolio benchmark] cached:', h.symbol, cached.historicalData.length, 'pts');
+                        return;
                     }
                     const result = await StockAPI.fetchBenchmarkData(h.symbol, range);
                     if (result.success && result.historicalData.length > 0) {
                         setCachedBenchmark(h.symbol, range, result);
                         histMap[h.symbol] = result.historicalData;
+                        console.log('[portfolio benchmark] fetched:', h.symbol, result.historicalData.length, 'pts');
+                    } else {
+                        console.warn('[portfolio benchmark] failed:', h.symbol, result.error || 'no data');
                     }
-                } catch(e) {}
+                } catch(e) { console.error('[portfolio benchmark] error:', h.symbol, e); }
             }));
+            console.log('[portfolio benchmark] histMap keys:', Object.keys(histMap));
 
             // Normalize each holding's hist dates to "YYYY-MM-DD" strings for easy comparison
             const histMapStr = {};
