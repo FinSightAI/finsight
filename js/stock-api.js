@@ -598,13 +598,30 @@ const StockAPI = {
     async fetchBenchmarkData(symbol, range = '1y') {
         try {
             let data = null;
-            for (const base of this.YAHOO_URLS) {
-                const yahooUrl = `${base}/${encodeURIComponent(symbol)}?interval=1d&range=${range}&includePrePost=false`;
+            const suffix = `/${encodeURIComponent(symbol)}?interval=1d&range=${range}&includePrePost=false`;
+
+            // Try Cloudflare Worker first (most reliable)
+            if (this.CF_WORKER_URL) {
                 try {
-                    data = await this._fetchWithFallback(yahooUrl);
-                    if (data?.chart?.result?.length > 0) break;
+                    const workerUrl = this.CF_WORKER_URL + suffix;
+                    const res = await fetch(workerUrl);
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json?.chart?.result?.length > 0) data = json;
+                    }
                 } catch (e) {}
             }
+
+            // Fallback: direct Yahoo + proxies
+            if (!data?.chart?.result?.length) {
+                for (const base of this.YAHOO_URLS) {
+                    try {
+                        const d = await this._fetchWithFallback(base + suffix);
+                        if (d?.chart?.result?.length > 0) { data = d; break; }
+                    } catch (e) {}
+                }
+            }
+
             if (!data?.chart?.result?.length) {
                 throw new Error('No data found for benchmark');
             }
