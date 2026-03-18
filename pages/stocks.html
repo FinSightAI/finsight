@@ -2984,22 +2984,31 @@
                 } catch(e) {}
             }));
 
+            // Normalize each holding's hist dates to "YYYY-MM-DD" strings for easy comparison
+            const histMapStr = {};
+            for (const sym of Object.keys(histMap)) {
+                histMapStr[sym] = histMap[sym].map(pt => ({
+                    dateStr: (pt.date instanceof Date ? pt.date : new Date(pt.date)).toISOString().split('T')[0],
+                    close: pt.close
+                }));
+            }
+
             // Build weighted return series
             const series = referenceDates.map(refDate => {
                 const refStr = new Date(refDate).toISOString().split('T')[0];
                 let weightedReturn = 0, usedWeight = 0;
                 for (const h of holdingsWithWeight) {
-                    const hist = histMap[h.symbol];
+                    const hist = histMapStr[h.symbol];
                     if (!hist || hist.length < 2) continue;
                     const startPrice = hist[0].close;
                     let closest = hist[0];
                     for (const pt of hist) {
-                        if (pt.date <= refStr) closest = pt; else break;
+                        if (pt.dateStr <= refStr) closest = pt; else break;
                     }
                     weightedReturn += ((closest.close / startPrice) - 1) * 100 * h.weight;
                     usedWeight += h.weight;
                 }
-                return usedWeight > 0.05 ? weightedReturn / usedWeight * usedWeight : 0;
+                return usedWeight > 0.05 ? weightedReturn / usedWeight : 0;
             });
 
             return { series, finalReturn: currentReturn };
