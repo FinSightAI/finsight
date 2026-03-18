@@ -1140,6 +1140,10 @@ const I18n = {
                 spendingRatio: 'מהכנסה',
                 ofIncome: 'מהכנסה',
                 needsIncomeData: 'נדרש נתון הכנסה בפרופיל'
+            },
+            footer: {
+                rights: '© 2026 FinSight. כל הזכויות שמורות.',
+                disclaimer: 'כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.'
             }
         },
         en: {
@@ -2277,6 +2281,10 @@ const I18n = {
                 spendingRatio: 'of income',
                 ofIncome: 'of income',
                 needsIncomeData: 'Income data required in profile'
+            },
+            footer: {
+                rights: '© 2026 FinSight. All rights reserved.',
+                disclaimer: 'All content is provided for informational purposes only and does not constitute financial advice.'
             }
         },
         pt: {
@@ -2697,6 +2705,10 @@ const I18n = {
                 spendingRatio: 'da renda',
                 ofIncome: 'da renda',
                 needsIncomeData: 'Dados de renda necessários no perfil'
+            },
+            footer: {
+                rights: '© 2026 FinSight. Todos os direitos reservados.',
+                disclaimer: 'Todo o conteúdo é fornecido apenas para fins informativos e não constitui aconselhamento financeiro.'
             },
             security: {
                 badgeEncrypted: '🛡️ Dados Criptografados',
