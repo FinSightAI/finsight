@@ -40,8 +40,8 @@
 
         .report-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
             margin-bottom: 30px;
         }
 
@@ -49,13 +49,19 @@
             background: var(--color-bg-card);
             border: 1px solid var(--color-border);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px 12px;
             text-align: center;
+            min-width: 0;
         }
 
-        .report-card .icon { font-size: 2rem; margin-bottom: 10px; }
-        .report-card .value { font-size: 1.8rem; font-weight: bold; margin-bottom: 5px; }
-        .report-card .label { color: var(--color-text-secondary); font-size: 0.9rem; }
+        .report-card .icon { font-size: 1.8rem; margin-bottom: 8px; }
+        .report-card .value { font-size: clamp(1rem, 1.6vw, 1.6rem); font-weight: bold; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .report-card .label { color: var(--color-text-secondary); font-size: 0.82rem; }
+
+        @media (max-width: 600px) {
+            .report-summary { grid-template-columns: repeat(2, 1fr); }
+            .report-card .value { font-size: clamp(0.9rem, 4vw, 1.2rem); }
+        }
         .report-card .change { font-size: 0.85rem; margin-top: 5px; }
         .report-card .change.positive { color: var(--color-positive); }
         .report-card .change.negative { color: var(--color-negative); }
