@@ -3005,6 +3005,9 @@
                 } catch(e) { console.error('[portfolio benchmark] error:', h.symbol, e.message); }
             }));
             console.log('[portfolio benchmark] histMap keys:', Object.keys(histMap));
+            if (Object.keys(histMap).length === 0) {
+                console.warn('[portfolio benchmark] no historical data fetched. currentReturn=', currentReturn.toFixed(2), '%. Using linear fallback.');
+            }
 
             // Normalize each holding's hist dates to "YYYY-MM-DD" strings for easy comparison
             const histMapStr = {};
@@ -3016,7 +3019,8 @@
             }
 
             // Build weighted return series
-            const series = referenceDates.map(refDate => {
+            const n = referenceDates.length;
+            const series = referenceDates.map((refDate, i) => {
                 const refStr = new Date(refDate).toISOString().split('T')[0];
                 let weightedReturn = 0, usedWeight = 0;
                 for (const h of holdingsWithWeight) {
@@ -3030,7 +3034,9 @@
                     weightedReturn += ((closest.close / startPrice) - 1) * 100 * h.weight;
                     usedWeight += h.weight;
                 }
-                return usedWeight > 0.05 ? weightedReturn / usedWeight : 0;
+                // Fallback: if no historical data fetched, interpolate linearly to known total return
+                if (usedWeight < 0.05) return currentReturn * (i / (n - 1 || 1));
+                return weightedReturn / usedWeight;
             });
 
             return { series, finalReturn: currentReturn };
