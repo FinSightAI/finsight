@@ -3096,9 +3096,11 @@
                     const cached = getCachedBenchmark(sym, range);
                     if (cached && cached.success && cached.historicalData && cached.historicalData.length > 0) return cached;
                     const workerUrl = `${StockAPI.CF_WORKER_URL}/${encodeURIComponent(sym)}?interval=1d&range=${range}&includePrePost=false`;
+                    console.error('[BM] fetching', sym, workerUrl);
                     try {
-                        const res = await fetch(workerUrl);
+                        const res = await fetch(workerUrl, { signal: AbortSignal.timeout(10000) });
                         const json = await res.json();
+                        console.error('[BM] got', sym, res.status, json?.chart?.result?.length, 'results');
                         if (json?.chart?.result?.length > 0) {
                             const r = json.chart.result[0];
                             const timestamps = r.timestamp || [];
@@ -3111,7 +3113,7 @@
                             setCachedBenchmark(sym, range, result);
                             return result;
                         }
-                    } catch(e) {}
+                    } catch(e) { console.error('[BM] fetch error', sym, e.message); }
                     return { symbol: sym, success: false, historicalData: [] };
                 };
 
@@ -3134,6 +3136,7 @@
 
                 const benchmarkPromises = selectedBenchmarks.map(sym => fetchViaWorker(sym, currentBenchmarkRange));
                 const benchmarkResults = await Promise.all(benchmarkPromises);
+                console.error('[BM] benchmarkResults:', benchmarkResults.map(r => r.symbol + ':' + r.success + ':' + (r.historicalData?.length||0)));
 
                 // If a newer load was triggered while we were fetching, abort this one
                 if (thisLoadId !== benchmarkLoadId) return;
