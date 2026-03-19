@@ -11,6 +11,15 @@ const PinLock = {
 
     init() {
         if (!this.isEnabled()) return;
+
+        // If already unlocked this session and within the timeout window, skip PIN
+        const sessionTs = parseInt(sessionStorage.getItem('pin_session_unlocked')) || 0;
+        const timeoutMs = this.getTimeout() * 60 * 1000;
+        if (sessionTs && (Date.now() - sessionTs) < timeoutMs) {
+            this.startAutoLock();
+            return;
+        }
+
         this._injectOverlay();
         this.showLockScreen();
         // Auto-lock timer starts after successful unlock, not here
@@ -82,6 +91,7 @@ const PinLock = {
         await Storage.decryptAll(cryptoKey);
         Storage.setEncryptionKey(cryptoKey);
         this._hideOverlay();
+        sessionStorage.setItem('pin_session_unlocked', Date.now());
         this.startAutoLock();
 
         // Reload page data
@@ -95,6 +105,7 @@ const PinLock = {
         if (!this.isEnabled()) return;
         if (this._overlay && this._overlay.style.display !== 'none') return; // already locked
 
+        sessionStorage.removeItem('pin_session_unlocked');
         await Storage.encryptAll();
         this._stopAutoLock();
         this.showLockScreen();
@@ -182,6 +193,7 @@ const PinLock = {
 
     _resetTimer() {
         if (this._autoLockTimer) clearTimeout(this._autoLockTimer);
+        sessionStorage.setItem('pin_session_unlocked', Date.now());
         const minutes = this.getTimeout();
         this._autoLockTimer = window.setTimeout(() => {
             this.lock();
