@@ -562,7 +562,8 @@ const StockAPI = {
             batches.push(symbols.slice(i, i + batchSize));
         }
 
-        for (const batch of batches) {
+        for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+            const batch = batches[batchIndex];
             const promises = batch.map(item => {
                 const symbol = typeof item === 'string' ? item : item.symbol;
                 const market = typeof item === 'string' ? null : item.market;
@@ -576,7 +577,7 @@ const StockAPI = {
             });
 
             // Small delay between batches to be respectful of rate limits
-            if (batches.indexOf(batch) < batches.length - 1) {
+            if (batchIndex < batches.length - 1) {
                 await new Promise(resolve => setTimeout(resolve, 200));
             }
         }
