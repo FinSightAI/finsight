@@ -19,6 +19,19 @@ const StockAPI = {
     ],
     _currentProxyIndex: 0,
     _taseIdCache: {},
+    _taseJsonPromise: null,
+    _taseJsonExpiry: 0,
+
+    async _fetchTaseJson() {
+        const now = Date.now();
+        if (this._taseJsonPromise && now < this._taseJsonExpiry) return this._taseJsonPromise;
+        const dataBase = location.pathname.includes('/pages/') ? '../' : './';
+        this._taseJsonExpiry = now + 5 * 60 * 1000;
+        this._taseJsonPromise = fetch(`${dataBase}data/tase-prices.json?v=${Math.floor(now / 300000)}`)
+            .then(res => res.ok ? res.json() : null)
+            .catch(() => null);
+        return this._taseJsonPromise;
+    },
 
     /**
      * Format symbol for Yahoo Finance API
@@ -211,10 +224,8 @@ const StockAPI = {
         // 1. Read from GitHub Actions daily cache (tase-prices.json)
         //    Updated server-side so no CORS issues. Best for mutual funds (numeric IDs).
         try {
-            const dataBase = location.pathname.includes('/pages/') ? '../' : './';
-            const res = await fetch(`${dataBase}data/tase-prices.json?v=${Math.floor(Date.now() / 300000)}`);
-            if (res.ok) {
-                const cache = await res.json();
+            const cache = await this._fetchTaseJson();
+            if (cache) {
                 const cached = cache[String(id)];
                 if (cached && cached.currentPrice) {
                     console.log(`[TASE cache] ${symbol}: ₪${cached.currentPrice} (updated ${cached.lastUpdate})`);
@@ -285,10 +296,8 @@ const StockAPI = {
         // Check GitHub Actions daily price cache (works for any symbol stored there)
         if (detectedMarket !== 'IL') {
             try {
-                const dataBase = location.pathname.includes('/pages/') ? '../' : './';
-                const res = await fetch(`${dataBase}data/tase-prices.json?v=${Math.floor(Date.now() / 300000)}`);
-                if (res.ok) {
-                    const cache = await res.json();
+                const cache = await this._fetchTaseJson();
+                if (cache) {
                     const entry = cache[formattedSymbol] || cache[symbol.toUpperCase()];
                     if (entry?.currentPrice) {
                         const ageHours = entry.lastUpdate
@@ -481,15 +490,12 @@ const StockAPI = {
         }
 
         const ma150Series = [];
-        for (let i = 149; i < historicalData.length; i++) {
-            let sum = 0;
-            for (let j = i - 149; j <= i; j++) {
-                sum += historicalData[j].close;
-            }
-            ma150Series.push({
-                date: historicalData[i].date,
-                value: sum / 150
-            });
+        let sum = 0;
+        for (let i = 0; i < 150; i++) sum += historicalData[i].close;
+        ma150Series.push({ date: historicalData[149].date, value: sum / 150 });
+        for (let i = 150; i < historicalData.length; i++) {
+            sum += historicalData[i].close - historicalData[i - 150].close;
+            ma150Series.push({ date: historicalData[i].date, value: sum / 150 });
         }
         return ma150Series;
     },

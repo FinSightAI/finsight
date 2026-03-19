@@ -3,6 +3,7 @@
  */
 const Storage = {
     _encryptionKey: null,
+    _cache: Object.create(null),
     _skipEncryptionKeys: [
         'finance_settings', 'finance_pin_hash', 'finance_pin_salt',
         'finance_lock_timeout', 'finance_last_update'
@@ -46,11 +47,13 @@ const Storage = {
      * During locked session: encrypted data returns null
      */
     get(key) {
+        if (key in this._cache) return this._cache[key];
         try {
             const raw = localStorage.getItem(key);
-            if (!raw) return null;
+            if (!raw) { this._cache[key] = null; return null; }
             const parsed = JSON.parse(raw);
-            if (parsed && parsed.__enc === true) return null;
+            if (parsed && parsed.__enc === true) return null; // don't cache encrypted values
+            this._cache[key] = parsed;
             return parsed;
         } catch (error) {
             console.error('Storage get error:', error);
@@ -63,6 +66,7 @@ const Storage = {
      */
     set(key, data) {
         try {
+            this._cache[key] = data;
             localStorage.setItem(key, JSON.stringify(data));
         } catch (error) {
             console.error('Storage set error:', error);
@@ -110,6 +114,7 @@ const Storage = {
      */
     async decryptAll(cryptoKey) {
         this._encryptionKey = cryptoKey;
+        this._cache = Object.create(null);
         const allKeys = Object.keys(localStorage);
         for (const key of allKeys) {
             if (!key.startsWith('finance_')) continue;
@@ -134,6 +139,7 @@ const Storage = {
     async encryptAll(cryptoKey) {
         const key = cryptoKey || this._encryptionKey;
         if (!key) return;
+        this._cache = Object.create(null);
         const allKeys = Object.keys(localStorage);
         for (const k of allKeys) {
             if (!k.startsWith('finance_')) continue;
