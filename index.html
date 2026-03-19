@@ -731,7 +731,132 @@
             loadQuickStatsWidget();
             loadCurrencyWidget();
             loadSmartTipsWidget();
+            Onboarding.init();
         });
+    </script>
+
+    <!-- ===== Onboarding ===== -->
+    <div id="onboardingOverlay" style="display:none; position:fixed; inset:0; z-index:10500;
+         background:rgba(10,15,25,0.92); backdrop-filter:blur(12px);
+         align-items:center; justify-content:center;">
+        <div style="background:var(--color-bg-card); border-radius:20px; max-width:420px; width:92%;
+                    padding:32px 28px 24px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+
+            <!-- Skip -->
+            <button onclick="Onboarding.finish()" style="position:absolute; top:14px; left:16px;
+                background:none; border:none; color:var(--color-text-secondary); font-size:13px; cursor:pointer;">
+                דלג
+            </button>
+
+            <!-- Slides -->
+            <div id="onboardingSlides">
+                <!-- Slide 1 -->
+                <div class="ob-slide">
+                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">🏠</div>
+                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">ברוכים הבאים ל-FinSight</h2>
+                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
+                        הדרך הפשוטה לנהל את כל הכסף שלך במקום אחד.<br>
+                        מניות, בנק, קרנות, הלוואות — הכל בתמונה אחת ברורה.
+                    </p>
+                </div>
+                <!-- Slide 2 -->
+                <div class="ob-slide" style="display:none;">
+                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">🏦</div>
+                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">הוסף את החשבונות שלך</h2>
+                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
+                        התחל מחשבון בנק, כרטיסי אשראי ונכסים.<br>
+                        כל עדכון ישפיע מיד על השווי הכולל בדאשבורד.
+                    </p>
+                </div>
+                <!-- Slide 3 -->
+                <div class="ob-slide" style="display:none;">
+                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">📋</div>
+                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">ייבוא חכם מאתרי אשראי</h2>
+                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
+                        הגדר סימניית ייבוא פעם אחת בהגדרות,<br>
+                        ולחץ עליה בכאל / מקס / ישראכרט<br>
+                        לייבוא עסקאות ישירות לאפליקציה.
+                    </p>
+                </div>
+                <!-- Slide 4 -->
+                <div class="ob-slide" style="display:none;">
+                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">📈</div>
+                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">מניות וקרנות בזמן אמת</h2>
+                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
+                        הוסף מניות עם מחיר ממוצע לצפייה בתשואות.<br>
+                        קרנות נאמנות מתעדכנות אוטומטית מנתוני TASE.
+                    </p>
+                </div>
+                <!-- Slide 5 -->
+                <div class="ob-slide" style="display:none;">
+                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">🔒</div>
+                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">הנתונים שלך, רק שלך</h2>
+                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
+                        כל המידע נשמר אצלך במכשיר בלבד.<br>
+                        ניתן להוסיף נעילת PIN ולגבות לענן<br>
+                        דרך עמוד ההגדרות.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dots -->
+            <div id="onboardingDots" style="display:flex; justify-content:center; gap:8px; margin:24px 0 20px;">
+                <span class="ob-dot ob-dot-active"></span>
+                <span class="ob-dot"></span>
+                <span class="ob-dot"></span>
+                <span class="ob-dot"></span>
+                <span class="ob-dot"></span>
+            </div>
+
+            <!-- Buttons -->
+            <div style="display:flex; gap:10px;">
+                <button id="obPrevBtn" onclick="Onboarding.prev()" style="flex:1; padding:11px;
+                    background:var(--color-bg); border:1px solid var(--color-border); border-radius:10px;
+                    color:var(--color-text); cursor:pointer; display:none;">הקודם</button>
+                <button id="obNextBtn" onclick="Onboarding.next()" style="flex:2; padding:11px;
+                    background:var(--color-primary); border:none; border-radius:10px;
+                    color:white; font-weight:600; cursor:pointer;">הבא →</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .ob-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--color-border); transition: background 0.2s;
+        }
+        .ob-dot-active { background: var(--color-primary); }
+    </style>
+
+    <script>
+        const Onboarding = {
+            _step: 0,
+            _total: 5,
+            init() {
+                if (localStorage.getItem('finance_onboarding_done')) return;
+                document.getElementById('onboardingOverlay').style.display = 'flex';
+            },
+            _render() {
+                const slides = document.querySelectorAll('.ob-slide');
+                const dots   = document.querySelectorAll('.ob-dot');
+                slides.forEach((s, i) => s.style.display = i === this._step ? '' : 'none');
+                dots.forEach((d, i) => d.classList.toggle('ob-dot-active', i === this._step));
+                document.getElementById('obPrevBtn').style.display = this._step > 0 ? '' : 'none';
+                document.getElementById('obNextBtn').textContent =
+                    this._step === this._total - 1 ? '✓ התחל' : 'הבא →';
+            },
+            next() {
+                if (this._step < this._total - 1) { this._step++; this._render(); }
+                else this.finish();
+            },
+            prev() {
+                if (this._step > 0) { this._step--; this._render(); }
+            },
+            finish() {
+                localStorage.setItem('finance_onboarding_done', '1');
+                document.getElementById('onboardingOverlay').style.display = 'none';
+            }
+        };
     </script>
 
 </body>

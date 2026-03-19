@@ -415,7 +415,7 @@
 
             <!-- App Lock (PIN) -->
             <div class="settings-section" style="border-color: rgba(16, 185, 129, 0.3);">
-                <h2>🔐 <span data-i18n="pinLock.appLock">נעילת אפליקציה</span></h2>
+                <h2>🔐 <span data-i18n="pinLock.appLock">נעילת אפליקציה</span> <span class="tooltip-btn" data-tooltip="הצפנת AES-256 על כל הנתונים.&#10;PIN נדרש רק בכניסה הראשונה&#10;או לאחר חוסר פעילות.">?</span></h2>
                 <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="pinLock.appLockDesc">הגן על הנתונים שלך עם קוד PIN</p>
 
                 <div class="setting-row">
@@ -591,7 +591,7 @@
 
                     <div class="setting-row">
                         <div class="setting-label">
-                            <span>🤖 CallMeBot API Key</span>
+                            <span>🤖 CallMeBot API Key <span class="tooltip-btn" data-tooltip="שירות חינמי לשליחת WhatsApp.&#10;כנס לcallmebot.com לקבלת&#10;המספר ומפתח ה-API.">?</span></span>
                             <span>לשליחה אוטומטית לגמרי — FinSight שולח בלי לחיצה</span>
                         </div>
                         <input type="text" id="callmebotApiKey" placeholder="1234567" onchange="saveSummarySettings()" style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;font-family:monospace;">
