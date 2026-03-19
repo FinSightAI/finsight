@@ -2926,40 +2926,7 @@
 
             const currentReturn = ((totalValue / totalCost) - 1) * 100;
 
-            // --- Method 1: transaction-based interpolation (when transactions exist) ---
-            const transactions = (stockData.transactions || [])
-                .filter(t => t.date)
-                .sort((a, b) => a.date.localeCompare(b.date));
-
-            if (transactions.length >= 2) {
-                let cumulativeInvested = 0;
-                const investedByDate = [];
-                for (const tx of transactions) {
-                    if (tx.type === 'buy') cumulativeInvested += (tx.price || 0) * (tx.quantity || 0);
-                    else if (tx.type === 'sell') cumulativeInvested = Math.max(0, cumulativeInvested - (tx.price || 0) * (tx.quantity || 0));
-                    investedByDate.push({ date: tx.date, cumInvested: cumulativeInvested });
-                }
-                const today = new Date().toISOString().split('T')[0];
-                const periodStart = referenceDates[0] ? new Date(referenceDates[0]).toISOString().split('T')[0] : today;
-                const series = [];
-                let txIdx = 0, investedAtDate = 0;
-                for (const refDate of referenceDates) {
-                    const refDateStr = new Date(refDate).toISOString().split('T')[0];
-                    while (txIdx < investedByDate.length && investedByDate[txIdx].date <= refDateStr) {
-                        investedAtDate = investedByDate[txIdx++].cumInvested;
-                    }
-                    if (investedAtDate <= 0) { series.push(0); continue; }
-                    const investedFraction = Math.min(investedAtDate / totalCost, 1);
-                    const periodStartMs = new Date(periodStart).getTime();
-                    const todayMs = new Date(today).getTime();
-                    const timeProgress = todayMs > periodStartMs
-                        ? Math.min((new Date(refDate).getTime() - periodStartMs) / (todayMs - periodStartMs), 1) : 1;
-                    series.push((currentReturn / 100) * investedFraction * timeProgress * 100);
-                }
-                return { series, finalReturn: currentReturn };
-            }
-
-            // --- Method 2: weighted historical prices per holding (no transactions) ---
+            // --- Weighted historical prices per holding ---
             const totalVal = totalValue;
             const holdingsWithWeight = holdings
                 .filter(h => h.symbol)
