@@ -2920,6 +2920,9 @@
                 return sum + (h.currentPrice || h.avgPrice || 0) * (h.quantity || 0) * getRate(h.currency);
             }, 0);
 
+            console.error('[portfolio] holdings count:', holdings.length, 'totalCost:', totalCost.toFixed(0), 'totalValue:', totalValue.toFixed(0));
+            console.error('[portfolio] first holding:', JSON.stringify(holdings[0]));
+
             if (totalCost <= 0) return { series: referenceDates.map(() => 0), finalReturn: 0 };
 
             const currentReturn = ((totalValue / totalCost) - 1) * 100;
