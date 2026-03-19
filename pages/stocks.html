@@ -698,6 +698,9 @@
                 <div id="benchmarkStats" style="padding: 10px 20px 20px; display: none;">
                     <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;" id="benchmarkStatsGrid">
                     </div>
+                    <div id="benchmarkPeriodNote" style="display:none; text-align:center; margin-top:10px; font-size:11px; color:var(--color-text-secondary);">
+                        ⓘ האחוזים מציגים תשואה תקופתית (שינוי מחיר בתקופה הנבחרת), לא P&amp;L כולל מול מחיר הקנייה
+                    </div>
                 </div>
             </div>
             <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
@@ -3320,7 +3323,8 @@
 
                 const annualMain = annualize(mainReturn, years);
                 const annualSublabel = isLongPeriod && annualMain !== null ? `${I18n.t('benchmark.annualReturn')}: ${annualMain >= 0 ? '+' : ''}${annualMain.toFixed(1)}%` : '';
-                addStat(mainLabel, mainReturn, mainReturn >= 0 ? 'var(--color-positive)' : 'var(--color-negative)', annualSublabel);
+                const periodLabel = compareTarget.type === 'portfolio' ? (annualSublabel || 'תשואה תקופתית') : annualSublabel;
+                addStat(mainLabel, mainReturn, mainReturn >= 0 ? 'var(--color-positive)' : 'var(--color-negative)', periodLabel);
 
                 for (const [sym, ret] of Object.entries(benchmarkReturns)) {
                     const annualBm = annualize(ret, years);
@@ -3345,6 +3349,8 @@
                 console.error('Benchmark error:', e);
                 statsGrid.innerHTML = `<div style="color: var(--color-negative);">${I18n.t('benchmark.noData')}</div>`;
                 statsEl.style.display = '';
+                const noteEl = document.getElementById('benchmarkPeriodNote');
+                if (noteEl) noteEl.style.display = compareTarget.type === 'portfolio' ? '' : 'none';
             } finally {
                 loadingEl.style.display = 'none';
             }
