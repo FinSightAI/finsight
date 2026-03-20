@@ -849,7 +849,7 @@
                     color:var(--color-text); cursor:pointer; display:none;">הקודם</button>
                 <button id="obNextBtn" onclick="Onboarding.next()" style="flex:2; padding:11px;
                     background:var(--color-primary); border:none; border-radius:10px;
-                    color:white; font-weight:600; cursor:pointer;">הבא →</button>
+                    color:white; font-weight:600; cursor:pointer;">הבא ←</button>
             </div>
         </div>
     </div>
@@ -877,7 +877,7 @@
                 dots.forEach((d, i) => d.classList.toggle('ob-dot-active', i === this._step));
                 document.getElementById('obPrevBtn').style.display = this._step > 0 ? '' : 'none';
                 document.getElementById('obNextBtn').textContent =
-                    this._step === this._total - 1 ? '✓ התחל' : 'הבא →';
+                    this._step === this._total - 1 ? '✓ התחל' : 'הבא ←';
             },
             next() {
                 if (this._step < this._total - 1) { this._step++; this._render(); }
