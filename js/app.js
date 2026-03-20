@@ -64,25 +64,8 @@ const App = {
             });
         }
 
-        // Mobile menu toggle
-        const menuToggle = document.querySelector('.mobile-menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-        if (menuToggle && sidebar) {
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                menuToggle.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
-            });
-        }
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', (e) => {
-            if (sidebar && sidebar.classList.contains('open')) {
-                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                    sidebar.classList.remove('open');
-                    menuToggle.textContent = '☰';
-                }
-            }
-        });
+        // Mobile header + sidebar
+        this.setupMobileHeader();
 
         // Modal close on overlay click
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -98,6 +81,73 @@ const App = {
 
         // Import data button
         document.getElementById('importDataBtn')?.addEventListener('click', () => this.importData());
+    },
+
+    /**
+     * Inject mobile header bar and sidebar overlay, wire up toggle logic
+     */
+    setupMobileHeader() {
+        const sidebar = document.querySelector('.sidebar');
+        if (!sidebar) return;
+
+        // Build logo src from existing brand icon (handles both root and /pages/ paths)
+        const existingLogo = document.querySelector('.sidebar .brand-icon');
+        const logoSrc = existingLogo ? existingLogo.src : '';
+        const isInPages = window.location.pathname.includes('/pages/');
+        const homeHref = isInPages ? '../index.html' : './index.html';
+
+        // Inject mobile header
+        const header = document.createElement('header');
+        header.className = 'mobile-header';
+        header.innerHTML =
+            '<button class="mobile-header-toggle" aria-label="תפריט">☰</button>' +
+            '<a href="' + homeHref + '" class="mobile-header-brand">' +
+                (logoSrc ? '<img src="' + logoSrc + '" class="mobile-header-logo" alt="FinSight">' : '') +
+                '<span class="mobile-header-name">Fin<span class="brand-highlight">Sight</span></span>' +
+            '</a>' +
+            '<div class="mobile-header-lang">' +
+                '<button class="lang-btn" data-lang="he" onclick="I18n.setLanguage(\'he\')">HE</button>' +
+                '<button class="lang-btn" data-lang="en" onclick="I18n.setLanguage(\'en\')">EN</button>' +
+                '<button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage(\'pt\')">PT</button>' +
+            '</div>';
+
+        // Inject overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+
+        const appContainer = document.querySelector('.app-container') || document.body;
+        appContainer.insertBefore(header, appContainer.firstChild);
+        appContainer.appendChild(overlay);
+
+        const toggle = header.querySelector('.mobile-header-toggle');
+
+        const openSidebar = () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+            toggle.textContent = '✕';
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeSidebar = () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            toggle.textContent = '☰';
+            document.body.style.overflow = '';
+        };
+
+        toggle.addEventListener('click', () => {
+            sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+        });
+
+        overlay.addEventListener('click', closeSidebar);
+
+        // Close on nav link click (navigate to page)
+        sidebar.querySelectorAll('.nav-link[href]').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) closeSidebar();
+            });
+        });
+
     },
 
     /**
