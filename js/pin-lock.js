@@ -227,6 +227,10 @@ const PinLock = {
                     <button class="pin-key" data-key="0">0</button>
                     <button class="pin-key pin-key-action pin-key-submit" data-key="ok">&#10003;</button>
                 </div>
+                <button class="pin-lock-biometric" id="pinLockBiometric" style="display:none">
+                    <span class="biometric-icon">🔒</span>
+                    <span id="pinLockBiometricLabel">Face ID / Touch ID</span>
+                </button>
                 <button class="pin-lock-forgot" id="pinLockForgot"></button>
             </div>
         `;
@@ -282,6 +286,15 @@ const PinLock = {
             .pin-key:active { background: rgba(55, 65, 81, 0.9); transform: scale(0.95); }
             .pin-key-submit { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981; }
             .pin-key-submit:active { background: rgba(16, 185, 129, 0.4); }
+            .pin-lock-biometric {
+                display: flex; align-items: center; gap: 8px;
+                background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3);
+                color: #00d2ff; border-radius: 14px; padding: 10px 22px;
+                font-size: 0.95rem; cursor: pointer; margin: 0 auto 12px;
+                transition: background 0.15s; -webkit-tap-highlight-color: transparent;
+            }
+            .pin-lock-biometric:active { background: rgba(0, 210, 255, 0.2); }
+            .biometric-icon { font-size: 1.3rem; }
             .pin-lock-forgot {
                 background: none; border: none; color: #6b7280; font-size: 0.85rem;
                 cursor: pointer; padding: 8px 16px; text-decoration: underline;
@@ -510,6 +523,40 @@ const PinLock = {
         if (this._isLockedOut()) {
             this._startLockoutTimer();
         }
+        // Show biometric button if enrolled
+        this._setupBiometricButton();
+    },
+
+    _setupBiometricButton() {
+        const btn = this._overlay?.querySelector('#pinLockBiometric');
+        if (!btn) return;
+
+        if (!this.biometricEnabled()) { btn.style.display = 'none'; return; }
+
+        // Detect Face ID vs Touch ID by platform hint
+        const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent);
+        const label = this._overlay.querySelector('#pinLockBiometricLabel');
+        if (label) label.textContent = isMac ? 'Face ID / Touch ID' : 'פתח עם טביעת אצבע';
+
+        // Detect icon
+        const icon = btn.querySelector('.biometric-icon');
+        if (icon) icon.textContent = isMac ? '🔐' : '👆';
+
+        btn.style.display = 'flex';
+        btn.onclick = async () => {
+            btn.disabled = true;
+            const ok = await this.tryBiometricUnlock();
+            if (!ok) {
+                btn.disabled = false;
+                const err = this._overlay?.querySelector('#pinLockError');
+                if (err) err.textContent = 'אימות ביומטרי נכשל — הזן PIN';
+            }
+        };
+
+        // Auto-trigger biometric after short delay (iOS UX pattern)
+        setTimeout(() => {
+            if (this._overlay?.style.display !== 'none') btn.click();
+        }, 400);
     },
 
     showSetupScreen(onComplete) {
@@ -561,6 +608,99 @@ const PinLock = {
             return val !== key ? val : fallback;
         }
         return fallback;
+    },
+
+    // ── Biometric (Face ID / Touch ID via WebAuthn) ──
+
+    async biometricSupported() {
+        if (!window.PublicKeyCredential) return false;
+        try {
+            return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+        } catch { return false; }
+    },
+
+    biometricEnabled() {
+        return !!localStorage.getItem('finance_biometric_id');
+    },
+
+    async registerBiometric(pin) {
+        try {
+            const challenge = crypto.getRandomValues(new Uint8Array(32));
+            const hostname = location.hostname || 'localhost';
+            const credential = await navigator.credentials.create({
+                publicKey: {
+                    challenge,
+                    rp: { name: 'FinSight', id: hostname },
+                    user: {
+                        id: new TextEncoder().encode('finsight-user'),
+                        name: 'FinSight',
+                        displayName: 'FinSight'
+                    },
+                    pubKeyCredParams: [
+                        { type: 'public-key', alg: -7 },
+                        { type: 'public-key', alg: -257 }
+                    ],
+                    authenticatorSelection: {
+                        authenticatorAttachment: 'platform',
+                        userVerification: 'required',
+                        residentKey: 'preferred'
+                    },
+                    timeout: 60000
+                }
+            });
+            const credId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+            localStorage.setItem('finance_biometric_id', credId);
+            // Store PIN obfuscated for biometric retrieval
+            const mask = crypto.getRandomValues(new Uint8Array(pin.length));
+            const pinBytes = new TextEncoder().encode(pin);
+            const enc = pinBytes.map((b, i) => b ^ mask[i]);
+            localStorage.setItem('finance_biometric_enc', btoa(String.fromCharCode(...enc)));
+            localStorage.setItem('finance_biometric_mask', btoa(String.fromCharCode(...mask)));
+            return true;
+        } catch (e) {
+            console.warn('Biometric registration failed:', e);
+            return false;
+        }
+    },
+
+    async _getBiometricPin() {
+        const credIdBase64 = localStorage.getItem('finance_biometric_id');
+        if (!credIdBase64) return null;
+        try {
+            const credIdBytes = Uint8Array.from(atob(credIdBase64), c => c.charCodeAt(0));
+            const challenge = crypto.getRandomValues(new Uint8Array(32));
+            const assertion = await navigator.credentials.get({
+                publicKey: {
+                    challenge,
+                    allowCredentials: [{ type: 'public-key', id: credIdBytes, transports: ['internal'] }],
+                    userVerification: 'required',
+                    timeout: 60000,
+                    rpId: location.hostname || 'localhost'
+                }
+            });
+            if (!assertion) return null;
+            // Retrieve obfuscated PIN
+            const enc  = Uint8Array.from(atob(localStorage.getItem('finance_biometric_enc')),  c => c.charCodeAt(0));
+            const mask = Uint8Array.from(atob(localStorage.getItem('finance_biometric_mask')), c => c.charCodeAt(0));
+            const pinBytes = enc.map((b, i) => b ^ mask[i]);
+            return new TextDecoder().decode(pinBytes);
+        } catch (e) {
+            console.warn('Biometric auth failed:', e);
+            return null;
+        }
+    },
+
+    async tryBiometricUnlock() {
+        if (!this.biometricEnabled()) return false;
+        const pin = await this._getBiometricPin();
+        if (!pin) return false;
+        return await this.unlock(pin);
+    },
+
+    disableBiometric() {
+        localStorage.removeItem('finance_biometric_id');
+        localStorage.removeItem('finance_biometric_enc');
+        localStorage.removeItem('finance_biometric_mask');
     }
 };
 

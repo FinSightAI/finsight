@@ -1,4 +1,16 @@
 /**
+ * Haptic feedback utility (Android only — iOS Safari blocks navigator.vibrate)
+ */
+const Haptic = {
+    light()   { navigator.vibrate?.(10); },
+    medium()  { navigator.vibrate?.(25); },
+    success() { navigator.vibrate?.([10, 40, 10]); },
+    error()   { navigator.vibrate?.([50, 30, 50]); },
+    warning() { navigator.vibrate?.(40); }
+};
+window.Haptic = Haptic;
+
+/**
  * Main Application Module
  */
 const App = {
@@ -66,6 +78,12 @@ const App = {
 
         // Mobile header + sidebar
         this.setupMobileHeader();
+
+        // Bottom tab bar (iOS-style)
+        this.setupBottomTabBar();
+
+        // Pull-to-refresh
+        this.setupPullToRefresh();
 
         // Modal close on overlay click
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -163,6 +181,116 @@ const App = {
             if (swipeClose && dy < 60 && window.innerWidth <= 768) closeSidebar();
         }, { passive: true });
 
+    },
+
+    /**
+     * Bottom tab bar — 5 main tabs + "more" to open sidebar
+     */
+    setupBottomTabBar() {
+        const sidebar = document.querySelector('.sidebar');
+        if (!sidebar) return;
+
+        const isInPages = window.location.pathname.includes('/pages/');
+        const base = isInPages ? '' : 'pages/';
+        const rootBase = isInPages ? '../' : './';
+
+        const tabs = [
+            { icon: '🏠', label: 'דאשבורד', href: rootBase + 'index.html',  category: 'dashboard' },
+            { icon: '🏦', label: 'בנק',      href: base + 'bank.html',        category: 'bank' },
+            { icon: '💳', label: 'אשראי',    href: base + 'credit.html',      category: 'credit' },
+            { icon: '📈', label: 'מניות',    href: base + 'stocks.html',      category: 'stocks' },
+            { icon: '☰',  label: 'עוד',      href: null,                       category: 'more' }
+        ];
+
+        // Detect current tab
+        const path = window.location.pathname;
+        const currentCategory = path.includes('bank') ? 'bank'
+            : path.includes('credit') ? 'credit'
+            : path.includes('stocks') ? 'stocks'
+            : path.includes('index') || path.endsWith('/') ? 'dashboard'
+            : 'other';
+
+        const bar = document.createElement('nav');
+        bar.className = 'mobile-tab-bar';
+        bar.setAttribute('aria-label', 'ניווט ראשי');
+
+        tabs.forEach(tab => {
+            const el = tab.href
+                ? document.createElement('a')
+                : document.createElement('button');
+
+            el.className = 'tab-item' + (tab.category === currentCategory ? ' active' : '');
+            if (tab.href) el.href = tab.href;
+            el.innerHTML = `<span class="tab-icon">${tab.icon}</span><span class="tab-label">${tab.label}</span>`;
+
+            if (tab.category === 'more') {
+                el.addEventListener('click', () => {
+                    Haptic.light();
+                    const isOpen = sidebar.classList.contains('open');
+                    // Trigger the existing toggle
+                    document.querySelector('.mobile-header-toggle')?.click();
+                });
+            } else {
+                el.addEventListener('click', () => Haptic.light());
+            }
+
+            bar.appendChild(el);
+        });
+
+        document.body.appendChild(bar);
+    },
+
+    /**
+     * Pull-to-refresh: swipe down at top of page to reload data
+     */
+    setupPullToRefresh() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+
+        const indicator = document.createElement('div');
+        indicator.className = 'pull-refresh-indicator';
+        indicator.textContent = '↓';
+        document.body.appendChild(indicator);
+
+        let startY = 0;
+        let pulling = false;
+        const THRESHOLD = 72;
+
+        mainContent.addEventListener('touchstart', e => {
+            if (mainContent.scrollTop === 0) {
+                startY = e.touches[0].clientY;
+                pulling = true;
+            }
+        }, { passive: true });
+
+        mainContent.addEventListener('touchmove', e => {
+            if (!pulling) return;
+            const dy = e.touches[0].clientY - startY;
+            if (dy > 20 && dy < THRESHOLD + 20) {
+                indicator.classList.add('visible');
+                indicator.textContent = dy >= THRESHOLD ? '↺' : '↓';
+            }
+        }, { passive: true });
+
+        mainContent.addEventListener('touchend', e => {
+            if (!pulling) return;
+            const dy = e.changedTouches[0].clientY - startY;
+            pulling = false;
+
+            if (dy >= THRESHOLD) {
+                indicator.textContent = '↺';
+                indicator.classList.add('refreshing');
+                Haptic.success();
+                setTimeout(() => {
+                    indicator.classList.remove('visible', 'refreshing');
+                    indicator.textContent = '↓';
+                    location.reload();
+                }, 600);
+            } else {
+                indicator.classList.remove('visible');
+                indicator.textContent = '↓';
+            }
+        }, { passive: true });
     },
 
     /**
