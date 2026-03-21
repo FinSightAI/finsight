@@ -1,4 +1,48 @@
 /**
+ * Inline Chart.js plugin: draw percentage labels inside pie/doughnut slices
+ * Only draws when the slice is >= 5% and the arc is wide enough to fit text
+ */
+const pieLabelsPlugin = {
+    id: 'pieLabels',
+    afterDraw(chart) {
+        if (chart.config.type !== 'pie' && chart.config.type !== 'doughnut') return;
+        const { ctx, data } = chart;
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+            const meta = chart.getDatasetMeta(datasetIndex);
+            if (meta.hidden) return;
+            const total = dataset.data.reduce((a, b) => a + (b || 0), 0);
+            if (total === 0) return;
+            meta.data.forEach((arc, index) => {
+                const value = dataset.data[index];
+                const pct = (value / total) * 100;
+                if (pct < 5) return; // skip tiny slices
+
+                const model = arc;
+                const midAngle = model.startAngle + (model.endAngle - model.startAngle) / 2;
+                const innerR = model.innerRadius || 0;
+                const outerR = model.outerRadius;
+                const r = innerR + (outerR - innerR) * 0.65;
+                const x = model.x + Math.cos(midAngle) * r;
+                const y = model.y + Math.sin(midAngle) * r;
+
+                const fontSize = Math.max(10, Math.min(13, outerR * 0.13));
+                ctx.save();
+                ctx.font = `bold ${fontSize}px -apple-system, sans-serif`;
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 3;
+                ctx.fillText(`${Math.round(pct)}%`, x, y);
+                ctx.restore();
+            });
+        });
+    }
+};
+
+Chart.register(pieLabelsPlugin);
+
+/**
  * Charts Module - Chart.js wrapper for finance dashboard
  */
 const Charts = {

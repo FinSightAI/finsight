@@ -643,25 +643,26 @@ ${fundsArrayToJS(gemel)}
     },
 
     /**
-     * Load data from localStorage if available
+     * Load data from localStorage if available (only if newer than built-in data)
      */
     loadFromStorage() {
-        ['training', 'pension', 'gemel'].forEach(type => {
-            const storageKey = \`market_funds_\${type}\`;
-            const stored = localStorage.getItem(storageKey);
-            if (stored) {
-                try {
-                    this[type] = JSON.parse(stored);
-                } catch (e) {
-                    console.error('Error loading stored fund data:', e);
-                }
-            }
-        });
-
         const updateKey = 'market_funds_last_update';
-        const lastUpdate = localStorage.getItem(updateKey);
-        if (lastUpdate) {
-            this.meta.lastUpdate = lastUpdate;
+        const storedPeriod = localStorage.getItem(updateKey);
+        const builtInPeriod = this.meta.lastUpdate;
+
+        if (storedPeriod && storedPeriod >= builtInPeriod) {
+            ['training', 'pension', 'gemel'].forEach(type => {
+                const storageKey = \`market_funds_\${type}\`;
+                const stored = localStorage.getItem(storageKey);
+                if (stored) {
+                    try {
+                        this[type] = JSON.parse(stored);
+                    } catch (e) {
+                        console.error('Error loading stored fund data:', e);
+                    }
+                }
+            });
+            this.meta.lastUpdate = storedPeriod;
         }
     },
 

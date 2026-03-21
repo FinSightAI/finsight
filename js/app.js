@@ -148,6 +148,21 @@ const App = {
             });
         });
 
+        // Swipe-to-close: detect horizontal swipe on the sidebar (iOS UX)
+        let touchStartX = 0;
+        let touchStartY = 0;
+        sidebar.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        sidebar.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+            const isRTL = document.documentElement.dir === 'rtl';
+            const swipeClose = isRTL ? dx > 60 : dx < -60; // RTL: swipe right to close; LTR: swipe left
+            if (swipeClose && dy < 60 && window.innerWidth <= 768) closeSidebar();
+        }, { passive: true });
+
     },
 
     /**
