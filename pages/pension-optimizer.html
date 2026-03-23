@@ -301,6 +301,8 @@
 </div>
 
 <script src="../js/app.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/i18n.js"></script>
 <script>
 function getTracks() {
     const pt = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
@@ -567,6 +569,7 @@ function buildChart(results, currentTrackId, yearsLeft, pv, monthlyDep, feeDepos
 }
 
 // Init
+if (typeof I18n !== 'undefined') I18n.apply();
 loadSettings();
 syncFromStorage(false);
 recalc();
