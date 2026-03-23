@@ -192,6 +192,14 @@
                 <div class="card">
                     <h2>⚙️ הפרטים שלך</h2>
 
+                    <!-- Real-data sync banner (populated by JS) -->
+                    <div id="syncBanner" style="display:none; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:12px 14px; margin-bottom:18px; font-size:0.85rem; color:var(--color-text-primary);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+                            <div id="syncBannerText"></div>
+                            <button onclick="syncFromStorage(true)" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:8px; color:#10b981; font-size:0.8rem; padding:4px 10px; cursor:pointer; white-space:nowrap;">🔄 רענן</button>
+                        </div>
+                    </div>
+
                     <div class="input-row">
                         <div class="input-group">
                             <label>גיל נוכחי</label>
@@ -239,12 +247,18 @@
                         </div>
                     </div>
 
-                    <div class="input-group" style="margin-top:16px; margin-bottom:0">
-                        <label>התאמה לאינפלציה</label>
-                        <select id="inflation" onchange="recalc()">
-                            <option value="0">ללא (ערכים נומינליים)</option>
-                            <option value="3">3% אינפלציה שנתית</option>
-                        </select>
+                    <div class="input-row" style="margin-top:16px;">
+                        <div class="input-group" style="margin-bottom:0">
+                            <label>התאמה לאינפלציה</label>
+                            <select id="inflation" onchange="recalc()">
+                                <option value="0">ללא (ערכים נומינליים)</option>
+                                <option value="3">3% אינפלציה שנתית</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="margin-bottom:0">
+                            <label title="מספר החודשים שהפנסיה מחולקת לפיו. ממוצע ישראלי: 200–230">מקדם המרה (חודשים) ℹ️</label>
+                            <input type="number" id="convFactor" value="210" min="150" max="300" step="5" oninput="recalc()">
+                        </div>
                     </div>
                 </div>
 
@@ -299,6 +313,56 @@ const TRACKS = [
 
 let chart = null;
 
+/* ── Settings persistence ── */
+const SETTINGS_KEY = 'finance_pension_optimizer_settings';
+const SETTINGS_IDS  = ['currentAge','retirementAge','currentSavings','monthlyContrib',
+                        'feeDeposit','feeAccum','currentTrack','inflation','convFactor'];
+
+function saveSettings() {
+    const s = {};
+    SETTINGS_IDS.forEach(id => { const el = document.getElementById(id); if (el) s[id] = el.value; });
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+}
+
+function loadSettings() {
+    try {
+        const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null');
+        if (!s) return false;
+        SETTINGS_IDS.forEach(id => { const el = document.getElementById(id); if (el && s[id] != null) el.value = s[id]; });
+        return true;
+    } catch(e) { return false; }
+}
+
+/* ── Sync from finance_my_funds ── */
+function syncFromStorage(force) {
+    try {
+        const funds = JSON.parse(localStorage.getItem('finance_my_funds') || '[]');
+        const pension = funds.filter(f => f.type === 'pension');
+        if (pension.length === 0) return;
+
+        const totalValue   = pension.reduce((s, f) => s + (f.value || f.currentValue || 0), 0);
+        const totalMonthly = pension.reduce((s, f) => s + (f.monthlyDeposit || 0), 0);
+
+        // Only auto-fill if no saved settings, or force=true
+        if (force || !localStorage.getItem(SETTINGS_KEY)) {
+            if (totalValue   > 0) document.getElementById('currentSavings').value = Math.round(totalValue);
+            if (totalMonthly > 0) document.getElementById('monthlyContrib').value  = Math.round(totalMonthly);
+            if (force) recalc();
+        }
+
+        // Show banner
+        const banner = document.getElementById('syncBanner');
+        const text   = document.getElementById('syncBannerText');
+        const names  = pension.slice(0, 2).map(f => f.name || f.company || 'קרן').join(', ');
+        const suffix = pension.length > 2 ? ` ועוד ${pension.length - 2}` : '';
+        text.innerHTML =
+            `📊 <strong>נטען מהנתונים שלך:</strong> ${pension.length} קרן פנסיה (${names}${suffix})<br>` +
+            `חיסכון: <strong>₪${Math.round(totalValue).toLocaleString('he-IL')}</strong>` +
+            (totalMonthly > 0 ? ` · הפקדה חודשית: <strong>₪${Math.round(totalMonthly).toLocaleString('he-IL')}</strong>` : '');
+        banner.style.display = 'block';
+    } catch(e) { /* ignore */ }
+}
+
 function projectSavings(pv, monthlyDeposit, annualReturnPct, depositFeePct, accumFeePct, months) {
     const netDeposit = monthlyDeposit * (1 - depositFeePct / 100);
     const netAnnualRate = (annualReturnPct - accumFeePct) / 100;
@@ -319,14 +383,16 @@ function fmtFull(n) {
 }
 
 function recalc() {
-    const currentAge   = parseInt(document.getElementById('currentAge').value) || 35;
-    const retireAge    = parseInt(document.getElementById('retirementAge').value) || 67;
-    const pv           = parseFloat(document.getElementById('currentSavings').value) || 0;
-    const monthlyDep   = parseFloat(document.getElementById('monthlyContrib').value) || 0;
-    const feeDeposit   = parseFloat(document.getElementById('feeDeposit').value) || 0;
-    const feeAccum     = parseFloat(document.getElementById('feeAccum').value) || 0;
-    const currentTrack = document.getElementById('currentTrack').value;
+    saveSettings();
+    const currentAge    = parseInt(document.getElementById('currentAge').value) || 35;
+    const retireAge     = parseInt(document.getElementById('retirementAge').value) || 67;
+    const pv            = parseFloat(document.getElementById('currentSavings').value) || 0;
+    const monthlyDep    = parseFloat(document.getElementById('monthlyContrib').value) || 0;
+    const feeDeposit    = parseFloat(document.getElementById('feeDeposit').value) || 0;
+    const feeAccum      = parseFloat(document.getElementById('feeAccum').value) || 0;
+    const currentTrack  = document.getElementById('currentTrack').value;
     const inflationRate = parseFloat(document.getElementById('inflation').value) || 0;
+    const convFactor    = parseFloat(document.getElementById('convFactor').value) || 210;
 
     const yearsLeft = Math.max(retireAge - currentAge, 1);
     const months = yearsLeft * 12;
@@ -346,7 +412,7 @@ function recalc() {
     buildChart(results, currentTrack, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate);
 
     // Summary boxes
-    const monthlyPension = (amount) => Math.round(amount / 240);
+    const monthlyPension = (amount) => Math.round(amount / convFactor);
     const boxes = document.getElementById('summaryBoxes');
     const gainVsBest = bestResult.display - currentResult.display;
     boxes.innerHTML = `
@@ -491,6 +557,8 @@ function buildChart(results, currentTrackId, yearsLeft, pv, monthlyDep, feeDepos
 }
 
 // Init
+loadSettings();
+syncFromStorage(false);
 recalc();
 </script>
 </body>
