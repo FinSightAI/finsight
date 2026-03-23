@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <meta name="theme-color" content="#f59e0b">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev; frame-src https://accounts.google.com https://*.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../img/logo.png">
+    <title>השוואת מוצרים - FinSight</title>
+    <link rel="stylesheet" href="../css/app.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --accent: #f59e0b; --accent2: #8b5cf6; }
+
+        .compare-container { max-width: 1100px; margin: 0 auto; }
+
+        /* Fund type pills */
+        .type-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .type-pill {
+            padding: 7px 16px;
+            border: 1.5px solid var(--color-border);
+            border-radius: 20px;
+            background: transparent;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+        .type-pill:hover { border-color: var(--accent); color: var(--accent); }
+        .type-pill.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Two-column layout */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) { .compare-grid { grid-template-columns: 1fr; } }
+
+        /* Fund selector card */
+        .fund-selector-card {
+            background: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 22px;
+            border: 2px solid var(--color-border);
+            transition: border-color 0.2s;
+        }
+        .fund-selector-card.is-current { border-color: rgba(16,185,129,0.4); }
+        .fund-selector-card.is-alt { border-color: rgba(245,158,11,0.4); }
+
+        .fund-selector-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fund-selector-card.is-current h3 { color: #10b981; }
+        .fund-selector-card.is-alt h3 { color: var(--accent); }
+
+        /* Input groups */
+        .input-group { margin-bottom: 14px; }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--color-text-secondary);
+            font-size: 0.82rem;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px 13px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: var(--color-bg);
+            color: var(--color-text-primary);
+            font-size: 0.92rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        /* Fund search */
+        .fund-search-wrap { position: relative; }
+        .fund-search-wrap input { padding-left: 36px; }
+        .fund-search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+        .fund-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            left: 0;
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 50;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+        .fund-dropdown-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--color-border);
+            transition: background 0.15s;
+        }
+        .fund-dropdown-item:last-child { border-bottom: none; }
+        .fund-dropdown-item:hover { background: rgba(245,158,11,0.08); }
+        .fund-dropdown-item .fname { font-size: 0.88rem; font-weight: 500; }
+        .fund-dropdown-item .fmeta {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+            display: flex;
+            gap: 10px;
+        }
+        .fund-dropdown-empty {
+            padding: 20px;
+            text-align: center;
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Mini stats below fund selector */
+        .fund-mini-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--color-border);
+        }
+        @media (max-width: 500px) { .fund-mini-stats { grid-template-columns: 1fr 1fr; } }
+        .mini-stat {
+            text-align: center;
+            background: var(--color-bg);
+            border-radius: 10px;
+            padding: 10px 6px;
+        }
+        .mini-stat .ms-label { font-size: 0.7rem; color: var(--color-text-secondary); margin-bottom: 3px; }
+        .mini-stat .ms-val { font-size: 1rem; font-weight: 700; }
+        .ms-green { color: #10b981; }
+        .ms-yellow { color: var(--accent); }
+        .ms-red { color: #ef4444; }
+        .ms-blue { color: #3b82f6; }
+
+        /* Settings row */
+        .settings-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+        .settings-row .input-group { margin-bottom: 0; flex: 1; min-width: 160px; }
+
+        /* Result section */
+        .result-header {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) { .result-header { grid-template-columns: 1fr 1fr; } }
+
+        .result-box {
+            background: var(--color-bg);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid var(--color-border);
+            text-align: center;
+        }
+        .result-box.highlight {
+            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(245,158,11,0.08));
+            border-color: var(--accent);
+        }
+        .result-box .rb-label { font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 4px; }
+        .result-box .rb-val {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+        .result-box.highlight .rb-val { color: var(--accent); font-size: 1.6rem; }
+        .result-box .rb-sub { font-size: 0.72rem; color: var(--color-text-secondary); margin-top: 3px; }
+
+        /* Chart */
+        .chart-wrap { position: relative; height: 300px; }
+
+        /* Verdict card */
+        .verdict-card {
+            border-radius: 16px;
+            padding: 22px 24px;
+            border: 2px solid;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .verdict-card.positive { background: rgba(16,185,129,0.07); border-color: rgba(16,185,129,0.3); }
+        .verdict-card.negative { background: rgba(239,68,68,0.07); border-color: rgba(239,68,68,0.3); }
+        .verdict-card.neutral  { background: rgba(245,158,11,0.07); border-color: rgba(245,158,11,0.3); }
+        .verdict-icon { font-size: 2rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+        .verdict-text h3 { font-size: 1.05rem; margin-bottom: 6px; }
+        .verdict-text p { font-size: 0.88rem; color: var(--color-text-secondary); line-height: 1.6; }
+
+        /* Fee breakdown */
+        .fee-breakdown {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .fee-item {
+            flex: 1;
+            min-width: 140px;
+            background: var(--color-bg);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid var(--color-border);
+        }
+        .fee-item .fi-label { font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 4px; }
+        .fee-item .fi-val { font-size: 1.1rem; font-weight: 700; }
+        .fee-item .fi-sub { font-size: 0.72rem; color: var(--color-text-secondary); margin-top: 2px; }
+
+        /* Considerations list */
+        .considerations { list-style: none; padding: 0; }
+        .considerations li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 0.88rem;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+        .considerations li:last-child { border-bottom: none; }
+        .considerations li .ci { font-size: 1rem; flex-shrink: 0; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-text-secondary);
+        }
+        .empty-state .es-icon { font-size: 3rem; margin-bottom: 12px; }
+        .empty-state p { font-size: 0.9rem; }
+
+        /* Button */
+        .btn-compare {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), #d97706);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            margin-top: 4px;
+        }
+        .btn-compare:hover { opacity: 0.9; }
+        .btn-compare:active { transform: scale(0.98); }
+
+        /* Results section (hidden until compare clicked) */
+        #resultsSection { display: none; }
+        #resultsSection.visible { display: block; }
+
+        /* My funds selector list */
+        .my-fund-list { margin-top: 10px; }
+        .my-fund-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border: 1.5px solid var(--color-border);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 0.88rem;
+        }
+        .my-fund-item:hover { border-color: #10b981; background: rgba(16,185,129,0.05); }
+        .my-fund-item.selected { border-color: #10b981; background: rgba(16,185,129,0.08); }
+        .my-fund-item .mfi-name { font-weight: 600; }
+        .my-fund-item .mfi-val { color: #10b981; font-weight: 600; }
+        .my-fund-item .mfi-type { font-size: 0.72rem; color: var(--color-text-secondary); margin-top: 2px; }
+
+        .or-divider {
+            text-align: center;
+            color: var(--color-text-secondary);
+            font-size: 0.8rem;
+            margin: 12px 0;
+            position: relative;
+        }
+        .or-divider::before, .or-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: var(--color-border);
+        }
+        .or-divider::before { right: 0; }
+        .or-divider::after { left: 0; }
+
+        /* Return bar */
+        .return-bar-row { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+        .return-bar-wrap { flex: 1; height: 6px; background: var(--color-border); border-radius: 3px; overflow: hidden; }
+        .return-bar-fill { height: 100%; border-radius: 3px; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <header class="app-header">
+        <button class="btn-back" onclick="history.back()">→</button>
+        <h1>⚖️ השוואת מוצרים פיננסיים</h1>
+        <div></div>
+    </header>
+
+    <main class="main-content">
+        <div class="compare-container">
+
+            <!-- Fund type selection -->
+            <div class="card">
+                <h2>📋 בחר סוג מוצר להשוואה</h2>
+                <div class="type-pills">
+                    <button class="type-pill active" onclick="setType('training')" id="pill-training">🎓 קרן השתלמות</button>
+                    <button class="type-pill" onclick="setType('pension')" id="pill-pension">🏛️ פנסיה</button>
+                    <button class="type-pill" onclick="setType('gemel')" id="pill-gemel">💼 קופת גמל</button>
+                </div>
+            </div>
+
+            <!-- Two-column: Current vs Alternative -->
+            <div class="compare-grid">
+
+                <!-- LEFT: Current fund -->
+                <div class="fund-selector-card is-current">
+                    <h3>🟢 הקרן הנוכחית שלך</h3>
+
+                    <!-- My saved funds list -->
+                    <div id="myFundsList"></div>
+
+                    <div class="or-divider" id="orDivider">או הזן ידנית</div>
+
+                    <div id="manualCurrentInputs">
+                        <div class="input-group">
+                            <label>שם הקרן</label>
+                            <input type="text" id="curName" placeholder="לדוגמה: מגדל מניות" oninput="onInputChange()">
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>שווי נוכחי (₪)</label>
+                                <input type="number" id="curValue" placeholder="0" min="0" oninput="onInputChange()">
+                            </div>
+                            <div class="input-group">
+                                <label>הפקדה חודשית (₪)</label>
+                                <input type="number" id="curMonthly" placeholder="0" min="0" oninput="onInputChange()">
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>תשואה שנתית ממוצעת (%)</label>
+                                <input type="number" id="curReturn" placeholder="8.0" min="-20" max="50" step="0.1" oninput="onInputChange()">
+                            </div>
+                            <div class="input-group">
+                                <label>דמי ניהול שנתיים (%)</label>
+                                <input type="number" id="curFee" placeholder="0.5" min="0" max="5" step="0.01" oninput="onInputChange()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini stats for selected current fund -->
+                    <div class="fund-mini-stats" id="curMiniStats" style="display:none;">
+                        <div class="mini-stat"><div class="ms-label">שווי</div><div class="ms-val ms-green" id="cur-stat-val">—</div></div>
+                        <div class="mini-stat"><div class="ms-label">תשואה שנה</div><div class="ms-val ms-blue" id="cur-stat-y1">—</div></div>
+                        <div class="mini-stat"><div class="ms-label">תשואה 5 שנים</div><div class="ms-val ms-blue" id="cur-stat-y5">—</div></div>
+                        <div class="mini-stat"><div class="ms-label">דמי ניהול</div><div class="ms-val ms-yellow" id="cur-stat-fee">—</div></div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Alternative fund -->
+                <div class="fund-selector-card is-alt">
+                    <h3>🟡 הקרן החלופית</h3>
+
+                    <div class="fund-search-wrap input-group">
+                        <label>חיפוש קרן מהשוק</label>
+                        <div style="position:relative;">
+                            <span class="fund-search-icon">🔍</span>
+                            <input type="text" id="altSearch" placeholder="הקלד שם קרן, חברה..." autocomplete="off"
+                                   oninput="searchAlt(this.value)" onfocus="searchAlt(this.value)">
+                            <div class="fund-dropdown" id="altDropdown" style="display:none;"></div>
+                        </div>
+                    </div>
+
+                    <div id="altManualSection">
+                        <div class="or-divider">או הזן ידנית</div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>תשואה שנתית ממוצעת (%)</label>
+                                <input type="number" id="altReturn" placeholder="12.0" min="-20" max="50" step="0.1" oninput="onInputChange()">
+                            </div>
+                            <div class="input-group">
+                                <label>דמי ניהול שנתיים (%)</label>
+                                <input type="number" id="altFee" placeholder="0.3" min="0" max="5" step="0.01" oninput="onInputChange()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini stats for selected alt fund -->
+                    <div class="fund-mini-stats" id="altMiniStats" style="display:none;">
+                        <div class="mini-stat"><div class="ms-label">תשואה חודש</div><div class="ms-val ms-green" id="alt-stat-m">—</div></div>
+                        <div class="mini-stat"><div class="ms-label">תשואה שנה</div><div class="ms-val ms-blue" id="alt-stat-y1">—</div></div>
+                        <div class="mini-stat"><div class="ms-label">תשואה 5 שנים</div><div class="ms-val ms-blue" id="alt-stat-y5">—</div></div>
+                        <div class="mini-stat"><div class="ms-label">דמי ניהול</div><div class="ms-val ms-yellow" id="alt-stat-fee">—</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="card">
+                <h2>⚙️ פרמטרי סימולציה</h2>
+                <div class="settings-row">
+                    <div class="input-group">
+                        <label>תקופת השוואה</label>
+                        <select id="simYears" onchange="onInputChange()">
+                            <option value="5">5 שנים</option>
+                            <option value="10" selected>10 שנים</option>
+                            <option value="15">15 שנים</option>
+                            <option value="20">20 שנים</option>
+                            <option value="30">30 שנים</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>הפקדה חודשית (₪) — אם לא הוזנה בקרן</label>
+                        <input type="number" id="simMonthly" placeholder="0" min="0" oninput="onInputChange()">
+                    </div>
+                </div>
+                <button class="btn-compare" onclick="runComparison()">⚖️ השווה עכשיו</button>
+            </div>
+
+            <!-- RESULTS -->
+            <div id="resultsSection">
+
+                <!-- Summary boxes -->
+                <div class="card">
+                    <h2>📊 תוצאות ההשוואה</h2>
+                    <div class="result-header">
+                        <div class="result-box">
+                            <div class="rb-label">🟢 שווי קרן נוכחית בסוף התקופה</div>
+                            <div class="rb-val" id="res-cur-val">—</div>
+                            <div class="rb-sub" id="res-cur-sub"></div>
+                        </div>
+                        <div class="result-box">
+                            <div class="rb-label">🟡 שווי קרן חלופית בסוף התקופה</div>
+                            <div class="rb-val" id="res-alt-val">—</div>
+                            <div class="rb-sub" id="res-alt-sub"></div>
+                        </div>
+                        <div class="result-box highlight">
+                            <div class="rb-label">⚡ הפרש לטובתך</div>
+                            <div class="rb-val" id="res-diff">—</div>
+                            <div class="rb-sub" id="res-diff-sub"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="chart-wrap">
+                        <canvas id="compareChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Verdict -->
+                <div class="verdict-card" id="verdictCard">
+                    <div class="verdict-icon" id="verdictIcon">🤔</div>
+                    <div class="verdict-text">
+                        <h3 id="verdictTitle">ממתין לנתונים...</h3>
+                        <p id="verdictBody"></p>
+                    </div>
+                </div>
+
+                <!-- Fee impact -->
+                <div class="card">
+                    <h2>💸 השפעת דמי הניהול</h2>
+                    <p style="font-size:0.82rem; color:var(--color-text-secondary); margin-bottom:14px;">
+                        דמי ניהול נמוכים יותר בקרן החלופית — כמה זה שווה לך לאורך הזמן?
+                    </p>
+                    <div class="fee-breakdown" id="feeBreakdown"></div>
+                </div>
+
+                <!-- Return comparison bars -->
+                <div class="card">
+                    <h2>📈 השוואת תשואות</h2>
+                    <div id="returnBars"></div>
+                </div>
+
+                <!-- Considerations -->
+                <div class="card">
+                    <h2>💡 דברים לקחת בחשבון לפני מעבר</h2>
+                    <ul class="considerations" id="considerationsList"></ul>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../data/market-funds.js"></script>
+<script src="../js/i18n.js"></script>
+<script>
+    let currentType = 'training';
+    let selectedMyFund = null;
+    let selectedAltFund = null;
+    let compareChart = null;
+
+    // ─── Type selection ───────────────────────────────────────────────
+    function setType(type) {
+        currentType = type;
+        ['training','pension','gemel'].forEach(t => {
+            document.getElementById('pill-' + t).classList.toggle('active', t === type);
+        });
+        selectedAltFund = null;
+        document.getElementById('altSearch').value = '';
+        document.getElementById('altDropdown').style.display = 'none';
+        document.getElementById('altMiniStats').style.display = 'none';
+        clearAltManualIfFromSearch();
+        loadMyFunds();
+        hideResults();
+    }
+
+    // ─── My funds from localStorage ───────────────────────────────────
+    function getMyFunds() {
+        try {
+            const raw = localStorage.getItem('finance_my_funds');
+            return raw ? JSON.parse(raw) : [];
+        } catch(e) { return []; }
+    }
+
+    function loadMyFunds() {
+        const all = getMyFunds();
+        const typeMap = { training: 'training', pension: 'pension', gemel: 'gemel' };
+        // Map fund types from my-funds page
+        const typeFilter = {
+            training: ['training', 'השתלמות', 'hishtalmut'],
+            pension: ['pension', 'פנסיה'],
+            gemel: ['gemel', 'גמל', 'savings', 'policy']
+        };
+        const keywords = typeFilter[currentType] || [];
+
+        const filtered = all.filter(f => {
+            const t = (f.type || '').toLowerCase();
+            return keywords.some(k => t.includes(k));
+        });
+
+        const container = document.getElementById('myFundsList');
+        const orDivider = document.getElementById('orDivider');
+
+        if (filtered.length === 0) {
+            container.innerHTML = '';
+            orDivider.style.display = 'block';
+            return;
+        }
+
+        orDivider.style.display = 'block';
+        container.innerHTML = '<div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:8px;">הקרנות שלך:</div>' +
+            filtered.map(f => `
+                <div class="my-fund-item" onclick="selectMyFund('${f.id}')" id="mfi-${f.id}">
+                    <div>
+                        <div class="mfi-name">${f.name}</div>
+                        <div class="mfi-type">${f.company || ''}</div>
+                    </div>
+                    <div class="mfi-val">₪${(f.value||0).toLocaleString('he-IL')}</div>
+                </div>
+            `).join('');
+    }
+
+    function selectMyFund(id) {
+        const funds = getMyFunds();
+        const fund = funds.find(f => f.id === id);
+        if (!fund) return;
+
+        selectedMyFund = fund;
+
+        // Highlight selected
+        document.querySelectorAll('.my-fund-item').forEach(el => el.classList.remove('selected'));
+        const el = document.getElementById('mfi-' + id);
+        if (el) el.classList.add('selected');
+
+        // Fill manual inputs (as override/view)
+        document.getElementById('curName').value = fund.name || '';
+        document.getElementById('curValue').value = fund.value || '';
+        document.getElementById('curMonthly').value = fund.monthlyDeposit || '';
+
+        // Derive annual return from fund's stored returns
+        let annualReturn = '';
+        if (fund.returns) {
+            const r = fund.returns;
+            // Prefer 5y annualized, then 3y annualized, then year1
+            if (r.year5 != null) annualReturn = (Math.pow(1 + r.year5/100, 1/5) - 1) * 100;
+            else if (r.year3 != null) annualReturn = (Math.pow(1 + r.year3/100, 1/3) - 1) * 100;
+            else if (r.year1 != null) annualReturn = r.year1;
+        }
+        document.getElementById('curReturn').value = annualReturn !== '' ? parseFloat(annualReturn).toFixed(1) : '';
+        document.getElementById('curFee').value = '';
+
+        // Show mini stats
+        const r = fund.returns || {};
+        document.getElementById('cur-stat-val').textContent = '₪' + Math.round(fund.value||0).toLocaleString('he-IL');
+        document.getElementById('cur-stat-y1').textContent = r.year1 != null ? r.year1.toFixed(1) + '%' : '—';
+        document.getElementById('cur-stat-y5').textContent = r.year5 != null ? r.year5.toFixed(1) + '%' : '—';
+        document.getElementById('cur-stat-fee').textContent = '—';
+        document.getElementById('curMiniStats').style.display = 'grid';
+
+        onInputChange();
+    }
+
+    // ─── Alt fund search ──────────────────────────────────────────────
+    function getFundsForType() {
+        if (!window.MarketFunds) return [];
+        return MarketFunds[currentType] || [];
+    }
+
+    function annualizedReturn(fund) {
+        // Calculate annualized from 5-year cumulative (preferred)
+        if (fund.year5 != null && fund.year5 > 0) {
+            return (Math.pow(1 + fund.year5/100, 1/5) - 1) * 100;
+        }
+        if (fund.year3 != null && fund.year3 > 0) {
+            return (Math.pow(1 + fund.year3/100, 1/3) - 1) * 100;
+        }
+        return fund.year1 || 0;
+    }
+
+    function searchAlt(q) {
+        const dropdown = document.getElementById('altDropdown');
+        const funds = getFundsForType();
+
+        let matches = funds;
+        if (q.trim()) {
+            const ql = q.trim().toLowerCase();
+            matches = funds.filter(f =>
+                (f.nameHe||'').includes(ql) ||
+                (f.companyHe||'').includes(ql) ||
+                (f.nameHe||'').toLowerCase().includes(ql) ||
+                (f.companyHe||'').toLowerCase().includes(ql)
+            );
+        }
+
+        // Sort by 5y return desc
+        matches = matches.slice().sort((a,b) => (b.year5||0) - (a.year5||0)).slice(0, 40);
+
+        if (matches.length === 0) {
+            dropdown.innerHTML = '<div class="fund-dropdown-empty">לא נמצאו קרנות תואמות</div>';
+            dropdown.style.display = 'block';
+            return;
+        }
+
+        dropdown.innerHTML = matches.map((f,i) => {
+            const ar = annualizedReturn(f);
+            const retClass = ar >= 10 ? 'ms-green' : ar >= 5 ? 'ms-blue' : 'ms-yellow';
+            return `<div class="fund-dropdown-item" onclick="selectAltFund(${i}, ${JSON.stringify(matches).length > 0 ? 'matchesArr' : '[]'}, event)" data-idx="${i}">
+                <div class="fname">${f.nameHe}</div>
+                <div class="fmeta">
+                    <span>${f.companyHe}</span>
+                    <span class="${retClass}">תשואה שנה: ${f.year1 != null ? f.year1.toFixed(1)+'%' : '—'}</span>
+                    <span>דמי ניהול: ${f.fee != null ? f.fee+'%' : '—'}</span>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Store matches globally for click handler
+        window._altMatches = matches;
+
+        dropdown.style.display = 'block';
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.fund-search-wrap')) {
+            document.getElementById('altDropdown').style.display = 'none';
+        }
+    });
+
+    // Handle click on dropdown item via event delegation
+    document.getElementById('altDropdown') && document.getElementById('altDropdown').addEventListener('click', function(e) {
+        const item = e.target.closest('.fund-dropdown-item');
+        if (!item) return;
+        const idx = parseInt(item.dataset.idx);
+        if (!isNaN(idx) && window._altMatches && window._altMatches[idx]) {
+            selectAltFundObj(window._altMatches[idx]);
+        }
+    });
+
+    function selectAltFund(idx, arr, e) { /* handled by delegation above */ }
+
+    function selectAltFundObj(fund) {
+        selectedAltFund = fund;
+        document.getElementById('altSearch').value = fund.nameHe;
+        document.getElementById('altDropdown').style.display = 'none';
+
+        // Fill manual fields from fund data
+        const ar = annualizedReturn(fund);
+        document.getElementById('altReturn').value = ar.toFixed(1);
+        document.getElementById('altFee').value = fund.fee != null ? fund.fee : '';
+
+        // Mini stats
+        document.getElementById('alt-stat-m').textContent = fund.month != null ? fund.month.toFixed(2) + '%' : '—';
+        document.getElementById('alt-stat-y1').textContent = fund.year1 != null ? fund.year1.toFixed(1) + '%' : '—';
+        document.getElementById('alt-stat-y5').textContent = fund.year5 != null ? fund.year5.toFixed(1) + '%' : '—';
+        document.getElementById('alt-stat-fee').textContent = fund.fee != null ? fund.fee + '%' : '—';
+        document.getElementById('altMiniStats').style.display = 'grid';
+
+        onInputChange();
+    }
+
+    function clearAltManualIfFromSearch() {
+        if (selectedAltFund) {
+            selectedAltFund = null;
+            document.getElementById('altReturn').value = '';
+            document.getElementById('altFee').value = '';
+        }
+    }
+
+    // ─── Input change ─────────────────────────────────────────────────
+    function onInputChange() {
+        // Auto-run if both sides have enough data
+        const curRet = parseFloat(document.getElementById('curReturn').value);
+        const altRet = parseFloat(document.getElementById('altReturn').value);
+        if (!isNaN(curRet) && !isNaN(altRet)) {
+            // Don't auto-run, just clear results
+        }
+        hideResults();
+    }
+
+    function hideResults() {
+        document.getElementById('resultsSection').classList.remove('visible');
+    }
+
+    // ─── Compound simulation ──────────────────────────────────────────
+    function simulate(startValue, monthlyDeposit, annualReturnPct, annualFeePct, years) {
+        const monthlyRate = (annualReturnPct - annualFeePct) / 100 / 12;
+        const months = years * 12;
+        let value = startValue;
+        const yearly = [value];
+
+        for (let m = 1; m <= months; m++) {
+            value = value * (1 + monthlyRate) + monthlyDeposit;
+            if (m % 12 === 0) yearly.push(value);
+        }
+        return yearly; // array of length years+1
+    }
+
+    // ─── Run comparison ───────────────────────────────────────────────
+    function runComparison() {
+        const curValue = parseFloat(document.getElementById('curValue').value) || 0;
+        const curMonthly = parseFloat(document.getElementById('curMonthly').value) ||
+                           parseFloat(document.getElementById('simMonthly').value) || 0;
+        const curReturn = parseFloat(document.getElementById('curReturn').value);
+        const curFee = parseFloat(document.getElementById('curFee').value) || 0;
+
+        const altReturn = parseFloat(document.getElementById('altReturn').value);
+        const altFee = parseFloat(document.getElementById('altFee').value) || 0;
+        const altMonthly = curMonthly; // same monthly deposit for fair comparison
+
+        const years = parseInt(document.getElementById('simYears').value) || 10;
+
+        // Validation
+        if (isNaN(curReturn)) {
+            alert('נא למלא תשואה שנתית לקרן הנוכחית');
+            return;
+        }
+        if (isNaN(altReturn)) {
+            alert('נא לבחור קרן חלופית או למלא תשואה שנתית');
+            return;
+        }
+        if (curValue === 0 && curMonthly === 0) {
+            alert('נא למלא שווי נוכחי או הפקדה חודשית');
+            return;
+        }
+
+        // Simulate
+        const curSeries = simulate(curValue, curMonthly, curReturn, curFee, years);
+        const altSeries = simulate(curValue, altMonthly, altReturn, altFee, years);
+
+        const curFinal = curSeries[curSeries.length - 1];
+        const altFinal = altSeries[altSeries.length - 1];
+        const diff = altFinal - curFinal;
+
+        // Show results
+        document.getElementById('resultsSection').classList.add('visible');
+
+        // Summary boxes
+        document.getElementById('res-cur-val').textContent = '₪' + Math.round(curFinal).toLocaleString('he-IL');
+        document.getElementById('res-cur-sub').textContent = `תשואה ${curReturn.toFixed(1)}% | דמי ניהול ${curFee.toFixed(2)}%`;
+
+        document.getElementById('res-alt-val').textContent = '₪' + Math.round(altFinal).toLocaleString('he-IL');
+        const altName = selectedAltFund ? selectedAltFund.nameHe : 'קרן חלופית';
+        document.getElementById('res-alt-sub').textContent = `תשואה ${altReturn.toFixed(1)}% | דמי ניהול ${altFee.toFixed(2)}%`;
+
+        const diffBox = document.getElementById('res-diff');
+        const diffSub = document.getElementById('res-diff-sub');
+        diffBox.textContent = (diff >= 0 ? '+' : '') + '₪' + Math.abs(Math.round(diff)).toLocaleString('he-IL');
+        diffBox.style.color = diff >= 0 ? '#10b981' : '#ef4444';
+        const diffPct = curFinal > 0 ? (diff / curFinal * 100) : 0;
+        diffSub.textContent = diff >= 0
+            ? `החלופה טובה יותר ב-${diffPct.toFixed(1)}%`
+            : `הנוכחית טובה יותר ב-${Math.abs(diffPct).toFixed(1)}%`;
+
+        // Chart
+        buildChart(curSeries, altSeries, years);
+
+        // Verdict
+        buildVerdict(diff, curReturn, altReturn, curFee, altFee, years, curFinal, altFinal);
+
+        // Fee breakdown
+        buildFeeBreakdown(curValue, curMonthly, curReturn, curFee, altFee, years);
+
+        // Return bars
+        buildReturnBars(curReturn, altReturn, curFee, altFee);
+
+        // Considerations
+        buildConsiderations(currentType, diff, curFee, altFee);
+
+        // Scroll to results
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ─── Chart ────────────────────────────────────────────────────────
+    function buildChart(curSeries, altSeries, years) {
+        const labels = Array.from({ length: years + 1 }, (_, i) => i === 0 ? 'היום' : `שנה ${i}`);
+
+        if (compareChart) compareChart.destroy();
+
+        compareChart = new Chart(document.getElementById('compareChart'), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'קרן נוכחית',
+                        data: curSeries,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16,185,129,0.08)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2.5,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                    },
+                    {
+                        label: selectedAltFund ? selectedAltFund.nameHe : 'קרן חלופית',
+                        data: altSeries,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245,158,11,0.08)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2.5,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        labels: { color: '#aaa', font: { size: 12 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ' ' + ctx.dataset.label + ': ₪' + Math.round(ctx.raw).toLocaleString('he-IL')
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            color: '#888',
+                            callback: v => v >= 1e6 ? '₪' + (v/1e6).toFixed(1) + 'M' : '₪' + (v/1000).toFixed(0) + 'K',
+                            font: { size: 10 }
+                        },
+                        grid: { color: 'rgba(128,128,128,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#888', font: { size: 10 }, maxTicksLimit: 8 },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    // ─── Verdict ──────────────────────────────────────────────────────
+    function buildVerdict(diff, curRet, altRet, curFee, altFee, years, curFinal, altFinal) {
+        const card = document.getElementById('verdictCard');
+        const icon = document.getElementById('verdictIcon');
+        const title = document.getElementById('verdictTitle');
+        const body = document.getElementById('verdictBody');
+
+        const altName = selectedAltFund ? selectedAltFund.nameHe : 'הקרן החלופית';
+        const curName = document.getElementById('curName').value || 'הקרן הנוכחית';
+
+        const retDiff = altRet - curRet;
+        const feeDiff = curFee - altFee; // positive = alt is cheaper
+
+        if (diff > 50000) {
+            card.className = 'verdict-card positive';
+            icon.textContent = '🚀';
+            title.textContent = `מעבר ל-${altName} ישתלם מאוד!`;
+            body.textContent = `לאחר ${years} שנים, ${altName} תניב לך ₪${Math.round(diff).toLocaleString('he-IL')} יותר.
+                ${retDiff > 0 ? `הקרן החלופית מציגה תשואה שנתית גבוהה יותר ב-${retDiff.toFixed(1)}%.` : ''}
+                ${feeDiff > 0.1 ? ` בנוסף, דמי הניהול נמוכים יותר ב-${feeDiff.toFixed(2)}% — וזה מצטבר להפרש גדול לאורך זמן.` : ''}
+                שים לב לבדוק את תנאי המעבר ועמלות.`;
+        } else if (diff > 5000) {
+            card.className = 'verdict-card positive';
+            icon.textContent = '✅';
+            title.textContent = `המעבר כדאי`;
+            body.textContent = `${altName} מצטיינת ב-₪${Math.round(diff).toLocaleString('he-IL')} לאחר ${years} שנים.
+                ${feeDiff > 0.05 ? `דמי הניהול הנמוכים יותר (${feeDiff.toFixed(2)}%) הם יתרון משמעותי לטווח ארוך.` : ''}
+                בדוק שאין עמלות מעבר שיבלעו את היתרון.`;
+        } else if (diff > -5000) {
+            card.className = 'verdict-card neutral';
+            icon.textContent = '⚖️';
+            title.textContent = `ההפרש קטן — תשקול את הגורמים הנוספים`;
+            body.textContent = `ההפרש הכספי בין הקרנות קטן יחסית (₪${Math.abs(Math.round(diff)).toLocaleString('he-IL')} לאחר ${years} שנים).
+                שים לב לגורמים כמו איכות שירות, ניסיון הבית השקעות, גמישות, ומדיניות ההשקעה.`;
+        } else {
+            card.className = 'verdict-card negative';
+            icon.textContent = '⛔';
+            title.textContent = `הקרן הנוכחית עדיפה`;
+            body.textContent = `על בסיס הנתונים שהוזנו, ${curName} מניבה ₪${Math.abs(Math.round(diff)).toLocaleString('he-IL')} יותר לאחר ${years} שנים.
+                ${altRet < curRet ? `התשואה ההיסטורית של הקרן החלופית נמוכה יותר (${altRet.toFixed(1)}% לעומת ${curRet.toFixed(1)}%).` : ''}
+                שים לב: תשואות עבר אינן ערובה לעתיד.`;
+        }
+    }
+
+    // ─── Fee breakdown ────────────────────────────────────────────────
+    function buildFeeBreakdown(startValue, monthly, annualReturn, curFee, altFee, years) {
+        const container = document.getElementById('feeBreakdown');
+
+        // No-fee baseline
+        const noFeeSeries = simulate(startValue, monthly, annualReturn, 0, years);
+        const curSeries = simulate(startValue, monthly, annualReturn, curFee, years);
+        const altSeries = simulate(startValue, monthly, annualReturn, altFee, years);
+
+        const noFee = noFeeSeries[noFeeSeries.length - 1];
+        const curFinal = curSeries[curSeries.length - 1];
+        const altFinal = altSeries[altSeries.length - 1];
+
+        const feeCostCur = noFee - curFinal;
+        const feeCostAlt = noFee - altFinal;
+        const feeSaving = feeCostCur - feeCostAlt;
+
+        container.innerHTML = `
+            <div class="fee-item">
+                <div class="fi-label">עלות דמי ניהול — קרן נוכחית (${curFee}%)</div>
+                <div class="fi-val" style="color:#ef4444;">-₪${Math.round(feeCostCur).toLocaleString('he-IL')}</div>
+                <div class="fi-sub">לאחר ${years} שנים</div>
+            </div>
+            <div class="fee-item">
+                <div class="fi-label">עלות דמי ניהול — קרן חלופית (${altFee}%)</div>
+                <div class="fi-val" style="color:#f59e0b;">-₪${Math.round(feeCostAlt).toLocaleString('he-IL')}</div>
+                <div class="fi-sub">לאחר ${years} שנים</div>
+            </div>
+            <div class="fee-item" style="border-color:rgba(16,185,129,0.3);">
+                <div class="fi-label">חיסכון בדמי ניהול מהמעבר</div>
+                <div class="fi-val" style="color:${feeSaving >= 0 ? '#10b981' : '#ef4444'};">${feeSaving >= 0 ? '+' : ''}₪${Math.abs(Math.round(feeSaving)).toLocaleString('he-IL')}</div>
+                <div class="fi-sub">${feeSaving >= 0 ? 'יתרון לקרן החלופית' : 'יתרון לקרן הנוכחית'}</div>
+            </div>
+        `;
+    }
+
+    // ─── Return bars ──────────────────────────────────────────────────
+    function buildReturnBars(curRet, altRet, curFee, altFee) {
+        const maxRet = Math.max(curRet, altRet, 1);
+        const netCur = curRet - curFee;
+        const netAlt = altRet - altFee;
+
+        document.getElementById('returnBars').innerHTML = `
+            <div style="margin-bottom:16px;">
+                <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:6px;">
+                    <span>תשואה שנתית ברוטו</span>
+                </div>
+                <div style="margin-bottom:8px;">
+                    <div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:3px;">קרן נוכחית — ${curRet.toFixed(1)}%</div>
+                    <div class="return-bar-wrap">
+                        <div class="return-bar-wrap" style="flex:1;height:10px;background:var(--color-border);border-radius:5px;overflow:hidden;">
+                            <div style="height:100%;width:${(curRet/maxRet*100).toFixed(0)}%;background:#10b981;border-radius:5px;transition:width 0.6s;"></div>
+                        </div>
+                        <span style="font-size:0.85rem;font-weight:700;color:#10b981;min-width:45px;text-align:left;">${curRet.toFixed(1)}%</span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:3px;">קרן חלופית — ${altRet.toFixed(1)}%</div>
+                    <div class="return-bar-wrap">
+                        <div class="return-bar-wrap" style="flex:1;height:10px;background:var(--color-border);border-radius:5px;overflow:hidden;">
+                            <div style="height:100%;width:${(altRet/maxRet*100).toFixed(0)}%;background:#f59e0b;border-radius:5px;transition:width 0.6s;"></div>
+                        </div>
+                        <span style="font-size:0.85rem;font-weight:700;color:#f59e0b;min-width:45px;text-align:left;">${altRet.toFixed(1)}%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:6px;">תשואה נטו (אחרי דמי ניהול)</div>
+                <div style="display:flex;gap:20px;flex-wrap:wrap;">
+                    <div style="font-size:1.1rem;font-weight:700;color:#10b981;">קרן נוכחית: ${netCur.toFixed(2)}%</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:#f59e0b;">קרן חלופית: ${netAlt.toFixed(2)}%</div>
+                    <div style="font-size:1rem;font-weight:600;color:${netAlt >= netCur ? '#10b981' : '#ef4444'};">
+                        הפרש: ${netAlt >= netCur ? '+' : ''}${(netAlt - netCur).toFixed(2)}% לשנה
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ─── Considerations ───────────────────────────────────────────────
+    function buildConsiderations(type, diff, curFee, altFee) {
+        const items = [
+            { icon: '📜', text: 'תשואות עבר אינן ערובה לעתיד — בדוק את מדיניות ההשקעה ומסלול הקרן לפני מעבר.' },
+            { icon: '💼', text: 'עמלות מעבר: בדוק אם יש עמלת יציאה בקרן הנוכחית או עמלת כניסה בקרן החדשה.' },
+            { icon: '⏳', text: 'תקופת מעבר: מעבר בין קרנות לוקח בדרך כלל 30-60 יום, ובמהלכו הכסף לא מושקע.' },
+        ];
+
+        if (type === 'training') {
+            items.push({ icon: '🎓', text: 'קרן השתלמות: בדוק שהמעבר לא פוגע בוותק — 6 שנים נדרשות למשיכה פטורה ממס.' });
+        }
+        if (type === 'pension') {
+            items.push({ icon: '🏛️', text: 'פנסיה: ביטוחי אובדן כושר עבודה עלולים להיפגע במעבר — קבל אישור מחברה החדשה לפני שינוי.' });
+            items.push({ icon: '👷', text: 'פנסיה: וודא שהמעביד שלך מאשר לנייד את ההפקדות לקרן החדשה.' });
+        }
+        if (type === 'gemel') {
+            items.push({ icon: '💼', text: 'גמל: בדוק את סוג הגמל — גמל להשקעה, גמל לפיצויים, ו-גמל רגיל — כללי המעבר שונים.' });
+        }
+
+        items.push({ icon: '🤝', text: 'כדאי להתייעץ עם יועץ פנסיוני מורשה לפני ביצוע מעבר, במיוחד לסכומים גדולים.' });
+        items.push({ icon: '🗓️', text: 'נתוני השוק מתעדכנים מדי חודש — בדוק את הנתונים העדכניים ביותר לפני החלטה.' });
+
+        document.getElementById('considerationsList').innerHTML = items.map(it =>
+            `<li><span class="ci">${it.icon}</span><span>${it.text}</span></li>`
+        ).join('');
+    }
+
+    // ─── Init ─────────────────────────────────────────────────────────
+    // Wire up dropdown delegation after DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('altDropdown').addEventListener('click', function(e) {
+            const item = e.target.closest('.fund-dropdown-item');
+            if (!item) return;
+            const idx = parseInt(item.dataset.idx);
+            if (!isNaN(idx) && window._altMatches && window._altMatches[idx]) {
+                selectAltFundObj(window._altMatches[idx]);
+            }
+        });
+    });
+
+    loadMyFunds();
+    if (typeof I18n !== 'undefined') I18n.apply();
+</script>
+</body>
+</html>

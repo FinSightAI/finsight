@@ -50,6 +50,17 @@ const SummarySender = {
         thisMonthExp.forEach(e => { byCat[e.category || 'other'] = (byCat[e.category || 'other'] || 0) + e.amount; });
         const topCatEntry = Object.entries(byCat).sort((a, b) => b[1] - a[1])[0];
 
+        // Save net worth to history (keep last 12 entries)
+        try {
+            const historyRaw = localStorage.getItem('finance_networth_history');
+            const history = historyRaw ? JSON.parse(historyRaw) : [];
+            history.push({ date: now.toISOString().split('T')[0], value: netWorth });
+            const trimmed = history.slice(-12);
+            localStorage.setItem('finance_networth_history', JSON.stringify(trimmed));
+        } catch (e) {
+            console.warn('SummarySender: could not save net worth history', e);
+        }
+
         return {
             currentMonth, prevMonth, now,
             bankBalance, creditThisMonth, creditPrevMonth,
@@ -61,6 +72,101 @@ const SummarySender = {
             topCatAmount: topCatEntry ? topCatEntry[1] : 0,
             expenseCount: thisMonthExp.length
         };
+    },
+
+    buildInsights(d) {
+        const insights = [];
+        const fmt = (n) => '₪' + Math.round(n).toLocaleString('he-IL');
+
+        const catLabels = {
+            food: 'מזון', transport: 'תחבורה', shopping: 'קניות',
+            entertainment: 'בידור', bills: 'חשבונות', health: 'בריאות',
+            education: 'חינוך', other: 'אחר', restaurants: 'מסעדות',
+            clothing: 'ביגוד', travel: 'נסיעות'
+        };
+
+        // 1. Category spending spike: compare this month vs avg of previous 3 months
+        try {
+            const ccData = Storage.getCreditCards();
+            const allExpenses = ccData.expenses || [];
+            const now = d.now;
+
+            // Build per-category totals for the previous 3 months
+            const prevMonthsData = []; // array of {cat: amount} objects
+            for (let i = 1; i <= 3; i++) {
+                const d2 = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const monthStr = `${d2.getFullYear()}-${String(d2.getMonth() + 1).padStart(2, '0')}`;
+                const monthExp = allExpenses.filter(e => e.date && e.date.startsWith(monthStr));
+                const catTotals = {};
+                monthExp.forEach(e => {
+                    const cat = e.category || 'other';
+                    catTotals[cat] = (catTotals[cat] || 0) + e.amount;
+                });
+                prevMonthsData.push(catTotals);
+            }
+
+            // Current month per-category
+            const thisMonthExp = allExpenses.filter(e => e.date && e.date.startsWith(d.currentMonth));
+            const thisByCat = {};
+            thisMonthExp.forEach(e => {
+                const cat = e.category || 'other';
+                thisByCat[cat] = (thisByCat[cat] || 0) + e.amount;
+            });
+
+            // Collect all categories that appear this month
+            Object.entries(thisByCat).forEach(([cat, thisAmt]) => {
+                const prevAmounts = prevMonthsData.map(m => m[cat] || 0);
+                const monthsWithData = prevAmounts.filter(v => v > 0).length;
+                if (monthsWithData === 0) return; // no history to compare
+                const avg = prevAmounts.reduce((a, b) => a + b, 0) / 3;
+                if (avg === 0) return;
+                const pctChange = (thisAmt - avg) / avg;
+                if (pctChange > 0.30 && thisAmt > 300) {
+                    const label = catLabels[cat] || cat;
+                    insights.push(`📈 הוצאות *${label}* עלו ב-${Math.round(pctChange * 100)}% לעומת ממוצע 3 חודשים אחרונים (${fmt(thisAmt)} vs ממוצע ${fmt(avg)})`);
+                }
+            });
+        } catch (e) {
+            console.warn('SummarySender: category insight error', e);
+        }
+
+        // 2. Subscriptions over 200₪/month total
+        try {
+            const subs = Storage.getSubscriptions() || [];
+            const monthly = subs.reduce((sum, s) => {
+                let amt = s.amount || 0;
+                if (s.billingCycle === 'yearly') amt = amt / 12;
+                else if (s.billingCycle === 'quarterly') amt = amt / 3;
+                return sum + amt;
+            }, 0);
+            if (monthly > 200) {
+                insights.push(`🔄 סך מנויים חודשיים: *${fmt(monthly)}* — שווה לבדוק מה ניתן לבטל`);
+            }
+        } catch (e) {
+            console.warn('SummarySender: subscriptions insight error', e);
+        }
+
+        // 3. Net worth trend from history
+        try {
+            const historyRaw = localStorage.getItem('finance_networth_history');
+            if (historyRaw) {
+                const history = JSON.parse(historyRaw);
+                // history already includes the entry just saved in buildSummaryData,
+                // so the previous entry is at index length-2
+                if (history.length >= 2) {
+                    const prev = history[history.length - 2];
+                    const curr = history[history.length - 1];
+                    const diff = curr.value - prev.value;
+                    const sign = diff >= 0 ? '+' : '';
+                    const arrow = diff >= 0 ? '📈' : '📉';
+                    insights.push(`${arrow} שווי נקי: ${sign}${fmt(Math.abs(diff))} מאז ${prev.date} (${fmt(prev.value)} ← ${fmt(curr.value)})`);
+                }
+            }
+        } catch (e) {
+            console.warn('SummarySender: net worth trend insight error', e);
+        }
+
+        return insights;
     },
 
     formatSummaryText(d) {
@@ -116,6 +222,15 @@ const SummarySender = {
 
         lines.push(`━━━━━━━━━━━━━━━━━━━━`);
         lines.push(`💰 *שווי נקי: ${fmt(d.netWorth)}*`);
+
+        const insights = this.buildInsights(d);
+        if (insights.length > 0) {
+            lines.push(``);
+            lines.push(`━━━━━━━━━━━━━━━━━━━━`);
+            lines.push(`💡 *תובנות חכמות:*`);
+            insights.forEach(i => lines.push(`• ${i}`));
+        }
+
         lines.push(``, `_נשלח מ-FinSight_`);
 
         return lines.join('\n');

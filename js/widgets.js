@@ -75,12 +75,12 @@ const WidgetManager = {
     },
 
     /**
-     * Apply widget configuration to DOM
+     * Apply widget configuration to DOM (visibility + order)
      */
     applyConfig() {
         const config = this.getConfig();
+        const main = document.querySelector('.main-content');
 
-        // Hide/show widgets based on config
         document.querySelectorAll('[data-widget]').forEach(element => {
             const widgetId = element.getAttribute('data-widget');
             const widgetConfig = config[widgetId];
@@ -90,7 +90,18 @@ const WidgetManager = {
             } else {
                 element.style.display = '';
             }
+
+            // Apply CSS order for drag-reorder
+            if (widgetConfig && widgetConfig.order != null) {
+                element.style.order = widgetConfig.order;
+            }
         });
+
+        // Make main-content a flex column so `order` works
+        if (main) {
+            main.style.display = 'flex';
+            main.style.flexDirection = 'column';
+        }
     },
 
     /**
@@ -102,12 +113,19 @@ const WidgetManager = {
     },
 
     /**
-     * Show customization modal
+     * Show customization modal with drag-and-drop ordering
      */
     showCustomizeModal() {
         const lang = I18n?.currentLanguage || 'he';
         const isHebrew = lang === 'he';
         const config = this.getConfig();
+
+        // Sort widgets by current order
+        const sortedWidgets = [...this.widgets].sort((a, b) => {
+            const oa = config[a.id]?.order ?? 999;
+            const ob = config[b.id]?.order ?? 999;
+            return oa - ob;
+        });
 
         const modal = document.createElement('div');
         modal.className = 'modal-overlay active';
@@ -119,21 +137,28 @@ const WidgetManager = {
                     <button class="modal-close" onclick="WidgetManager.closeModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p style="color: var(--color-text-secondary); margin-bottom: 20px;">
-                        ${isHebrew ? 'בחר אילו רכיבים להציג בדשבורד:' : 'Select which widgets to display on the dashboard:'}
+                    <p style="color: var(--color-text-secondary); margin-bottom: 6px;">
+                        ${isHebrew ? 'בחר אילו רכיבים להציג, וגרור לשינוי סדר:' : 'Select widgets to show, drag to reorder:'}
                     </p>
-                    <div class="widget-list">
-                        ${this.widgets.map(widget => {
+                    <p style="color: var(--color-text-secondary); font-size:0.78rem; margin-bottom: 16px;">
+                        ${isHebrew ? '↕️ גרור ∙ ✓ הפעל/כבה' : '↕️ Drag to reorder ∙ ✓ Toggle'}
+                    </p>
+                    <div class="widget-list" id="widgetDragList">
+                        ${sortedWidgets.map(widget => {
                             const isEnabled = config[widget.id]?.enabled !== false;
                             const name = widget.name[lang] || widget.name.en;
                             return `
-                                <div class="widget-item ${isEnabled ? 'enabled' : ''}" onclick="WidgetManager.toggleWidgetFromModal('${widget.id}')">
+                                <div class="widget-item ${isEnabled ? 'enabled' : ''}"
+                                     data-widget-id="${widget.id}"
+                                     draggable="true">
+                                    <div class="widget-drag-handle" title="${isHebrew ? 'גרור לשינוי סדר' : 'Drag to reorder'}">⠿</div>
                                     <div class="widget-icon">${widget.icon}</div>
                                     <div class="widget-info">
                                         <div class="widget-name">${name}</div>
                                     </div>
                                     <div class="widget-toggle">
-                                        <input type="checkbox" ${isEnabled ? 'checked' : ''} onclick="event.stopPropagation(); WidgetManager.toggleWidgetFromModal('${widget.id}')">
+                                        <input type="checkbox" ${isEnabled ? 'checked' : ''}
+                                               onclick="event.stopPropagation(); WidgetManager.toggleWidgetFromModal('${widget.id}')">
                                     </div>
                                 </div>
                             `;
@@ -142,7 +167,7 @@ const WidgetManager = {
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" onclick="WidgetManager.resetToDefault()">
-                        ${isHebrew ? '↩️ איפוס לברירת מחדל' : '↩️ Reset to Default'}
+                        ${isHebrew ? '↩️ איפוס' : '↩️ Reset'}
                     </button>
                     <button class="btn btn-primary" onclick="WidgetManager.closeModal()">
                         ${isHebrew ? 'סיום' : 'Done'}
@@ -151,53 +176,102 @@ const WidgetManager = {
             </div>
         `;
 
-        // Add styles for widget list
+        // Styles
         const style = document.createElement('style');
         style.id = 'widget-modal-styles';
         style.textContent = `
-            .widget-list {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
+            .widget-list { display: flex; flex-direction: column; gap: 8px; }
             .widget-item {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                padding: 15px;
+                display: flex; align-items: center; gap: 12px;
+                padding: 12px 14px;
                 background: var(--color-bg-hover);
                 border-radius: 10px;
-                cursor: pointer;
+                cursor: default;
                 transition: all 0.2s;
                 border: 2px solid transparent;
+                user-select: none;
             }
-            .widget-item:hover {
-                background: var(--color-bg-card);
+            .widget-item:hover { background: var(--color-bg-card); }
+            .widget-item.enabled { border-color: var(--color-primary); }
+            .widget-item.drag-over { border-color: #f59e0b; background: rgba(245,158,11,0.06); }
+            .widget-item.dragging { opacity: 0.4; }
+            .widget-drag-handle {
+                font-size: 1.1rem; color: var(--color-text-secondary);
+                cursor: grab; padding: 2px 4px; line-height: 1;
+                flex-shrink: 0;
             }
-            .widget-item.enabled {
-                border-color: var(--color-primary);
-            }
-            .widget-icon {
-                font-size: 1.5rem;
-            }
-            .widget-info {
-                flex: 1;
-            }
-            .widget-name {
-                font-weight: 500;
-            }
-            .widget-toggle input {
-                width: 20px;
-                height: 20px;
-                cursor: pointer;
-            }
+            .widget-drag-handle:active { cursor: grabbing; }
+            .widget-icon { font-size: 1.4rem; flex-shrink: 0; }
+            .widget-info { flex: 1; }
+            .widget-name { font-weight: 500; font-size: 0.92rem; }
+            .widget-toggle input { width: 20px; height: 20px; cursor: pointer; }
         `;
-
         if (!document.getElementById('widget-modal-styles')) {
             document.head.appendChild(style);
         }
 
         document.body.appendChild(modal);
+
+        // Wire up drag-and-drop ordering
+        this._initDragOrder(document.getElementById('widgetDragList'));
+    },
+
+    /**
+     * Init drag-to-reorder on widget list
+     */
+    _initDragOrder(list) {
+        if (!list) return;
+        let dragSrc = null;
+
+        list.addEventListener('dragstart', (e) => {
+            dragSrc = e.target.closest('.widget-item');
+            if (!dragSrc) return;
+            dragSrc.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        list.addEventListener('dragend', () => {
+            list.querySelectorAll('.widget-item').forEach(el => {
+                el.classList.remove('dragging', 'drag-over');
+            });
+            dragSrc = null;
+        });
+
+        list.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('.widget-item');
+            if (!target || target === dragSrc) return;
+            list.querySelectorAll('.widget-item').forEach(el => el.classList.remove('drag-over'));
+            target.classList.add('drag-over');
+        });
+
+        list.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('.widget-item');
+            if (!target || !dragSrc || target === dragSrc) return;
+
+            // Reorder in DOM
+            const items = [...list.querySelectorAll('.widget-item')];
+            const srcIdx = items.indexOf(dragSrc);
+            const tgtIdx = items.indexOf(target);
+            if (srcIdx < tgtIdx) {
+                list.insertBefore(dragSrc, target.nextSibling);
+            } else {
+                list.insertBefore(dragSrc, target);
+            }
+
+            // Save new order to config
+            const config = this.getConfig();
+            [...list.querySelectorAll('.widget-item')].forEach((el, i) => {
+                const id = el.dataset.widgetId;
+                if (id) {
+                    if (!config[id]) config[id] = { enabled: true };
+                    config[id].order = i;
+                }
+            });
+            this.saveConfig(config);
+            this.applyConfig();
+        });
     },
 
     /**
