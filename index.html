@@ -771,117 +771,227 @@
     </script>
 
     <!-- ===== Onboarding ===== -->
-    <div id="onboardingOverlay" style="display:none; position:fixed; inset:0; z-index:10500;
-         background:rgba(10,15,25,0.92); backdrop-filter:blur(12px);
-         align-items:center; justify-content:center;">
-        <div style="background:var(--color-bg-card); border-radius:20px; max-width:420px; width:92%;
-                    padding:32px 28px 24px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;z-index:10500;background:#0d1117;overflow:hidden;">
 
-            <!-- Skip -->
-            <button onclick="Onboarding.finish()" style="position:absolute; top:14px; left:16px;
-                background:none; border:none; color:var(--color-text-secondary); font-size:13px; cursor:pointer;">
-                דלג
-            </button>
+        <!-- Progress bar -->
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.08);z-index:3;">
+            <div id="obProgressBar" style="height:100%;background:linear-gradient(90deg,#10b981,#3b82f6);width:0%;transition:width 0.4s ease;"></div>
+        </div>
 
-            <!-- Slides -->
-            <div id="onboardingSlides">
-                <!-- Slide 1 -->
-                <div class="ob-slide">
-                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">🏠</div>
-                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">ברוכים הבאים ל-FinSight</h2>
-                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
-                        הדרך הפשוטה לנהל את כל הכסף שלך במקום אחד.<br>
-                        מניות, בנק, קרנות, הלוואות — הכל בתמונה אחת ברורה.
-                    </p>
-                </div>
-                <!-- Slide 2 -->
-                <div class="ob-slide" style="display:none;">
-                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">🏦</div>
-                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">הוסף את החשבונות שלך</h2>
-                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
-                        התחל מחשבון בנק, כרטיסי אשראי ונכסים.<br>
-                        כל עדכון ישפיע מיד על השווי הכולל בדאשבורד.
-                    </p>
-                </div>
-                <!-- Slide 3 -->
-                <div class="ob-slide" style="display:none;">
-                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">📋</div>
-                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">ייבוא חכם מאתרי אשראי</h2>
-                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
-                        הגדר סימניית ייבוא פעם אחת בהגדרות,<br>
-                        ולחץ עליה בכאל / מקס / ישראכרט<br>
-                        לייבוא עסקאות ישירות לאפליקציה.
-                    </p>
-                </div>
-                <!-- Slide 4 -->
-                <div class="ob-slide" style="display:none;">
-                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">📈</div>
-                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">מניות וקרנות בזמן אמת</h2>
-                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
-                        הוסף מניות עם מחיר ממוצע לצפייה בתשואות.<br>
-                        קרנות נאמנות מתעדכנות אוטומטית מנתוני TASE.
-                    </p>
-                </div>
-                <!-- Slide 5 -->
-                <div class="ob-slide" style="display:none;">
-                    <div style="font-size:3rem; text-align:center; margin-bottom:16px;">🔒</div>
-                    <h2 style="text-align:center; font-size:1.3rem; margin-bottom:12px;">הנתונים שלך, רק שלך</h2>
-                    <p style="color:var(--color-text-secondary); text-align:center; line-height:1.7; font-size:0.95rem;">
-                        כל המידע נשמר אצלך במכשיר בלבד.<br>
-                        ניתן להוסיף נעילת PIN ולגבות לענן<br>
-                        דרך עמוד ההגדרות.
-                    </p>
-                </div>
-            </div>
+        <!-- Top bar: skip + counter -->
+        <div style="position:absolute;top:3px;left:0;right:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;">
+            <button onclick="Onboarding.finish()" style="background:rgba(255,255,255,0.08);border:none;border-radius:20px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;padding:6px 14px;font-family:inherit;">דלג</button>
+            <span id="obCounter" style="color:rgba(255,255,255,0.3);font-size:13px;"></span>
+        </div>
 
-            <!-- Dots -->
-            <div id="onboardingDots" style="display:flex; justify-content:center; gap:8px; margin:24px 0 20px;">
-                <span class="ob-dot ob-dot-active"></span>
-                <span class="ob-dot"></span>
-                <span class="ob-dot"></span>
-                <span class="ob-dot"></span>
-                <span class="ob-dot"></span>
-            </div>
+        <!-- Slides track (horizontal scroll) -->
+        <div style="position:absolute;inset:0;overflow:hidden;">
+            <div id="obTrack" style="display:flex;height:100%;transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);will-change:transform;"></div>
+        </div>
 
-            <!-- Buttons -->
-            <div style="display:flex; gap:10px;">
-                <button id="obPrevBtn" onclick="Onboarding.prev()" style="flex:1; padding:11px;
-                    background:var(--color-bg); border:1px solid var(--color-border); border-radius:10px;
-                    color:var(--color-text); cursor:pointer; display:none;">הקודם</button>
-                <button id="obNextBtn" onclick="Onboarding.next()" style="flex:2; padding:11px;
-                    background:var(--color-primary); border:none; border-radius:10px;
-                    color:white; font-weight:600; cursor:pointer;">הבא ←</button>
-            </div>
+        <!-- Bottom nav -->
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 36px;display:flex;gap:12px;align-items:center;z-index:3;">
+            <button id="obPrevBtn" onclick="Onboarding.prev()"
+                style="width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;font-size:22px;cursor:pointer;flex-shrink:0;display:none;font-family:inherit;">→</button>
+            <button id="obNextBtn" onclick="Onboarding.next()"
+                style="flex:1;height:52px;border-radius:14px;background:linear-gradient(135deg,#10b981,#3b82f6);border:none;color:white;font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;transition:transform 0.1s;"></button>
         </div>
     </div>
 
     <style>
-        .ob-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: var(--color-border); transition: background 0.2s;
+        .ob-feature {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.06); border-radius: 10px;
+            padding: 10px 14px; font-size: 14px; color: rgba(255,255,255,0.85);
+            border: 1px solid rgba(255,255,255,0.08);
         }
-        .ob-dot-active { background: var(--color-primary); }
+        .ob-action-card {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px; border-radius: 16px; padding: 18px 12px; cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
+            text-decoration: none; transition: transform 0.15s, background 0.15s;
+            color: white;
+        }
+        .ob-action-card:active { transform: scale(0.96); background: rgba(255,255,255,0.1); }
+        #obNextBtn:active { transform: scale(0.97); }
     </style>
 
     <script>
         const Onboarding = {
             _step: 0,
-            _total: 5,
+            _slides: [
+                {
+                    icon: '✨',
+                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)',
+                    title: 'ברוכים הבאים ל-FinSight',
+                    sub: 'הדרך החכמה לנהל את כל הכסף שלך במקום אחד',
+                    features: [
+                        { e: '📊', t: 'תמונה מלאה של כל הנכסים וההתחייבויות' },
+                        { e: '🔔', t: 'התראות חכמות על חריגות ויעדים' },
+                        { e: '🔒', t: 'הנתונים שלך נשמרים אצלך בלבד' }
+                    ]
+                },
+                {
+                    icon: '🏦',
+                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)',
+                    title: 'חשבון בנק ועסקאות',
+                    sub: 'הוסף את יתרות החשבון ועקוב אחרי כל הכנסה והוצאה',
+                    features: [
+                        { e: '⚡', t: 'ייבוא ישיר מאתר הבנק בסימניית bookmarklet' },
+                        { e: '📅', t: 'היסטוריית עסקאות עם חיפוש וסינון' },
+                        { e: '📉', t: 'גרף הוצאות חודשי אוטומטי' }
+                    ]
+                },
+                {
+                    icon: '💳',
+                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)',
+                    title: 'כרטיסי אשראי בשליטה',
+                    sub: 'ייבא עסקאות מכאל, מקס וישראכרט בלחיצת כפתור',
+                    features: [
+                        { e: '🔖', t: 'סימניית ייבוא חכם — הגדרה פעם אחת' },
+                        { e: '📂', t: 'קטגוריות אוטומטיות לכל עסקה' },
+                        { e: '🔄', t: 'זיהוי מנויים חוזרים אוטומטי' }
+                    ]
+                },
+                {
+                    icon: '📈',
+                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)',
+                    title: 'מניות, קרנות ופנסיה',
+                    sub: 'כל ההשקעות שלך — מניות, קרנות נאמנות, גמל ופנסיה',
+                    features: [
+                        { e: '💹', t: 'מחירים בזמן אמת מנתוני TASE ויאהו' },
+                        { e: '📊', t: 'תשואה לעומת עלות ממוצעת' },
+                        { e: '🏆', t: 'השוואת קרנות נאמנות וגמל' }
+                    ]
+                },
+                {
+                    icon: '🔐',
+                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)',
+                    title: 'פרטיות מלאה ואבטחה',
+                    sub: 'כל המידע נשמר במכשיר שלך בלבד — לא עובר לשום שרת',
+                    features: [
+                        { e: '🔑', t: 'נעילת PIN ו-Face ID' },
+                        { e: '☁️', t: 'גיבוי אופציונלי לענן דרך ההגדרות' },
+                        { e: '📤', t: 'ייצוא לאקסל בכל עת' }
+                    ]
+                },
+                {
+                    icon: '🚀',
+                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)',
+                    title: 'מוכן להתחיל?',
+                    sub: 'בחר איפה להתחיל — תמיד אפשר לחזור ולהוסיף עוד',
+                    actions: [
+                        { e: '🏦', label: 'חשבון בנק',   href: 'pages/bank.html',        color: '#3b82f6' },
+                        { e: '💳', label: 'כרטיס אשראי', href: 'pages/credit.html',       color: '#8b5cf6' },
+                        { e: '📈', label: 'מניות',        href: 'pages/stocks.html',       color: '#f59e0b' },
+                        { e: '💎', label: 'קרנות',        href: 'pages/my-funds.html',     color: '#10b981' },
+                        { e: '🏛️', label: 'גמל ופנסיה',  href: 'pages/gemel.html',        color: '#ec4899' },
+                        { e: '🏠', label: 'לדאשבורד',    href: null,                       color: '#64748b' }
+                    ]
+                }
+            ],
+
             init() {
                 if (localStorage.getItem('finance_onboarding_done')) return;
-                document.getElementById('onboardingOverlay').style.display = 'flex';
+                this._buildSlides();
+                this._initSwipe();
+                document.getElementById('onboardingOverlay').style.display = 'block';
+                this._render();
             },
+
+            _buildSlides() {
+                const track = document.getElementById('obTrack');
+                track.innerHTML = '';
+                this._slides.forEach((s, i) => {
+                    const panel = document.createElement('div');
+                    panel.style.cssText = 'flex:0 0 100vw;width:100vw;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 28px 120px;box-sizing:border-box;position:relative;';
+
+                    // bg glow
+                    const glow = document.createElement('div');
+                    glow.style.cssText = `position:absolute;inset:0;background:${s.bg};pointer-events:none;`;
+                    panel.appendChild(glow);
+
+                    // icon circle
+                    const iconWrap = document.createElement('div');
+                    iconWrap.style.cssText = 'width:96px;height:96px;border-radius:28px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:28px;backdrop-filter:blur(4px);flex-shrink:0;';
+                    iconWrap.textContent = s.icon;
+                    panel.appendChild(iconWrap);
+
+                    // title
+                    const title = document.createElement('h2');
+                    title.style.cssText = 'color:#fff;font-size:1.5rem;font-weight:700;text-align:center;margin:0 0 12px;line-height:1.3;';
+                    title.textContent = s.title;
+                    panel.appendChild(title);
+
+                    // subtitle
+                    const sub = document.createElement('p');
+                    sub.style.cssText = 'color:rgba(255,255,255,0.55);font-size:1rem;text-align:center;line-height:1.7;margin:0 0 32px;max-width:340px;';
+                    sub.textContent = s.sub;
+                    panel.appendChild(sub);
+
+                    if (s.actions) {
+                        // Action grid (last slide)
+                        const grid = document.createElement('div');
+                        grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;max-width:360px;';
+                        s.actions.forEach(a => {
+                            const card = document.createElement('a');
+                            card.className = 'ob-action-card';
+                            card.href = a.href || '#';
+                            if (!a.href) card.addEventListener('click', e => { e.preventDefault(); Onboarding.finish(); });
+                            else card.addEventListener('click', () => Onboarding.finish());
+                            card.innerHTML = `<span style="font-size:1.6rem;line-height:1;">${a.e}</span><span style="font-size:12px;font-weight:600;text-align:center;line-height:1.3;">${a.label}</span>`;
+                            card.style.borderColor = a.color + '44';
+                            card.style.background = a.color + '18';
+                            grid.appendChild(card);
+                        });
+                        panel.appendChild(grid);
+                    } else {
+                        // Feature list
+                        const list = document.createElement('div');
+                        list.style.cssText = 'display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;';
+                        s.features.forEach(f => {
+                            const row = document.createElement('div');
+                            row.className = 'ob-feature';
+                            row.innerHTML = `<span style="font-size:1.2rem;flex-shrink:0;">${f.e}</span><span>${f.t}</span>`;
+                            list.appendChild(row);
+                        });
+                        panel.appendChild(list);
+                    }
+
+                    track.appendChild(panel);
+                });
+            },
+
+            _initSwipe() {
+                const overlay = document.getElementById('onboardingOverlay');
+                let startX = 0;
+                overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+                overlay.addEventListener('touchend', e => {
+                    const dx = e.changedTouches[0].clientX - startX;
+                    if (Math.abs(dx) > 50) { dx > 0 ? this.next() : this.prev(); }
+                }, { passive: true });
+            },
+
             _render() {
-                const slides = document.querySelectorAll('.ob-slide');
-                const dots   = document.querySelectorAll('.ob-dot');
-                slides.forEach((s, i) => s.style.display = i === this._step ? '' : 'none');
-                dots.forEach((d, i) => d.classList.toggle('ob-dot-active', i === this._step));
+                const total = this._slides.length;
+                const isLast = this._step === total - 1;
+
+                // progress bar
+                document.getElementById('obProgressBar').style.width = ((this._step + 1) / total * 100) + '%';
+                // counter
+                document.getElementById('obCounter').textContent = `${this._step + 1} / ${total}`;
+                // track translate (RTL: positive = go right = prev slide)
+                document.getElementById('obTrack').style.transform = `translateX(${this._step * 100}vw)`;
+                // prev button
                 document.getElementById('obPrevBtn').style.display = this._step > 0 ? '' : 'none';
-                document.getElementById('obNextBtn').textContent =
-                    this._step === this._total - 1 ? '✓ התחל' : 'הבא ←';
+                // next button
+                const btn = document.getElementById('obNextBtn');
+                btn.textContent = isLast ? '✓ יאללה, מתחילים' : 'הבא →';
+                btn.style.display = isLast ? 'none' : '';
             },
+
             next() {
-                if (this._step < this._total - 1) { this._step++; this._render(); }
+                if (this._step < this._slides.length - 1) { this._step++; this._render(); }
                 else this.finish();
             },
             prev() {
@@ -889,7 +999,10 @@
             },
             finish() {
                 localStorage.setItem('finance_onboarding_done', '1');
-                document.getElementById('onboardingOverlay').style.display = 'none';
+                const el = document.getElementById('onboardingOverlay');
+                el.style.transition = 'opacity 0.3s';
+                el.style.opacity = '0';
+                setTimeout(() => { el.style.display = 'none'; el.style.opacity = ''; }, 300);
             }
         };
     </script>
