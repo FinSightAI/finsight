@@ -8,6 +8,7 @@ const WidgetManager = {
     widgets: [
         { id: 'netWorth', name: { he: 'שווי נקי', en: 'Net Worth' }, icon: '💰', default: true },
         { id: 'summaryCards', name: { he: 'כרטיסי סיכום', en: 'Summary Cards' }, icon: '📊', default: true },
+        { id: 'fullPicture', name: { he: 'תמונה פיננסית מלאה', en: 'Full Financial Picture' }, icon: '🗺️', default: true },
         { id: 'assetDistribution', name: { he: 'חלוקת נכסים', en: 'Asset Distribution' }, icon: '🥧', default: true },
         { id: 'monthlyExpenses', name: { he: 'הוצאות חודשיות', en: 'Monthly Expenses' }, icon: '💳', default: true },
         { id: 'recentTransactions', name: { he: 'פעולות אחרונות', en: 'Recent Transactions' }, icon: '📋', default: true },

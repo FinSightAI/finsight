@@ -252,6 +252,17 @@
                 </a>
             </div>
 
+            <!-- Full Financial Picture Widget -->
+            <div class="card" data-widget="fullPicture">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">🗺️</span>
+                        <span>תמונה פיננסית מלאה</span>
+                    </h2>
+                </div>
+                <div class="card-body" id="fullPictureWidget" style="padding:0;"></div>
+            </div>
+
             <!-- Charts Section -->
             <div class="charts-grid">
                 <div class="card" data-widget="assetDistribution">
@@ -553,6 +564,97 @@
             if (container) container.classList.remove('has-alerts');
         }
 
+        // Load full financial picture widget
+        function loadFullPictureWidget() {
+            const widget = document.getElementById('fullPictureWidget');
+            if (!widget || !WidgetManager.isEnabled('fullPicture')) return;
+
+            const bank    = Storage.getTotalBankBalance();
+            const stocks  = Storage.getTotalStocksValue();
+            const funds   = Storage.getTotalFundsValue();
+            const assets  = Storage.getTotalAssetsValue();
+            const loans   = Storage.getTotalLoansBalance();
+            const credit  = Storage.getTotalCreditExpenses(
+                (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; })()
+            );
+
+            const totalAssets = bank + stocks + funds + assets;
+            const totalLiab   = loans + credit;
+            const netWorth    = totalAssets - totalLiab;
+            const fmt = v => I18n.formatCurrency(v);
+            const pct = (v, total) => total > 0 ? Math.round(v / total * 100) : 0;
+
+            const assetRows = [
+                { icon: '🏦', label: 'בנק', value: bank,   color: '#3b82f6' },
+                { icon: '📈', label: 'מניות', value: stocks, color: '#10b981' },
+                { icon: '💎', label: 'קרנות וחסכונות', value: funds, color: '#8b5cf6' },
+                { icon: '🏠', label: 'נכסים ונדל"ן', value: assets, color: '#f59e0b' }
+            ].filter(r => r.value > 0);
+
+            const liabRows = [
+                { icon: '🔴', label: 'הלוואות',       value: loans,  color: '#ef4444' },
+                { icon: '💳', label: 'אשראי (החודש)', value: credit, color: '#f97316' }
+            ].filter(r => r.value > 0);
+
+            const rowHtml = (rows, total) => rows.map(r => {
+                const p = pct(r.value, total);
+                return `
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 20px;">
+                    <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0;">${r.icon}</span>
+                    <span style="flex:1;font-size:14px;color:var(--color-text-primary);">${r.label}</span>
+                    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);white-space:nowrap;">${fmt(r.value)}</span>
+                    <div style="width:80px;flex-shrink:0;">
+                        <div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;">
+                            <div style="height:100%;width:${p}%;background:${r.color};border-radius:3px;transition:width 0.6s ease;"></div>
+                        </div>
+                        <div style="font-size:11px;color:var(--color-text-secondary);text-align:left;margin-top:2px;">${p}%</div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            const nwColor = netWorth >= 0 ? '#10b981' : '#ef4444';
+
+            widget.innerHTML = `
+                <!-- Net worth summary bar -->
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px 14px;border-bottom:1px solid var(--color-border);">
+                    <div>
+                        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">שווי נקי</div>
+                        <div style="font-size:1.6rem;font-weight:700;color:${nwColor};">${fmt(netWorth)}</div>
+                    </div>
+                    <div style="display:flex;gap:20px;text-align:center;">
+                        <div>
+                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">סה"כ נכסים</div>
+                            <div style="font-size:15px;font-weight:600;color:#10b981;">${fmt(totalAssets)}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">סה"כ חובות</div>
+                            <div style="font-size:15px;font-weight:600;color:#ef4444;">${fmt(totalLiab)}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assets -->
+                ${assetRows.length > 0 ? `
+                <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">נכסים</div>
+                ${rowHtml(assetRows, totalAssets)}
+                ` : ''}
+
+                <!-- Liabilities -->
+                ${liabRows.length > 0 ? `
+                <div style="padding:10px 20px 4px;border-top:1px solid var(--color-border);font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">התחייבויות</div>
+                ${rowHtml(liabRows, totalLiab)}
+                ` : ''}
+
+                <!-- Empty state -->
+                ${assetRows.length === 0 && liabRows.length === 0 ? `
+                <div style="padding:32px;text-align:center;color:var(--color-text-secondary);">
+                    <div style="font-size:2rem;margin-bottom:12px;">📭</div>
+                    <div>עדיין אין נתונים. <a href="pages/bank.html" style="color:var(--color-primary);">הוסף חשבון בנק</a> כדי להתחיל.</div>
+                </div>
+                ` : ''}
+            `;
+        }
+
         // Load goals progress widget
         function loadGoalsProgressWidget() {
             const widget = document.getElementById('goalsProgressWidget');
@@ -762,6 +864,7 @@
 
         // Update widget loading on dashboard load
         document.addEventListener('DOMContentLoaded', () => {
+            loadFullPictureWidget();
             loadGoalsProgressWidget();
             loadQuickStatsWidget();
             loadCurrencyWidget();
