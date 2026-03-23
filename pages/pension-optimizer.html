@@ -190,7 +190,7 @@
             <div class="top-grid">
                 <!-- Inputs -->
                 <div class="card">
-                    <h2>⚙️ הפרטים שלך</h2>
+                    <h2>⚙️ <span data-i18n="pensionOptimizer.yourDetails">הפרטים שלך</span></h2>
 
                     <!-- Real-data sync banner (populated by JS) -->
                     <div id="syncBanner" style="display:none; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:12px 14px; margin-bottom:18px; font-size:0.85rem; color:var(--color-text-primary);">
@@ -202,46 +202,46 @@
 
                     <div class="input-row">
                         <div class="input-group">
-                            <label>גיל נוכחי</label>
+                            <label data-i18n="pensionOptimizer.currentAge">גיל נוכחי</label>
                             <input type="number" id="currentAge" value="35" min="18" max="66" oninput="recalc()">
                         </div>
                         <div class="input-group">
-                            <label>גיל פרישה</label>
+                            <label data-i18n="pensionOptimizer.retirementAge">גיל פרישה</label>
                             <input type="number" id="retirementAge" value="67" min="60" max="75" oninput="recalc()">
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>חיסכון פנסיוני נוכחי (₪)</label>
+                        <label data-i18n="pensionOptimizer.currentSavings">חיסכון פנסיוני נוכחי (₪)</label>
                         <input type="number" id="currentSavings" value="150000" min="0" oninput="recalc()">
                     </div>
 
                     <div class="input-group">
-                        <label>הפקדה חודשית כוללת (עובד + מעסיק + פיצויים) (₪)</label>
+                        <label data-i18n="pensionOptimizer.monthlyContrib">הפקדה חודשית כוללת (עובד + מעסיק + פיצויים) (₪)</label>
                         <input type="number" id="monthlyContrib" value="3500" min="0" oninput="recalc()">
                     </div>
 
                     <div class="input-group">
-                        <label>מסלול השקעה נוכחי</label>
+                        <label data-i18n="pensionOptimizer.currentTrack">מסלול השקעה נוכחי</label>
                         <select id="currentTrack" onchange="recalc()">
-                            <option value="general">מסלול כללי</option>
-                            <option value="stocks">מסלול מניות</option>
-                            <option value="bonds">מסלול אגרות חוב</option>
-                            <option value="gov">מסלול ממשלתי</option>
-                            <option value="passive">מסלול פאסיבי / מחקה</option>
-                            <option value="halakha">מסלול הלכה</option>
+                            <option value="general" data-i18n="pensionOptimizer.trackGeneral">מסלול כללי</option>
+                            <option value="stocks"  data-i18n="pensionOptimizer.trackStocks">מסלול מניות</option>
+                            <option value="bonds"   data-i18n="pensionOptimizer.trackBonds">מסלול אגרות חוב</option>
+                            <option value="gov"     data-i18n="pensionOptimizer.trackGov">מסלול ממשלתי</option>
+                            <option value="passive" data-i18n="pensionOptimizer.trackPassive">מסלול פאסיבי / מחקה</option>
+                            <option value="halakha" data-i18n="pensionOptimizer.trackHalakha">מסלול הלכה</option>
                         </select>
                     </div>
 
                     <div class="fee-section">
-                        <h3>דמי ניהול נוכחיים</h3>
+                        <h3 data-i18n="pensionOptimizer.fees">דמי ניהול נוכחיים</h3>
                         <div class="input-row">
                             <div class="input-group" style="margin-bottom:0">
-                                <label>מהפקדה (%)</label>
+                                <label data-i18n="pensionOptimizer.feeDeposit">מהפקדה (%)</label>
                                 <input type="number" id="feeDeposit" value="1.5" min="0" max="6" step="0.1" oninput="recalc()">
                             </div>
                             <div class="input-group" style="margin-bottom:0">
-                                <label>מצבירה (% לשנה)</label>
+                                <label data-i18n="pensionOptimizer.feeAccum">מצבירה (% לשנה)</label>
                                 <input type="number" id="feeAccum" value="0.5" min="0" max="1.05" step="0.05" oninput="recalc()">
                             </div>
                         </div>
@@ -249,14 +249,14 @@
 
                     <div class="input-row" style="margin-top:16px;">
                         <div class="input-group" style="margin-bottom:0">
-                            <label>התאמה לאינפלציה</label>
+                            <label data-i18n="pensionOptimizer.inflation">התאמה לאינפלציה</label>
                             <select id="inflation" onchange="recalc()">
-                                <option value="0">ללא (ערכים נומינליים)</option>
-                                <option value="3">3% אינפלציה שנתית</option>
+                                <option value="0" data-i18n="pensionOptimizer.inflationNone">ללא (ערכים נומינליים)</option>
+                                <option value="3" data-i18n="pensionOptimizer.inflation3">3% אינפלציה שנתית</option>
                             </select>
                         </div>
                         <div class="input-group" style="margin-bottom:0">
-                            <label title="מספר החודשים שהפנסיה מחולקת לפיו. ממוצע ישראלי: 200–230">מקדם המרה (חודשים) ℹ️</label>
+                            <label data-i18n="pensionOptimizer.convFactor" data-i18n-title="pensionOptimizer.convFactorTip" title="מספר החודשים שהפנסיה מחולקת לפיו. ממוצע ישראלי: 200–230">מקדם המרה (חודשים) ℹ️</label>
                             <input type="number" id="convFactor" value="210" min="150" max="300" step="5" oninput="recalc()">
                         </div>
                     </div>
@@ -264,7 +264,7 @@
 
                 <!-- Chart -->
                 <div class="card">
-                    <h2>📈 צמיחה צפויה לפרישה</h2>
+                    <h2>📈 <span data-i18n="pensionOptimizer.growthChart">צמיחה צפויה לפרישה</span></h2>
                     <div class="chart-wrap">
                         <canvas id="growthChart"></canvas>
                     </div>
@@ -273,7 +273,7 @@
 
             <!-- Summary -->
             <div class="card" style="margin-top: 20px;">
-                <h2>💰 השוואת מסלולים</h2>
+                <h2>💰 <span data-i18n="pensionOptimizer.compareTitle">השוואת מסלולים</span></h2>
 
                 <div class="summary-boxes" id="summaryBoxes"></div>
 
@@ -281,11 +281,11 @@
                     <table class="tracks-table">
                         <thead>
                             <tr>
-                                <th>מסלול</th>
-                                <th>תשואה ממוצעת</th>
-                                <th>צבירה בפרישה</th>
-                                <th>פנסיה חודשית משוערת</th>
-                                <th>הפרש ממסלול הנוכחי</th>
+                                <th data-i18n="pensionOptimizer.colTrack">מסלול</th>
+                                <th data-i18n="pensionOptimizer.colReturn">תשואה ממוצעת</th>
+                                <th data-i18n="pensionOptimizer.colAccum">צבירה בפרישה</th>
+                                <th data-i18n="pensionOptimizer.colMonthly">פנסיה חודשית משוערת</th>
+                                <th data-i18n="pensionOptimizer.colDelta">הפרש ממסלול הנוכחי</th>
                             </tr>
                         </thead>
                         <tbody id="tracksTableBody"></tbody>
@@ -302,14 +302,17 @@
 
 <script src="../js/app.js"></script>
 <script>
-const TRACKS = [
-    { id: 'gov',      name: 'ממשלתי',           return: 3.0,  color: '#94a3b8', desc: 'אג"ח ממשלתיות בלבד — בטוח מאוד, תשואה נמוכה' },
-    { id: 'bonds',    name: 'אגרות חוב',         return: 4.5,  color: '#60a5fa', desc: 'רוב האפיק באג"ח — סולידי' },
-    { id: 'halakha',  name: 'הלכה',              return: 5.8,  color: '#fbbf24', desc: 'השקעה לפי הלכה — ללא ריבית' },
-    { id: 'general',  name: 'כללי',              return: 7.5,  color: '#34d399', desc: 'תמהיל מניות + אג"ח — ברירת מחדל לרוב' },
-    { id: 'stocks',   name: 'מניות',             return: 9.2,  color: '#f97316', desc: 'בעיקר מניות — תנודתי, פוטנציאל גבוה' },
-    { id: 'passive',  name: 'פאסיבי / מחקה',    return: 9.8,  color: '#a78bfa', desc: 'עוקב מדדים (S&P / ת"א) — עמלות נמוכות' },
-];
+function getTracks() {
+    const pt = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
+    return [
+        { id: 'gov',      name: pt('trackNameGov'),     return: 3.0,  color: '#94a3b8', desc: pt('trackDescGov') },
+        { id: 'bonds',    name: pt('trackNameBonds'),   return: 4.5,  color: '#60a5fa', desc: pt('trackDescBonds') },
+        { id: 'halakha',  name: pt('trackNameHalakha'), return: 5.8,  color: '#fbbf24', desc: pt('trackDescHalakha') },
+        { id: 'general',  name: pt('trackNameGeneral'), return: 7.5,  color: '#34d399', desc: pt('trackDescGeneral') },
+        { id: 'stocks',   name: pt('trackNameStocks'),  return: 9.2,  color: '#f97316', desc: pt('trackDescStocks') },
+        { id: 'passive',  name: pt('trackNamePassive'), return: 9.8,  color: '#a78bfa', desc: pt('trackDescPassive') },
+    ];
+}
 
 let chart = null;
 
@@ -351,14 +354,16 @@ function syncFromStorage(force) {
         }
 
         // Show banner
+        const po2 = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
         const banner = document.getElementById('syncBanner');
         const text   = document.getElementById('syncBannerText');
-        const names  = pension.slice(0, 2).map(f => f.name || f.company || 'קרן').join(', ');
-        const suffix = pension.length > 2 ? ` ועוד ${pension.length - 2}` : '';
+        const names  = pension.slice(0, 2).map(f => f.name || f.company || po2('syncFunds')).join(', ');
+        const suffix = pension.length > 2 ? ` +${pension.length - 2}` : '';
         text.innerHTML =
-            `📊 <strong>נטען מהנתונים שלך:</strong> ${pension.length} קרן פנסיה (${names}${suffix})<br>` +
-            `חיסכון: <strong>₪${Math.round(totalValue).toLocaleString('he-IL')}</strong>` +
-            (totalMonthly > 0 ? ` · הפקדה חודשית: <strong>₪${Math.round(totalMonthly).toLocaleString('he-IL')}</strong>` : '');
+            `📊 <strong>${po2('syncLoaded')}:</strong> ${pension.length} ${po2('syncFunds')} (${names}${suffix})<br>` +
+            `${po2('syncSavings')}: <strong>₪${Math.round(totalValue).toLocaleString('he-IL')}</strong>` +
+            (totalMonthly > 0 ? ` · ${po2('syncMonthly')}: <strong>₪${Math.round(totalMonthly).toLocaleString('he-IL')}</strong>` : '');
+        document.querySelector('#syncBanner button').textContent = po2('syncRefresh');
         banner.style.display = 'block';
     } catch(e) { /* ignore */ }
 }
@@ -398,6 +403,7 @@ function recalc() {
     const months = yearsLeft * 12;
 
     // Compute projections
+    const TRACKS = getTracks();
     const results = TRACKS.map(t => {
         const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, months);
         // Inflation-adjusted real value
@@ -411,27 +417,30 @@ function recalc() {
     // Chart
     buildChart(results, currentTrack, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate);
 
+    // i18n helper
+    const po = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
+
     // Summary boxes
     const monthlyPension = (amount) => Math.round(amount / convFactor);
     const boxes = document.getElementById('summaryBoxes');
     const gainVsBest = bestResult.display - currentResult.display;
     boxes.innerHTML = `
         <div class="summary-box">
-            <div class="label">מסלול נוכחי (${currentResult.name})</div>
+            <div class="label">${po('currentBox')} (${currentResult.name})</div>
             <div class="value">${fmt(currentResult.display)}</div>
-            <div class="sub">~${fmtFull(monthlyPension(currentResult.display))} / חודש</div>
+            <div class="sub">~${fmtFull(monthlyPension(currentResult.display))} ${po('perMonth')}</div>
         </div>
         <div class="summary-box highlight">
-            <div class="label">🏆 המסלול הטוב ביותר (${bestResult.name})</div>
+            <div class="label">🏆 ${po('bestBox')} (${bestResult.name})</div>
             <div class="value">${fmt(bestResult.display)}</div>
-            <div class="sub">~${fmtFull(monthlyPension(bestResult.display))} / חודש</div>
+            <div class="sub">~${fmtFull(monthlyPension(bestResult.display))} ${po('perMonth')}</div>
         </div>
-        <div class="summary-box ${gainVsBest > 0 ? '' : ''}">
-            <div class="label">פוטנציאל רווח</div>
+        <div class="summary-box">
+            <div class="label">${po('gainBox')}</div>
             <div class="value" style="color: ${gainVsBest > 0 ? 'var(--color-positive)' : 'var(--color-text-secondary)'}">
-                ${gainVsBest > 0 ? '+' + fmt(gainVsBest) : 'במסלול הטוב ביותר'}
+                ${gainVsBest > 0 ? '+' + fmt(gainVsBest) : po('alreadyBest')}
             </div>
-            <div class="sub">${gainVsBest > 0 ? 'יותר בפרישה אם תעבור' : ''}${currentResult.id === bestResult.id ? '✅ אתה כבר במסלול הטוב!' : ''}</div>
+            <div class="sub">${gainVsBest > 0 ? po('gainSuffix') : ''}${currentResult.id === bestResult.id ? po('alreadyBestCheck') : ''}</div>
         </div>
     `;
 
@@ -443,14 +452,14 @@ function recalc() {
         const isCurrent = r.id === currentTrack;
         const isBest = r.id === bestResult.id;
         const delta = r.display - currentResult.display;
-        const deltaStr = isCurrent ? '<span class="delta-zero">— נוכחי</span>' :
+        const deltaStr = isCurrent ? `<span class="delta-zero">— ${po('badgeCurrent')}</span>` :
             delta > 0 ? `<span class="delta-positive">+${fmt(delta)}</span>` :
             `<span class="delta-negative">${fmt(delta)}</span>`;
         const barW = Math.round((r.return / maxReturn) * 100);
         return `<tr class="${isCurrent ? 'current-track' : ''} ${isBest && !isCurrent ? 'best-track' : ''}" onclick="selectTrack('${r.id}')">
             <td>
-                ${isCurrent ? '<span class="track-badge badge-current">נוכחי</span>' : ''}
-                ${isBest && !isCurrent ? '<span class="track-badge badge-best">מומלץ</span>' : ''}
+                ${isCurrent ? `<span class="track-badge badge-current">${po('badgeCurrent')}</span>` : ''}
+                ${isBest && !isCurrent ? `<span class="track-badge badge-best">${po('badgeBest')}</span>` : ''}
                 <span class="track-name">${r.name}</span><br>
                 <span style="font-size:0.75rem;color:var(--color-text-secondary)">${r.desc}</span>
             </td>
@@ -461,7 +470,7 @@ function recalc() {
                 </div>
             </td>
             <td style="font-weight:600">${fmtFull(r.display)}</td>
-            <td class="monthly-pension">~${fmtFull(monthlyPension(r.display))} / חודש</td>
+            <td class="monthly-pension">~${fmtFull(monthlyPension(r.display))} ${po('perMonth')}</td>
             <td>${deltaStr}</td>
         </tr>`;
     }).join('');
@@ -469,10 +478,10 @@ function recalc() {
     // Insight
     const insight = document.getElementById('insightBox');
     if (currentResult.id === bestResult.id) {
-        insight.innerHTML = `✅ <strong>כל הכבוד!</strong> אתה כבר במסלול עם הפוטנציאל הגבוה ביותר — ${bestResult.name}. המשך כך.`;
+        insight.innerHTML = `${po('insightGood')} — ${bestResult.name}. ${po('insightContinue')}`;
     } else {
         const extraMonthly = monthlyPension(bestResult.display) - monthlyPension(currentResult.display);
-        insight.innerHTML = `💡 מעבר מ<strong>${currentResult.name}</strong> ל<strong>${bestResult.name}</strong> עשוי להוסיף <strong>${fmt(gainVsBest)}</strong> לחיסכון שלך בגיל ${retireAge} — כ-<strong>${fmtFull(extraMonthly)} יותר בחודש</strong> בפנסיה. זו החלטה שכדאי לבחון עם יועץ פנסיוני.`;
+        insight.innerHTML = `💡 ${po('insightSwitch')} <strong>${currentResult.name}</strong> ${po('insightTo')} <strong>${bestResult.name}</strong> ${po('insightAdd')} <strong>${fmt(gainVsBest)}</strong> ${po('insightAt')} ${retireAge} — <strong>${fmtFull(extraMonthly)} ${po('insightExtra')}</strong> ${po('insightInRetirement')} ${po('insightConsult')}`;
     }
 
     // Fee impact
@@ -480,9 +489,9 @@ function recalc() {
     const withLowFee = projectSavings(pv, monthlyDep, currentResult.return, 0, 0.1, months);
     const feeWaste = (inflationRate > 0 ? withLowFee / Math.pow(1 + inflationRate / 100, yearsLeft) : withLowFee) - currentResult.display;
     if (feeWaste > 5000) {
-        feeImpact.innerHTML = `⚠️ <strong>השפעת דמי ניהול:</strong> דמי הניהול שלך (${feeDeposit}% מהפקדה + ${feeAccum}% מצבירה) "שורפים" כ-<strong>${fmt(feeWaste)}</strong> לאורך ${yearsLeft} שנים. ניהול של 0% מהפקדה + 0.1% מצבירה (קרנות פאסיביות) יכול לחסוך סכום זה.`;
+        feeImpact.innerHTML = `${po('feeBurn')} (${feeDeposit}% ${po('feeDash')} ${feeAccum}% ${po('feeAccumLabel')}) ${po('feeBurnMid')} <strong>${fmt(feeWaste)}</strong> ${po('feeBurnYears')} ${yearsLeft} ${po('feeBurnYearsLabel')} ${po('feePassive')}`;
     } else {
-        feeImpact.innerHTML = `✅ <strong>דמי הניהול שלך סבירים</strong> — ${feeDeposit}% מהפקדה ו-${feeAccum}% מצבירה.`;
+        feeImpact.innerHTML = `${po('feeGood')} — ${feeDeposit}% ${po('feeDash')} ${feeAccum}% ${po('feeAccumLabel')}`;
     }
 }
 
@@ -492,13 +501,14 @@ function selectTrack(id) {
 }
 
 function buildChart(results, currentTrackId, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate) {
+    const yearLabel = (typeof I18n !== 'undefined' && I18n.currentLanguage !== 'he') ? 'Year ' : 'שנה ';
     const labels = [];
-    for (let y = 0; y <= yearsLeft; y += Math.max(1, Math.floor(yearsLeft / 10))) labels.push('שנה ' + y);
-    if (labels[labels.length - 1] !== 'שנה ' + yearsLeft) labels.push('שנה ' + yearsLeft);
+    for (let y = 0; y <= yearsLeft; y += Math.max(1, Math.floor(yearsLeft / 10))) labels.push(yearLabel + y);
+    if (labels[labels.length - 1] !== yearLabel + yearsLeft) labels.push(yearLabel + yearsLeft);
 
     const datasets = results.map(t => {
         const data = labels.map(l => {
-            const y = parseInt(l.replace('שנה ', ''));
+            const y = parseInt(l.replace(yearLabel, ''));
             const m = y * 12;
             const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, m);
             return inflationRate > 0 ? gross / Math.pow(1 + inflationRate / 100, y) : gross;

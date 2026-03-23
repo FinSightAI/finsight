@@ -257,7 +257,7 @@
                 <div class="card-header">
                     <h2 class="card-title">
                         <span class="icon">🗺️</span>
-                        <span>תמונה פיננסית מלאה</span>
+                        <span data-i18n="dashboard.fullPicture">תמונה פיננסית מלאה</span>
                     </h2>
                 </div>
                 <div class="card-body" id="fullPictureWidget" style="padding:0;"></div>
@@ -584,16 +584,17 @@
             const fmt = v => I18n.formatCurrency(v);
             const pct = (v, total) => total > 0 ? Math.round(v / total * 100) : 0;
 
+            const t = k => I18n.t('dashboard.' + k);
             const assetRows = [
-                { icon: '🏦', label: 'בנק', value: bank,   color: '#3b82f6' },
-                { icon: '📈', label: 'מניות', value: stocks, color: '#10b981' },
-                { icon: '💎', label: 'קרנות וחסכונות', value: funds, color: '#8b5cf6' },
-                { icon: '🏠', label: 'נכסים ונדל"ן', value: assets, color: '#f59e0b' }
+                { icon: '🏦', label: t('bankLabel'),        value: bank,   color: '#3b82f6' },
+                { icon: '📈', label: t('stocksLabel'),      value: stocks, color: '#10b981' },
+                { icon: '💎', label: t('fundsLabel'),       value: funds,  color: '#8b5cf6' },
+                { icon: '🏠', label: t('realEstateLabel'),  value: assets, color: '#f59e0b' }
             ].filter(r => r.value > 0);
 
             const liabRows = [
-                { icon: '🔴', label: 'הלוואות',       value: loans,  color: '#ef4444' },
-                { icon: '💳', label: 'אשראי (החודש)', value: credit, color: '#f97316' }
+                { icon: '🔴', label: t('loansLabel'),        value: loans,  color: '#ef4444' },
+                { icon: '💳', label: t('creditMonthlyLabel'), value: credit, color: '#f97316' }
             ].filter(r => r.value > 0);
 
             const rowHtml = (rows, total) => rows.map(r => {
@@ -618,16 +619,16 @@
                 <!-- Net worth summary bar -->
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px 14px;border-bottom:1px solid var(--color-border);">
                     <div>
-                        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">שווי נקי</div>
+                        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">${t('netWorth')}</div>
                         <div style="font-size:1.6rem;font-weight:700;color:${nwColor};">${fmt(netWorth)}</div>
                     </div>
                     <div style="display:flex;gap:20px;text-align:center;">
                         <div>
-                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">סה"כ נכסים</div>
+                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">${t('totalAssets')}</div>
                             <div style="font-size:15px;font-weight:600;color:#10b981;">${fmt(totalAssets)}</div>
                         </div>
                         <div>
-                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">סה"כ חובות</div>
+                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">${t('totalLiabilities')}</div>
                             <div style="font-size:15px;font-weight:600;color:#ef4444;">${fmt(totalLiab)}</div>
                         </div>
                     </div>
@@ -635,13 +636,13 @@
 
                 <!-- Assets -->
                 ${assetRows.length > 0 ? `
-                <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">נכסים</div>
+                <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">${t('assetsSection')}</div>
                 ${rowHtml(assetRows, totalAssets)}
                 ` : ''}
 
                 <!-- Liabilities -->
                 ${liabRows.length > 0 ? `
-                <div style="padding:10px 20px 4px;border-top:1px solid var(--color-border);font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">התחייבויות</div>
+                <div style="padding:10px 20px 4px;border-top:1px solid var(--color-border);font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">${t('liabilitiesSection')}</div>
                 ${rowHtml(liabRows, totalLiab)}
                 ` : ''}
 
@@ -649,7 +650,7 @@
                 ${assetRows.length === 0 && liabRows.length === 0 ? `
                 <div style="padding:32px;text-align:center;color:var(--color-text-secondary);">
                     <div style="font-size:2rem;margin-bottom:12px;">📭</div>
-                    <div>עדיין אין נתונים. <a href="pages/bank.html" style="color:var(--color-primary);">הוסף חשבון בנק</a> כדי להתחיל.</div>
+                    <div>${t('noDataFullPicture')} <a href="pages/bank.html" style="color:var(--color-primary);">${t('addBankCta')}</a> ${t('addBankCtaSuffix')}</div>
                 </div>
                 ` : ''}
             `;
@@ -922,77 +923,39 @@
     <script>
         const Onboarding = {
             _step: 0,
-            _slides: [
-                {
-                    icon: '✨',
-                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)',
-                    title: 'ברוכים הבאים ל-FinSight',
-                    sub: 'הדרך החכמה לנהל את כל הכסף שלך במקום אחד',
-                    features: [
-                        { e: '📊', t: 'תמונה מלאה של כל הנכסים וההתחייבויות' },
-                        { e: '🔔', t: 'התראות חכמות על חריגות ויעדים' },
-                        { e: '🔒', t: 'הנתונים שלך נשמרים אצלך בלבד' }
+
+            _getSlides() {
+                const ob = (typeof I18n !== 'undefined') ? I18n.translations[I18n.currentLanguage]?.onboarding : null;
+                const t  = k => ob?.[k] || k;
+                const slides = {
+                    he: [
+                        { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'ברוכים הבאים ל-FinSight', sub:'הדרך החכמה לנהל את כל הכסף שלך במקום אחד', features:[{e:'📊',t:'תמונה מלאה של כל הנכסים וההתחייבויות'},{e:'🔔',t:'התראות חכמות על חריגות ויעדים'},{e:'🔒',t:'הנתונים שלך נשמרים אצלך בלבד'}] },
+                        { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'חשבון בנק ועסקאות', sub:'הוסף את יתרות החשבון ועקוב אחרי כל הכנסה והוצאה', features:[{e:'⚡',t:'ייבוא ישיר מאתר הבנק בסימניית bookmarklet'},{e:'📅',t:'היסטוריית עסקאות עם חיפוש וסינון'},{e:'📉',t:'גרף הוצאות חודשי אוטומטי'}] },
+                        { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'כרטיסי אשראי בשליטה', sub:'ייבא עסקאות מכאל, מקס וישראכרט בלחיצת כפתור', features:[{e:'🔖',t:'סימניית ייבוא חכם — הגדרה פעם אחת'},{e:'📂',t:'קטגוריות אוטומטיות לכל עסקה'},{e:'🔄',t:'זיהוי מנויים חוזרים אוטומטי'}] },
+                        { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'מניות, קרנות ופנסיה', sub:'כל ההשקעות שלך — מניות, קרנות נאמנות, גמל ופנסיה', features:[{e:'💹',t:'מחירים בזמן אמת מנתוני TASE ויאהו'},{e:'📊',t:'תשואה לעומת עלות ממוצעת'},{e:'🏆',t:'השוואת קרנות נאמנות וגמל'}] },
+                        { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'פרטיות מלאה ואבטחה', sub:'כל המידע נשמר במכשיר שלך בלבד — לא עובר לשום שרת', features:[{e:'🔑',t:'נעילת PIN ו-Face ID'},{e:'☁️',t:'גיבוי אופציונלי לענן דרך ההגדרות'},{e:'📤',t:'ייצוא לאקסל בכל עת'}] },
+                        { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'מוכן להתחיל?', sub:'בחר איפה להתחיל — תמיד אפשר לחזור ולהוסיף עוד', actions:[{e:'🏦',label:'חשבון בנק',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'כרטיס אשראי',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'מניות',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'קרנות',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'גמל ופנסיה',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'לדאשבורד',href:null,color:'#64748b'}] }
+                    ],
+                    en: [
+                        { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Welcome to FinSight', sub:'The smart way to manage all your money in one place', features:[{e:'📊',t:'Complete picture of all your assets & liabilities'},{e:'🔔',t:'Smart alerts for budget overruns and goals'},{e:'🔒',t:'Your data stays on your device only'}] },
+                        { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Bank Accounts & Transactions', sub:'Add your account balances and track every income and expense', features:[{e:'⚡',t:'Direct import from your bank via bookmarklet'},{e:'📅',t:'Transaction history with search and filters'},{e:'📉',t:'Automatic monthly expense chart'}] },
+                        { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Credit Cards Under Control', sub:'Import transactions from Cal, Max and Isracard in one click', features:[{e:'🔖',t:'Smart import bookmarklet — set up once'},{e:'📂',t:'Automatic categories for every transaction'},{e:'🔄',t:'Automatic recurring subscription detection'}] },
+                        { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Stocks, Funds & Pension', sub:'All your investments — stocks, mutual funds, gemel & pension', features:[{e:'💹',t:'Real-time prices from TASE & Yahoo'},{e:'📊',t:'Return vs average cost'},{e:'🏆',t:'Compare mutual funds and gemel'}] },
+                        { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Full Privacy & Security', sub:'All data stays on your device only — nothing sent to any server', features:[{e:'🔑',t:'PIN lock & Face ID'},{e:'☁️',t:'Optional cloud backup via Settings'},{e:'📤',t:'Export to Excel anytime'}] },
+                        { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Ready to Start?', sub:'Choose where to begin — you can always add more later', actions:[{e:'🏦',label:'Bank Account',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Credit Card',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Stocks',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Funds',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Pension & Gemel',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Dashboard',href:null,color:'#64748b'}] }
+                    ],
+                    pt: [
+                        { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Bem-vindo ao FinSight', sub:'A forma inteligente de gerenciar todo o seu dinheiro em um lugar', features:[{e:'📊',t:'Visão completa de todos os ativos e passivos'},{e:'🔔',t:'Alertas inteligentes para metas e orçamentos'},{e:'🔒',t:'Seus dados ficam apenas no seu dispositivo'}] },
+                        { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Contas Bancárias e Transações', sub:'Adicione saldos e acompanhe cada receita e despesa', features:[{e:'⚡',t:'Importação direta do banco via bookmarklet'},{e:'📅',t:'Histórico de transações com busca e filtros'},{e:'📉',t:'Gráfico de despesas mensais automático'}] },
+                        { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Cartões de Crédito Sob Controle', sub:'Importe transações com um clique', features:[{e:'🔖',t:'Bookmarklet de importação — configure uma vez'},{e:'📂',t:'Categorias automáticas para cada transação'},{e:'🔄',t:'Detecção automática de assinaturas recorrentes'}] },
+                        { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Ações, Fundos e Previdência', sub:'Todos os seus investimentos em um só lugar', features:[{e:'💹',t:'Preços em tempo real'},{e:'📊',t:'Retorno vs custo médio'},{e:'🏆',t:'Comparar fundos de investimento'}] },
+                        { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Privacidade e Segurança Total', sub:'Todos os dados ficam apenas no seu dispositivo', features:[{e:'🔑',t:'Bloqueio por PIN e Face ID'},{e:'☁️',t:'Backup opcional na nuvem'},{e:'📤',t:'Exportar para Excel a qualquer momento'}] },
+                        { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Pronto para Começar?', sub:'Escolha por onde começar — sempre dá para adicionar mais', actions:[{e:'🏦',label:'Conta Bancária',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Cartão de Crédito',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Ações',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Fundos',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Previdência',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Painel',href:null,color:'#64748b'}] }
                     ]
-                },
-                {
-                    icon: '🏦',
-                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)',
-                    title: 'חשבון בנק ועסקאות',
-                    sub: 'הוסף את יתרות החשבון ועקוב אחרי כל הכנסה והוצאה',
-                    features: [
-                        { e: '⚡', t: 'ייבוא ישיר מאתר הבנק בסימניית bookmarklet' },
-                        { e: '📅', t: 'היסטוריית עסקאות עם חיפוש וסינון' },
-                        { e: '📉', t: 'גרף הוצאות חודשי אוטומטי' }
-                    ]
-                },
-                {
-                    icon: '💳',
-                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)',
-                    title: 'כרטיסי אשראי בשליטה',
-                    sub: 'ייבא עסקאות מכאל, מקס וישראכרט בלחיצת כפתור',
-                    features: [
-                        { e: '🔖', t: 'סימניית ייבוא חכם — הגדרה פעם אחת' },
-                        { e: '📂', t: 'קטגוריות אוטומטיות לכל עסקה' },
-                        { e: '🔄', t: 'זיהוי מנויים חוזרים אוטומטי' }
-                    ]
-                },
-                {
-                    icon: '📈',
-                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)',
-                    title: 'מניות, קרנות ופנסיה',
-                    sub: 'כל ההשקעות שלך — מניות, קרנות נאמנות, גמל ופנסיה',
-                    features: [
-                        { e: '💹', t: 'מחירים בזמן אמת מנתוני TASE ויאהו' },
-                        { e: '📊', t: 'תשואה לעומת עלות ממוצעת' },
-                        { e: '🏆', t: 'השוואת קרנות נאמנות וגמל' }
-                    ]
-                },
-                {
-                    icon: '🔐',
-                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)',
-                    title: 'פרטיות מלאה ואבטחה',
-                    sub: 'כל המידע נשמר במכשיר שלך בלבד — לא עובר לשום שרת',
-                    features: [
-                        { e: '🔑', t: 'נעילת PIN ו-Face ID' },
-                        { e: '☁️', t: 'גיבוי אופציונלי לענן דרך ההגדרות' },
-                        { e: '📤', t: 'ייצוא לאקסל בכל עת' }
-                    ]
-                },
-                {
-                    icon: '🚀',
-                    bg: 'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)',
-                    title: 'מוכן להתחיל?',
-                    sub: 'בחר איפה להתחיל — תמיד אפשר לחזור ולהוסיף עוד',
-                    actions: [
-                        { e: '🏦', label: 'חשבון בנק',   href: 'pages/bank.html',        color: '#3b82f6' },
-                        { e: '💳', label: 'כרטיס אשראי', href: 'pages/credit.html',       color: '#8b5cf6' },
-                        { e: '📈', label: 'מניות',        href: 'pages/stocks.html',       color: '#f59e0b' },
-                        { e: '💎', label: 'קרנות',        href: 'pages/my-funds.html',     color: '#10b981' },
-                        { e: '🏛️', label: 'גמל ופנסיה',  href: 'pages/gemel.html',        color: '#ec4899' },
-                        { e: '🏠', label: 'לדאשבורד',    href: null,                       color: '#64748b' }
-                    ]
-                }
-            ],
+                };
+                const lang = (typeof I18n !== 'undefined') ? I18n.currentLanguage : 'he';
+                return slides[lang] || slides.en;
+            },
 
             init() {
                 if (localStorage.getItem('finance_onboarding_done')) return;
@@ -1005,7 +968,7 @@
             _buildSlides() {
                 const track = document.getElementById('obTrack');
                 track.innerHTML = '';
-                this._slides.forEach((s, i) => {
+                this._getSlides().forEach((s, i) => {
                     const panel = document.createElement('div');
                     panel.style.cssText = 'flex:0 0 100vw;width:100vw;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 28px 120px;box-sizing:border-box;position:relative;';
 
@@ -1076,8 +1039,10 @@
             },
 
             _render() {
-                const total = this._slides.length;
+                const slides = this._getSlides();
+                const total  = slides.length;
                 const isLast = this._step === total - 1;
+                const ob = (typeof I18n !== 'undefined') ? I18n.translations[I18n.currentLanguage]?.onboarding : null;
 
                 // progress bar
                 document.getElementById('obProgressBar').style.width = ((this._step + 1) / total * 100) + '%';
@@ -1089,12 +1054,12 @@
                 document.getElementById('obPrevBtn').style.display = this._step > 0 ? '' : 'none';
                 // next button
                 const btn = document.getElementById('obNextBtn');
-                btn.textContent = isLast ? '✓ יאללה, מתחילים' : 'הבא →';
+                btn.textContent = isLast ? (ob?.start || '✓ Let\'s Start') : (ob?.next || 'Next →');
                 btn.style.display = isLast ? 'none' : '';
             },
 
             next() {
-                if (this._step < this._slides.length - 1) { this._step++; this._render(); }
+                if (this._step < this._getSlides().length - 1) { this._step++; this._render(); }
                 else this.finish();
             },
             prev() {
