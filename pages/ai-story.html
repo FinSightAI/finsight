@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="../img/logo.png">
-    <title>סיפור השבוע - FinSight</title>
+    <title id="pageTitle">סיפור השבוע - FinSight</title>
     <link rel="icon" type="image/png" href="../img/logo.png">
     <link rel="stylesheet" href="../css/app.css">
     <style>
@@ -215,7 +215,7 @@
 <div class="app-container">
     <header class="app-header">
         <button class="btn-back" onclick="history.back()">→</button>
-        <h1>✨ סיפור השבוע</h1>
+        <h1>✨ <span data-i18n="aiStory.pageTitle">סיפור השבוע</span></h1>
         <div></div>
     </header>
 
@@ -225,41 +225,40 @@
             <!-- API Setup (shown when no key) -->
             <div class="api-setup" id="apiSetup">
                 <div style="font-size:3rem;margin-bottom:16px">🤖</div>
-                <h2>חבר את Claude AI</h2>
-                <p>הכנס את מפתח ה-API של Anthropic כדי לקבל סיכום שבועי אישי של ההוצאות שלך.<br>
-                המפתח נשמר אצלך בדפדפן בלבד ולא נשלח לשום שרת.</p>
+                <h2 data-i18n="aiStory.connectTitle">חבר את Claude AI</h2>
+                <p data-i18n="aiStory.connectDesc">הכנס את מפתח ה-API של Anthropic כדי לקבל סיכום שבועי אישי של ההוצאות שלך. המפתח נשמר אצלך בדפדפן בלבד ולא נשלח לשום שרת.</p>
                 <div class="api-input-row">
                     <input type="password" id="apiKeyInput" placeholder="sk-ant-api..." autocomplete="off">
-                    <button class="btn btn-primary" onclick="saveApiKey()">התחבר</button>
+                    <button class="btn btn-primary" onclick="saveApiKey()" data-i18n="aiStory.connectBtn">התחבר</button>
                 </div>
                 <p style="margin-top:12px;font-size:0.78rem">
-                    <a href="https://console.anthropic.com" target="_blank" style="color:var(--color-primary)">קבל מפתח API בחינם באתר Anthropic ←</a>
+                    <a href="https://console.anthropic.com" target="_blank" style="color:var(--color-primary)" data-i18n="aiStory.getApiKey">קבל מפתח API בחינם באתר Anthropic ←</a>
                 </p>
             </div>
 
             <!-- Main UI (shown when key exists) -->
             <div id="mainUI" style="display:none">
                 <div class="key-row">
-                    <span>🔑 מחובר ל-Claude AI</span>
-                    <button class="key-change-btn" onclick="changeKey()">שנה מפתח</button>
+                    <span data-i18n="aiStory.connectedLabel">🔑 מחובר ל-Claude AI</span>
+                    <button class="key-change-btn" onclick="changeKey()" data-i18n="aiStory.changeKey">שנה מפתח</button>
                 </div>
 
                 <div class="controls-row">
                     <select id="rangeSelect">
-                        <option value="7">7 ימים אחרונים</option>
-                        <option value="14">14 ימים אחרונים</option>
-                        <option value="30">חודש אחרון</option>
-                        <option value="0">החודש הנוכחי</option>
+                        <option value="7" data-i18n="aiStory.range7">7 ימים אחרונים</option>
+                        <option value="14" data-i18n="aiStory.range14">14 ימים אחרונים</option>
+                        <option value="30" data-i18n="aiStory.range30">חודש אחרון</option>
+                        <option value="0" data-i18n="aiStory.range0">החודש הנוכחי</option>
                     </select>
                     <button class="generate-btn" id="generateBtn" onclick="generateStory()">
-                        <span>✨</span> <span id="btnText">ספר לי את השבוע שלי</span>
+                        <span>✨</span> <span id="btnText" data-i18n="aiStory.generateBtn">ספר לי את השבוע שלי</span>
                     </button>
                 </div>
 
                 <div class="error-box" id="errorBox"></div>
                 <div class="loading-wrap" id="loadingWrap">
                     <div class="loading-dots">✨</div>
-                    <div class="loading-text">Claude קורא את ההוצאות שלך...</div>
+                    <div class="loading-text" data-i18n="aiStory.loadingText">Claude קורא את ההוצאות שלך...</div>
                 </div>
 
                 <div class="story-card" id="storyCard">
@@ -275,7 +274,7 @@
                     </div>
                     <div class="story-footer">
                         <span id="storyTimestamp"></span>
-                        <span style="color:var(--color-primary);cursor:pointer" onclick="generateStory()">↻ רענן</span>
+                        <span style="color:var(--color-primary);cursor:pointer" onclick="generateStory()" data-i18n="aiStory.refresh">↻ רענן</span>
                     </div>
                 </div>
             </div>
@@ -290,9 +289,15 @@
 const AI_KEY_STORAGE = 'finance_ai_api_key';
 const AI_CACHE_KEY   = 'finance_ai_story_cache';
 
+function as(k) { return I18n.t('aiStory.' + k); }
+
 function getApiKey() { return localStorage.getItem(AI_KEY_STORAGE) || ''; }
 
 function init() {
+    if (typeof I18n !== 'undefined') {
+        I18n.apply();
+        document.title = as('pageTitle') + ' - FinSight';
+    }
     const key = getApiKey();
     document.getElementById('apiSetup').style.display = key ? 'none' : 'block';
     document.getElementById('mainUI').style.display   = key ? 'block' : 'none';
@@ -302,7 +307,7 @@ function init() {
 function saveApiKey() {
     const val = document.getElementById('apiKeyInput').value.trim();
     if (!val.startsWith('sk-ant-')) {
-        alert('המפתח צריך להתחיל ב-sk-ant-');
+        alert(as('invalidKey'));
         return;
     }
     localStorage.setItem(AI_KEY_STORAGE, val);
@@ -395,31 +400,33 @@ function gatherData(days) {
 }
 
 function buildPrompt(data) {
+    const langInstruction = as('promptInstruction');
     const lines = [
-        `תאריכים: ${data.from} עד ${data.to}`,
-        `מספר עסקאות: ${data.count}`,
-        `סך הוצאות (ILS): ₪${Math.round(data.totalILS).toLocaleString('he-IL')}`,
+        `Dates: ${data.from} to ${data.to}`,
+        `Transactions: ${data.count}`,
+        `Total expenses (ILS): ₪${Math.round(data.totalILS).toLocaleString('en-US')}`,
     ];
-    if (data.topCat) lines.push(`קטגוריה מובילה: ${data.topCat.name} (₪${Math.round(data.topCat.amount).toLocaleString('he-IL')})`);
-    if (data.biggest) lines.push(`ההוצאה הגדולה: ${data.biggest.desc} — ${data.biggest.amount} ${data.biggest.currency} (${data.biggest.date})`);
-    if (data.budgetLeft !== null) lines.push(`תקציב חודשי: ₪${data.budgetTotal.toLocaleString('he-IL')} | נשאר: ₪${Math.round(data.budgetLeft).toLocaleString('he-IL')} ל-${data.daysLeft} ימים`);
+    if (data.topCat) lines.push(`Top category: ${data.topCat.name} (₪${Math.round(data.topCat.amount).toLocaleString('en-US')})`);
+    if (data.biggest) lines.push(`Largest expense: ${data.biggest.desc} — ${data.biggest.amount} ${data.biggest.currency} (${data.biggest.date})`);
+    if (data.budgetLeft !== null) lines.push(`Monthly budget: ₪${data.budgetTotal.toLocaleString('en-US')} | Remaining: ₪${Math.round(data.budgetLeft).toLocaleString('en-US')} for ${data.daysLeft} days`);
 
     const countryList = Object.entries(data.countries).map(([c,v]) => `${c}: ₪${Math.round(v)}`).join(', ');
-    if (countryList) lines.push(`פירוט לפי מדינה: ${countryList}`);
+    if (countryList) lines.push(`By country: ${countryList}`);
 
-    lines.push('', '15 העסקאות הגדולות:');
+    lines.push('', 'Top 15 transactions:');
     data.expenses.forEach(e => lines.push(`  ${e.date} | ${e.desc} | ${e.amount} ${e.currency} | ${e.category||''}`));
 
-    return `אתה יועץ פיננסי אישי חכם ומחובר. קיבלת נתוני הוצאות של משתמש.
+    return `You are a smart personal financial advisor. You received a user's expense data.
 
 ${lines.join('\n')}
 
-ענה בJSON בלבד (ללא markdown, ללא טקסט מחוץ ל-JSON):
+${langInstruction}
+Reply in JSON only (no markdown, no text outside JSON):
 {
-  "headline": "כותרת קצרה ומעניינת לתקופה זו (עד 8 מילים, עברית)",
-  "story": "2-3 משפטים שמתארים את ההוצאות בצורה אישית, חמה וספציפית עם מספרים ושמות. עברית.",
-  "highlight": "תובנה מעניינת אחת שמצאת — משהו שהמשתמש אולי לא שם לב אליו. עברית.",
-  "tip": "טיפ אחד מעשי ורלוונטי לנתונים הספציפיים האלה. עברית.",
+  "headline": "Short, engaging title for this period (up to 8 words)",
+  "story": "2-3 sentences describing expenses in a personal, warm, specific way with numbers and names.",
+  "highlight": "One interesting insight you found — something the user may not have noticed.",
+  "tip": "One practical tip relevant to this specific data.",
   "mood": "exactly one of: excellent / good / warning / critical"
 }`;
 }
@@ -432,7 +439,7 @@ async function generateStory() {
     const data = gatherData(days);
 
     if (data.count === 0) {
-        showError('לא נמצאו עסקאות בתקופה הנבחרת. יבא עסקאות תחילה.');
+        showError(as('noTransactions'));
         return;
     }
 
@@ -458,7 +465,7 @@ async function generateStory() {
 
         if (!resp.ok) {
             const err = await resp.json().catch(() => ({}));
-            throw new Error(err.error?.message || `שגיאת API: ${resp.status}`);
+            throw new Error(err.error?.message || `API Error: ${resp.status}`);
         }
 
         const json = await resp.json();
@@ -473,7 +480,7 @@ async function generateStory() {
         renderStory(result, data, days, new Date());
 
     } catch(e) {
-        showError('שגיאה: ' + (e.message || e));
+        showError(as('errorPrefix') + (e.message || e));
     } finally {
         setLoading(false);
     }
@@ -481,14 +488,14 @@ async function generateStory() {
 
 function renderStory(result, data, days, ts) {
     const moodMap = {
-        excellent: { text: '🟢 מצוין', cls: 'mood-excellent' },
-        good:      { text: '🔵 טוב', cls: 'mood-good' },
-        warning:   { text: '🟡 שים לב', cls: 'mood-warning' },
-        critical:  { text: '🔴 חריגה', cls: 'mood-critical' }
+        excellent: { text: as('moodExcellent'), cls: 'mood-excellent' },
+        good:      { text: as('moodGood'),      cls: 'mood-good' },
+        warning:   { text: as('moodWarning'),   cls: 'mood-warning' },
+        critical:  { text: as('moodCritical'),  cls: 'mood-critical' }
     };
     const mood = moodMap[result.mood] || moodMap.good;
 
-    document.getElementById('weekLabel').textContent = days === 0 ? 'החודש הנוכחי' : `${days} הימים האחרונים · ${data.from} – ${data.to}`;
+    document.getElementById('weekLabel').textContent = days === 0 ? as('currentMonth') : `${days} · ${data.from} – ${data.to}`;
     document.getElementById('storyHeadline').textContent = result.headline || '';
 
     const badge = document.getElementById('moodBadge');
@@ -500,20 +507,20 @@ function renderStory(result, data, days, ts) {
     const budgetPct = data.budgetTotal > 0 ? Math.round(data.monthTotal / data.budgetTotal * 100) : null;
     qs.innerHTML = `
         <div class="quick-stat">
-            <div class="qs-label">סך הוצאות</div>
+            <div class="qs-label">${as('statTotal')}</div>
             <div class="qs-value">₪${Math.round(data.totalILS).toLocaleString('he-IL')}</div>
         </div>
         <div class="quick-stat">
-            <div class="qs-label">עסקאות</div>
+            <div class="qs-label">${as('statTransactions')}</div>
             <div class="qs-value">${data.count}</div>
         </div>
         ${budgetPct !== null ? `
         <div class="quick-stat">
-            <div class="qs-label">מהתקציב</div>
+            <div class="qs-label">${as('statBudget')}</div>
             <div class="qs-value" style="color:${budgetPct>90?'var(--color-negative)':budgetPct>70?'#f59e0b':'var(--color-positive)'}">${budgetPct}%</div>
         </div>` : `
         <div class="quick-stat">
-            <div class="qs-label">ממוצע ליום</div>
+            <div class="qs-label">${as('statAvgDay')}</div>
             <div class="qs-value">₪${data.count > 0 ? Math.round(data.totalILS / Math.max(days||30,1)).toLocaleString('he-IL') : 0}</div>
         </div>`}
     `;
@@ -521,18 +528,23 @@ function renderStory(result, data, days, ts) {
     document.getElementById('storyMain').textContent = result.story || '';
 
     const sections = document.getElementById('storySections');
+    const budgetText = data.budgetLeft !== null
+        ? (data.budgetLeft >= 0
+            ? as('budgetRemaining').replace('{left}', `₪${Math.round(data.budgetLeft).toLocaleString('he-IL')}`).replace('{total}', `₪${data.budgetTotal.toLocaleString('he-IL')}`).replace('{days}', data.daysLeft)
+            : as('budgetOver').replace('{amount}', `₪${Math.round(Math.abs(data.budgetLeft)).toLocaleString('he-IL')}`))
+        : '';
     sections.innerHTML = `
         <div class="story-section">
             <div class="section-icon">💡</div>
             <div class="section-content">
-                <div class="section-label">תובנה</div>
+                <div class="section-label">${as('sectionInsight')}</div>
                 <div class="section-text">${result.highlight || ''}</div>
             </div>
         </div>
         <div class="story-section">
             <div class="section-icon">🎯</div>
             <div class="section-content">
-                <div class="section-label">טיפ</div>
+                <div class="section-label">${as('sectionTip')}</div>
                 <div class="section-text">${result.tip || ''}</div>
             </div>
         </div>
@@ -540,17 +552,14 @@ function renderStory(result, data, days, ts) {
         <div class="story-section">
             <div class="section-icon">${data.budgetLeft < 0 ? '🚨' : data.budgetLeft < data.budgetTotal * 0.1 ? '⚠️' : '📊'}</div>
             <div class="section-content">
-                <div class="section-label">תקציב</div>
-                <div class="section-text">
-                    ${data.budgetLeft >= 0
-                        ? `נשאר ₪${Math.round(data.budgetLeft).toLocaleString('he-IL')} מתוך ₪${data.budgetTotal.toLocaleString('he-IL')} — ל-${data.daysLeft} ימים נוספים בחודש`
-                        : `חרגת ב-₪${Math.round(Math.abs(data.budgetLeft)).toLocaleString('he-IL')} מהתקציב החודשי`}
-                </div>
+                <div class="section-label">${as('sectionBudget')}</div>
+                <div class="section-text">${budgetText}</div>
             </div>
         </div>` : ''}
     `;
 
-    document.getElementById('storyTimestamp').textContent = 'עודכן: ' + ts.toLocaleString('he-IL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+    const locale = I18n.currentLanguage === 'he' ? 'he-IL' : I18n.currentLanguage === 'pt' ? 'pt-BR' : 'en-US';
+    document.getElementById('storyTimestamp').textContent = as('updatedLabel') + ts.toLocaleString(locale, {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
 
     document.getElementById('storyCard').style.display = 'block';
 }
@@ -558,7 +567,7 @@ function renderStory(result, data, days, ts) {
 function setLoading(on) {
     document.getElementById('loadingWrap').style.display = on ? 'block' : 'none';
     document.getElementById('generateBtn').disabled = on;
-    document.getElementById('btnText').textContent = on ? 'מייצר...' : 'ספר לי את השבוע שלי';
+    document.getElementById('btnText').textContent = on ? as('generating') : as('generateBtn');
     if (on) document.getElementById('storyCard').style.display = 'none';
 }
 
