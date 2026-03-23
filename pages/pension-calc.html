@@ -308,36 +308,36 @@
             <header class="page-header">
                 <h1>
                     <span>🧮</span>
-                    <span data-he="מחשבון פנסיה" data-en="Pension Calculator">מחשבון פנסיה</span>
+                    <span data-i18n="pensionCalc.pageTitle">מחשבון פנסיה</span>
                 </h1>
-                <p data-he="תחזית חיסכון לגיל פרישה" data-en="Retirement savings projection">תחזית חיסכון לגיל פרישה</p>
+                <p data-i18n="pensionCalc.subtitle">תחזית חיסכון לגיל פרישה</p>
             </header>
 
             <div class="calc-container">
                 <div class="calc-grid">
                     <!-- Input Section -->
                     <div class="calc-inputs">
-                        <h2 data-he="📝 פרטים אישיים" data-en="📝 Personal Details">📝 פרטים אישיים</h2>
+                        <h2 data-i18n="pensionCalc.personalDetails">📝 פרטים אישיים</h2>
 
                         <div class="input-group">
-                            <label data-he="גיל נוכחי" data-en="Current Age">גיל נוכחי</label>
+                            <label data-i18n="pensionCalc.currentAge">גיל נוכחי</label>
                             <input type="number" id="currentAge" min="18" max="80" value="30">
                         </div>
 
                         <div class="input-group">
-                            <label data-he="גיל פרישה מתוכנן" data-en="Planned Retirement Age">גיל פרישה מתוכנן</label>
+                            <label data-i18n="pensionCalc.retirementAge">גיל פרישה מתוכנן</label>
                             <input type="number" id="retirementAge" min="55" max="80" value="67">
                         </div>
 
                         <div class="input-group">
-                            <label data-he="תוחלת חיים (לחישוב תשלום חודשי)" data-en="Life Expectancy">תוחלת חיים (לחישוב תשלום חודשי)</label>
+                            <label data-i18n="pensionCalc.lifeExpectancy">תוחלת חיים (לחישוב תשלום חודשי)</label>
                             <input type="number" id="lifeExpectancy" min="70" max="100" value="85">
                         </div>
 
-                        <h2 style="margin-top: 30px;" data-he="💰 נתונים פיננסיים" data-en="💰 Financial Data">💰 נתונים פיננסיים</h2>
+                        <h2 style="margin-top: 30px;" data-i18n="pensionCalc.financialData">💰 נתונים פיננסיים</h2>
 
                         <div class="input-group">
-                            <label data-he="סכום פנסיה נוכחי (₪)" data-en="Current Pension Balance (₪)">סכום פנסיה נוכחי (₪)</label>
+                            <label data-i18n="pensionCalc.currentBalance">סכום פנסיה נוכחי (₪)</label>
                             <div class="input-with-unit">
                                 <input type="number" id="currentBalance" min="0" value="100000">
                                 <span class="unit">₪</span>
@@ -345,7 +345,7 @@
                         </div>
 
                         <div class="input-group">
-                            <label data-he="הפקדה חודשית (עובד + מעסיק)" data-en="Monthly Deposit (Employee + Employer)">הפקדה חודשית (עובד + מעסיק)</label>
+                            <label data-i18n="pensionCalc.monthlyDeposit">הפקדה חודשית (עובד + מעסיק)</label>
                             <div class="input-with-unit">
                                 <input type="number" id="monthlyDeposit" min="0" value="3000">
                                 <span class="unit">₪</span>
@@ -353,7 +353,7 @@
                         </div>
 
                         <div class="input-group">
-                            <label data-he="תשואה שנתית צפויה (%)" data-en="Expected Annual Return (%)">תשואה שנתית צפויה (%)</label>
+                            <label data-i18n="pensionCalc.expectedReturn">תשואה שנתית צפויה (%)</label>
                             <div class="input-with-unit">
                                 <input type="number" id="expectedReturn" min="0" max="20" step="0.5" value="5">
                                 <span class="unit">%</span>
@@ -361,54 +361,54 @@
                         </div>
 
                         <div class="input-group">
-                            <label data-he="דמי ניהול מצבירה (%)" data-en="Management Fee (%)">דמי ניהול מצבירה (%)</label>
+                            <label data-i18n="pensionCalc.managementFee">דמי ניהול מצבירה (%)</label>
                             <div class="input-with-unit">
                                 <input type="number" id="managementFee" min="0" max="2" step="0.1" value="0.5">
                                 <span class="unit">%</span>
                             </div>
                         </div>
 
-                        <button class="calc-btn" onclick="calculatePension()" data-he="חשב תחזית" data-en="Calculate Projection">
+                        <button class="calc-btn" onclick="calculatePension()" data-i18n="pensionCalc.calcBtn">
                             🔮 חשב תחזית
                         </button>
                     </div>
 
                     <!-- Results Section -->
                     <div class="results-container">
-                        <h2 data-he="📊 תוצאות התחזית" data-en="📊 Projection Results">📊 תוצאות התחזית</h2>
+                        <h2 data-i18n="pensionCalc.resultsTitle">📊 תוצאות התחזית</h2>
 
                         <div id="resultsEmpty" class="empty-state">
                             <div class="icon">🧮</div>
-                            <p data-he="הזן את הנתונים ולחץ על 'חשב תחזית'" data-en="Enter your data and click 'Calculate Projection'">הזן את הנתונים ולחץ על 'חשב תחזית'</p>
+                            <p data-i18n="pensionCalc.enterDataHint">הזן את הנתונים ולחץ על 'חשב תחזית'</p>
                         </div>
 
                         <div id="resultsContent" style="display: none;">
                             <div class="result-summary">
                                 <div class="result-card">
-                                    <div class="label" data-he="צבירה צפויה בפרישה" data-en="Expected Balance at Retirement">צבירה צפויה בפרישה</div>
+                                    <div class="label" data-i18n="pensionCalc.expectedBalance">צבירה צפויה בפרישה</div>
                                     <div class="value highlight" id="totalAtRetirement">₪0</div>
                                 </div>
                                 <div class="result-card">
-                                    <div class="label" data-he="שנים עד פרישה" data-en="Years to Retirement">שנים עד פרישה</div>
+                                    <div class="label" data-i18n="pensionCalc.yearsToRetirement">שנים עד פרישה</div>
                                     <div class="value" id="yearsToRetirement">0</div>
                                 </div>
                                 <div class="result-card">
-                                    <div class="label" data-he="סה״כ הפקדות" data-en="Total Deposits">סה״כ הפקדות</div>
+                                    <div class="label" data-i18n="pensionCalc.totalDeposits">סה"כ הפקדות</div>
                                     <div class="value" id="totalDeposits">₪0</div>
                                 </div>
                                 <div class="result-card">
-                                    <div class="label" data-he="רווחים מתשואה" data-en="Returns Earned">רווחים מתשואה</div>
+                                    <div class="label" data-i18n="pensionCalc.returnsEarned">רווחים מתשואה</div>
                                     <div class="value positive" id="totalReturns">₪0</div>
                                 </div>
                             </div>
 
                             <div class="result-summary" style="margin-top: 15px;">
                                 <div class="result-card">
-                                    <div class="label" data-he="קצבה חודשית משוערת" data-en="Estimated Monthly Pension">קצבה חודשית משוערת</div>
+                                    <div class="label" data-i18n="pensionCalc.monthlyPension">קצבה חודשית משוערת</div>
                                     <div class="value highlight" id="monthlyPension">₪0</div>
                                 </div>
                                 <div class="result-card">
-                                    <div class="label" data-he="תשואה נטו (לאחר דמי ניהול)" data-en="Net Return (After Fees)">תשואה נטו (לאחר דמי ניהול)</div>
+                                    <div class="label" data-i18n="pensionCalc.netReturn">תשואה נטו (לאחר דמי ניהול)</div>
                                     <div class="value" id="netReturn">0%</div>
                                 </div>
                             </div>
@@ -418,14 +418,14 @@
                             </div>
 
                             <div class="projection-table" id="projectionTableContainer">
-                                <h3 style="margin-bottom: 15px;" data-he="📅 פירוט שנתי" data-en="📅 Yearly Breakdown">📅 פירוט שנתי</h3>
+                                <h3 style="margin-bottom: 15px;" data-i18n="pensionCalc.yearlyBreakdown">📅 פירוט שנתי</h3>
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th data-he="גיל" data-en="Age">גיל</th>
-                                            <th data-he="הפקדות" data-en="Deposits">הפקדות</th>
-                                            <th data-he="תשואה" data-en="Returns">תשואה</th>
-                                            <th data-he="צבירה" data-en="Balance">צבירה</th>
+                                            <th data-i18n="pensionCalc.colAge">גיל</th>
+                                            <th data-i18n="pensionCalc.colDeposits">הפקדות</th>
+                                            <th data-i18n="pensionCalc.colReturns">תשואה</th>
+                                            <th data-i18n="pensionCalc.colBalance">צבירה</th>
                                         </tr>
                                     </thead>
                                     <tbody id="projectionTable">
@@ -437,10 +437,8 @@
                 </div>
 
                 <div class="disclaimer">
-                    <strong data-he="⚠️ שים לב:" data-en="⚠️ Note:">⚠️ שים לב:</strong>
-                    <span data-he="חישוב זה הוא אומדן בלבד ומבוסס על הנחות פשטניות. התשואות בפועל עשויות להשתנות. מומלץ להתייעץ עם יועץ פנסיוני מוסמך." data-en="This calculation is an estimate only and is based on simplified assumptions. Actual returns may vary. It is recommended to consult a certified pension advisor.">
-                        חישוב זה הוא אומדן בלבד ומבוסס על הנחות פשטניות. התשואות בפועל עשויות להשתנות. מומלץ להתייעץ עם יועץ פנסיוני מוסמך.
-                    </span>
+                    <strong data-i18n="pensionCalc.disclaimerTitle">⚠️ שים לב:</strong>
+                    <span data-i18n="pensionCalc.disclaimerText">חישוב זה הוא אומדן בלבד ומבוסס על הנחות פשטניות. התשואות בפועל עשויות להשתנות. מומלץ להתייעץ עם יועץ פנסיוני מוסמך.</span>
                 </div>
             </div>
             <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
@@ -482,15 +480,13 @@
                 currentLang = 'he';
             }
 
-            document.body.classList.toggle('ltr', currentLang === 'en');
+            if (typeof I18n !== 'undefined') {
+                I18n.currentLanguage = currentLang;
+                I18n.apply();
+            }
+            document.body.classList.toggle('ltr', currentLang !== 'he');
             document.documentElement.lang = currentLang;
             document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-
-            document.querySelectorAll('[data-he][data-en]').forEach(el => {
-                el.textContent = el.getAttribute(`data-${currentLang}`);
-            });
-
-            // Language switcher buttons are now in sidebar-header
         }
 
         function formatCurrency(amount) {
