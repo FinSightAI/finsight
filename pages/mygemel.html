@@ -215,64 +215,65 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../js/i18n.js"></script>
 </head>
 <body>
     <div class="dashboard">
         <header>
             <img src="../img/logo.png" alt="FinSight" class="logo-hero-img" style="display: block; margin: 0 auto 15px; width: 160px; height: auto; border-radius: 12px;">
-            <h1 data-he="קרנות ופנסיה - iGemel-Net" data-en="Funds & Pension - iGemel-Net">קרנות ופנסיה - iGemel-Net</h1>
-            <p data-he="השוואת קופות גמל, קרנות השתלמות וקרנות פנסיה - נתונים אמיתיים" data-en="Compare Provident Funds, Training Funds and Pension Funds - Real Data">השוואת קופות גמל, קרנות השתלמות וקרנות פנסיה - נתונים אמיתיים</p>
+            <h1 data-i18n="market.pages.mygemelTitle">קרנות ופנסיה - iGemel-Net</h1>
+            <p data-i18n="market.pages.mygemelSubtitle">השוואת קופות גמל, קרנות השתלמות וקרנות פנסיה - נתונים אמיתיים</p>
             <span class="source-badge" id="sourceBadge">iGemel-Net</span>
             <div class="nav-links">
-                <a href="../index.html" data-he="🏠 דאשבורד ראשי" data-en="🏠 Main Dashboard">🏠 דאשבורד ראשי</a>
-                <a href="market-products.html" data-he="🏪 מוצרים בשוק" data-en="🏪 Market Products">🏪 מוצרים בשוק</a>
-                <a href="training.html" data-he="TheMarker - השתלמות" data-en="TheMarker - Training">TheMarker - השתלמות</a>
-                <a href="pension.html" data-he="TheMarker - פנסיה" data-en="TheMarker - Pension">TheMarker - פנסיה</a>
-                <a href="gemel.html" data-he="TheMarker - גמל" data-en="TheMarker - Gemel">TheMarker - גמל</a>
+                <a href="../index.html" data-i18n="market.nav.dashboard">🏠 דאשבורד ראשי</a>
+                <a href="market-products.html" data-i18n="market.nav.marketProducts">🏪 מוצרים בשוק</a>
+                <a href="training.html" data-i18n="market.nav.training">קרנות השתלמות</a>
+                <a href="pension.html" data-i18n="market.nav.pension">קרנות פנסיה</a>
+                <a href="gemel.html" data-i18n="market.nav.gemel">קופות גמל</a>
             </div>
         </header>
 
         <div class="cards-grid">
             <a href="mygemel-training.html" class="fund-card">
                 <div class="icon">📚</div>
-                <h2 data-he="קרנות השתלמות" data-en="Training Funds">קרנות השתלמות</h2>
-                <p data-he="השוואת קרנות השתלמות - תשואות, דמי ניהול והשוואה בין חברות" data-en="Compare training funds - returns, fees, and company comparison">השוואת קרנות השתלמות - תשואות, דמי ניהול והשוואה בין חברות</p>
-                <span class="count" id="trainingCount" data-he="טוען..." data-en="Loading...">טוען...</span>
+                <h2 data-i18n="market.pages.mygemelCard1Title">קרנות השתלמות</h2>
+                <p data-i18n="market.pages.mygemelCard1Desc">השוואת קרנות השתלמות - תשואות, דמי ניהול והשוואה בין חברות</p>
+                <span class="count" id="trainingCount" data-i18n="market.labels.loading">טוען...</span>
             </a>
 
             <a href="mygemel-pension.html" class="fund-card">
                 <div class="icon">🏦</div>
-                <h2 data-he="קרנות פנסיה" data-en="Pension Funds">קרנות פנסיה</h2>
-                <p data-he="השוואת קרנות פנסיה - מסלולים, תשואות ודמי ניהול" data-en="Compare pension funds - tracks, returns, and management fees">השוואת קרנות פנסיה - מסלולים, תשואות ודמי ניהול</p>
-                <span class="count" id="pensionCount" data-he="טוען..." data-en="Loading...">טוען...</span>
+                <h2 data-i18n="market.pages.mygemelCard2Title">קרנות פנסיה</h2>
+                <p data-i18n="market.pages.mygemelCard2Desc">השוואת קרנות פנסיה - מסלולים, תשואות ודמי ניהול</p>
+                <span class="count" id="pensionCount" data-i18n="market.labels.loading">טוען...</span>
             </a>
 
             <a href="mygemel-gemel.html" class="fund-card">
                 <div class="icon">💰</div>
-                <h2 data-he="קופות גמל להשקעה" data-en="Provident Funds">קופות גמל להשקעה</h2>
-                <p data-he="השוואת קופות גמל להשקעה - מסלולים, תשואות ודמי ניהול" data-en="Compare provident funds - tracks, returns, and fees">השוואת קופות גמל להשקעה - מסלולים, תשואות ודמי ניהול</p>
-                <span class="count" id="gemelCount" data-he="טוען..." data-en="Loading...">טוען...</span>
+                <h2 data-i18n="market.pages.mygemelCard3Title">קופות גמל להשקעה</h2>
+                <p data-i18n="market.pages.mygemelCard3Desc">השוואת קופות גמל להשקעה - מסלולים, תשואות ודמי ניהול</p>
+                <span class="count" id="gemelCount" data-i18n="market.labels.loading">טוען...</span>
             </a>
         </div>
 
         <div class="info-section">
             <h3>
                 <span>ℹ️</span>
-                <span data-he="מידע על הנתונים" data-en="About the Data">מידע על הנתונים</span>
+                <span data-i18n="market.pages.mygemelInfoTitle">מידע על הנתונים</span>
             </h3>
             <ul>
-                <li data-he="• נתונים רשמיים מרשות שוק ההון ומשרד האוצר" data-en="• Official data from Capital Market Authority and Ministry of Finance">• נתונים רשמיים מרשות שוק ההון ומשרד האוצר</li>
-                <li data-he="• תשואות מצטברות וממוצעות של כלל העמיתים" data-en="• Cumulative and average returns of all members">• תשואות מצטברות וממוצעות של כלל העמיתים</li>
-                <li data-he="• תשואות ברוטו - לפני ניכוי דמי ניהול" data-en="• Gross returns - before management fee deduction">• תשואות ברוטו - לפני ניכוי דמי ניהול</li>
-                <li data-he="• דירוג לפי תשואות בתקופות שונות" data-en="• Ranking by returns over different periods">• דירוג לפי תשואות בתקופות שונות</li>
+                <li data-i18n="market.pages.mygemelInfo1">• נתונים רשמיים מרשות שוק ההון ומשרד האוצר</li>
+                <li data-i18n="market.pages.mygemelInfo2">• תשואות מצטברות וממוצעות של כלל העמיתים</li>
+                <li data-i18n="market.pages.mygemelInfo3">• תשואות ברוטו - לפני ניכוי דמי ניהול</li>
+                <li data-i18n="market.pages.mygemelInfo4">• דירוג לפי תשואות בתקופות שונות</li>
             </ul>
         </div>
 
         <div class="data-source">
-            <span data-he="מקור הנתונים:" data-en="Data source:">מקור הנתונים:</span>
+            <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
             <a href="https://www.igemel-net.co.il/" target="_blank">iGemel-Net.co.il</a>
             <div class="last-update">
-                <span data-he="עדכון אחרון:" data-en="Last update:">עדכון אחרון:</span>
+                <span data-i18n="market.labels.lastUpdate">עדכון אחרון:</span>
                 <span id="lastUpdate">טוען...</span>
             </div>
         </div>
@@ -286,20 +287,15 @@
         let currentLang = 'he';
 
         function loadLanguage() {
-            try {
-                const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
-                currentLang = settings.language || 'he';
-            } catch (e) {
-                currentLang = 'he';
+            const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
+            currentLang = settings.language || 'he';
+            if (typeof I18n !== 'undefined') {
+                I18n.currentLanguage = currentLang;
+                I18n.apply();
             }
-
-            document.body.classList.toggle('ltr', currentLang === 'en');
+            document.body.classList.toggle('ltr', currentLang !== 'he');
             document.documentElement.lang = currentLang;
             document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-
-            document.querySelectorAll('[data-he][data-en]').forEach(el => {
-                el.textContent = el.getAttribute(`data-${currentLang}`);
-            });
         }
 
 

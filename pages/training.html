@@ -381,23 +381,24 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../js/i18n.js"></script>
 </head>
 <body>
     <div class="dashboard">
         <header>
             <img src="../img/logo.png" alt="FinSight" class="logo-hero-img" style="display: block; margin: 0 auto 15px; width: 160px; height: auto; border-radius: 12px;">
-            <h1 data-he="דאשבורד קרנות השתלמות" data-en="Training Funds Dashboard">דאשבורד קרנות השתלמות</h1>
-            <p data-he="השוואת קרנות השתלמות מובילות" data-en="Top Performing Training Funds Comparison">השוואת קרנות השתלמות מובילות</p>
-            <span class="real-data-badge" id="dataDate" data-he="נתונים אמיתיים" data-en="REAL DATA">נתונים אמיתיים</span>
-            <a href="market-update.html" class="real-data-badge" style="background: #00d2ff; text-decoration: none; margin-right: 5px;" data-he="🔄 עדכון נתונים" data-en="🔄 Update Data">🔄 עדכון נתונים</a>
+            <h1 data-i18n="market.pages.trainingTitle">דאשבורד קרנות השתלמות</h1>
+            <p data-i18n="market.pages.trainingSubtitle">השוואת קרנות השתלמות מובילות</p>
+            <span class="real-data-badge" id="dataDate" data-i18n="market.labels.realData">נתונים אמיתיים</span>
+            <a href="market-update.html" class="real-data-badge" style="background: #00d2ff; text-decoration: none; margin-right: 5px;" data-i18n="market.nav.updateData">🔄 עדכון נתונים</a>
             <div class="nav-links">
-                <a href="../index.html" data-he="🏠 דאשבורד ראשי" data-en="🏠 Main Dashboard">🏠 דאשבורד ראשי</a>
-                <a href="market-products.html" data-he="🏪 מוצרים בשוק" data-en="🏪 Market Products">🏪 מוצרים בשוק</a>
-                <a href="training.html" class="active" data-he="קרנות השתלמות" data-en="Training Funds">קרנות השתלמות</a>
-                <a href="pension.html" data-he="קרנות פנסיה" data-en="Pension Funds">קרנות פנסיה</a>
-                <a href="gemel.html" data-he="קופות גמל" data-en="Provident Funds">קופות גמל</a>
-                <a href="my-funds.html" data-he="💎 הקופות שלי" data-en="💎 My Accounts">💎 הקופות שלי</a>
-                <a href="pension-optimizer.html" data-he="🎯 אופטימיזטור" data-en="🎯 Optimizer">🎯 אופטימיזטור</a>
+                <a href="../index.html" data-i18n="market.nav.dashboard">🏠 דאשבורד ראשי</a>
+                <a href="market-products.html" data-i18n="market.nav.marketProducts">🏪 מוצרים בשוק</a>
+                <a href="training.html" class="active" data-i18n="market.nav.training">קרנות השתלמות</a>
+                <a href="pension.html" data-i18n="market.nav.pension">קרנות פנסיה</a>
+                <a href="gemel.html" data-i18n="market.nav.gemel">קופות גמל</a>
+                <a href="my-funds.html" data-i18n="market.nav.myAccounts">💎 הקופות שלי</a>
+                <a href="pension-optimizer.html" data-i18n="market.nav.optimizer">🎯 אופטימיזטור</a>
             </div>
         </header>
 
@@ -406,30 +407,30 @@
             <div class="table-container" style="border: 2px solid #00d2ff;">
                 <h2 class="section-title" style="color: #00d2ff;">
                     <span class="icon">🎓</span>
-                    <span data-he="קרנות ההשתלמות שלי" data-en="My Training Funds">קרנות ההשתלמות שלי</span>
-                    <button onclick="openAddTrainingModal()" style="margin-right: auto; background: #00d2ff; color: #fff; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600;" data-he="➕ הוסף" data-en="➕ Add">➕ הוסף</button>
+                    <span data-i18n="market.pages.myFundsTraining">קרנות ההשתלמות שלי</span>
+                    <button onclick="openAddTrainingModal()" style="margin-right: auto; background: #00d2ff; color: #fff; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600;" data-i18n="market.pages.addBtn">➕ הוסף</button>
                 </h2>
                 <div id="myTrainingFunds">
-                    <p style="text-align: center; color: #8892b0; padding: 20px;" data-he="טוען..." data-en="Loading...">טוען...</p>
+                    <p style="text-align: center; color: #8892b0; padding: 20px;" data-i18n="market.labels.loading">טוען...</p>
                 </div>
             </div>
         </div>
 
         <div class="stats-row">
             <div class="stat-card">
-                <h3 data-he="סה״כ חסכונות" data-en="Total Funds">סה״כ חסכונות</h3>
+                <h3 data-i18n="market.labels.totalFunds">סה"כ חסכונות</h3>
                 <div class="value">12</div>
             </div>
             <div class="stat-card">
-                <h3 data-he="תשואה חודשית מובילה" data-en="Best Monthly Return">תשואה חודשית מובילה</h3>
+                <h3 data-i18n="market.labels.bestMonthly">תשואה חודשית מקסימלית</h3>
                 <div class="value">4.89%</div>
             </div>
             <div class="stat-card">
-                <h3 data-he="תשואה שנתית מובילה" data-en="Best 1-Year Return">תשואה שנתית מובילה</h3>
+                <h3 data-i18n="market.labels.bestYearly">תשואה שנתית מקסימלית</h3>
                 <div class="value">52.54%</div>
             </div>
             <div class="stat-card">
-                <h3 data-he="תשואת 5 שנים מובילה" data-en="Best 5-Year Return">תשואת 5 שנים מובילה</h3>
+                <h3 data-i18n="market.labels.best5y">תשואה מקסימלית 5 שנים</h3>
                 <div class="value">128.34%</div>
             </div>
         </div>
@@ -437,13 +438,13 @@
         <div class="analysis-section">
             <h2 class="analysis-title">
                 <span>🏆</span>
-                <span data-he="ניתוח: הקרנות המובילות" data-en="Analysis: Top Performing Funds">ניתוח: הקרנות המובילות</span>
+                <span data-i18n="market.labels.topFundsAnalysis">ניתוח: הקרנות המובילות</span>
             </h2>
             <div class="winners-grid">
                 <div class="winner-card">
                     <div class="winner-badge">
                         <span>🥇</span>
-                        <span data-he="מקום ראשון" data-en="1st Place">מקום ראשון</span>
+                        <span data-i18n="market.labels.place1">מקום ראשון</span>
                     </div>
                     <div class="winner-info">
                         <div class="winner-name" data-he="אינפיניטי השתלמות משולב סחיר" data-en="Infiniti Mixed Tradable">אינפיניטי השתלמות משולב סחיר</div>
@@ -452,26 +453,26 @@
                     <div class="winner-stats">
                         <div class="winner-stat">
                             <div class="winner-stat-value">128.34%</div>
-                            <div class="winner-stat-label" data-he="5 שנים" data-en="5 Years">5 שנים</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y5">5 שנים</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">110.99%</div>
-                            <div class="winner-stat-label" data-he="3 שנים" data-en="3 Years">3 שנים</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y3">3 שנים</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">48.74%</div>
-                            <div class="winner-stat-label" data-he="שנה" data-en="1 Year">שנה</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y1">שנה</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">2.86%</div>
-                            <div class="winner-stat-label" data-he="חודש" data-en="Month">חודש</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.month">חודש</div>
                         </div>
                     </div>
                 </div>
                 <div class="winner-card second">
                     <div class="winner-badge silver">
                         <span>🥈</span>
-                        <span data-he="מקום שני" data-en="2nd Place">מקום שני</span>
+                        <span data-i18n="market.labels.place2">מקום שני</span>
                     </div>
                     <div class="winner-info">
                         <div class="winner-name" data-he="אינפיניטי השתלמות מניות" data-en="Infiniti Stocks">אינפיניטי השתלמות מניות</div>
@@ -480,26 +481,26 @@
                     <div class="winner-stats">
                         <div class="winner-stat">
                             <div class="winner-stat-value">106.21%</div>
-                            <div class="winner-stat-label" data-he="5 שנים" data-en="5 Years">5 שנים</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y5">5 שנים</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">90.83%</div>
-                            <div class="winner-stat-label" data-he="3 שנים" data-en="3 Years">3 שנים</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y3">3 שנים</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">24.18%</div>
-                            <div class="winner-stat-label" data-he="שנה" data-en="1 Year">שנה</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y1">שנה</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">0.95%</div>
-                            <div class="winner-stat-label" data-he="חודש" data-en="Month">חודש</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.month">חודש</div>
                         </div>
                     </div>
                 </div>
                 <div class="winner-card third">
                     <div class="winner-badge bronze">
                         <span>🥉</span>
-                        <span data-he="מקום שלישי" data-en="3rd Place">מקום שלישי</span>
+                        <span data-i18n="market.labels.place3">מקום שלישי</span>
                     </div>
                     <div class="winner-info">
                         <div class="winner-name" data-he="השתלמות משפטנים מניות" data-en="Lawyers Fund Stocks">השתלמות משפטנים מניות</div>
@@ -508,19 +509,19 @@
                     <div class="winner-stats">
                         <div class="winner-stat">
                             <div class="winner-stat-value">103.96%</div>
-                            <div class="winner-stat-label" data-he="5 שנים" data-en="5 Years">5 שנים</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y5">5 שנים</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">87.29%</div>
-                            <div class="winner-stat-label" data-he="3 שנים" data-en="3 Years">3 שנים</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y3">3 שנים</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">30.72%</div>
-                            <div class="winner-stat-label" data-he="שנה" data-en="1 Year">שנה</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.y1">שנה</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">0.06%</div>
-                            <div class="winner-stat-label" data-he="חודש" data-en="Month">חודש</div>
+                            <div class="winner-stat-label" data-i18n="market.labels.month">חודש</div>
                         </div>
                     </div>
                 </div>
@@ -533,19 +534,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">🏆</span>
-                    <span data-he="ממוין לפי 5 שנים" data-en="Sorted by 5 Years">ממוין לפי 5 שנים</span>
+                    <span data-i18n="market.labels.sortedBy5y">ממוין לפי 5 שנים</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם קרן" data-en="Fund Name">שם קרן</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="5 שנים ▼" data-en="5-Year ▼">5 שנים ▼</th>
-                            <th data-he="3 שנים" data-en="3-Year">3 שנים</th>
-                            <th data-he="שנה" data-en="1-Year">שנה</th>
-                            <th data-he="חודש אחרון" data-en="Last Month">חודש אחרון</th>
+                            <th data-i18n="market.labels.fundName">שם קרן</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">5 שנים ▼</th>
+                            <th data-i18n="market.labels.y3">3 שנים</th>
+                            <th data-i18n="market.labels.y1">שנה</th>
+                            <th data-i18n="market.labels.month">חודש אחרון</th>
                         </tr>
                     </thead>
                     <tbody id="year5-table"></tbody>
@@ -556,19 +557,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">🚀</span>
-                    <span data-he="ממוין לפי 3 שנים" data-en="Sorted by 3 Years">ממוין לפי 3 שנים</span>
+                    <span data-i18n="market.labels.sortedBy3y">ממוין לפי 3 שנים</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם קרן" data-en="Fund Name">שם קרן</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="3 שנים ▼" data-en="3-Year ▼">3 שנים ▼</th>
-                            <th data-he="5 שנים" data-en="5-Year">5 שנים</th>
-                            <th data-he="שנה" data-en="1-Year">שנה</th>
-                            <th data-he="חודש אחרון" data-en="Last Month">חודש אחרון</th>
+                            <th data-i18n="market.labels.fundName">שם קרן</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">3 שנים ▼</th>
+                            <th data-i18n="market.labels.y5">5 שנים</th>
+                            <th data-i18n="market.labels.y1">שנה</th>
+                            <th data-i18n="market.labels.month">חודש אחרון</th>
                         </tr>
                     </thead>
                     <tbody id="year3-table"></tbody>
@@ -579,19 +580,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">📈</span>
-                    <span data-he="ממוין לפי שנה אחרונה" data-en="Sorted by 1 Year">ממוין לפי שנה אחרונה</span>
+                    <span data-i18n="market.labels.sortedBy1y">ממוין לפי שנה אחרונה</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם קרן" data-en="Fund Name">שם קרן</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="שנה ▼" data-en="1-Year ▼">שנה ▼</th>
-                            <th data-he="5 שנים" data-en="5-Year">5 שנים</th>
-                            <th data-he="3 שנים" data-en="3-Year">3 שנים</th>
-                            <th data-he="חודש אחרון" data-en="Last Month">חודש אחרון</th>
+                            <th data-i18n="market.labels.fundName">שם קרן</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">שנה ▼</th>
+                            <th data-i18n="market.labels.y5">5 שנים</th>
+                            <th data-i18n="market.labels.y3">3 שנים</th>
+                            <th data-i18n="market.labels.month">חודש אחרון</th>
                         </tr>
                     </thead>
                     <tbody id="year1-table"></tbody>
@@ -602,19 +603,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">📅</span>
-                    <span data-he="ממוין לפי חודש אחרון" data-en="Sorted by Last Month">ממוין לפי חודש אחרון</span>
+                    <span data-i18n="market.labels.sortedByMonth">ממוין לפי חודש אחרון</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם קרן" data-en="Fund Name">שם קרן</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="חודש ▼" data-en="Month ▼">חודש ▼</th>
-                            <th data-he="5 שנים" data-en="5-Year">5 שנים</th>
-                            <th data-he="3 שנים" data-en="3-Year">3 שנים</th>
-                            <th data-he="שנה" data-en="1-Year">שנה</th>
+                            <th data-i18n="market.labels.fundName">שם קרן</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">חודש ▼</th>
+                            <th data-i18n="market.labels.y5">5 שנים</th>
+                            <th data-i18n="market.labels.y3">3 שנים</th>
+                            <th data-i18n="market.labels.y1">שנה</th>
                         </tr>
                     </thead>
                     <tbody id="month-table"></tbody>
@@ -623,9 +624,9 @@
         </div>
 
         <div class="data-source">
-            <span data-he="מקור הנתונים:" data-en="Data sourced from">מקור הנתונים:</span>
+            <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
             <a href="https://www.supermarker.themarker.com/Gemel/CompareHishtalmutFunds.aspx" target="_blank">TheMarker SuperMarker</a>
-            - <span id="lastUpdate" data-he="טוען..." data-en="Loading...">טוען...</span>
+            - <span id="lastUpdate" data-i18n="market.labels.loading">טוען...</span>
         </div>
     </div>
 
@@ -671,22 +672,18 @@
         }
 
         function loadLanguage() {
-            // Load language from global settings
-            try {
-                const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
-                currentLang = settings.language || 'he';
-            } catch (e) {
-                currentLang = 'he';
+            const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
+            currentLang = settings.language || 'he';
+            if (typeof I18n !== 'undefined') {
+                I18n.currentLanguage = currentLang;
+                I18n.apply();
             }
-
-            document.body.classList.toggle('ltr', currentLang === 'en');
+            document.querySelectorAll('[data-he][data-en]').forEach(el => {
+                el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.he;
+            });
+            document.body.classList.toggle('ltr', currentLang !== 'he');
             document.documentElement.lang = currentLang;
             document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-
-            // Update all translatable elements
-            document.querySelectorAll('[data-he][data-en]').forEach(el => {
-                el.textContent = el.getAttribute(`data-${currentLang}`);
-            });
         }
 
 

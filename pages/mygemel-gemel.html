@@ -365,22 +365,23 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../js/i18n.js"></script>
 </head>
 <body>
     <div class="dashboard">
         <header>
             <img src="../img/logo.png" alt="FinSight" class="logo-hero-img" style="display: block; margin: 0 auto 15px; width: 160px; height: auto; border-radius: 12px;">
-            <h1 data-he="קופות גמל להשקעה - iGemel-Net" data-en="Investment Provident Funds - iGemel-Net">קופות גמל להשקעה - iGemel-Net</h1>
-            <p data-he="השוואת קופות גמל להשקעה מובילות - נתונים אמיתיים" data-en="Top Performing Provident Funds - Real Data">השוואת קופות גמל להשקעה מובילות - נתונים אמיתיים</p>
+            <h1 data-i18n="market.pages.mygemelGemelTitle">קופות גמל להשקעה - iGemel-Net</h1>
+            <p data-i18n="market.pages.mygemelGemelSubtitle">השוואת קופות גמל להשקעה מובילות - נתונים אמיתיים</p>
             <span class="source-badge" id="dataDate">iGemel-Net</span>
             <div class="nav-links">
-                <a href="../index.html" data-he="🏠 דאשבורד ראשי" data-en="🏠 Main Dashboard">🏠 דאשבורד ראשי</a>
-                <a href="market-products.html" data-he="🏪 מוצרים בשוק" data-en="🏪 Market Products">🏪 מוצרים בשוק</a>
-                <a href="mygemel.html" data-he="מיי גמל נט" data-en="MyGemel Net">מיי גמל נט</a>
-                <a href="mygemel-training.html" data-he="השתלמות" data-en="Training">השתלמות</a>
-                <a href="mygemel-pension.html" data-he="פנסיה" data-en="Pension">פנסיה</a>
-                <a href="mygemel-gemel.html" class="active" data-he="גמל" data-en="Gemel">גמל</a>
-                <a href="pension-optimizer.html" data-he="🎯 אופטימיזטור" data-en="🎯 Optimizer">🎯 אופטימיזטור</a>
+                <a href="../index.html" data-i18n="market.nav.dashboard">🏠 דאשבורד ראשי</a>
+                <a href="market-products.html" data-i18n="market.nav.marketProducts">🏪 מוצרים בשוק</a>
+                <a href="mygemel.html" data-i18n="market.nav.mygemel">מיי גמל נט</a>
+                <a href="mygemel-training.html" data-i18n="market.nav.trainingShort">השתלמות</a>
+                <a href="mygemel-pension.html" data-i18n="market.nav.pensionShort">פנסיה</a>
+                <a href="mygemel-gemel.html" class="active" data-i18n="market.nav.gemelShort">גמל</a>
+                <a href="pension-optimizer.html" data-i18n="market.nav.optimizer">🎯 אופטימיזטור</a>
             </div>
         </header>
 
@@ -391,7 +392,7 @@
         <div class="analysis-section">
             <h2 class="analysis-title">
                 <span>🏆</span>
-                <span data-he="ניתוח: הקופות המובילות" data-en="Analysis: Top Performing Funds">ניתוח: הקופות המובילות</span>
+                <span data-i18n="market.labels.topFundsGemel">ניתוח: הקופות המובילות</span>
             </h2>
             <div class="winners-grid" id="winnersGrid">
                 <!-- Winners will be populated by JS -->
@@ -403,19 +404,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">🏆</span>
-                    <span data-he="ממוין לפי 5 שנים" data-en="Sorted by 5 Years">ממוין לפי 5 שנים</span>
+                    <span data-i18n="market.labels.sortedBy5y">ממוין לפי 5 שנים</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם הקופה" data-en="Fund Name">שם הקופה</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="5 שנים ▼" data-en="5-Year ▼">5 שנים ▼</th>
-                            <th data-he="3 שנים" data-en="3-Year">3 שנים</th>
-                            <th data-he="שנה" data-en="1-Year">שנה</th>
-                            <th data-he="חודש" data-en="Month">חודש</th>
+                            <th data-i18n="market.labels.gemelName">שם הקופה</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">5 שנים ▼</th>
+                            <th data-i18n="market.labels.y3">3 שנים</th>
+                            <th data-i18n="market.labels.y1">שנה</th>
+                            <th data-i18n="market.labels.month">חודש</th>
                         </tr>
                     </thead>
                     <tbody id="year5-table"></tbody>
@@ -425,19 +426,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">🚀</span>
-                    <span data-he="ממוין לפי 3 שנים" data-en="Sorted by 3 Years">ממוין לפי 3 שנים</span>
+                    <span data-i18n="market.labels.sortedBy3y">ממוין לפי 3 שנים</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם הקופה" data-en="Fund Name">שם הקופה</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="3 שנים ▼" data-en="3-Year ▼">3 שנים ▼</th>
-                            <th data-he="5 שנים" data-en="5-Year">5 שנים</th>
-                            <th data-he="שנה" data-en="1-Year">שנה</th>
-                            <th data-he="חודש" data-en="Month">חודש</th>
+                            <th data-i18n="market.labels.gemelName">שם הקופה</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">3 שנים ▼</th>
+                            <th data-i18n="market.labels.y5">5 שנים</th>
+                            <th data-i18n="market.labels.y1">שנה</th>
+                            <th data-i18n="market.labels.month">חודש</th>
                         </tr>
                     </thead>
                     <tbody id="year3-table"></tbody>
@@ -447,19 +448,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">📈</span>
-                    <span data-he="ממוין לפי שנה אחרונה" data-en="Sorted by 1 Year">ממוין לפי שנה אחרונה</span>
+                    <span data-i18n="market.labels.sortedBy1y">ממוין לפי שנה אחרונה</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם הקופה" data-en="Fund Name">שם הקופה</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="שנה ▼" data-en="1-Year ▼">שנה ▼</th>
-                            <th data-he="5 שנים" data-en="5-Year">5 שנים</th>
-                            <th data-he="3 שנים" data-en="3-Year">3 שנים</th>
-                            <th data-he="חודש" data-en="Month">חודש</th>
+                            <th data-i18n="market.labels.gemelName">שם הקופה</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">שנה ▼</th>
+                            <th data-i18n="market.labels.y5">5 שנים</th>
+                            <th data-i18n="market.labels.y3">3 שנים</th>
+                            <th data-i18n="market.labels.month">חודש</th>
                         </tr>
                     </thead>
                     <tbody id="year1-table"></tbody>
@@ -469,19 +470,19 @@
             <div class="table-container">
                 <h2 class="section-title">
                     <span class="icon">📅</span>
-                    <span data-he="ממוין לפי חודש אחרון" data-en="Sorted by Last Month">ממוין לפי חודש אחרון</span>
+                    <span data-i18n="market.labels.sortedByMonth">ממוין לפי חודש אחרון</span>
                     <span class="sort-indicator">▼</span>
                 </h2>
                 <table>
                     <thead>
                         <tr>
                             <th class="rank">#</th>
-                            <th data-he="שם הקופה" data-en="Fund Name">שם הקופה</th>
-                            <th data-he="חברה" data-en="Company">חברה</th>
-                            <th class="sorted" data-he="חודש ▼" data-en="Month ▼">חודש ▼</th>
-                            <th data-he="5 שנים" data-en="5-Year">5 שנים</th>
-                            <th data-he="3 שנים" data-en="3-Year">3 שנים</th>
-                            <th data-he="שנה" data-en="1-Year">שנה</th>
+                            <th data-i18n="market.labels.gemelName">שם הקופה</th>
+                            <th data-i18n="market.labels.company">חברה</th>
+                            <th class="sorted">חודש ▼</th>
+                            <th data-i18n="market.labels.y5">5 שנים</th>
+                            <th data-i18n="market.labels.y3">3 שנים</th>
+                            <th data-i18n="market.labels.y1">שנה</th>
                         </tr>
                     </thead>
                     <tbody id="month-table"></tbody>
@@ -490,7 +491,7 @@
         </div>
 
         <div class="data-source">
-            <span data-he="מקור הנתונים:" data-en="Data sourced from:">מקור הנתונים:</span>
+            <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
             <a href="https://www.igemel-net.co.il/" target="_blank">iGemel-Net.co.il</a> -
             <span id="lastUpdate">טוען...</span>
         </div>
@@ -504,20 +505,15 @@
         let currentLang = 'he';
 
         function loadLanguage() {
-            try {
-                const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
-                currentLang = settings.language || 'he';
-            } catch (e) {
-                currentLang = 'he';
+            const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
+            currentLang = settings.language || 'he';
+            if (typeof I18n !== 'undefined') {
+                I18n.currentLanguage = currentLang;
+                I18n.apply();
             }
-
-            document.body.classList.toggle('ltr', currentLang === 'en');
+            document.body.classList.toggle('ltr', currentLang !== 'he');
             document.documentElement.lang = currentLang;
             document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-
-            document.querySelectorAll('[data-he][data-en]').forEach(el => {
-                el.textContent = el.getAttribute(`data-${currentLang}`);
-            });
         }
 
 
@@ -550,16 +546,16 @@
             const maxYear5 = Math.max(...fundsData.filter(f => f.year5).map(f => f.year5));
 
             const stats = [
-                { labelHe: 'סה"כ קופות', labelEn: 'Total Funds', value: fundsData.length },
-                { labelHe: 'תשואה חודשית מקסימלית', labelEn: 'Best Monthly Return', value: maxMonth.toFixed(2) + '%' },
-                { labelHe: 'תשואה שנתית מקסימלית', labelEn: 'Best 1-Year Return', value: maxYear1.toFixed(2) + '%' },
-                { labelHe: 'תשואה מקסימלית 5 שנים', labelEn: 'Best 5-Year Return', value: maxYear5.toFixed(2) + '%' }
+                { labelKey: 'market.labels.totalFunds', value: fundsData.length },
+                { labelKey: 'market.labels.bestMonthly', value: maxMonth.toFixed(2) + '%' },
+                { labelKey: 'market.labels.bestYearly', value: maxYear1.toFixed(2) + '%' },
+                { labelKey: 'market.labels.best5y', value: maxYear5.toFixed(2) + '%' }
             ];
 
             const statsRow = document.getElementById('statsRow');
             statsRow.innerHTML = stats.map(stat => `
                 <div class="stat-card">
-                    <h3 data-he="${stat.labelHe}" data-en="${stat.labelEn}">${currentLang === 'he' ? stat.labelHe : stat.labelEn}</h3>
+                    <h3>${I18n.t(stat.labelKey)}</h3>
                     <div class="value">${stat.value}</div>
                 </div>
             `).join('');
@@ -576,8 +572,7 @@
 
             const badges = ['winner-badge', 'winner-badge silver', 'winner-badge bronze'];
             const icons = ['🥇', '🥈', '🥉'];
-            const placesHe = ['מקום ראשון', 'מקום שני', 'מקום שלישי'];
-            const placesEn = ['1st Place', '2nd Place', '3rd Place'];
+            const placeKeys = ['market.labels.place1', 'market.labels.place2', 'market.labels.place3'];
             const cardClasses = ['winner-card', 'winner-card second', 'winner-card third'];
 
             const winnersGrid = document.getElementById('winnersGrid');
@@ -585,7 +580,7 @@
                 <div class="${cardClasses[i]}">
                     <div class="${badges[i]}">
                         <span>${icons[i]}</span>
-                        <span data-he="${placesHe[i]}" data-en="${placesEn[i]}">${currentLang === 'he' ? placesHe[i] : placesEn[i]}</span>
+                        <span>${I18n.t(placeKeys[i])}</span>
                     </div>
                     <div class="winner-info">
                         <div class="winner-name">${currentLang === 'he' ? fund.nameHe : fund.nameEn}</div>
@@ -594,24 +589,21 @@
                     <div class="winner-stats">
                         <div class="winner-stat">
                             <div class="winner-stat-value">${fund.year5?.toFixed(2) || '-'}%</div>
-                            <div class="winner-stat-label" data-he="5 שנים" data-en="5 Years">${currentLang === 'he' ? '5 שנים' : '5 Years'}</div>
+                            <div class="winner-stat-label">${I18n.t('market.labels.y5')}</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">${fund.year3?.toFixed(2) || '-'}%</div>
-                            <div class="winner-stat-label" data-he="3 שנים" data-en="3 Years">${currentLang === 'he' ? '3 שנים' : '3 Years'}</div>
+                            <div class="winner-stat-label">${I18n.t('market.labels.y3')}</div>
                         </div>
                         <div class="winner-stat">
                             <div class="winner-stat-value">${fund.year1?.toFixed(2) || '-'}%</div>
-                            <div class="winner-stat-label" data-he="שנה" data-en="1 Year">${currentLang === 'he' ? 'שנה' : '1 Year'}</div>
+                            <div class="winner-stat-label">${I18n.t('market.labels.y1')}</div>
                         </div>
                     </div>
                 </div>
             `).join('');
 
-            const note = currentLang === 'he'
-                ? 'הדירוג מבוסס על ביצועים לאורך כל התקופות. נתונים מ-MyGemel.net.'
-                : 'Rankings based on performance across all time periods. Data from MyGemel.net.';
-            document.getElementById('analysisNote').textContent = note;
+            document.getElementById('analysisNote').textContent = I18n.t('market.labels.analysisNote');
         }
 
         function getRankClass(rank) {
