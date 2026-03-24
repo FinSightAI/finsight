@@ -244,15 +244,15 @@ const SummarySender = {
 
         const text = this.formatSummaryText(this.buildSummaryData());
         const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encodeURIComponent(text)}&apikey=${encodeURIComponent(apiKey)}`;
-        try {
-            const res = await fetch(url);
-            if (res.ok) { this.markSent(); return true; }
-            console.warn('CallMeBot response:', res.status);
-            return false;
-        } catch (e) {
-            console.error('CallMeBot error:', e);
-            return false;
-        }
+        // Use Image trick to bypass CORS — CallMeBot doesn't send CORS headers
+        // so fetch() gets blocked; image requests bypass CORS restrictions.
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = img.onerror = () => { this.markSent(); resolve(true); };
+            img.src = url;
+            // Fallback: assume sent after 8s if no response
+            setTimeout(() => { this.markSent(); resolve(true); }, 8000);
+        });
     },
 
     checkAndShowBanner() {

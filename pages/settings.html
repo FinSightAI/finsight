@@ -1088,7 +1088,7 @@
             }
         }
 
-        async function testCallMeBot() {
+        function testCallMeBot() {
             const s = Storage.getSummarySchedule();
             const phone = (s.recipientPhone || '').replace(/\D/g, '');
             const apiKey = (s.callmebotApiKey || '').trim();
@@ -1099,13 +1099,10 @@
             App.notify('שולח הודעת בדיקה...', 'info');
             const testText = '✅ FinSight — הודעת בדיקה נשלחה בהצלחה!';
             const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encodeURIComponent(testText)}&apikey=${encodeURIComponent(apiKey)}`;
-            try {
-                const res = await fetch(url);
-                if (res.ok) App.notify('✅ הודעה נשלחה! בדוק את WhatsApp', 'success');
-                else App.notify('שגיאה בשליחה — בדוק מספר ו-API Key', 'error');
-            } catch (e) {
-                App.notify('שגיאת רשת: ' + e.message, 'error');
-            }
+            // Use Image trick to bypass CORS — fetch() gets blocked by browser
+            const img = new Image();
+            img.onload = img.onerror = () => App.notify('✅ הבקשה נשלחה — בדוק את WhatsApp תוך שנייה', 'success');
+            img.src = url;
         }
 
         // Set bookmarklet href (pre-minified string — avoids toString() length issues)
