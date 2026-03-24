@@ -255,19 +255,21 @@ const SummarySender = {
         });
     },
 
+    shareWhatsApp() {
+        const data = this.buildSummaryData();
+        const text = this.formatSummaryText(data);
+        const schedule = Storage.getSummarySchedule();
+        const phone = (schedule.recipientPhone || '').replace(/\D/g, '');
+        const url = phone
+            ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+            : `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+        this.markSent();
+        this.dismissBanner();
+    },
+
     checkAndShowBanner() {
         if (!this.isDue()) return;
-        const schedule = Storage.getSummarySchedule();
-        if (schedule.callmebotApiKey && schedule.recipientPhone) {
-            // Auto-send silently; fall back to banner only on failure
-            this.autoSendWhatsApp().then(ok => {
-                if (!ok) {
-                    const banner = document.getElementById('summarySenderBanner');
-                    if (banner) banner.style.display = 'flex';
-                }
-            });
-            return;
-        }
         const banner = document.getElementById('summarySenderBanner');
         if (banner) banner.style.display = 'flex';
     },
