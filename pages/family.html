@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <meta name="theme-color" content="#8b5cf6">
+    <title>דשבורד משפחתי – FinSight</title>
+    <link rel="stylesheet" href="../css/app.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <img src="../img/logo.png" class="brand-icon" alt="FinSight">
+                <span class="brand-name">Fin<span class="brand-highlight">Sight</span></span>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html" class="nav-link"><span class="icon">🏠</span><span>דאשבורד</span></a></li>
+                <li class="nav-item"><a href="bank.html" class="nav-link"><span class="icon">🏦</span><span>חשבונות בנק</span></a></li>
+                <li class="nav-item"><a href="credit.html" class="nav-link"><span class="icon">💳</span><span>כרטיסי אשראי</span></a></li>
+                <li class="nav-item"><a href="stocks.html" class="nav-link"><span class="icon">📈</span><span>מניות</span></a></li>
+                <li class="nav-item">
+                    <span class="nav-link" style="cursor:default;"><span class="icon">📊</span><span>מוצרים פיננסיים</span></span>
+                    <ul class="nav-submenu">
+                        <li class="nav-item"><a href="market-products.html" class="nav-link"><span>🏪 מוצרים בשוק</span></a></li>
+                        <li class="nav-item"><a href="my-funds.html" class="nav-link"><span>💎 החסכונות שלי</span></a></li>
+                        <li class="nav-item"><a href="compare-funds.html" class="nav-link"><span>⚖️ השוואת מוצרים</span></a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="assets.html" class="nav-link"><span class="icon">🏠</span><span>נכסים</span></a></li>
+                <li class="nav-item"><a href="loans.html" class="nav-link"><span class="icon">🏦</span><span>הלוואות</span></a></li>
+                <li class="nav-item"><a href="subscriptions.html" class="nav-link"><span class="icon">🔄</span><span>תשלומים קבועים</span></a></li>
+                <li class="nav-item"><a href="goals.html" class="nav-link"><span class="icon">🎯</span><span>יעדי חיסכון</span></a></li>
+                <li class="nav-item"><a href="ai-story.html" class="nav-link"><span class="icon">✨</span><span>סיפור השבוע</span></a></li>
+                <li class="nav-item"><a href="pension-optimizer.html" class="nav-link"><span class="icon">🎯</span><span>אופטימיזטור פנסיה</span></a></li>
+                <li class="nav-item"><a href="pension-calc.html" class="nav-link"><span class="icon">🧮</span><span>מחשבון פנסיה</span></a></li>
+                <li class="nav-item"><a href="reports.html" class="nav-link"><span class="icon">📋</span><span>דוחות</span></a></li>
+                <li class="nav-item"><a href="calendar.html" class="nav-link"><span class="icon">📅</span><span>לוח שנה פיננסי</span></a></li>
+                <li class="nav-item"><a href="family.html" class="nav-link active" data-category="family"><span class="icon">👨‍👩‍👧‍👦</span><span>דשבורד משפחתי</span></a></li>
+                <li class="nav-item"><a href="health-score.html" class="nav-link"><span class="icon">🩺</span><span>בריאות פיננסית</span></a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link"><span class="icon">👤</span><span>פרופיל פיננסי</span></a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link"><span class="icon">⚙️</span><span>הגדרות</span></a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content" style="padding: 24px;">
+
+        <!-- Header -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:12px;">
+            <div>
+                <h1 style="font-size:1.6rem; font-weight:700; margin:0;">👨‍👩‍👧‍👦 דשבורד משפחתי</h1>
+                <p style="color:var(--color-text-secondary); margin:4px 0 0; font-size:0.9rem;">תמונה כלכלית של כל בני המשפחה</p>
+            </div>
+            <button onclick="ProfileManager.openAddModal()"
+                style="display:flex;align-items:center;gap:8px;padding:10px 18px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;border-radius:12px;color:white;font-weight:600;font-size:0.9rem;cursor:pointer;">
+                ➕ הוסף בן משפחה
+            </button>
+        </div>
+
+        <!-- Family total net worth banner -->
+        <div id="familyBanner" style="background:linear-gradient(135deg,#8b5cf6,#10b981);border-radius:18px;padding:24px 28px;margin-bottom:28px;color:white;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+            <div>
+                <div style="font-size:0.85rem;opacity:0.85;margin-bottom:4px;">שווי נקי משפחתי</div>
+                <div id="familyNetWorthTotal" style="font-size:2.4rem;font-weight:800;">מחשב...</div>
+            </div>
+            <div id="familyStats" style="display:flex;gap:28px;flex-wrap:wrap;">
+                <div style="text-align:center;">
+                    <div style="font-size:0.75rem;opacity:0.8;">סה״כ נכסים</div>
+                    <div id="familyAssetsTotal" style="font-size:1.2rem;font-weight:700;">–</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:0.75rem;opacity:0.8;">סה״כ התחייבויות</div>
+                    <div id="familyLiabsTotal" style="font-size:1.2rem;font-weight:700;">–</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:0.75rem;opacity:0.8;">הוצאות החודש</div>
+                    <div id="familyExpMonth" style="font-size:1.2rem;font-weight:700;">–</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Member cards -->
+        <div id="memberCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:32px;">
+            <!-- populated by JS -->
+        </div>
+
+        <!-- Children savings section -->
+        <div id="childrenSection" style="display:none;">
+            <h2 style="font-size:1.15rem;font-weight:700;margin-bottom:16px;">🐣 חיסכון לילדים</h2>
+            <div id="childrenCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="emptyState" style="display:none;text-align:center;padding:60px 20px;">
+            <div style="font-size:4rem;margin-bottom:16px;">👨‍👩‍👧‍👦</div>
+            <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:8px;">עדיין אין בני משפחה</h2>
+            <p style="color:var(--color-text-secondary);margin-bottom:24px;">הוסף בן/בת זוג או ילדים כדי לראות את התמונה הפיננסית המשפחתית</p>
+            <button onclick="ProfileManager.openAddModal()"
+                style="padding:12px 28px;background:#8b5cf6;border:none;border-radius:12px;color:white;font-weight:700;font-size:0.95rem;cursor:pointer;">
+                ➕ הוסף בן משפחה
+            </button>
+        </div>
+
+    </main>
+</div>
+
+<style>
+    .member-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: 18px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .member-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .member-card-accent {
+        position: absolute;
+        top: 0; right: 0; left: 0;
+        height: 4px;
+        border-radius: 18px 18px 0 0;
+    }
+    .member-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    .member-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    .member-stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 7px 0;
+        border-bottom: 1px solid var(--color-border);
+        font-size: 0.84rem;
+    }
+    .member-stat-row:last-child { border-bottom: none; }
+    .member-stat-label { color: var(--color-text-secondary); }
+    .member-stat-value { font-weight: 600; }
+    .member-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+    }
+    .member-btn {
+        flex: 1;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-hover);
+        color: var(--color-text-primary);
+        font-size: 0.8rem;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        transition: background 0.15s;
+    }
+    .member-btn:hover { background: var(--color-bg-card); }
+    .member-btn.primary {
+        background: #8b5cf6;
+        border-color: #8b5cf6;
+        color: white;
+    }
+    .member-btn.primary:hover { background: #7c3aed; }
+    .child-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: 16px;
+        padding: 18px;
+    }
+    .child-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    .goal-bar-wrap {
+        background: var(--color-bg-hover);
+        border-radius: 99px;
+        height: 8px;
+        overflow: hidden;
+        margin: 6px 0 3px;
+    }
+    .goal-bar-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.6s ease;
+    }
+    .net-worth-positive { color: #10b981; }
+    .net-worth-negative { color: #ef4444; }
+</style>
+
+<script src="../js/idb.js"></script>
+<script src="../js/profiles.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/i18n.js"></script>
+
+<script>
+    const fmt = n => {
+        const abs = Math.abs(n);
+        let s;
+        if (abs >= 1_000_000) s = (n / 1_000_000).toFixed(1) + 'M';
+        else if (abs >= 1_000)  s = (n / 1_000).toFixed(0) + 'K';
+        else                    s = Math.round(n).toString();
+        return '₪' + s;
+    };
+
+    function buildMemberCard(member, data) {
+        const nw     = data.netWorth;
+        const nwCls  = nw >= 0 ? 'net-worth-positive' : 'net-worth-negative';
+        const isChild = member.type === 'child';
+        const typeTag = isChild ? '👧 ילד/ה' : '👤 מבוגר';
+        const color   = member.color || '#8b5cf6';
+
+        const statsHtml = isChild ? `
+            <div class="member-stat-row">
+                <span class="member-stat-label">חיסכון / קרן</span>
+                <span class="member-stat-value">${fmt(data.fundsTotal + data.bankTotal)}</span>
+            </div>
+            <div class="member-stat-row">
+                <span class="member-stat-label">יעדים</span>
+                <span class="member-stat-value">${data.goals.length} יעדים</span>
+            </div>
+        ` : `
+            <div class="member-stat-row">
+                <span class="member-stat-label">חשבון בנק</span>
+                <span class="member-stat-value">${fmt(data.bankTotal)}</span>
+            </div>
+            <div class="member-stat-row">
+                <span class="member-stat-label">מניות</span>
+                <span class="member-stat-value">${fmt(data.stocksTotal)}</span>
+            </div>
+            <div class="member-stat-row">
+                <span class="member-stat-label">קרנות / פנסיה</span>
+                <span class="member-stat-value">${fmt(data.fundsTotal)}</span>
+            </div>
+            <div class="member-stat-row">
+                <span class="member-stat-label">נכסים</span>
+                <span class="member-stat-value">${fmt(data.assetsTotal)}</span>
+            </div>
+            <div class="member-stat-row">
+                <span class="member-stat-label">הלוואות</span>
+                <span class="member-stat-value" style="color:#ef4444;">-${fmt(data.loansTotal)}</span>
+            </div>
+            <div class="member-stat-row">
+                <span class="member-stat-label">הוצאות החודש</span>
+                <span class="member-stat-value">${fmt(data.monthExpenses)}</span>
+            </div>
+        `;
+
+        const isDefault  = member.id === '';
+        const switchBtnHtml = !isDefault ? `
+            <button onclick="ProfileManager.switchTo('${member.id}')" class="member-btn primary">כניסה לפרופיל</button>
+        ` : `
+            <a href="../index.html" class="member-btn primary">כניסה לפרופיל</a>
+        `;
+
+        const deleteBtnHtml = !isDefault ? `
+            <button onclick="deleteMember('${member.id}')" class="member-btn" style="color:#ef4444;border-color:#ef4444;">מחיקה</button>
+        ` : '';
+
+        return `
+            <div class="member-card">
+                <div class="member-card-accent" style="background:${color};"></div>
+                <div class="member-header">
+                    <div class="member-avatar" style="background:${color}22;">
+                        <span>${member.emoji || '👤'}</span>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-weight:700;font-size:1rem;">${member.name}</div>
+                        <div style="font-size:0.75rem;color:var(--color-text-secondary);">${typeTag}</div>
+                    </div>
+                    <div class="${nwCls}" style="font-weight:800;font-size:1.05rem;">${fmt(nw)}</div>
+                </div>
+                ${statsHtml}
+                <div class="member-actions">
+                    ${switchBtnHtml}
+                    ${deleteBtnHtml}
+                </div>
+            </div>
+        `;
+    }
+
+    function buildChildSavingsCard(member, data) {
+        const color = member.color || '#8b5cf6';
+        const savings = data.fundsTotal + data.bankTotal;
+
+        const goalsHtml = data.goals.length === 0
+            ? `<p style="color:var(--color-text-secondary);font-size:0.82rem;text-align:center;padding:8px 0;">אין יעדים עדיין</p>`
+            : data.goals.map(g => {
+                const target  = g.targetAmount || 0;
+                const current = g.currentAmount || g.savedAmount || 0;
+                const pct     = target > 0 ? Math.min(100, (current / target) * 100) : 0;
+                return `
+                    <div style="margin-bottom:10px;">
+                        <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:2px;">
+                            <span>${g.name || 'יעד'}</span>
+                            <span style="color:var(--color-text-secondary);">${fmt(current)} / ${fmt(target)}</span>
+                        </div>
+                        <div class="goal-bar-wrap">
+                            <div class="goal-bar-fill" style="width:${pct}%;background:${color};"></div>
+                        </div>
+                        <div style="font-size:0.72rem;color:var(--color-text-secondary);text-align:left;">${pct.toFixed(0)}%</div>
+                    </div>
+                `;
+            }).join('');
+
+        return `
+            <div class="child-card">
+                <div class="child-header">
+                    <div style="width:40px;height:40px;border-radius:50%;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">${member.emoji}</div>
+                    <div>
+                        <div style="font-weight:700;">${member.name}</div>
+                        <div style="font-size:0.75rem;color:var(--color-text-secondary);">חיסכון: <strong style="color:${color};">${fmt(savings)}</strong></div>
+                    </div>
+                </div>
+                <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:8px;font-weight:500;">יעדי חיסכון</div>
+                ${goalsHtml}
+                <button onclick="ProfileManager.switchTo('${member.id}')"
+                    style="width:100%;margin-top:10px;padding:8px;background:${color};border:none;border-radius:8px;color:white;font-weight:600;font-size:0.82rem;cursor:pointer;">
+                    ניהול חיסכון
+                </button>
+            </div>
+        `;
+    }
+
+    function deleteMember(id) {
+        if (!confirm('למחוק את הפרופיל הזה? כל הנתונים שלו יימחקו לצמיתות.')) return;
+        ProfileManager.deleteMember(id);
+        render();
+    }
+
+    function render() {
+        const members = ProfileManager.getAllMembers();
+        const memberCards = document.getElementById('memberCards');
+        const childrenSection = document.getElementById('childrenSection');
+        const childrenCards = document.getElementById('childrenCards');
+        const emptyState = document.getElementById('emptyState');
+
+        // Non-default members only (for "empty" check the user always exists)
+        const extras = members.filter(m => m.id !== '');
+        if (extras.length === 0) {
+            // Show just the main user card + empty hint for extras
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+        }
+
+        // Compute data for all members
+        const allData = members.map(m => ({ member: m, data: ProfileManager.readProfileData(m.id) }));
+
+        // Family totals
+        let totalNetWorth = 0, totalAssets = 0, totalLiabs = 0, totalExpMonth = 0;
+        allData.forEach(({ data }) => {
+            totalNetWorth  += data.netWorth;
+            totalAssets    += data.bankTotal + data.stocksTotal + data.fundsTotal + data.assetsTotal;
+            totalLiabs     += data.loansTotal;
+            totalExpMonth  += data.monthExpenses;
+        });
+
+        document.getElementById('familyNetWorthTotal').textContent = fmt(totalNetWorth);
+        document.getElementById('familyAssetsTotal').textContent   = fmt(totalAssets);
+        document.getElementById('familyLiabsTotal').textContent    = fmt(totalLiabs);
+        document.getElementById('familyExpMonth').textContent      = fmt(totalExpMonth);
+
+        // Member cards (all members)
+        memberCards.innerHTML = allData.map(({ member, data }) => buildMemberCard(member, data)).join('');
+
+        // Children savings section
+        const children = allData.filter(({ member }) => member.type === 'child');
+        if (children.length > 0) {
+            childrenSection.style.display = 'block';
+            childrenCards.innerHTML = children.map(({ member, data }) => buildChildSavingsCard(member, data)).join('');
+        } else {
+            childrenSection.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof I18n !== 'undefined') I18n.init();
+        render();
+    });
+</script>
+</body>
+</html>
