@@ -270,6 +270,12 @@ const SummarySender = {
 
     checkAndShowBanner() {
         if (!this.isDue()) return;
+        // Fire push notification automatically (works even if banner isn't visible)
+        if (typeof Notifications !== 'undefined' &&
+            Notifications.getPermission() === 'granted') {
+            Notifications.notifyWeeklySummary();
+        }
+        // Also show in-app banner for manual WhatsApp share
         const banner = document.getElementById('summarySenderBanner');
         if (banner) banner.style.display = 'flex';
     },

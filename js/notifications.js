@@ -247,6 +247,36 @@ const Notifications = {
     },
 
     /**
+     * Weekly/monthly financial summary notification
+     */
+    async notifyWeeklySummary() {
+        const settings = this.getSettings();
+        if (!settings.enabled) return false;
+
+        try {
+            const netWorth  = Storage.getNetWorth?.() || 0;
+            const expenses  = Storage.getTotalCreditExpenses?.(
+                (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; })()
+            ) || 0;
+            const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
+
+            const title = '📊 הסיכום הפיננסי השבועי שלך מוכן';
+            const body  = `שווי נקי: ${fmt(netWorth)}  |  הוצאות החודש: ${fmt(expenses)}\nלחץ לפתיחה ושיתוף`;
+
+            return this.show(title, {
+                body,
+                type: 'weekly_summary',
+                tag:  'weekly-summary',
+                requireInteraction: true,
+                data: { url: '/' }
+            });
+        } catch (e) {
+            console.warn('notifyWeeklySummary error:', e);
+            return false;
+        }
+    },
+
+    /**
      * Get notification history
      */
     getHistory() {

@@ -101,6 +101,21 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
+// Notification click — open/focus the app
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const targetUrl = event.notification.data?.url || '/';
+    event.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+            // Focus existing tab if open
+            const existing = clients.find(c => c.url.includes(self.location.origin));
+            if (existing) return existing.focus();
+            // Otherwise open new tab
+            return self.clients.openWindow(targetUrl);
+        })
+    );
+});
+
 // Fetch event - network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
