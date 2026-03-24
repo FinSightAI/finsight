@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <meta name="theme-color" content="#10b981">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev; frame-src https://accounts.google.com https://*.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../img/logo.png">
+    <title>אופטימיזציית מס - FinSight</title>
+    <link rel="stylesheet" href="../css/app.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        :root {
+            --color-tax: #10b981;
+            --color-tax-dark: #059669;
+            --color-amber: #f59e0b;
+            --color-purple: #8b5cf6;
+            --color-red: #ef4444;
+        }
+
+        .nav-link.active {
+            background: var(--color-tax) !important;
+        }
+        .page-header h1 {
+            color: var(--color-tax);
+        }
+        .btn-primary {
+            background: var(--color-tax);
+        }
+        .btn-primary:hover {
+            background: var(--color-tax-dark);
+        }
+
+        /* ── Input Card ── */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        @media (max-width: 640px) {
+            .input-grid { grid-template-columns: 1fr; }
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.82rem;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+        }
+        .form-group input[type="number"],
+        .form-group select {
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            color: var(--color-text);
+            padding: 9px 12px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            direction: ltr;
+            text-align: right;
+            transition: border-color 0.2s;
+        }
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-tax);
+        }
+        .radio-group {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            padding: 9px 0;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+        .radio-group input[type="radio"] {
+            accent-color: var(--color-tax);
+            width: 17px;
+            height: 17px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 0;
+        }
+        .checkbox-group label {
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--color-text);
+        }
+        .checkbox-group input[type="checkbox"] {
+            accent-color: var(--color-tax);
+            width: 17px;
+            height: 17px;
+        }
+
+        /* ── Summary Badges ── */
+        .tax-summary-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 640px) {
+            .tax-summary-row { grid-template-columns: 1fr 1fr; }
+        }
+        .tax-badge {
+            background: var(--color-bg-tertiary);
+            border-radius: 12px;
+            padding: 14px 16px;
+            border: 1px solid var(--color-border);
+            text-align: center;
+        }
+        .tax-badge .badge-label {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 6px;
+        }
+        .tax-badge .badge-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+        .tax-badge.highlight .badge-value {
+            color: var(--color-red);
+        }
+        .tax-badge.good .badge-value {
+            color: var(--color-tax);
+        }
+
+        /* ── Opportunity Cards ── */
+        .opportunity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px;
+        }
+        .opp-card {
+            background: var(--color-bg-secondary);
+            border-radius: 14px;
+            border: 1px solid var(--color-border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .opp-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .opp-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .opp-icon.green  { background: rgba(16,185,129,0.15); }
+        .opp-icon.amber  { background: rgba(245,158,11,0.15); }
+        .opp-icon.purple { background: rgba(139,92,246,0.15); }
+        .opp-card-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+        .opp-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            color: var(--color-text-secondary);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 8px;
+        }
+        .opp-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+        .opp-row .val {
+            font-weight: 700;
+            color: var(--color-text);
+        }
+        .saving-banner {
+            background: rgba(16,185,129,0.12);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 10px;
+            padding: 10px 14px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--color-tax);
+        }
+        .no-saving-banner {
+            background: rgba(100,116,139,0.1);
+            border: 1px dashed var(--color-border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--color-text-secondary);
+        }
+        .opp-note {
+            font-size: 0.78rem;
+            color: var(--color-text-secondary);
+            background: var(--color-bg-tertiary);
+            border-radius: 8px;
+            padding: 8px 10px;
+            line-height: 1.5;
+        }
+        .opp-note.amber-note {
+            border-right: 3px solid var(--color-amber);
+        }
+        .opp-note.red-note {
+            border-right: 3px solid var(--color-red);
+            color: #fca5a5;
+        }
+
+        /* ── Loss Harvesting Table ── */
+        .loss-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .loss-table th {
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            padding: 8px 10px;
+            text-align: right;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .loss-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+        .loss-table tr:last-child td { border-bottom: none; }
+        .loss-table .loss-val { color: #f87171; font-weight: 700; }
+        .loss-table .gain-val { color: var(--color-tax); font-weight: 700; }
+        .loss-table .symbol-cell { font-weight: 700; font-family: monospace; font-size: 0.95rem; }
+
+        /* ── Grand Summary Hero ── */
+        .summary-hero {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #047857 100%);
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid rgba(16,185,129,0.3);
+            color: #fff;
+        }
+        .summary-hero h2 {
+            margin: 0 0 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #a7f3d0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .summary-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #d1fae5;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .summary-line:last-child { border-bottom: none; padding-bottom: 0; }
+        .summary-line .sval {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .summary-total {
+            background: rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .summary-total .label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #a7f3d0;
+        }
+        .summary-total .big-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        .summary-disclaimer {
+            font-size: 0.75rem;
+            color: #6ee7b7;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* ── Tips ── */
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--color-bg-tertiary);
+            border-radius: 10px;
+            padding: 14px 16px;
+            border: 1px solid var(--color-border);
+        }
+        .tip-num {
+            width: 28px;
+            height: 28px;
+            background: var(--color-tax);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .tip-text {
+            font-size: 0.9rem;
+            color: var(--color-text);
+            line-height: 1.55;
+            padding-top: 3px;
+        }
+
+        /* ── Calculate Button ── */
+        .calc-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 32px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .calc-btn:hover { opacity: 0.9; }
+        .calc-btn:active { transform: scale(0.97); }
+
+        /* ── Section Headers ── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+        .section-header .section-icon {
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="../img/logo.png" class="brand-icon" alt="FinSight">
+                    <span class="brand-name">Fin<span class="brand-highlight">Sight</span></span>
+                </div>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link" data-category="dashboard">
+                            <span class="icon">🏠</span>
+                            <span data-i18n="nav.dashboard">דאשבורד</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="bank.html" class="nav-link" data-category="bank">
+                            <span class="icon">🏦</span>
+                            <span data-i18n="nav.bankAccounts">חשבונות בנק</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="credit.html" class="nav-link" data-category="credit">
+                            <span class="icon">💳</span>
+                            <span data-i18n="nav.creditCards">כרטיסי אשראי</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="stocks.html" class="nav-link" data-category="stocks">
+                            <span class="icon">📈</span>
+                            <span data-i18n="nav.stocks">מניות</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link" style="cursor: default;">
+                            <span class="icon">📊</span>
+                            <span data-i18n="nav.financialProducts">מוצרים פיננסיים</span>
+                        </span>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="market-products.html" class="nav-link" data-category="market-products"><span data-i18n="nav.marketProducts">🏪 מוצרים בשוק</span></a></li>
+                            <li class="nav-item"><a href="my-funds.html" class="nav-link" data-category="my-products"><span data-i18n="nav.myProducts">💎 החסכונות שלי</span></a></li>
+                            <li class="nav-item"><a href="compare-funds.html" class="nav-link" data-category="compare-funds"><span>⚖️ השוואת מוצרים</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="assets.html" class="nav-link" data-category="assets">
+                            <span class="icon">🏠</span>
+                            <span data-i18n="nav.assets">נכסים</span>
+                        </a>
+                    </li>
+                    <li class="nav-item"><a href="loans.html" class="nav-link" data-category="loans"><span class="icon">🏦</span><span data-i18n="nav.loans">הלוואות</span></a></li>
+                    <li class="nav-item"><a href="subscriptions.html" class="nav-link" data-category="subscriptions"><span class="icon">🔄</span><span data-i18n="nav.subscriptions">תשלומים קבועים</span></a></li>
+                    <li class="nav-item">
+                        <a href="goals.html" class="nav-link" data-category="goals">
+                            <span class="icon">🎯</span>
+                            <span data-i18n="nav.goals">יעדי חיסכון</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pension-calc.html" class="nav-link" data-category="pension-calc">
+                            <span class="icon">🧮</span>
+                            <span data-i18n="nav.pensionCalc">מחשבון פנסיה</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="tax-optimizer.html" class="nav-link active">
+                            <span class="icon">🧾</span>
+                            <span>אופטימיזציית מס</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link" data-category="reports">
+                            <span class="icon">📋</span>
+                            <span data-i18n="nav.reports">דוחות</span>
+                        </a>
+                    </li>
+                    <li class="nav-item"><a href="calendar.html" class="nav-link"><span class="icon">📅</span><span>לוח שנה פיננסי</span></a></li>
+                    <li class="nav-item"><a href="family.html" class="nav-link"><span class="icon">👨‍👩‍👧‍👦</span><span>דשבורד משפחתי</span></a></li>
+                    <li class="nav-item"><a href="health-score.html" class="nav-link"><span class="icon">🩺</span><span data-i18n="nav.healthScore">בריאות פיננסית</span></a></li>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="icon">👤</span>
+                            <span data-i18n="nav.profile">פרופיל פיננסי</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link" data-category="settings">
+                            <span class="icon">⚙️</span>
+                            <span data-i18n="nav.settings">הגדרות</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="logo-hero">
+                <img src="../img/logo.png" alt="FinSight" class="logo-hero-img">
+            </div>
+
+            <header class="page-header">
+                <h1>
+                    <span>🧾</span>
+                    <span>אופטימיזציית מס</span>
+                </h1>
+            </header>
+
+            <!-- ══════════════════════════════════════════════════
+                 SECTION 1 — Income Details Inputs
+            ═══════════════════════════════════════════════════ -->
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="section-header">
+                    <span class="section-icon">📝</span>
+                    <h2>פרטי הכנסה</h2>
+                </div>
+
+                <!-- Employment type -->
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label>סוג עסקה</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="employment" value="employed" id="radio-employed" checked onchange="onEmploymentChange()">
+                            שכיר
+                        </label>
+                        <label>
+                            <input type="radio" name="employment" value="self" id="radio-self" onchange="onEmploymentChange()">
+                            עצמאי
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-grid">
+                    <div class="form-group">
+                        <label for="inp-salary">משכורת חודשית ברוטו (₪)</label>
+                        <input type="number" id="inp-salary" value="15000" min="0" step="100" oninput="autoCalc()">
+                    </div>
+                    <div class="form-group">
+                        <label for="inp-pension-pct">% הפרשה לפנסיה (עובד)</label>
+                        <input type="number" id="inp-pension-pct" value="6" min="0" max="20" step="0.5" oninput="autoCalc()">
+                    </div>
+                    <div class="form-group">
+                        <label for="inp-hishtalmut-pct">% הפרשה לקרן השתלמות (עובד)</label>
+                        <input type="number" id="inp-hishtalmut-pct" value="2.5" min="0" max="10" step="0.5" oninput="autoCalc()">
+                    </div>
+                    <div class="form-group">
+                        <label for="inp-gains">רווחי הון ממומשים השנה (₪)</label>
+                        <input type="number" id="inp-gains" value="0" min="0" step="100" oninput="autoCalc()">
+                    </div>
+                </div>
+
+                <!-- Has Keren Hishtalmut -->
+                <div class="checkbox-group" style="margin-top: 14px;">
+                    <input type="checkbox" id="chk-hishtalmut" checked onchange="autoCalc()">
+                    <label for="chk-hishtalmut">יש לי קרן השתלמות</label>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button class="calc-btn" onclick="calculate()">
+                        <span>🧮</span>
+                        חשב
+                    </button>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════
+                 SECTION 2 — Current Tax Burden
+            ═══════════════════════════════════════════════════ -->
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="section-header">
+                    <span class="section-icon">💸</span>
+                    <h2>עומס מס נוכחי משוער</h2>
+                </div>
+
+                <div class="tax-summary-row">
+                    <div class="tax-badge">
+                        <div class="badge-label">שכר חודשי ברוטו</div>
+                        <div class="badge-value" id="out-monthly-salary">₪15,000</div>
+                    </div>
+                    <div class="tax-badge highlight">
+                        <div class="badge-label">מס הכנסה חודשי משוער</div>
+                        <div class="badge-value" id="out-monthly-tax">₪2,014</div>
+                    </div>
+                    <div class="tax-badge highlight">
+                        <div class="badge-label">מס הכנסה שנתי משוער</div>
+                        <div class="badge-value" id="out-annual-tax">₪24,168</div>
+                    </div>
+                    <div class="tax-badge">
+                        <div class="badge-label">שיעור מס אפקטיבי</div>
+                        <div class="badge-value" id="out-effective-rate">13.4%</div>
+                    </div>
+                    <div class="tax-badge good">
+                        <div class="badge-label">שכר נטו חודשי משוער</div>
+                        <div class="badge-value" id="out-net-salary">₪12,986</div>
+                    </div>
+                    <div class="tax-badge">
+                        <div class="badge-label">מדרגת מס שולי</div>
+                        <div class="badge-value" id="out-marginal-rate">20%</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; font-size: 0.78rem; color: var(--color-text-secondary);">
+                    * חישוב מס הכנסה כולל נקודות זיכוי בסיסיות (2.25 נקודות = ₪285/חודש). ביטוח לאומי אינו כלול.
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════
+                 SECTION 3 — Optimization Opportunities
+            ═══════════════════════════════════════════════════ -->
+            <div style="margin-bottom: 24px;">
+                <div class="section-header">
+                    <span class="section-icon">💡</span>
+                    <h2>הזדמנויות לחיסכון במס</h2>
+                </div>
+
+                <div class="opportunity-grid">
+
+                    <!-- Card A: Keren Hishtalmut -->
+                    <div class="opp-card">
+                        <div class="opp-card-header">
+                            <div class="opp-icon green">🏦</div>
+                            <h3>קרן השתלמות</h3>
+                        </div>
+
+                        <!-- Employed view -->
+                        <div id="hishtalmut-employed-view">
+                            <div class="opp-row">
+                                <span>הפרשה חודשית נוכחית (עובד)</span>
+                                <span class="val" id="out-hist-employee-monthly">₪375</span>
+                            </div>
+                            <div class="opp-row">
+                                <span>הפרשת מעסיק (7.5% — פטורה ממס)</span>
+                                <span class="val" id="out-hist-employer-monthly">₪1,179</span>
+                            </div>
+                            <div class="opp-row">
+                                <span>תקרת שכר לטובת מס</span>
+                                <span class="val">₪15,712/חודש</span>
+                            </div>
+                            <div class="opp-row">
+                                <span>הפרשת מעסיק עד תקרה (מקסימום)</span>
+                                <span class="val" id="out-hist-employer-max">₪1,179</span>
+                            </div>
+                            <div class="opp-row">
+                                <span>חיסכון מס שנתי (מעסיק פטור ממס)</span>
+                                <span class="val" id="out-hist-employer-saving">₪0</span>
+                            </div>
+                            <div class="opp-note amber-note" id="hist-employed-note">
+                                הפרשת המעסיק (עד 7.5% מהשכר, לתקרה ₪15,712) פטורה ממס הכנסה. הפרשת העובד אינה מוכרת כניכוי — אך הרווחים בקרן פטורים ממס.
+                            </div>
+                        </div>
+
+                        <!-- Self-employed view (hidden by default) -->
+                        <div id="hishtalmut-self-view" style="display:none;">
+                            <div class="opp-row">
+                                <span>תקרת הכנסה שנתית לניכוי</span>
+                                <span class="val">₪272,700</span>
+                            </div>
+                            <div class="opp-row">
+                                <span>ניכוי מקסימלי (4.5%)</span>
+                                <span class="val">₪12,272/שנה</span>
+                            </div>
+                            <div class="opp-row">
+                                <span>ניכוי משוער לפי הכנסה שלך</span>
+                                <span class="val" id="out-hist-self-deduction">₪0</span>
+                            </div>
+                            <div class="opp-row">
+                                <span>חיסכון מס פוטנציאלי</span>
+                                <span class="val" id="out-hist-self-saving">₪0</span>
+                            </div>
+                            <div class="opp-note amber-note">
+                                עצמאי יכול לנכות עד 4.5% מהכנסה החייבת (תקרת הכנסה ₪272,700/שנה) כהפרשה לקרן השתלמות. הקרן פטורה ממס לאחר 6 שנים.
+                            </div>
+                        </div>
+
+                        <div class="saving-banner" id="out-hist-saving-banner">
+                            חיסכון פוטנציאלי בשנה: <span id="out-hist-total-saving">₪0</span>
+                        </div>
+                    </div>
+
+                    <!-- Card B: Pension Tax Credit -->
+                    <div class="opp-card">
+                        <div class="opp-card-header">
+                            <div class="opp-icon amber">🏛️</div>
+                            <h3>פנסיה — זיכוי מס</h3>
+                        </div>
+
+                        <div class="opp-row">
+                            <span>הפרשה חודשית נוכחית (עובד)</span>
+                            <span class="val" id="out-pension-monthly">₪900</span>
+                        </div>
+                        <div class="opp-row">
+                            <span>הפרשה שנתית</span>
+                            <span class="val" id="out-pension-annual">₪10,800</span>
+                        </div>
+                        <div class="opp-row">
+                            <span>בסיס לזיכוי מס (7% מהשכר, תקרה ₪35,300)</span>
+                            <span class="val" id="out-pension-credit-base">₪12,600</span>
+                        </div>
+                        <div class="opp-row">
+                            <span>זיכוי מס שנתי (35% מהבסיס)</span>
+                            <span class="val" id="out-pension-credit">₪4,410</span>
+                        </div>
+                        <div class="opp-row">
+                            <span>זיכוי מקסימלי אפשרי</span>
+                            <span class="val">₪10,378</span>
+                        </div>
+                        <div class="opp-row">
+                            <span>פוטנציאל זיכוי נוסף</span>
+                            <span class="val" id="out-pension-extra-credit" style="color: var(--color-amber);">₪0</span>
+                        </div>
+
+                        <div class="opp-note amber-note" id="pension-extra-note" style="display:none;">
+                            <strong>הזדמנות:</strong> הגדל הפרשה חודשית ב-<span id="pension-extra-monthly">₪0</span> כדי למקסם זיכוי מס נוסף של <span id="pension-extra-credit-val">₪0</span> בשנה.
+                        </div>
+
+                        <div class="opp-note" style="border-right: 3px solid var(--color-amber);">
+                            זיכוי מס = הפחתה ישירה מחשבון המס, לא רק מהכנסה החייבת — כל שקל זיכוי שווה שקל פחות מס.
+                        </div>
+
+                        <div class="saving-banner">
+                            זיכוי מס שנתי: <span id="out-pension-saving-banner">₪4,410</span>
+                        </div>
+                    </div>
+
+                    <!-- Card C: Capital Gains / Loss Harvesting -->
+                    <div class="opp-card">
+                        <div class="opp-card-header">
+                            <div class="opp-icon purple">📉</div>
+                            <h3>מס רווחי הון — קיזוז הפסדים</h3>
+                        </div>
+
+                        <div class="opp-row">
+                            <span>רווחי הון ממומשים השנה</span>
+                            <span class="val" id="out-cg-gains">₪0</span>
+                        </div>
+                        <div class="opp-row">
+                            <span>מס צפוי על רווחים (25%)</span>
+                            <span class="val" id="out-cg-tax" style="color: var(--color-red);">₪0</span>
+                        </div>
+
+                        <div id="cg-stocks-section">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <div class="opp-note red-note" id="cg-warning" style="display:none;">
+                            מימוש הפסדים עד 31 דצמבר יאפשר קיזוז כנגד רווחים ממומשים וחיסכון של 25% ממס.
+                        </div>
+
+                        <div class="saving-banner" id="cg-saving-banner">
+                            חיסכון מקיזוז הפסדים: <span id="out-cg-harvest-saving">₪0</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════
+                 SECTION 4 — Annual Tax Savings Summary
+            ═══════════════════════════════════════════════════ -->
+            <div style="margin-bottom: 24px;">
+                <div class="section-header">
+                    <span class="section-icon">🏆</span>
+                    <h2>סיכום חיסכון מס שנתי</h2>
+                </div>
+
+                <div class="summary-hero">
+                    <h2>✨ הפוטנציאל שלך לחיסכון במס</h2>
+
+                    <div class="summary-lines">
+                        <div class="summary-line">
+                            <span>חיסכון ממיצוי קרן השתלמות</span>
+                            <span class="sval" id="sum-hishtalmut">₪0</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>זיכוי מס פנסיה</span>
+                            <span class="sval" id="sum-pension">₪0</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>חיסכון מקיזוז הפסדי הון</span>
+                            <span class="sval" id="sum-cg">₪0</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-total">
+                        <span class="label">סה"כ חיסכון פוטנציאלי</span>
+                        <span class="big-num" id="sum-total">₪0</span>
+                    </div>
+
+                    <div class="summary-disclaimer">
+                        * הנתונים מוצגים לצורך הדרכה בלבד. יש להתייעץ עם רואה חשבון.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════
+                 SECTION 5 — Practical Tips
+            ═══════════════════════════════════════════════════ -->
+            <div class="card" style="margin-bottom: 32px;">
+                <div class="section-header">
+                    <span class="section-icon">💬</span>
+                    <h2>טיפים מעשיים לחיסכון במס</h2>
+                </div>
+
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text">
+                            <strong>מקסם הפרשה לקרן השתלמות</strong> — הפרשת המעסיק פטורה לחלוטין ממס הכנסה, והכסף גדל ללא מס רווחי הון. לאחר 6 שנים — משיכה פטורה ממס.
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text">
+                            <strong>שקול העברת כסף לפנסיה מעל חובה</strong> — כל שקל שמופרש לפנסיה (עד גבול 7% מהשכר, תקרת שכר ₪35,300) שווה 35 אגורות זיכוי מס ישיר מחשבון המס.
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text">
+                            <strong>ממש הפסדי הון לפני סוף שנה</strong> — ניתן לקזז הפסדים ממומשים מניירות ערך כנגד רווחי הון ממומשים. מס רווחי הון בישראל הוא 25%.
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text">
+                            <strong>שכיר עם הכנסה נוספת — שקול פתיחת קרן השתלמות לעצמאים</strong> — עצמאי יכול לנכות עד 4.5% מהכנסה כהפרשה לקרן השתלמות, גם אם יש לו קרן כשכיר.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Bottom tab bar for mobile (iOS PWA style) -->
+    <nav class="bottom-tab-bar" id="bottomTabBar">
+        <a href="../index.html" class="tab-item">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">בית</span>
+        </a>
+        <a href="bank.html" class="tab-item">
+            <span class="tab-icon">🏦</span>
+            <span class="tab-label">בנק</span>
+        </a>
+        <a href="stocks.html" class="tab-item">
+            <span class="tab-icon">📈</span>
+            <span class="tab-label">מניות</span>
+        </a>
+        <a href="tax-optimizer.html" class="tab-item active">
+            <span class="tab-icon">🧾</span>
+            <span class="tab-label">מס</span>
+        </a>
+        <a href="settings.html" class="tab-item">
+            <span class="tab-icon">⚙️</span>
+            <span class="tab-label">הגדרות</span>
+        </a>
+    </nav>
+
+    <script src="../js/idb.js"></script>
+    <script src="../js/profiles.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/i18n.js"></script>
+
+    <script>
+    // ─────────────────────────────────────────────
+    // Israeli Tax Constants (2025)
+    // ─────────────────────────────────────────────
+    const TAX_BRACKETS = [
+        { upTo: 6790,      rate: 0.10 },
+        { upTo: 9730,      rate: 0.14 },
+        { upTo: 15640,     rate: 0.20 },
+        { upTo: 21710,     rate: 0.31 },
+        { upTo: 45180,     rate: 0.35 },
+        { upTo: Infinity,  rate: 0.47 },
+    ];
+
+    // Tax credit points: basic 2.25 points for resident. 1 point = ₪242/month (2025).
+    const CREDIT_POINT_VALUE_MONTHLY = 242;
+    const BASIC_CREDIT_POINTS = 2.25;
+    const MONTHLY_BASIC_CREDIT = BASIC_CREDIT_POINTS * CREDIT_POINT_VALUE_MONTHLY; // ₪544.5
+
+    const HISHTALMUT_EMPLOYER_PCT = 0.075;          // 7.5%
+    const HISHTALMUT_EMPLOYEE_PCT_MAX = 0.025;      // 2.5%
+    const HISHTALMUT_SALARY_CEILING = 15712;        // ₪/month
+    const HISHTALMUT_SELF_DEDUCTION_PCT = 0.045;    // 4.5%
+    const HISHTALMUT_SELF_ANNUAL_CEILING = 272700;  // ₪/year
+    const HISHTALMUT_SELF_MAX_DEDUCTION = 12272;    // ₪/year
+
+    const PENSION_CREDIT_RATE = 0.35;               // 35%
+    const PENSION_CREDIT_SALARY_PCT = 0.07;         // 7% of salary for credit base
+    const PENSION_SALARY_CEILING = 35300;           // ₪/month
+    const PENSION_MAX_ANNUAL_CREDIT = 10378;        // ₪/year (35% × 7% × 35300 × 12)
+
+    const CAPITAL_GAINS_RATE = 0.25;                // 25%
+
+    // ─────────────────────────────────────────────
+    // Utilities
+    // ─────────────────────────────────────────────
+    function fmt(n) {
+        if (isNaN(n) || n === null || n === undefined) n = 0;
+        const abs = Math.abs(Math.round(n));
+        const str = abs.toLocaleString('he-IL');
+        return (n < 0 ? '-' : '') + '₪' + str;
+    }
+
+    function pct(n) {
+        return (Math.round(n * 10) / 10) + '%';
+    }
+
+    // ─────────────────────────────────────────────
+    // Core Tax Calculation
+    // ─────────────────────────────────────────────
+    function calcMonthlyTax(monthlyIncome) {
+        let tax = 0;
+        let prev = 0;
+        for (const bracket of TAX_BRACKETS) {
+            if (monthlyIncome <= prev) break;
+            const taxable = Math.min(monthlyIncome, bracket.upTo) - prev;
+            tax += taxable * bracket.rate;
+            prev = bracket.upTo;
+            if (bracket.upTo === Infinity) break;
+        }
+        // Subtract basic credit points
+        tax = Math.max(0, tax - MONTHLY_BASIC_CREDIT);
+        return tax;
+    }
+
+    function getMarginalRate(monthlyIncome) {
+        let prev = 0;
+        for (const bracket of TAX_BRACKETS) {
+            if (monthlyIncome <= bracket.upTo) {
+                return bracket.rate;
+            }
+            prev = bracket.upTo;
+        }
+        return 0.47;
+    }
+
+    // ─────────────────────────────────────────────
+    // Employment Type Toggle
+    // ─────────────────────────────────────────────
+    function onEmploymentChange() {
+        const isSelf = document.getElementById('radio-self').checked;
+        document.getElementById('hishtalmut-employed-view').style.display = isSelf ? 'none' : 'block';
+        document.getElementById('hishtalmut-self-view').style.display = isSelf ? 'block' : 'none';
+        autoCalc();
+    }
+
+    // ─────────────────────────────────────────────
+    // Main Calculate Function
+    // ─────────────────────────────────────────────
+    function calculate() {
+        const isSelf = document.getElementById('radio-self').checked;
+        const salary = parseFloat(document.getElementById('inp-salary').value) || 0;
+        const pensionPct = parseFloat(document.getElementById('inp-pension-pct').value) / 100 || 0;
+        const hishtalmutPct = parseFloat(document.getElementById('inp-hishtalmut-pct').value) / 100 || 0;
+        const hasHishtalmut = document.getElementById('chk-hishtalmut').checked;
+        const realizedGains = parseFloat(document.getElementById('inp-gains').value) || 0;
+
+        // ── Section 2: Tax Burden ──
+        const monthlyTax = calcMonthlyTax(salary);
+        const annualTax = monthlyTax * 12;
+        const effectiveRate = salary > 0 ? (monthlyTax / salary) * 100 : 0;
+        const netSalary = salary - monthlyTax;
+        const marginalRate = getMarginalRate(salary) * 100;
+
+        document.getElementById('out-monthly-salary').textContent = fmt(salary);
+        document.getElementById('out-monthly-tax').textContent = fmt(monthlyTax);
+        document.getElementById('out-annual-tax').textContent = fmt(annualTax);
+        document.getElementById('out-effective-rate').textContent = pct(effectiveRate);
+        document.getElementById('out-net-salary').textContent = fmt(netSalary);
+        document.getElementById('out-marginal-rate').textContent = pct(marginalRate);
+
+        // ── Card A: Keren Hishtalmut ──
+        let hishtalmutTotalSaving = 0;
+
+        if (!isSelf) {
+            // Employed
+            const effectiveSalary = Math.min(salary, HISHTALMUT_SALARY_CEILING);
+            const employerMonthly = effectiveSalary * HISHTALMUT_EMPLOYER_PCT;
+            const employeeMonthly = salary * hishtalmutPct;
+            const employerMaxMonthly = HISHTALMUT_SALARY_CEILING * HISHTALMUT_EMPLOYER_PCT; // ₪1,178.4
+
+            // Tax saving from employer portion: employer contribution is tax-free income
+            // The employer pays this instead of salary — benefit = annual employer contribution × marginal tax rate
+            const employerAnnual = employerMonthly * 12;
+            const employerTaxSaving = hasHishtalmut ? employerAnnual * (marginalRate / 100) : 0;
+            hishtalmutTotalSaving = employerTaxSaving;
+
+            document.getElementById('out-hist-employee-monthly').textContent = fmt(employeeMonthly);
+            document.getElementById('out-hist-employer-monthly').textContent = fmt(employerMonthly);
+            document.getElementById('out-hist-employer-max').textContent = fmt(employerMaxMonthly);
+            document.getElementById('out-hist-employer-saving').textContent = fmt(employerTaxSaving);
+
+            const note = document.getElementById('hist-employed-note');
+            if (!hasHishtalmut) {
+                note.textContent = 'סמן "יש לי קרן השתלמות" כדי לחשב את החיסכון מהפרשת המעסיק.';
+            } else if (salary > HISHTALMUT_SALARY_CEILING) {
+                note.textContent = `השכר שלך (${fmt(salary)}) גבוה מתקרת המס (₪15,712). הפרשת המעסיק מוכרת עד ₪${(HISHTALMUT_SALARY_CEILING * HISHTALMUT_EMPLOYER_PCT).toLocaleString('he-IL')}/חודש פטורה ממס.`;
+            } else {
+                note.textContent = 'הפרשת המעסיק (עד 7.5% מהשכר, תקרה ₪15,712) פטורה ממס הכנסה. הפרשת העובד אינה מוכרת כניכוי — אך הרווחים בקרן פטורים ממס.';
+            }
+
+        } else {
+            // Self-employed
+            const annualIncome = salary * 12;
+            const deductionBase = Math.min(annualIncome, HISHTALMUT_SELF_ANNUAL_CEILING);
+            const deduction = Math.min(deductionBase * HISHTALMUT_SELF_DEDUCTION_PCT, HISHTALMUT_SELF_MAX_DEDUCTION);
+            // Tax saving from deduction = deduction × marginal rate
+            const selfTaxSaving = hasHishtalmut ? deduction * (marginalRate / 100) : 0;
+            hishtalmutTotalSaving = selfTaxSaving;
+
+            document.getElementById('out-hist-self-deduction').textContent = fmt(deduction);
+            document.getElementById('out-hist-self-saving').textContent = fmt(selfTaxSaving);
+        }
+
+        document.getElementById('out-hist-total-saving').textContent = fmt(hishtalmutTotalSaving);
+
+        // ── Card B: Pension Credit ──
+        const pensionMonthly = salary * pensionPct;
+        const pensionAnnual = pensionMonthly * 12;
+
+        // Credit base: min(7% of salary, 7% of ceiling)
+        const effectivePensionSalary = Math.min(salary, PENSION_SALARY_CEILING);
+        const creditBase = effectivePensionSalary * PENSION_CREDIT_SALARY_PCT * 12; // annual
+        const actualCredit = Math.min(pensionAnnual * PENSION_CREDIT_RATE, creditBase * PENSION_CREDIT_RATE);
+        const maxCredit = PENSION_MAX_ANNUAL_CREDIT;
+        const extraCredit = Math.max(0, maxCredit - actualCredit);
+        // How much more monthly contribution to gain max credit
+        const contributionForMaxCredit = creditBase; // the 7% of salary ceiling annual amount
+        const extraContributionNeeded = Math.max(0, (contributionForMaxCredit - pensionAnnual) / 12);
+
+        document.getElementById('out-pension-monthly').textContent = fmt(pensionMonthly);
+        document.getElementById('out-pension-annual').textContent = fmt(pensionAnnual);
+        document.getElementById('out-pension-credit-base').textContent = fmt(creditBase);
+        document.getElementById('out-pension-credit').textContent = fmt(actualCredit);
+        document.getElementById('out-pension-extra-credit').textContent = fmt(extraCredit);
+        document.getElementById('out-pension-saving-banner').textContent = fmt(actualCredit);
+
+        const pensionExtraNote = document.getElementById('pension-extra-note');
+        if (extraCredit > 1 && extraContributionNeeded > 0) {
+            pensionExtraNote.style.display = 'block';
+            document.getElementById('pension-extra-monthly').textContent = fmt(extraContributionNeeded);
+            document.getElementById('pension-extra-credit-val').textContent = fmt(extraCredit);
+        } else {
+            pensionExtraNote.style.display = 'none';
+        }
+
+        // ── Card C: Capital Gains Loss Harvesting ──
+        const cgTax = realizedGains * CAPITAL_GAINS_RATE;
+        document.getElementById('out-cg-gains').textContent = fmt(realizedGains);
+        document.getElementById('out-cg-tax').textContent = fmt(cgTax);
+
+        let totalHarvestSaving = 0;
+        renderStocksSection(realizedGains, function(saving) {
+            totalHarvestSaving = saving;
+            document.getElementById('out-cg-harvest-saving').textContent = fmt(totalHarvestSaving);
+
+            const cgWarning = document.getElementById('cg-warning');
+            if (totalHarvestSaving > 0 && realizedGains > 0) {
+                cgWarning.style.display = 'block';
+            } else {
+                cgWarning.style.display = 'none';
+            }
+
+            // ── Section 4: Summary ──
+            document.getElementById('sum-hishtalmut').textContent = fmt(hishtalmutTotalSaving);
+            document.getElementById('sum-pension').textContent = fmt(actualCredit);
+            document.getElementById('sum-cg').textContent = fmt(totalHarvestSaving);
+            const grandTotal = hishtalmutTotalSaving + actualCredit + totalHarvestSaving;
+            document.getElementById('sum-total').textContent = fmt(grandTotal);
+        });
+    }
+
+    // ─────────────────────────────────────────────
+    // Loss Harvesting — read from Storage
+    // ─────────────────────────────────────────────
+    function renderStocksSection(realizedGains, callback) {
+        const section = document.getElementById('cg-stocks-section');
+
+        let holdings = [];
+        try {
+            const stocksData = Storage.getStocks();
+            holdings = (stocksData && stocksData.holdings) ? stocksData.holdings : [];
+        } catch (e) {
+            holdings = [];
+        }
+
+        // Filter stocks with unrealized loss
+        const lossStocks = holdings.filter(h => {
+            const currentPrice = parseFloat(h.currentPrice) || 0;
+            const avgPrice = parseFloat(h.avgPrice) || 0;
+            const qty = parseFloat(h.quantity) || 0;
+            if (qty === 0 || avgPrice === 0 || currentPrice === 0) return false;
+            const unrealizedPnL = (currentPrice - avgPrice) * qty;
+            return unrealizedPnL < 0;
+        });
+
+        if (holdings.length === 0) {
+            section.innerHTML = `
+                <div class="no-saving-banner">
+                    הוסף מניות בדף המניות כדי לראות הזדמנויות קיזוז
+                </div>`;
+            callback(0);
+            return;
+        }
+
+        if (lossStocks.length === 0) {
+            section.innerHTML = `
+                <div class="no-saving-banner">
+                    אין הפסדים לא ממומשים בתיק הנוכחי
+                </div>`;
+            callback(0);
+            return;
+        }
+
+        let totalLoss = 0;
+        let rows = '';
+        for (const h of lossStocks) {
+            const currentPrice = parseFloat(h.currentPrice) || 0;
+            const avgPrice = parseFloat(h.avgPrice) || 0;
+            const qty = parseFloat(h.quantity) || 0;
+            const unrealizedLoss = (currentPrice - avgPrice) * qty; // negative
+            const lossAbs = Math.abs(unrealizedLoss);
+            // Harvest only up to the realized gains amount
+            totalLoss += lossAbs;
+            const taxSaving = lossAbs * CAPITAL_GAINS_RATE;
+            const symbol = h.symbol || h.name || '—';
+            rows += `
+                <tr>
+                    <td class="symbol-cell">${symbol}</td>
+                    <td class="loss-val">${fmt(unrealizedLoss)}</td>
+                    <td class="gain-val">${fmt(taxSaving)}</td>
+                </tr>`;
+        }
+
+        // Actual harvestable saving is limited by realized gains tax
+        const cgTax = realizedGains * CAPITAL_GAINS_RATE;
+        const harvestSaving = realizedGains > 0
+            ? Math.min(totalLoss * CAPITAL_GAINS_RATE, cgTax)
+            : totalLoss * CAPITAL_GAINS_RATE; // Still show potential even if no gains yet
+
+        section.innerHTML = `
+            <div class="opp-row">
+                <span>סה"כ הפסדים לא ממומשים בתיק</span>
+                <span class="val" style="color: #f87171;">${fmt(-totalLoss)}</span>
+            </div>
+            <div style="overflow-x: auto; margin: 4px 0;">
+                <table class="loss-table">
+                    <thead>
+                        <tr>
+                            <th>סימבול</th>
+                            <th>הפסד לא ממומש</th>
+                            <th>חיסכון מס (25%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>`;
+
+        callback(harvestSaving);
+    }
+
+    // ─────────────────────────────────────────────
+    // Auto-calculate on input change
+    // ─────────────────────────────────────────────
+    function autoCalc() {
+        calculate();
+    }
+
+    // ─────────────────────────────────────────────
+    // Init
+    // ─────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+        calculate();
+    });
+    </script>
+</body>
+</html>
