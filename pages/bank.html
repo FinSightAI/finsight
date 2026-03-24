@@ -1031,7 +1031,14 @@
             if (updatedHistory.length > 0) updatePayload.history = updatedHistory;
 
             Storage.updateBankAccount(targetId, updatePayload);
-            App.notify(`יובאו ${newTx.length} תנועות בהצלחה`, 'success');
+            const skipped = transactions.length - newTx.length;
+            if (newTx.length === 0) {
+                App.notify(`כל ${skipped} התנועות כבר קיימות — אין חדש לייבא`, 'info');
+            } else if (skipped > 0) {
+                App.notify(`יובאו ${newTx.length} תנועות חדשות · ${skipped} כפולות דולגו`, 'success');
+            } else {
+                App.notify(`יובאו ${newTx.length} תנועות בהצלחה`, 'success');
+            }
             loadAccounts();
             delete window._statementData;
         }
