@@ -64,7 +64,7 @@ const StockAPI = {
     /**
      * Fetch URL through CORS proxy with fallback
      */
-    async _fetchWithFallback(targetUrl) {
+    async _fetchWithFallback(targetUrl) {	
         // Run all proxies in parallel — resolves on first success, fails only when all fail
         return Promise.any(
             this.PROXY_URLS.map((proxy, i) => {

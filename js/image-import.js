@@ -24,6 +24,20 @@ const ImageImport = {
     },
 
     /**
+     * Lazy-load Tesseract.js only when actually needed (saves ~5MB on initial load)
+     */
+    async ensureTesseract() {
+        if (window.Tesseract) return;
+        await new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+            s.onload = resolve;
+            s.onerror = () => reject(new Error('Failed to load Tesseract.js'));
+            document.head.appendChild(s);
+        });
+    },
+
+    /**
      * Process image with Tesseract OCR
      */
     async processImage(file, dataType) {
@@ -31,6 +45,7 @@ const ImageImport = {
         this.showLoadingModal();
 
         try {
+            await this.ensureTesseract();
             const result = await Tesseract.recognize(file, 'heb+eng', {
                 logger: (info) => {
                     if (info.status === 'recognizing text') {
