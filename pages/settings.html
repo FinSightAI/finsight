@@ -174,6 +174,7 @@
                 <ul class="nav-menu">
                     <li class="nav-item"><a href="../index.html" class="nav-link"><span class="icon">🏠</span><span data-i18n="nav.dashboard">דאשבורד</span></a></li>
                     <li class="nav-item"><a href="bank.html" class="nav-link"><span class="icon">🏦</span><span data-i18n="nav.bankAccounts">חשבונות בנק</span></a></li>
+                    <li class="nav-item"><a href="income.html" class="nav-link"><span class="icon">💰</span><span>מעקב הכנסות</span></a></li>
                     <li class="nav-item"><a href="credit.html" class="nav-link"><span class="icon">💳</span><span data-i18n="nav.creditCards">כרטיסי אשראי</span></a></li>
                     <li class="nav-item"><a href="stocks.html" class="nav-link"><span class="icon">📈</span><span data-i18n="nav.stocks">מניות</span></a></li>
                     <li class="nav-item">
@@ -340,6 +341,31 @@
                             <span>📤</span>
                             <span data-i18n="settings.sendTest">שלח בדיקה</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- Smart Alerts -->
+                <h3 style="margin: 25px 0 15px; font-size: 1.1rem;">🧠 התראות חכמות</h3>
+
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <span>🏦 התראת יתרת בנק נמוכה</span>
+                        <span>קבל התראה כשיתרת הבנק יורדת מתחת לסף</span>
+                    </div>
+                    <input type="number" id="bankBalanceThreshold" placeholder="0" min="0"
+                        style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;"
+                        onchange="saveBankAlertSettings()">
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <span>💸 התראת הוצאות מול הכנסה</span>
+                        <span>התראה כשהוצאות עוברות X% מההכנסה החודשית</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <input type="number" id="incomeExpenseAlert" placeholder="80" min="0" max="200"
+                            style="width:80px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;"
+                            onchange="saveBankAlertSettings()">
+                        <span style="color:var(--color-text-secondary);">%</span>
                     </div>
                 </div>
             </div>
@@ -736,6 +762,9 @@
             loadPinSettings();
             loadSecurityStatus();
             loadSummarySettings();
+            // Load smart alert thresholds
+            document.getElementById('bankBalanceThreshold').value = Alerts.getConfig().bankBalanceThreshold || '';
+            document.getElementById('incomeExpenseAlert').value = Alerts.getConfig().incomeExpenseAlert || '';
         });
 
         function loadSecurityStatus() {
@@ -1030,6 +1059,12 @@
             };
 
             Notifications.updateSettings(settings);
+            App.notify(I18n.t('settings.settingsSaved'), 'success');
+        }
+
+        function saveBankAlertSettings() {
+            Alerts.setBankBalanceThreshold(parseFloat(document.getElementById('bankBalanceThreshold').value) || 0);
+            Alerts.setIncomeExpenseAlert(parseFloat(document.getElementById('incomeExpenseAlert').value) || 0);
             App.notify(I18n.t('settings.settingsSaved'), 'success');
         }
 

@@ -281,6 +281,11 @@ const App = {
         if (Notifications.getPermission() === 'granted') {
             this._checkBudgetNotifications();
         }
+
+        // Fire smart alerts (push notifications)
+        if (typeof Alerts !== 'undefined') {
+            Alerts.fireSmartAlertNotifications();
+        }
     },
 
     _showNotifPrompt() {

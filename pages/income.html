@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev; frame-src https://accounts.google.com https://*.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../img/logo.png">
+    <title>הכנסות - FinSight</title>
+    <link rel="stylesheet" href="../css/app.css">
+    <style>
+        :root {
+            --color-income: #8b5cf6;
+            --color-income-light: #a78bfa;
+            --color-green: #10b981;
+            --color-red: #ef4444;
+        }
+
+        .nav-link.active { background: var(--color-income) !important; }
+        .page-header h1 { color: var(--color-income); }
+        .btn-primary { background: var(--color-income); }
+        .btn-primary:hover { background: #7c3aed; }
+
+        /* Summary bar */
+        .income-summary-bar {
+            background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #a78bfa 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+
+        .summary-stat {
+            text-align: center;
+        }
+
+        .summary-stat .stat-label {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .summary-stat .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .summary-stat .stat-value.positive { color: #6ee7b7; }
+        .summary-stat .stat-value.negative { color: #fca5a5; }
+
+        .summary-divider {
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            align-self: stretch;
+        }
+
+        /* Income table */
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--color-income-light);
+            white-space: nowrap;
+        }
+
+        .freq-badge {
+            font-size: 0.78rem;
+            color: var(--color-text-secondary, #94a3b8);
+        }
+
+        .amount-cell {
+            font-weight: 600;
+            color: var(--color-green);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .amount-cell.one-time {
+            color: var(--color-text-secondary, #94a3b8);
+        }
+
+        .monthly-equiv {
+            font-size: 0.72rem;
+            color: var(--color-text-secondary, #94a3b8);
+            display: block;
+        }
+
+        /* Action buttons in table */
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: background 0.15s;
+        }
+        .action-btn:hover { background: rgba(255,255,255,0.08); }
+        .action-btn.delete:hover { background: rgba(239,68,68,0.15); }
+
+        /* Quick add buttons */
+        .quick-add-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: var(--color-income-light);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            font-family: inherit;
+        }
+        .quick-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: var(--color-income);
+        }
+
+        /* Chart container */
+        .chart-container {
+            position: relative;
+            height: 260px;
+        }
+
+        /* Modal form */
+        .modal-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .modal-form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 0.82rem;
+            color: var(--color-text-secondary, #94a3b8);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: var(--color-surface, #1e293b);
+            border: 1px solid var(--color-border, #334155);
+            border-radius: 8px;
+            padding: 9px 12px;
+            color: var(--color-text, #f1f5f9);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.15s;
+            direction: rtl;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-income);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-group select option {
+            background: var(--color-surface, #1e293b);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--color-text-secondary, #94a3b8);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .empty-state small {
+            font-size: 0.82rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .income-summary-bar {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .modal-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-form-grid .full-width {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="../img/logo.png" class="brand-icon" alt="FinSight">
+                    <span class="brand-name">Fin<span class="brand-highlight">Sight</span></span>
+                </div>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link" data-category="dashboard">
+                            <span class="icon">🏠</span>
+                            <span data-i18n="nav.dashboard">דאשבורד</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="bank.html" class="nav-link" data-category="bank">
+                            <span class="icon">🏦</span>
+                            <span data-i18n="nav.bankAccounts">חשבונות בנק</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="credit.html" class="nav-link" data-category="credit">
+                            <span class="icon">💳</span>
+                            <span data-i18n="nav.creditCards">כרטיסי אשראי</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="income.html" class="nav-link active" data-category="income">
+                            <span class="icon">💰</span>
+                            <span>הכנסות</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="stocks.html" class="nav-link" data-category="stocks">
+                            <span class="icon">📈</span>
+                            <span data-i18n="nav.stocks">מניות</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link" style="cursor: default;">
+                            <span class="icon">📊</span>
+                            <span data-i18n="nav.financialProducts">מוצרים פיננסיים</span>
+                        </span>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="market-products.html" class="nav-link" data-category="market-products"><span data-i18n="nav.marketProducts">🏪 מוצרים בשוק</span></a></li>
+                            <li class="nav-item"><a href="my-funds.html" class="nav-link" data-category="my-products"><span data-i18n="nav.myProducts">💎 החסכונות שלי</span></a></li>
+                            <li class="nav-item"><a href="compare-funds.html" class="nav-link" data-category="compare-funds"><span>⚖️ השוואת מוצרים</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="assets.html" class="nav-link" data-category="assets">
+                            <span class="icon">🏠</span>
+                            <span data-i18n="nav.assets">נכסים</span>
+                        </a>
+                    </li>
+                    <li class="nav-item"><a href="loans.html" class="nav-link" data-category="loans"><span class="icon">🏦</span><span data-i18n="nav.loans">הלוואות</span></a></li>
+                    <li class="nav-item"><a href="subscriptions.html" class="nav-link" data-category="subscriptions"><span class="icon">🔄</span><span data-i18n="nav.subscriptions">תשלומים קבועים</span></a></li>
+                    <li class="nav-item">
+                        <a href="goals.html" class="nav-link" data-category="goals">
+                            <span class="icon">🎯</span>
+                            <span data-i18n="nav.goals">יעדי חיסכון</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pension-calc.html" class="nav-link" data-category="pension-calc">
+                            <span class="icon">🧮</span>
+                            <span data-i18n="nav.pensionCalc">מחשבון פנסיה</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link" data-category="reports">
+                            <span class="icon">📋</span>
+                            <span data-i18n="nav.reports">דוחות</span>
+                        </a>
+                    </li>
+                    <li class="nav-item"><a href="calendar.html" class="nav-link"><span class="icon">📅</span><span>לוח שנה פיננסי</span></a></li>
+                    <li class="nav-item"><a href="family.html" class="nav-link"><span class="icon">👨‍👩‍👧‍👦</span><span>דשבורד משפחתי</span></a></li>
+                    <li class="nav-item"><a href="health-score.html" class="nav-link"><span class="icon">🩺</span><span data-i18n="nav.healthScore">בריאות פיננסית</span></a></li>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="icon">👤</span>
+                            <span data-i18n="nav.profile">פרופיל פיננסי</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link" data-category="settings">
+                            <span class="icon">⚙️</span>
+                            <span data-i18n="nav.settings">הגדרות</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="logo-hero">
+                <img src="../img/logo.png" alt="FinSight" class="logo-hero-img">
+            </div>
+            <header class="page-header">
+                <h1>
+                    <span>💰</span>
+                    <span>הכנסות</span>
+                </h1>
+            </header>
+
+            <!-- Summary Bar -->
+            <div class="income-summary-bar">
+                <div class="summary-stat">
+                    <div class="stat-label">סה״כ הכנסה חודשית</div>
+                    <div class="stat-value" id="totalMonthlyIncome">₪0</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="stat-label">סה״כ הוצאות החודש</div>
+                    <div class="stat-value" id="totalMonthlyExpenses">₪0</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="stat-label">תזרים נטו</div>
+                    <div class="stat-value" id="netCashflow">₪0</div>
+                </div>
+            </div>
+
+            <!-- Income List Card -->
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">📋</span>
+                        <span>רשימת הכנסות</span>
+                    </h2>
+                    <button class="btn btn-primary" onclick="openAddModal()" style="margin-right: auto;">
+                        <span>➕</span>
+                        <span>הוסף הכנסה</span>
+                    </button>
+                </div>
+
+                <!-- Quick add buttons -->
+                <div class="quick-add-row" style="padding: 0 4px 4px;">
+                    <button class="quick-btn" onclick="openAddModal('salary')">+ משכורת</button>
+                    <button class="quick-btn" onclick="openAddModal('rental')">+ שכר דירה</button>
+                    <button class="quick-btn" onclick="openAddModal('dividend')">+ דיבידנד</button>
+                    <button class="quick-btn" onclick="openAddModal('business')">+ עסק</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="incomeTable">
+                        <thead>
+                            <tr>
+                                <th>שם</th>
+                                <th>סוג</th>
+                                <th>סכום</th>
+                                <th>תדירות</th>
+                                <th>תאריך</th>
+                                <th>פעולות</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incomeTableBody">
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <span class="empty-icon">💰</span>
+                                        <p>אין הכנסות עדיין</p>
+                                        <small>לחץ "הוסף הכנסה" כדי להתחיל</small>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Income vs Expenses Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">📊</span>
+                        <span>הכנסות מול הוצאות — 6 חודשים אחרונים</span>
+                    </h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="incomeExpensesChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add / Edit Income Modal -->
+    <div class="modal-overlay" id="incomeModal" style="display:none;" onclick="handleModalOverlayClick(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">הוסף הכנסה</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-form-grid">
+                    <div class="form-group full-width">
+                        <label for="incomeName">שם ההכנסה *</label>
+                        <input type="text" id="incomeName" placeholder="לדוגמה: משכורת חברה א׳" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="incomeAmount">סכום (₪) *</label>
+                        <input type="number" id="incomeAmount" placeholder="0" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="incomeType">סוג הכנסה *</label>
+                        <select id="incomeType">
+                            <option value="salary">💼 משכורת</option>
+                            <option value="rental">🏠 שכר דירה</option>
+                            <option value="dividend">📈 דיבידנד</option>
+                            <option value="business">🏪 עסק</option>
+                            <option value="other">💰 אחר</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="incomeFrequency">תדירות *</label>
+                        <select id="incomeFrequency">
+                            <option value="monthly">חודשי</option>
+                            <option value="annual">שנתי</option>
+                            <option value="one_time">חד פעמי</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="incomeDate">תאריך *</label>
+                        <input type="date" id="incomeDate" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="incomeNotes">הערות (אופציונלי)</label>
+                        <textarea id="incomeNotes" placeholder="הערות נוספות..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                <button class="btn btn-primary" onclick="saveIncome()">שמור</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/idb.js"></script>
+    <script src="../js/profiles.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    const STORAGE_KEY = 'finance_income';
+
+    const TYPE_LABELS = {
+        salary:   '💼 משכורת',
+        rental:   '🏠 שכר דירה',
+        dividend: '📈 דיבידנד',
+        business: '🏪 עסק',
+        other:    '💰 אחר',
+    };
+
+    const FREQ_LABELS = {
+        monthly:  'חודשי',
+        annual:   'שנתי',
+        one_time: 'חד פעמי',
+    };
+
+    function monthlyEquiv(entry) {
+        if (entry.frequency === 'annual')   return entry.amount / 12;
+        if (entry.frequency === 'one_time') return 0;
+        return entry.amount; // monthly
+    }
+
+    function formatCurrency(n) {
+        return '₪' + Math.round(n).toLocaleString('he-IL');
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '—';
+        const d = new Date(dateStr);
+        if (isNaN(d)) return dateStr;
+        return d.toLocaleDateString('he-IL');
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
+
+    function todayISO() {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    function currentMonthStr() {
+        const now = new Date();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        return `${now.getFullYear()}-${m}`;
+    }
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    function loadIncome() {
+        return Storage.get(STORAGE_KEY) || [];
+    }
+
+    function saveIncomeList(arr) {
+        Storage.set(STORAGE_KEY, arr);
+    }
+
+    // ── Summary ───────────────────────────────────────────────────────────────
+
+    function renderSummary(entries) {
+        const totalIncome = entries.reduce((s, e) => s + monthlyEquiv(e), 0);
+
+        const monthStr = currentMonthStr();
+        const totalExpenses = Storage.getTotalCreditExpenses(monthStr);
+
+        const net = totalIncome - totalExpenses;
+
+        document.getElementById('totalMonthlyIncome').textContent = formatCurrency(totalIncome);
+        document.getElementById('totalMonthlyExpenses').textContent = formatCurrency(totalExpenses);
+
+        const netEl = document.getElementById('netCashflow');
+        netEl.textContent = formatCurrency(net);
+        netEl.className = 'stat-value ' + (net >= 0 ? 'positive' : 'negative');
+    }
+
+    // ── Table ─────────────────────────────────────────────────────────────────
+
+    function renderTable(entries) {
+        const tbody = document.getElementById('incomeTableBody');
+
+        if (!entries || entries.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6">
+                <div class="empty-state">
+                    <span class="empty-icon">💰</span>
+                    <p>אין הכנסות עדיין</p>
+                    <small>לחץ "הוסף הכנסה" כדי להתחיל</small>
+                </div>
+            </td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = entries.map(e => {
+            const equiv = monthlyEquiv(e);
+            const isOneTime = e.frequency === 'one_time';
+            const amountClass = isOneTime ? 'amount-cell one-time' : 'amount-cell';
+
+            let amountDisplay = formatCurrency(e.amount);
+            let equivNote = '';
+            if (e.frequency === 'annual') {
+                equivNote = `<span class="monthly-equiv">(${formatCurrency(equiv)}/חודש)</span>`;
+            } else if (e.frequency === 'one_time') {
+                equivNote = `<span class="monthly-equiv">לא נספר בחודשי</span>`;
+            }
+
+            return `<tr>
+                <td><strong>${escapeHtml(e.name)}</strong>${e.notes ? `<br><small style="color:#94a3b8;font-size:0.75rem">${escapeHtml(e.notes)}</small>` : ''}</td>
+                <td><span class="type-badge">${TYPE_LABELS[e.type] || e.type}</span></td>
+                <td class="${amountClass}">${amountDisplay}${equivNote}</td>
+                <td><span class="freq-badge">${FREQ_LABELS[e.frequency] || e.frequency}</span></td>
+                <td style="white-space:nowrap">${formatDate(e.date)}</td>
+                <td style="white-space:nowrap">
+                    <button class="action-btn" onclick="openEditModal('${e.id}')" title="עריכה">✏️</button>
+                    <button class="action-btn delete" onclick="deleteEntry('${e.id}')" title="מחיקה">🗑️</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // ── Chart ─────────────────────────────────────────────────────────────────
+
+    let incomeChart = null;
+
+    function renderChart(entries) {
+        const ctx = document.getElementById('incomeExpensesChart').getContext('2d');
+
+        const monthlyIncome = entries.reduce((s, e) => s + monthlyEquiv(e), 0);
+
+        // Build last 6 months labels + expense data
+        const labels = [];
+        const incomeData = [];
+        const expensesData = [];
+
+        const now = new Date();
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const monthStr = `${year}-${month}`;
+
+            // Hebrew month label
+            const label = d.toLocaleDateString('he-IL', { month: 'short', year: '2-digit' });
+            labels.push(label);
+
+            incomeData.push(Math.round(monthlyIncome));
+
+            const exp = Storage.getTotalCreditExpenses(monthStr);
+            expensesData.push(Math.round(exp));
+        }
+
+        if (incomeChart) {
+            incomeChart.destroy();
+        }
+
+        incomeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'הכנסות',
+                        data: incomeData,
+                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                        borderColor: '#10b981',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'הוצאות',
+                        data: expensesData,
+                        backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                        borderColor: '#8b5cf6',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#cbd5e1',
+                            font: { family: 'inherit', size: 13 },
+                        },
+                    },
+                    tooltip: {
+                        rtl: true,
+                        callbacks: {
+                            label: ctx => ` ${ctx.dataset.label}: ₪${ctx.parsed.y.toLocaleString('he-IL')}`,
+                        },
+                    },
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#94a3b8', font: { family: 'inherit' } },
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#94a3b8',
+                            font: { family: 'inherit' },
+                            callback: v => '₪' + v.toLocaleString('he-IL'),
+                        },
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                    },
+                },
+            },
+        });
+    }
+
+    // ── Render all ────────────────────────────────────────────────────────────
+
+    function renderAll() {
+        const entries = loadIncome();
+        renderSummary(entries);
+        renderTable(entries);
+        renderChart(entries);
+    }
+
+    // ── Modal ─────────────────────────────────────────────────────────────────
+
+    let editingId = null;
+
+    function openAddModal(presetType) {
+        editingId = null;
+        document.getElementById('modalTitle').textContent = 'הוסף הכנסה';
+        document.getElementById('incomeName').value = '';
+        document.getElementById('incomeAmount').value = '';
+        document.getElementById('incomeType').value = presetType || 'salary';
+        document.getElementById('incomeFrequency').value = 'monthly';
+        document.getElementById('incomeDate').value = todayISO();
+        document.getElementById('incomeNotes').value = '';
+        document.getElementById('incomeModal').style.display = 'flex';
+        document.getElementById('incomeName').focus();
+    }
+
+    function openEditModal(id) {
+        const entries = loadIncome();
+        const entry = entries.find(e => e.id === id);
+        if (!entry) return;
+
+        editingId = id;
+        document.getElementById('modalTitle').textContent = 'עריכת הכנסה';
+        document.getElementById('incomeName').value = entry.name || '';
+        document.getElementById('incomeAmount').value = entry.amount || '';
+        document.getElementById('incomeType').value = entry.type || 'salary';
+        document.getElementById('incomeFrequency').value = entry.frequency || 'monthly';
+        document.getElementById('incomeDate').value = entry.date || todayISO();
+        document.getElementById('incomeNotes').value = entry.notes || '';
+        document.getElementById('incomeModal').style.display = 'flex';
+        document.getElementById('incomeName').focus();
+    }
+
+    function closeModal() {
+        document.getElementById('incomeModal').style.display = 'none';
+        editingId = null;
+    }
+
+    function handleModalOverlayClick(event) {
+        if (event.target === document.getElementById('incomeModal')) {
+            closeModal();
+        }
+    }
+
+    function saveIncome() {
+        const name = document.getElementById('incomeName').value.trim();
+        const amount = parseFloat(document.getElementById('incomeAmount').value);
+        const type = document.getElementById('incomeType').value;
+        const frequency = document.getElementById('incomeFrequency').value;
+        const date = document.getElementById('incomeDate').value;
+        const notes = document.getElementById('incomeNotes').value.trim();
+
+        if (!name) {
+            document.getElementById('incomeName').focus();
+            return;
+        }
+        if (isNaN(amount) || amount < 0) {
+            document.getElementById('incomeAmount').focus();
+            return;
+        }
+        if (!date) {
+            document.getElementById('incomeDate').focus();
+            return;
+        }
+
+        const entries = loadIncome();
+
+        if (editingId) {
+            const idx = entries.findIndex(e => e.id === editingId);
+            if (idx !== -1) {
+                entries[idx] = { ...entries[idx], name, amount, type, frequency, date, notes };
+            }
+        } else {
+            entries.push({ id: generateId(), name, amount, type, frequency, date, notes });
+        }
+
+        saveIncomeList(entries);
+        closeModal();
+        renderAll();
+    }
+
+    function deleteEntry(id) {
+        const entries = loadIncome();
+        const entry = entries.find(e => e.id === id);
+        if (!entry) return;
+        if (!confirm(`למחוק את "${entry.name}"?`)) return;
+        saveIncomeList(entries.filter(e => e.id !== id));
+        renderAll();
+    }
+
+    // ── Keyboard shortcuts ────────────────────────────────────────────────────
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderAll();
+    });
+    </script>
+</body>
+</html>
