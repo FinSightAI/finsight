@@ -205,107 +205,7 @@
 
     <div class="app-container">
         <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="mainSidebar">
-            <div class="sidebar-header">
-                <div class="brand">
-                    <img src="../img/logo.png" class="brand-icon" alt="FinSight">
-                    <span class="brand-name">Fin<span class="brand-highlight">Sight</span></span>
-                </div>
-            </div>
-
-            <nav>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="../index.html" class="nav-link" data-category="dashboard">
-                            <span class="icon">🏠</span>
-                            <span data-i18n="nav.dashboard">דאשבורד</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="bank.html" class="nav-link" data-category="bank">
-                            <span class="icon">🏦</span>
-                            <span data-i18n="nav.bankAccounts">חשבונות בנק</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="credit.html" class="nav-link" data-category="credit">
-                            <span class="icon">💳</span>
-                            <span data-i18n="nav.creditCards">כרטיסי אשראי</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="stocks.html" class="nav-link active" data-category="stocks">
-                            <span class="icon">📈</span>
-                            <span data-i18n="nav.stocks">מניות</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <span class="nav-link" style="cursor: default;">
-                            <span class="icon">📊</span>
-                            <span data-i18n="nav.financialProducts">מוצרים פיננסיים</span>
-                        </span>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="market-products.html" class="nav-link" data-category="market-products"><span data-i18n="nav.marketProducts">🏪 מוצרים בשוק</span></a></li>
-                            <li class="nav-item"><a href="my-funds.html" class="nav-link" data-category="my-products"><span data-i18n="nav.myProducts">💎 החסכונות שלי</span></a></li><li class="nav-item"><a href="compare-funds.html" class="nav-link" data-category="compare-funds"><span>⚖️ השוואת מוצרים</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="assets.html" class="nav-link" data-category="assets">
-                            <span class="icon">🏠</span>
-                            <span data-i18n="nav.assets">נכסים</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="loans.html" class="nav-link" data-category="loans">
-                            <span class="icon">🏦</span>
-                            <span data-i18n="nav.loans">הלוואות</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="subscriptions.html" class="nav-link" data-category="subscriptions">
-                            <span class="icon">🔄</span>
-                            <span data-i18n="nav.subscriptions">תשלומים קבועים</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="goals.html" class="nav-link" data-category="goals">
-                            <span class="icon">🎯</span>
-                            <span data-i18n="nav.goals">יעדי חיסכון</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="pension-calc.html" class="nav-link" data-category="pension-calc">
-                            <span class="icon">🧮</span>
-                            <span data-i18n="nav.pensionCalc">מחשבון פנסיה</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="reports.html" class="nav-link" data-category="reports">
-                            <span class="icon">📋</span>
-                            <span data-i18n="nav.reports">דוחות</span>
-                    <li class="nav-item"><a href="calendar.html" class="nav-link"><span class="icon">📅</span><span>לוח שנה פיננסי</span></a></li>
-                    <li class="nav-item"><a href="family.html" class="nav-link"><span class="icon">👨‍👩‍👧‍👦</span><span>דשבורד משפחתי</span></a></li>
-                    <li class="nav-item"><a href="health-score.html" class="nav-link"><span class="icon">🩺</span><span data-i18n="nav.healthScore">בריאות פיננסית</span></a></li>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="profile.html" class="nav-link">
-                            <span class="icon">👤</span>
-                            <span data-i18n="nav.profile">פרופיל פיננסי</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="settings.html" class="nav-link" data-category="settings">
-                            <span class="icon">⚙️</span>
-                            <span data-i18n="nav.settings">הגדרות</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="sidebar-footer">
-            </div>
-        </aside>
+        <aside class="sidebar"></aside>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -913,6 +813,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="../js/sidebar.js"></script>
     <script src="../js/profiles.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/pin-lock.js"></script>
