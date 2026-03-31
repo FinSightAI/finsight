@@ -34,6 +34,7 @@
         { icon: '🏦', label: 'הלוואות',               file: prefix + 'loans.html',             category: 'loans' },
         { icon: '🔄', label: 'תשלומים קבועים',        file: prefix + 'subscriptions.html',     category: 'subscriptions' },
         { icon: '🎯', label: 'יעדי חיסכון',           file: prefix + 'goals.html',             category: 'goals' },
+        { icon: '⏳', label: 'סימולטור מה היה קורה',   file: prefix + 'simulator.html',         category: 'simulator' },
         { icon: '🤖', label: 'יועץ AI',               file: prefix + 'ai-chat.html',           category: 'ai-chat' },
         { icon: '✨', label: 'סיפור השבוע',            file: prefix + 'ai-story.html',          category: 'ai-story' },
         { icon: '🧾', label: 'מייעל מס',              file: prefix + 'tax-optimizer.html',     category: 'tax-optimizer' },
