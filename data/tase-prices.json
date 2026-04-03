@@ -1,43 +1,43 @@
 {
   "SPY": {
-    "currentPrice": 653.93,
+    "currentPrice": 655.83,
     "previousClose": 645.09,
-    "priceChange": 8.839999999999918,
-    "priceChangePercent": 1.3703514238323207,
+    "priceChange": 10.740000000000009,
+    "priceChangePercent": 1.6648839696786508,
     "currency": "USD",
-    "lastUpdate": "2026-04-02T16:43:34.869Z"
+    "lastUpdate": "2026-04-03T21:40:35.015Z"
   },
   "TSM": {
-    "currentPrice": 338.068,
+    "currentPrice": 339.04,
     "previousClose": 326.11,
-    "priceChange": 11.95799999999997,
-    "priceChangePercent": 3.6668608751648124,
+    "priceChange": 12.930000000000007,
+    "priceChangePercent": 3.964919812333264,
     "currency": "USD",
-    "lastUpdate": "2026-04-02T16:43:35.309Z"
+    "lastUpdate": "2026-04-03T21:40:35.421Z"
   },
   "TBLA": {
-    "currentPrice": 3.185,
+    "currentPrice": 3.22,
     "previousClose": 3.06,
-    "priceChange": 0.125,
-    "priceChangePercent": 4.084967320261438,
+    "priceChange": 0.16000000000000014,
+    "priceChangePercent": 5.228758169934645,
     "currency": "USD",
-    "lastUpdate": "2026-04-02T16:43:35.754Z"
+    "lastUpdate": "2026-04-03T21:40:35.794Z"
   },
   "TLRY": {
-    "currentPrice": 6.465,
+    "currentPrice": 6.55,
     "previousClose": 6.54,
-    "priceChange": -0.07500000000000018,
-    "priceChangePercent": -1.1467889908256907,
+    "priceChange": 0.009999999999999787,
+    "priceChangePercent": 0.15290519877675515,
     "currency": "USD",
-    "lastUpdate": "2026-04-02T16:43:36.207Z"
+    "lastUpdate": "2026-04-03T21:40:36.165Z"
   },
   "XLE": {
-    "currentPrice": 59.125,
+    "currentPrice": 59.25,
     "previousClose": 61.52,
-    "priceChange": -2.395000000000003,
-    "priceChangePercent": -3.8930429128738666,
+    "priceChange": -2.270000000000003,
+    "priceChangePercent": -3.6898569570871307,
     "currency": "USD",
-    "lastUpdate": "2026-04-02T16:43:36.662Z"
+    "lastUpdate": "2026-04-03T21:40:36.581Z"
   },
   "AML.L": {
     "currentPrice": 0.38420000000000004,
@@ -45,6 +45,6 @@
     "priceChange": 0.00720000000000004,
     "priceChangePercent": 1.9098143236074376,
     "currency": "GBP",
-    "lastUpdate": "2026-04-02T16:43:37.077Z"
+    "lastUpdate": "2026-04-03T21:40:36.954Z"
   }
 }
