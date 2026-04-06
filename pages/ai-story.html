@@ -298,7 +298,7 @@ function getApiKey() { return localStorage.getItem(AI_KEY_STORAGE) || ''; }
 
 function init() {
     if (typeof I18n !== 'undefined') {
-        I18n.apply();
+        I18n.init();
         document.title = as('pageTitle') + ' - FinSight';
     }
     const key = getApiKey();

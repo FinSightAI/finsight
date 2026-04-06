@@ -329,6 +329,14 @@
     <script src="js/summary-sender.js"></script>
     <script src="data/sample-data.js"></script>
     <script>
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
         // Dashboard specific initialization
         document.addEventListener('DOMContentLoaded', () => {
             App.currentPage = 'dashboard';
@@ -397,8 +405,8 @@
             tbody.innerHTML = recent.map(tx => `
                 <tr>
                     <td>${I18n.formatDate(tx.date)}</td>
-                    <td>${tx.type}</td>
-                    <td>${tx.description}</td>
+                    <td>${escapeHtml(tx.type)}</td>
+                    <td>${escapeHtml(tx.description)}</td>
                     <td class="${tx.isPositive ? 'positive' : 'negative'}">${I18n.formatCurrency(Math.abs(tx.amount))}</td>
                 </tr>
             `).join('');
@@ -547,7 +555,7 @@
                     return `
                         <div style="margin-bottom: 15px;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span>${goal.name}</span>
+                                <span>${escapeHtml(goal.name)}</span>
                                 <span>${progress.toFixed(0)}%</span>
                             </div>
                             <div style="background: var(--color-bg-hover); border-radius: 4px; height: 8px; overflow: hidden;">

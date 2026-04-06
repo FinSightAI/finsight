@@ -830,6 +830,14 @@
     <script src="../js/crypto.js"></script>
     <script src="../js/auth.js"></script>
     <script>
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
         // Sidebar toggle
         function toggleSidebar() {
             document.body.classList.toggle('sidebar-collapsed');
@@ -3029,7 +3037,7 @@
                     }
                     if (!targetData.success || !targetData.historicalData || targetData.historicalData.length === 0) {
                         loadingEl.style.display = 'none';
-                        statsGrid.innerHTML = `<div style="color: var(--color-negative);">⚠ ${compareTarget.symbol} — ${I18n.t('benchmark.tickerNotFound')}</div>`;
+                        statsGrid.innerHTML = `<div style="color: var(--color-negative);">⚠ ${escapeHtml(compareTarget.symbol)} — ${I18n.t('benchmark.tickerNotFound')}</div>`;
                         statsEl.style.display = '';
                         return;
                     }

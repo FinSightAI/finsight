@@ -795,7 +795,7 @@
             currentLang = settings.language || 'he';
             if (typeof I18n !== 'undefined') {
                 I18n.currentLanguage = currentLang;
-                I18n.apply();
+                I18n.init();
             }
             document.querySelectorAll('[data-he][data-en]').forEach(el => {
                 el.textContent = currentLang === 'en' ? el.dataset.en : el.dataset.he;
