@@ -235,6 +235,18 @@ body.ltr .main-content {
 .nav-link.active[data-category="assets"] { background: var(--color-assets); }
 .nav-link.active[data-category="subscriptions"] { background: var(--color-subscriptions); }
 
+.pro-lock {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    margin-right: auto;
+    letter-spacing: 0.3px;
+    opacity: 0.85;
+}
+
 .nav-link .icon {
     font-size: 1.2rem;
     width: 24px;
