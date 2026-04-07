@@ -69,6 +69,15 @@ const Paywall = (() => {
         document.head.appendChild(style);
     }
 
+    function _stripeUrl() {
+        // Append Firebase UID as client_reference_id so the webhook can identify the user
+        try {
+            const uid = firebaseAuth && firebaseAuth.currentUser && firebaseAuth.currentUser.uid;
+            if (uid) return `${STRIPE_LINK}?client_reference_id=${encodeURIComponent(uid)}`;
+        } catch (_) {}
+        return STRIPE_LINK;
+    }
+
     function show(featureKey) {
         _inject();
 
@@ -91,7 +100,7 @@ const Paywall = (() => {
               ${c.perks.map(p => `<li>${p}</li>`).join("")}
             </ul>
             <p class="pw-price">${c.price}</p>
-            <a class="pw-btn" href="${STRIPE_LINK}" target="_blank" rel="noopener">${c.btn}</a>
+            <a class="pw-btn" href="${_stripeUrl()}" target="_blank" rel="noopener">${c.btn}</a>
             <button class="pw-dismiss" onclick="document.getElementById('paywallOverlay').remove()">${c.dismiss}</button>
           </div>
         `;
