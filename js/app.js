@@ -51,6 +51,19 @@ const App = {
                 const swPath = basePath + '/sw.js';
                 const registration = await navigator.serviceWorker.register(swPath, { scope: basePath + '/' });
                 console.log('ServiceWorker registered:', registration.scope);
+
+                // Auto-reload when a new SW takes control — ensures users always
+                // get the latest version without manual cache clearing
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
+                });
+
+                // Force update check every time the page loads
+                registration.update();
             } catch (error) {
                 console.log('ServiceWorker registration failed:', error);
             }
