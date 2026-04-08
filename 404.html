@@ -3,15 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <script>
-  // Fix case-sensitive URL issues on GitHub Pages
-  // e.g. /FinSight/ → /finsight/
-  var path = window.location.pathname;
-  var fixed = path.replace(/\/FinSight\//gi, '/finsight/');
-  if (fixed !== path) {
-    window.location.replace(fixed + window.location.search + window.location.hash);
+  // 1. Unregister all stale service workers (fixes old PWA installs with wrong scope)
+  // 2. Redirect to correct URL
+  function redirect() {
+    var path = window.location.pathname;
+    var fixed = path.replace(/\/FinSight/gi, '/finsight');
+    var target = (fixed !== path) ? fixed : '/finsight/';
+    window.location.replace(target + window.location.search + window.location.hash);
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      var unregisterAll = registrations.map(function(r) { return r.unregister(); });
+      Promise.all(unregisterAll).then(redirect);
+    }).catch(redirect);
   } else {
-    // Genuine 404 — redirect to home
-    window.location.replace('/finsight/');
+    redirect();
   }
 </script>
 </head>
