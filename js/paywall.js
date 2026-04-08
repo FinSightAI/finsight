@@ -65,6 +65,15 @@ const Paywall = (() => {
           #paywallBox .pw-btn:hover { opacity: 0.88; }
           #paywallBox .pw-dismiss { background: none; border: none; color: #8892a4; font-size: 0.85rem; cursor: pointer; }
           #paywallBox .pw-dismiss:hover { color: #f0f4ff; }
+          #paywallBox .pw-code-row { display: flex; gap: 8px; margin: 12px 0 4px; }
+          #paywallBox .pw-code-input { flex: 1; padding: 10px 12px; background: #161b27; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0f4ff; font-size: 0.88rem; font-family: inherit; }
+          #paywallBox .pw-code-input:focus { outline: none; border-color: #6366f1; }
+          #paywallBox .pw-code-input::placeholder { color: #8892a4; }
+          #paywallBox .pw-code-btn { padding: 10px 16px; background: #161b27; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0f4ff; font-size: 0.88rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+          #paywallBox .pw-code-btn:hover { border-color: #6366f1; }
+          #paywallBox .pw-code-msg { font-size: 0.82rem; min-height: 18px; margin-bottom: 8px; }
+          #paywallBox .pw-code-msg.ok  { color: #10b981; }
+          #paywallBox .pw-code-msg.err { color: #f87171; }
         `;
         document.head.appendChild(style);
     }
@@ -101,6 +110,11 @@ const Paywall = (() => {
             </ul>
             <p class="pw-price">${c.price}</p>
             <a class="pw-btn" href="${_stripeUrl()}" target="_blank" rel="noopener">${c.btn}</a>
+            <div class="pw-code-row">
+              <input class="pw-code-input" id="pwCodeInput" placeholder="${lang === 'he' ? 'יש לך קוד גישה?' : 'Have an access code?'}" />
+              <button class="pw-code-btn" onclick="Paywall.applyCode()">${lang === 'he' ? 'אשר' : 'Apply'}</button>
+            </div>
+            <div class="pw-code-msg" id="pwCodeMsg"></div>
             <button class="pw-dismiss" onclick="document.getElementById('paywallOverlay').remove()">${c.dismiss}</button>
           </div>
         `;
@@ -118,5 +132,23 @@ const Paywall = (() => {
         if (el) el.remove();
     }
 
-    return { show, hide };
+    function applyCode() {
+        const input = document.getElementById("pwCodeInput");
+        const msg   = document.getElementById("pwCodeMsg");
+        if (!input || !msg) return;
+        const code = input.value.trim();
+        if (!code) return;
+        const success = Plan.redeemCode(code);
+        if (success) {
+            msg.className = "pw-code-msg ok";
+            msg.textContent = "✓ קוד תקין! גישת Pro הופעלה.";
+            setTimeout(() => { hide(); location.reload(); }, 1200);
+        } else {
+            msg.className = "pw-code-msg err";
+            msg.textContent = "קוד לא תקין. נסה שוב.";
+            input.value = "";
+        }
+    }
+
+    return { show, hide, applyCode };
 })();
