@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+  // Fix case-sensitive URL issues on GitHub Pages
+  // e.g. /FinSight/ → /finsight/
+  var path = window.location.pathname;
+  var fixed = path.replace(/\/FinSight\//gi, '/finsight/');
+  if (fixed !== path) {
+    window.location.replace(fixed + window.location.search + window.location.hash);
+  } else {
+    // Genuine 404 — redirect to home
+    window.location.replace('/finsight/');
+  }
+</script>
+</head>
+<body></body>
+</html>
