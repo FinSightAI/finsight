@@ -10,9 +10,12 @@ const Plan = (() => {
     // ─── ACCESS CODES ─────────────────────────────────────────────
     // Add/remove codes here. Each code grants Pro access permanently.
     const ACCESS_CODES = new Set([
-        "WIZELIFE2026",
-        "BETA-ACCESS",
-        "FRIEND-PRO",
+        "BKU3-7TCCBW",
+        "3QRT-4QF27K",
+        "LZWY-ALHXD7",
+        "WZBD-UD7WC7",
+        "7ELJ-L29T4K",
+        "ZYUO-67D4C7",
     ]);
     // ──────────────────────────────────────────────────────────────
 
