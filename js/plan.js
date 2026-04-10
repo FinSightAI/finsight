@@ -5,7 +5,7 @@
  */
 const Plan = (() => {
     // ─── MASTER SWITCH ────────────────────────────────────────────
-    const PAYWALL_ACTIVE = false; // ← set true when ready to charge
+    const PAYWALL_ACTIVE = true;
 
     // ─── ACCESS CODES ─────────────────────────────────────────────
     // Add/remove codes here. Each code grants Pro access permanently.
