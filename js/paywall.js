@@ -3,7 +3,7 @@
  * Customize STRIPE_LINK before going live
  */
 const Paywall = (() => {
-    const STRIPE_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK"; // TODO: replace
+    const PAYPAL_PLAN_ID = "P-42B26777LT293231BNHMVWNA";
 
     const COPY = {
         he: {
@@ -78,13 +78,15 @@ const Paywall = (() => {
         document.head.appendChild(style);
     }
 
-    function _stripeUrl() {
-        // Append Firebase UID as client_reference_id so the webhook can identify the user
+    function _paypalUrl() {
         try {
             const uid = firebaseAuth && firebaseAuth.currentUser && firebaseAuth.currentUser.uid;
-            if (uid) return `${STRIPE_LINK}?client_reference_id=${encodeURIComponent(uid)}`;
-        } catch (_) {}
-        return STRIPE_LINK;
+            const base = `https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=${PAYPAL_PLAN_ID}`;
+            if (uid) return `${base}&custom_id=${encodeURIComponent(uid)}`;
+            return base;
+        } catch (_) {
+            return `https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=${PAYPAL_PLAN_ID}`;
+        }
     }
 
     function show(featureKey) {
@@ -109,7 +111,7 @@ const Paywall = (() => {
               ${c.perks.map(p => `<li>${p}</li>`).join("")}
             </ul>
             <p class="pw-price">${c.price}</p>
-            <a class="pw-btn" href="${_stripeUrl()}" target="_blank" rel="noopener">${c.btn}</a>
+            <a class="pw-btn" href="${_paypalUrl()}" target="_blank" rel="noopener">${c.btn}</a>
             <div class="pw-code-row">
               <input class="pw-code-input" id="pwCodeInput" placeholder="${lang === 'he' ? 'יש לך קוד גישה?' : 'Have an access code?'}" />
               <button class="pw-code-btn" onclick="Paywall.applyCode()">${lang === 'he' ? 'אשר' : 'Apply'}</button>
