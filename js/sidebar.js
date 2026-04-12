@@ -105,6 +105,50 @@
         </nav>
         <div class="sidebar-footer">${footer}</div>`;
 
+    // Language switcher — floats in the corner opposite the sidebar
+    function injectLangSwitcher() {
+        if (document.getElementById('globalLangSwitcher')) return;
+        const sw = document.createElement('div');
+        sw.id = 'globalLangSwitcher';
+        sw.innerHTML =
+            '<button class="lang-btn" data-lang="he" onclick="I18n.setLanguage(\'he\')">HE</button>' +
+            '<button class="lang-btn" data-lang="en" onclick="I18n.setLanguage(\'en\')">EN</button>' +
+            '<button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage(\'pt\')">PT</button>';
+        sw.style.cssText =
+            'position:fixed;top:14px;z-index:1200;' +
+            'display:flex;gap:4px;' +
+            'background:rgba(255,255,255,0.06);' +
+            'border:1px solid rgba(255,255,255,0.12);' +
+            'border-radius:8px;padding:4px 6px;backdrop-filter:blur(8px);';
+
+        // Position on the side OPPOSITE the sidebar
+        // RTL (Hebrew) → sidebar is on the right → switcher goes to the left
+        // LTR (English) → sidebar is on the left  → switcher goes to the right
+        function positionSwitcher() {
+            const isRtl = document.documentElement.dir === 'rtl' ||
+                          document.documentElement.lang === 'he';
+            sw.style.left  = isRtl  ? '14px' : 'unset';
+            sw.style.right = !isRtl ? '14px' : 'unset';
+            // Highlight active lang
+            sw.querySelectorAll('.lang-btn').forEach(btn => {
+                const active = btn.getAttribute('data-lang') ===
+                    (typeof I18n !== 'undefined' ? I18n.currentLanguage : 'he');
+                btn.classList.toggle('active', active);
+            });
+        }
+
+        document.body.appendChild(sw);
+        positionSwitcher();
+        // Re-position whenever language changes (i18n.js calls translatePage → updates .lang-btn.active)
+        const origSetLang = typeof I18n !== 'undefined' && I18n.setLanguage;
+        if (origSetLang) {
+            const _orig = I18n.setLanguage.bind(I18n);
+            I18n.setLanguage = function(lang) { _orig(lang); positionSwitcher(); };
+        }
+        // Also re-run after a short delay to catch i18n init
+        setTimeout(positionSwitcher, 300);
+    }
+
     // Inject as soon as possible — script is deferred, so DOM is ready
     function inject() {
         const aside = document.querySelector('aside.sidebar');
@@ -112,6 +156,7 @@
             aside.innerHTML = html;
             attachProGates(aside);
         }
+        injectLangSwitcher();
     }
 
     function attachProGates(aside) {
