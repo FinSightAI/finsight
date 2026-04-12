@@ -7,17 +7,7 @@ const Plan = (() => {
     // ─── MASTER SWITCH ────────────────────────────────────────────
     const PAYWALL_ACTIVE = true;
 
-    // ─── ACCESS CODES ─────────────────────────────────────────────
-    // Add/remove codes here. Each code grants Pro access permanently.
-    const ACCESS_CODES = new Set([
-        "BKU3-7TCCBW",
-        "3QRT-4QF27K",
-        "LZWY-ALHXD7",
-        "WZBD-UD7WC7",
-        "7ELJ-L29T4K",
-        "ZYUO-67D4C7",
-    ]);
-    // ──────────────────────────────────────────────────────────────
+    // Access codes validated server-side via Firebase Function (validateCode)
 
     const PRO_FEATURES = {
         export:          { he: "ייצוא נתונים",        en: "Export Data" },
@@ -44,19 +34,24 @@ const Plan = (() => {
 
     // ── Access Code ───────────────────────────────────────────────
 
-    function redeemCode(code) {
+    async function redeemCode(code) {
         const normalized = code.trim().toUpperCase();
-        if (!ACCESS_CODES.has(normalized)) return false;
-        _plan = "pro";
-        localStorage.setItem("wl_plan", "pro");
-        localStorage.setItem("wl_access_code", normalized);
-        // Persist to Firestore if logged in
+        if (!normalized) return false;
         try {
-            const uid = firebaseAuth && firebaseAuth.currentUser && firebaseAuth.currentUser.uid;
-            if (uid) firebaseDb.collection("users").doc(uid).set({ plan: "pro", accessCode: normalized }, { merge: true });
-        } catch (_) {}
-        _notify();
-        return true;
+            const fn = firebase.functions().httpsCallable("validateCode");
+            const result = await fn({ code: normalized });
+            if (result.data.valid) {
+                _plan = "pro";
+                localStorage.setItem("wl_plan", "pro");
+                localStorage.setItem("wl_access_code", normalized);
+                _notify();
+                return true;
+            }
+            return false;
+        } catch (e) {
+            console.error("Code validation error:", e);
+            return false;
+        }
     }
 
     function getRedeemedCode() {
@@ -67,12 +62,6 @@ const Plan = (() => {
 
     async function load() {
         if (!PAYWALL_ACTIVE) { _plan = "pro"; _notify(); return "pro"; }
-
-        // Check localStorage access code first (fast path)
-        const savedCode = localStorage.getItem("wl_access_code");
-        if (savedCode && ACCESS_CODES.has(savedCode)) {
-            _plan = "pro"; _notify(); return "pro";
-        }
 
         if (typeof firebaseAuth !== "undefined" && firebaseAuth.currentUser) {
             try {

@@ -21,6 +21,36 @@ const PAYPAL_CLIENT_ID  = defineSecret("PAYPAL_CLIENT_ID");
 const PAYPAL_SECRET     = defineSecret("PAYPAL_SECRET");
 const PAYPAL_WEBHOOK_ID = defineSecret("PAYPAL_WEBHOOK_ID");
 const GEMINI_API_KEY    = defineSecret("GEMINI_API_KEY");
+const ACCESS_CODES_SEC  = defineSecret("ACCESS_CODES");
+
+// ─── Access Code Validation ───────────────────────────────────────────────────
+
+exports.validateCode = functions
+    .runWith({ secrets: [ACCESS_CODES_SEC] })
+    .https.onCall(async (data, context) => {
+        if (!context.auth) {
+            throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי לממש קוד");
+        }
+
+        const code = (data.code || "").trim().toUpperCase();
+        if (!code) throw new functions.https.HttpsError("invalid-argument", "קוד נדרש");
+
+        const validCodes = new Set(
+            ACCESS_CODES_SEC.value()
+                .split(",")
+                .map(c => c.trim().toUpperCase())
+                .filter(Boolean)
+        );
+
+        if (!validCodes.has(code)) return { valid: false };
+
+        await db.collection("users").doc(context.auth.uid).set(
+            { plan: "pro", accessCode: code, planActivatedAt: admin.firestore.FieldValue.serverTimestamp() },
+            { merge: true }
+        );
+
+        return { valid: true };
+    });
 
 // ─── AI Proxy — callable function ────────────────────────────────────────────
 

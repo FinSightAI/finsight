@@ -2,9 +2,7 @@
  * Stock API Module - Fetches stock data from Yahoo Finance + TASE
  */
 const StockAPI = {
-    // Cloudflare Worker proxy — set your worker URL here after deploying workers/yahoo-proxy.js
-    // e.g. 'https://finsight-yahoo.YOUR-SUBDOMAIN.workers.dev/v8/finance/chart'
-    CF_WORKER_URL: 'https://lucky-hill-f215.ofirshamir57.workers.dev/v8/finance/chart',
+    CF_WORKER_URL: null, // Cloudflare Worker disabled (returning 500)
 
     YAHOO_URLS: [
         'https://query1.finance.yahoo.com/v8/finance/chart',

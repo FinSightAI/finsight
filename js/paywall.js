@@ -134,13 +134,15 @@ const Paywall = (() => {
         if (el) el.remove();
     }
 
-    function applyCode() {
+    async function applyCode() {
         const input = document.getElementById("pwCodeInput");
         const msg   = document.getElementById("pwCodeMsg");
         if (!input || !msg) return;
         const code = input.value.trim();
         if (!code) return;
-        const success = Plan.redeemCode(code);
+        msg.className = "pw-code-msg";
+        msg.textContent = "בודק קוד...";
+        const success = await Plan.redeemCode(code);
         if (success) {
             msg.className = "pw-code-msg ok";
             msg.textContent = "✓ קוד תקין! גישת Pro הופעלה.";
