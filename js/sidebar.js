@@ -105,6 +105,24 @@
         </nav>
         <div class="sidebar-footer">${footer}</div>`;
 
+    // Theme toggle — floats bottom-left
+    function injectThemeToggle() {
+        if (document.getElementById('wlThemeToggle')) return;
+        var btn = document.createElement('button');
+        btn.id = 'wlThemeToggle';
+        var light = localStorage.getItem('wl_theme') === 'light';
+        if (light) document.body.classList.add('light');
+        btn.textContent = light ? '🌙' : '☀️';
+        btn.title = 'Toggle theme';
+        btn.style.cssText = 'position:fixed;bottom:16px;left:16px;z-index:1200;width:36px;height:36px;border-radius:50%;background:var(--color-bg-card,rgba(255,255,255,0.06));border:1px solid var(--color-border,rgba(255,255,255,0.12));font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all 0.2s;';
+        btn.onclick = function() {
+            var isLight = document.body.classList.toggle('light');
+            localStorage.setItem('wl_theme', isLight ? 'light' : 'dark');
+            btn.textContent = isLight ? '🌙' : '☀️';
+        };
+        document.body.appendChild(btn);
+    }
+
     // Language switcher — floats in the corner opposite the sidebar
     function injectLangSwitcher() {
         if (document.getElementById('globalLangSwitcher')) return;
@@ -157,6 +175,7 @@
             attachProGates(aside);
         }
         injectLangSwitcher();
+        injectThemeToggle();
     }
 
     function attachProGates(aside) {

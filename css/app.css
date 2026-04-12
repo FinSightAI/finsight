@@ -41,6 +41,53 @@
     --transition-normal: 0.3s ease;
 }
 
+body.light {
+    --color-bg-primary: #f8fafc;
+    --color-bg-secondary: #ffffff;
+    --color-bg-card: rgba(0, 0, 0, 0.03);
+    --color-border: rgba(0, 0, 0, 0.1);
+    --color-text-primary: #1e293b;
+    --color-text-secondary: #64748b;
+    --color-positive: #10b981;
+    --color-negative: #f43f5e;
+}
+
+body.light {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    color: #1e293b !important;
+}
+
+body.light .sidebar {
+    background: rgba(255,255,255,0.85) !important;
+    border-color: rgba(0,0,0,0.1) !important;
+}
+
+body.light .card,
+body.light .summary-card {
+    background: rgba(255,255,255,0.9) !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    color: #1e293b !important;
+}
+
+body.light .nav-link {
+    color: #475569 !important;
+}
+
+body.light .nav-link:hover,
+body.light .nav-link.active {
+    background: rgba(16,185,129,0.1) !important;
+    color: #1e293b !important;
+}
+
+body.light input, body.light textarea, body.light select {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.15) !important;
+    color: #1e293b !important;
+}
+
+body.light .modal-overlay { background: rgba(0,0,0,0.4) !important; }
+body.light .modal { background: #ffffff !important; color: #1e293b !important; }
+
 /* ===== iOS Safe Area ===== */
 /* top safe area is handled by .mobile-header on mobile, and not needed on desktop */
 @supports (padding: env(safe-area-inset-bottom)) {
