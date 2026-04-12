@@ -224,25 +224,18 @@
     <main class="main-content">
         <div class="story-container">
 
-            <!-- API Setup (shown when no key) -->
-            <div class="api-setup" id="apiSetup">
-                <div style="font-size:3rem;margin-bottom:16px">🤖</div>
-                <h2 data-i18n="aiStory.connectTitle">חבר את Claude AI</h2>
-                <p data-i18n="aiStory.connectDesc">הכנס את מפתח ה-API של Anthropic כדי לקבל סיכום שבועי אישי של ההוצאות שלך. המפתח נשמר אצלך בדפדפן בלבד ולא נשלח לשום שרת.</p>
-                <div class="api-input-row">
-                    <input type="password" id="apiKeyInput" placeholder="sk-ant-api..." autocomplete="off">
-                    <button class="btn btn-primary" onclick="saveApiKey()" data-i18n="aiStory.connectBtn">התחבר</button>
-                </div>
-                <p style="margin-top:12px;font-size:0.78rem">
-                    <a href="https://console.anthropic.com" target="_blank" style="color:var(--color-primary)" data-i18n="aiStory.getApiKey">קבל מפתח API בחינם באתר Anthropic ←</a>
-                </p>
+            <!-- Login required (shown when not authenticated) -->
+            <div class="api-setup" id="apiSetup" style="display:none">
+                <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+                <h2>התחבר לחשבון</h2>
+                <p style="color:var(--color-text-secondary);">יש להתחבר לחשבון FinSight כדי להשתמש בסיפור ה-AI.</p>
+                <p style="color:var(--color-text-secondary);font-size:0.85rem;">לחץ על "התחבר" בתפריט הצד.</p>
             </div>
 
-            <!-- Main UI (shown when key exists) -->
+            <!-- Main UI -->
             <div id="mainUI" style="display:none">
                 <div class="key-row">
-                    <span data-i18n="aiStory.connectedLabel">🔑 מחובר ל-Claude AI</span>
-                    <button class="key-change-btn" onclick="changeKey()" data-i18n="aiStory.changeKey">שנה מפתח</button>
+                    <span id="aiConnectedLabel">✨ AI מחובר</span>
                 </div>
 
                 <div class="controls-row">
@@ -284,43 +277,34 @@
     </main>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
 <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
+<script src="../js/storage.js"></script>
 <script src="../js/i18n.js"></script>
 <script>
-const AI_KEY_STORAGE = 'finance_ai_api_key';
-const AI_CACHE_KEY   = 'finance_ai_story_cache';
+const AI_CACHE_KEY = 'finance_ai_story_cache';
+let currentUser = null;
+const aiProxy = firebase.functions().httpsCallable('aiProxy');
 
-function as(k) { return I18n.t('aiStory.' + k); }
-
-function getApiKey() { return localStorage.getItem(AI_KEY_STORAGE) || ''; }
+function as(k) { return typeof I18n !== 'undefined' ? I18n.t('aiStory.' + k) : k; }
 
 function init() {
     if (typeof I18n !== 'undefined') {
         I18n.init();
         document.title = as('pageTitle') + ' - FinSight';
     }
-    const key = getApiKey();
-    document.getElementById('apiSetup').style.display = key ? 'none' : 'block';
-    document.getElementById('mainUI').style.display   = key ? 'block' : 'none';
-    if (key) loadCachedStory();
 }
 
-function saveApiKey() {
-    const val = document.getElementById('apiKeyInput').value.trim();
-    if (!val.startsWith('sk-ant-')) {
-        alert(as('invalidKey'));
-        return;
-    }
-    localStorage.setItem(AI_KEY_STORAGE, val);
-    init();
-}
-
-function changeKey() {
-    localStorage.removeItem(AI_KEY_STORAGE);
-    init();
-}
+firebase.auth().onAuthStateChanged(user => {
+    currentUser = user;
+    document.getElementById('apiSetup').style.display = user ? 'none' : 'block';
+    document.getElementById('mainUI').style.display   = user ? 'block' : 'none';
+    if (user) loadCachedStory();
+});
 
 function loadCachedStory() {
     try {
@@ -435,8 +419,10 @@ Reply in JSON only (no markdown, no text outside JSON):
 }
 
 async function generateStory() {
-    const apiKey = getApiKey();
-    if (!apiKey) return;
+    if (!currentUser) {
+        showError('יש להתחבר לחשבון.');
+        return;
+    }
 
     const days = parseInt(document.getElementById('rangeSelect').value);
     const data = gatherData(days);
@@ -451,39 +437,23 @@ async function generateStory() {
 
     try {
         const prompt = buildPrompt(data);
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01',
-                'content-type': 'application/json',
-                'anthropic-dangerous-allow-browser': 'true'
-            },
-            body: JSON.stringify({
-                model: 'claude-haiku-4-5-20251001',
-                max_tokens: 600,
-                messages: [{ role: 'user', content: prompt }]
-            })
+        const res = await aiProxy({
+            messages: [{ role: 'user', parts: [{ text: prompt }] }],
+            maxTokens: 600,
         });
 
-        if (!resp.ok) {
-            const err = await resp.json().catch(() => ({}));
-            throw new Error(err.error?.message || `API Error: ${resp.status}`);
-        }
-
-        const json = await resp.json();
-        const raw = json.content?.[0]?.text || '';
-
-        // Parse JSON from response (strip any accidental markdown)
+        const raw = res.data.text || '';
         const cleaned = raw.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
         const result = JSON.parse(cleaned);
 
-        // Cache
         localStorage.setItem(AI_CACHE_KEY, JSON.stringify({ result, stats: data, range: days, ts: new Date().toISOString() }));
         renderStory(result, data, days, new Date());
 
     } catch(e) {
-        showError(as('errorPrefix') + (e.message || e));
+        const msg = e.code === 'functions/resource-exhausted'
+            ? (e.message || 'הגעת למגבלה היומית.')
+            : (as('errorPrefix') + (e.message || e));
+        showError(msg);
     } finally {
         setLoading(false);
     }
