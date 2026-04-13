@@ -54,8 +54,50 @@ exports.validateCode = functions
 
 // ─── AI Proxy — callable function ────────────────────────────────────────────
 
-const aiRateStore = {}; // uid → { count, resetAt }
-const AI_CALLS_PER_DAY = 25;
+const AI_LIMIT = { pro: 10, free: 1 };
+
+/**
+ * Firestore-backed rate limiting — tiered by plan.
+ * Free: 1 call/day. Pro: 10 calls/day.
+ */
+async function checkAiRateLimit(uid) {
+    const [rateSnap, userSnap] = await Promise.all([
+        db.collection("ai_rate").doc(uid).get(),
+        db.collection("users").doc(uid).get(),
+    ]);
+
+    const plan  = userSnap.exists ? (userSnap.data().plan || "free") : "free";
+    const limit = AI_LIMIT[plan] ?? AI_LIMIT.free;
+
+    const ref = db.collection("ai_rate").doc(uid);
+    const now = Date.now();
+    const dayMs = 24 * 60 * 60 * 1000;
+
+    await db.runTransaction(async (tx) => {
+        const snap = await tx.get(ref);
+        const d = snap.exists ? snap.data() : {};
+
+        const dayCount   = (d.dayResetAt > now) ? (d.dayCount || 0) : 0;
+        const dayResetAt = (d.dayResetAt > now) ? d.dayResetAt : now + dayMs;
+
+        if (dayCount >= limit) {
+            const minLeft = Math.ceil((dayResetAt - now) / 60000);
+            const upgradeHint = plan === "free"
+                ? " שדרג לפרו כדי לקבל 10 שאלות ביום."
+                : "";
+            throw new functions.https.HttpsError(
+                "resource-exhausted",
+                `הגעת למגבלת ${limit} שאלות יומיות.${upgradeHint} נסה שוב בעוד ~${minLeft} דקות.`
+            );
+        }
+
+        tx.set(ref, {
+            dayCount:  dayCount + 1,
+            dayResetAt,
+            lastCall:  now,
+        }, { merge: true });
+    });
+}
 
 exports.aiProxy = functions
     .runWith({ secrets: [GEMINI_API_KEY] })
@@ -65,19 +107,7 @@ exports.aiProxy = functions
         }
 
         const uid = context.auth.uid;
-        const now = Date.now();
-        const entry = aiRateStore[uid];
-
-        if (!entry || entry.resetAt < now) {
-            aiRateStore[uid] = { count: 1, resetAt: now + 24 * 60 * 60 * 1000 };
-        } else if (entry.count >= AI_CALLS_PER_DAY) {
-            throw new functions.https.HttpsError(
-                "resource-exhausted",
-                "הגעת למגבלת 25 שאלות יומיות. נסה מחר."
-            );
-        } else {
-            entry.count++;
-        }
+        await checkAiRateLimit(uid);
 
         const { messages, system, maxTokens = 2048 } = data;
         if (!messages || !Array.isArray(messages)) {
