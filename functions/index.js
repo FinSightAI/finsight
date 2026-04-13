@@ -54,7 +54,7 @@ exports.validateCode = functions
 
 // ─── AI Proxy — callable function ────────────────────────────────────────────
 
-const AI_LIMIT = { pro: 10, free: 1 };
+const AI_LIMIT = { free: 2, pro: 20, yolo: 40 };
 
 /**
  * Firestore-backed rate limiting — tiered by plan.
@@ -68,6 +68,7 @@ async function checkAiRateLimit(uid) {
 
     const plan  = userSnap.exists ? (userSnap.data().plan || "free") : "free";
     const limit = AI_LIMIT[plan] ?? AI_LIMIT.free;
+    const isPaid = plan === "pro" || plan === "yolo";
 
     const ref = db.collection("ai_rate").doc(uid);
     const now = Date.now();
@@ -83,7 +84,9 @@ async function checkAiRateLimit(uid) {
         if (dayCount >= limit) {
             const minLeft = Math.ceil((dayResetAt - now) / 60000);
             const upgradeHint = plan === "free"
-                ? " שדרג לפרו כדי לקבל 10 שאלות ביום."
+                ? " שדרג ל-Pro ($4.90/חודש) לקבל 20 שאלות ביום."
+                : plan === "pro"
+                ? " שדרג ל-YOLO ($9.90/חודש) לקבל 40 שאלות ביום."
                 : "";
             throw new functions.https.HttpsError(
                 "resource-exhausted",

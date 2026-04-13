@@ -91,7 +91,12 @@ const Plan = (() => {
 
     function isPro() {
         if (!PAYWALL_ACTIVE) return true;
-        return _plan === "pro";
+        return _plan === "pro" || _plan === "yolo";
+    }
+
+    function isYolo() {
+        if (!PAYWALL_ACTIVE) return true;
+        return _plan === "yolo";
     }
 
     function isPaywallActive() { return PAYWALL_ACTIVE; }
@@ -124,5 +129,5 @@ const Plan = (() => {
         load();
     }
 
-    return { load, setPro, isPro, isPaywallActive, check, redeemCode, getRedeemedCode, freeTxLimit, featureName, onChange };
+    return { load, setPro, isPro, isYolo, isPaywallActive, check, redeemCode, getRedeemedCode, freeTxLimit, featureName, onChange };
 })();
