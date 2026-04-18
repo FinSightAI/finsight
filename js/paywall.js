@@ -54,9 +54,33 @@ const Paywall = (() => {
         },
     };
 
+    const AI_FEATURES = new Set(["aiChat", "aiStory", "taxOptimizer", "pensionOptimizer"]);
+    const DATA_FEATURES = new Set(["export", "reports", "compareFunds"]);
+
+    function _smartSub(featureKey, name, lang) {
+        if (featureKey === "quota") {
+            return lang === "he"
+                ? `השתמשת בכל שאלות ה-AI שלך להיום. <strong>Pro מעניק לך 20 שאלות ביום</strong> — פי 10 מהחינמי.`
+                : `You've used all your free AI questions today. <strong>Pro gives you 20/day</strong> — 10× more.`;
+        }
+        if (AI_FEATURES.has(featureKey)) {
+            return lang === "he"
+                ? `<strong>${name}</strong> זמין בתוכנית Pro — יחד עם 20 שאלות AI ביום, AI Story, ואופטימיזציית מס.`
+                : `<strong>${name}</strong> is on Pro — along with 20 AI questions/day, AI Story, and tax optimizer.`;
+        }
+        if (DATA_FEATURES.has(featureKey)) {
+            return lang === "he"
+                ? `<strong>${name}</strong> ודוחות מפורטים זמינים בתוכנית Pro בלבד.`
+                : `<strong>${name}</strong> and detailed reports are available on Pro only.`;
+        }
+        return lang === "he"
+            ? `<strong>${name}</strong> זמין בתוכנית Pro ומעלה.`
+            : `<strong>${name}</strong> is available on Pro and above.`;
+    }
+
     const COPY = {
-        he: { title: "בחר תוכנית", sub: (name) => `<strong>${name}</strong> זמין בתוכנית Pro ומעלה`, btn_pro: "שדרג ל-Pro", btn_yolo: "שדרג ל-YOLO", current: "התוכנית שלך", dismiss: "אולי אחר כך", code_placeholder: "יש לך קוד גישה?", code_btn: "אשר" },
-        en: { title: "Choose a Plan", sub: (name) => `<strong>${name}</strong> is available on Pro and above`, btn_pro: "Upgrade to Pro", btn_yolo: "Upgrade to YOLO", current: "Your plan", dismiss: "Maybe later", code_placeholder: "Have an access code?", code_btn: "Apply" },
+        he: { title: "בחר תוכנית", sub: _smartSub, btn_pro: "שדרג ל-Pro", btn_yolo: "שדרג ל-YOLO", current: "התוכנית שלך", dismiss: "אולי אחר כך", code_placeholder: "יש לך קוד גישה?", code_btn: "אשר" },
+        en: { title: "Choose a Plan", sub: _smartSub, btn_pro: "Upgrade to Pro", btn_yolo: "Upgrade to YOLO", current: "Your plan", dismiss: "Maybe later", code_placeholder: "Have an access code?", code_btn: "Apply" },
     };
 
     function _lang() { try { return (I18n && I18n.current) || "he"; } catch { return "he"; } }
@@ -145,7 +169,7 @@ const Paywall = (() => {
         const lang = _lang();
         const c    = COPY[lang]  || COPY.he;
         const p    = PLANS[lang] || PLANS.he;
-        const name = Plan.featureName(featureKey);
+        const name = featureKey === "quota" ? (lang === "he" ? "יועץ AI" : "AI") : Plan.featureName(featureKey);
 
         const old = document.getElementById("paywallOverlay");
         if (old) old.remove();
@@ -172,7 +196,7 @@ const Paywall = (() => {
         overlay.innerHTML = `
           <div id="paywallBox">
             <h2>✨ ${c.title}</h2>
-            <p class="pw-sub">${c.sub(name)}</p>
+            <p class="pw-sub">${c.sub(featureKey, name, lang)}</p>
             <div class="pw-plans">
               ${planCard('free', p.free)}
               ${planCard('pro',  p.pro)}
@@ -219,5 +243,8 @@ const Paywall = (() => {
         }
     }
 
-    return { show, hide, applyCode };
+    // Call this when user hits daily AI quota (e.g., Paywall.showQuota())
+    function showQuota() { show("quota"); }
+
+    return { show, hide, applyCode, showQuota };
 })();

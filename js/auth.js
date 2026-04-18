@@ -131,6 +131,17 @@ const Auth = {
     async signInWithGoogle() {
         try {
             const result = await firebaseAuth.signInWithPopup(googleProvider);
+            // First-time Google sign-in: create user doc with trial start
+            if (typeof firebaseDb !== 'undefined') {
+                const ref = firebaseDb.collection('users').doc(result.user.uid);
+                const doc = await ref.get();
+                if (!doc.exists) {
+                    await ref.set({
+                        plan: 'free',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            }
             App.notify(`${I18n.t('auth.welcome')}, ${result.user.displayName}!`, 'success');
             return result.user;
         } catch (error) {
@@ -172,6 +183,13 @@ const Auth = {
     async registerWithEmail(email, password) {
         try {
             const result = await firebaseAuth.createUserWithEmailAndPassword(email, password);
+            // Create user doc with trial start timestamp
+            if (typeof firebaseDb !== 'undefined') {
+                await firebaseDb.collection('users').doc(result.user.uid).set({
+                    plan: 'free',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            }
             App.notify(I18n.t('auth.registered'), 'success');
             this.closeEmailModal();
             return result.user;

@@ -60,6 +60,16 @@ const Plan = (() => {
 
     // ── Plan Loading ──────────────────────────────────────────────
 
+    const TRIAL_DAYS = 7;
+
+    function _trialDaysLeft(createdAt) {
+        try {
+            const created = createdAt.toDate ? createdAt.toDate() : new Date(createdAt);
+            const msLeft = TRIAL_DAYS * 24 * 60 * 60 * 1000 - (Date.now() - created.getTime());
+            return Math.max(0, Math.ceil(msLeft / (24 * 60 * 60 * 1000)));
+        } catch { return 0; }
+    }
+
     async function load() {
         if (!PAYWALL_ACTIVE) { _plan = "pro"; _notify(); return "pro"; }
 
@@ -67,9 +77,20 @@ const Plan = (() => {
             try {
                 const uid = firebaseAuth.currentUser.uid;
                 const doc = await firebaseDb.collection("users").doc(uid).get();
-                _plan = (doc.exists && doc.data().plan === "pro") ? "pro" : "free";
+                const data = doc.exists ? doc.data() : {};
+                const storedPlan = data.plan || "free";
+
+                if (storedPlan === "pro" || storedPlan === "yolo") {
+                    _plan = storedPlan;
+                } else if (data.createdAt && _trialDaysLeft(data.createdAt) > 0) {
+                    _plan = "pro_trial";
+                } else {
+                    _plan = "free";
+                }
+
                 localStorage.setItem("wl_plan", _plan);
                 _notify();
+                if (_plan === "pro_trial") _showTrialBanner(_trialDaysLeft(data.createdAt));
                 return _plan;
             } catch (e) {
                 console.warn("Plan: Firestore read failed, using localStorage");
@@ -78,6 +99,19 @@ const Plan = (() => {
         _plan = localStorage.getItem("wl_plan") || "free";
         _notify();
         return _plan;
+    }
+
+    function _showTrialBanner(daysLeft) {
+        if (document.getElementById("wlTrialBanner")) return;
+        const lang = _lang();
+        const msg = lang === "he"
+            ? `🎁 ניסיון Pro חינמי — נותרו <strong>${daysLeft}</strong> ימים. <a href="#" onclick="Paywall.show('trial');return false;" style="color:#fff;text-decoration:underline;">שדרג לשמור על הגישה →</a>`
+            : `🎁 Pro trial — <strong>${daysLeft}</strong> day${daysLeft !== 1 ? "s" : ""} left. <a href="#" onclick="Paywall.show('trial');return false;" style="color:#fff;text-decoration:underline;">Upgrade to keep Pro →</a>`;
+        const banner = document.createElement("div");
+        banner.id = "wlTrialBanner";
+        banner.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:2000;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;text-align:center;padding:9px 40px;font-size:0.82rem;font-weight:600;line-height:1.4;";
+        banner.innerHTML = msg + `<button onclick="this.parentElement.remove()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:1.1rem;line-height:1;">×</button>`;
+        document.body.prepend(banner);
     }
 
     async function setPro(uid) {
@@ -91,13 +125,15 @@ const Plan = (() => {
 
     function isPro() {
         if (!PAYWALL_ACTIVE) return true;
-        return _plan === "pro" || _plan === "yolo";
+        return _plan === "pro" || _plan === "yolo" || _plan === "pro_trial";
     }
 
     function isYolo() {
         if (!PAYWALL_ACTIVE) return true;
         return _plan === "yolo";
     }
+
+    function isTrialing() { return _plan === "pro_trial"; }
 
     function isPaywallActive() { return PAYWALL_ACTIVE; }
 
@@ -129,5 +165,5 @@ const Plan = (() => {
         load();
     }
 
-    return { load, setPro, isPro, isYolo, isPaywallActive, check, redeemCode, getRedeemedCode, freeTxLimit, featureName, onChange };
+    return { load, setPro, isPro, isYolo, isTrialing, isPaywallActive, check, redeemCode, getRedeemedCode, freeTxLimit, featureName, onChange };
 })();
