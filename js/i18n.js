@@ -1384,7 +1384,7 @@ const I18n = {
                 needsIncomeData: 'נדרש נתון הכנסה בפרופיל'
             },
             footer: {
-                rights: '© 2026 WizeMoney. כל הזכויות שמורות.',
+                rights: '© 2026 FinSight · Part of WizeLife',
                 disclaimer: 'כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.'
             }
         },
@@ -2767,7 +2767,7 @@ const I18n = {
                 needsIncomeData: 'Income data required in profile'
             },
             footer: {
-                rights: '© 2026 WizeMoney. All rights reserved.',
+                rights: '© 2026 FinSight · Part of WizeLife',
                 disclaimer: 'All content is provided for informational purposes only and does not constitute financial advice.'
             }
         },
@@ -3433,7 +3433,7 @@ const I18n = {
                 needsIncomeData: 'Dados de renda necessários no perfil'
             },
             footer: {
-                rights: '© 2026 WizeMoney. Todos os direitos reservados.',
+                rights: '© 2026 FinSight · Part of WizeLife',
                 disclaimer: 'Todo o conteúdo é fornecido apenas para fins informativos e não constitui aconselhamento financeiro.'
             },
             security: {
