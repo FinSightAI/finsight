@@ -60,7 +60,7 @@ const Plan = (() => {
 
     // ── Plan Loading ──────────────────────────────────────────────
 
-    const TRIAL_DAYS = 7;
+    const TRIAL_DAYS = 3;
 
     function _trialDaysLeft(createdAt) {
         try {
