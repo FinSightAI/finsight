@@ -90,7 +90,7 @@ const Plan = (() => {
 
                 localStorage.setItem("wl_plan", _plan);
                 _notify();
-                if (_plan === "pro_trial") _showTrialBanner(_trialDaysLeft(data.createdAt));
+                // Trial is silent — no banner. Users discover the limit on day 8.
                 return _plan;
             } catch (e) {
                 console.warn("Plan: Firestore read failed, using localStorage");
