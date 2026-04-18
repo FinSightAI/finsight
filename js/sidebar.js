@@ -94,8 +94,8 @@
     const html = `
         <div class="sidebar-header">
             <div class="brand">
-                <img src="${imgPrefix}img/logo.png" class="brand-icon" alt="FinSight">
-                <span class="brand-name">Fin<span class="brand-highlight">Sight</span></span>
+                <img src="${imgPrefix}img/logo.png" class="brand-icon" alt="WizeMoney">
+                <span class="brand-name">Wize<span class="brand-highlight">Money</span></span>
             </div>
         </div>
         <nav>

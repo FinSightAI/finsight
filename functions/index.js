@@ -13,9 +13,13 @@ const functions        = require("firebase-functions");
 const { defineSecret } = require("firebase-functions/params");
 const admin            = require("firebase-admin");
 const https            = require("https");
+const nodemailer       = require("nodemailer");
 
 admin.initializeApp();
 const db = admin.firestore();
+
+const GMAIL_EMAIL    = defineSecret("GMAIL_EMAIL");
+const GMAIL_PASSWORD = defineSecret("GMAIL_APP_PASSWORD");
 
 const PAYPAL_CLIENT_ID  = defineSecret("PAYPAL_CLIENT_ID");
 const PAYPAL_SECRET     = defineSecret("PAYPAL_SECRET");
@@ -50,6 +54,74 @@ exports.validateCode = functions
         );
 
         return { valid: true };
+    });
+
+// ─── Welcome Email — on new user registration ─────────────────────────────────
+
+exports.sendWelcomeEmail = functions
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .auth.user().onCreate(async (user) => {
+        const email = user.email;
+        if (!email) return;
+
+        const gmailUser = GMAIL_EMAIL.value();
+        const gmailPass = GMAIL_PASSWORD.value();
+        if (!gmailUser || !gmailPass) {
+            console.log("Welcome email: GMAIL_EMAIL / GMAIL_APP_PASSWORD not configured — skipping");
+            return;
+        }
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: { user: gmailUser, pass: gmailPass },
+        });
+
+        const name = user.displayName || email.split("@")[0];
+
+        const html = `
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head><meta charset="UTF-8"><style>
+  body { font-family: Arial, sans-serif; background:#f4f4f8; margin:0; padding:0; }
+  .wrap { max-width:520px; margin:32px auto; background:#fff; border-radius:16px;
+          padding:36px 32px; box-shadow:0 2px 12px rgba(0,0,0,.08); }
+  h1 { color:#10b981; font-size:1.6rem; margin-bottom:8px; }
+  p  { color:#334155; line-height:1.7; }
+  .badge { display:inline-block; background:#ecfdf5; color:#10b981; font-weight:700;
+           padding:6px 16px; border-radius:20px; margin:16px 0; font-size:1rem; }
+  .cta { display:inline-block; margin-top:20px; background:#10b981; color:#fff;
+         padding:12px 28px; border-radius:10px; text-decoration:none;
+         font-weight:700; font-size:1rem; }
+  .footer { margin-top:28px; font-size:0.8rem; color:#94a3b8; }
+</style></head>
+<body>
+  <div class="wrap">
+    <h1>ברוכים הבאים ל-WizeMoney 💰</h1>
+    <p>היי ${name},</p>
+    <p>נרשמת בהצלחה! החשבון שלך מוכן.</p>
+    <div class="badge">✨ 3 ימי Pro חינם — מופעל עכשיו</div>
+    <p>במשך 3 ימים הבאים תוכל לגשת לכל התכונות המתקדמות:<br>
+    AI פיננסי אישי, ניתוח תיק השקעות, אופטימיזציית מס ועוד.</p>
+    <a class="cta" href="https://finsightai.github.io/finsight/">פתח את הדאשבורד →</a>
+    <div class="footer">
+      WizeLife · נשלח אוטומטית בעת ההרשמה<br>
+      לביטול קבלת אימיילים — <a href="https://finsightai.github.io/finsight/">כניסה להגדרות</a>
+    </div>
+  </div>
+</body>
+</html>`;
+
+        try {
+            await transporter.sendMail({
+                from: `"WizeMoney" <${gmailUser}>`,
+                to:   email,
+                subject: "ברוכים הבאים ל-WizeMoney — 3 ימי Pro חינם 🎉",
+                html,
+            });
+            console.log(`✅ Welcome email sent to ${email}`);
+        } catch (err) {
+            console.error("Welcome email failed:", err.message);
+        }
     });
 
 // ─── AI Proxy — callable function ────────────────────────────────────────────

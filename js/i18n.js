@@ -102,7 +102,7 @@ const I18n = {
             },
             // Dashboard
             dashboard: {
-                title: 'FinSight',
+                title: 'WizeMoney',
                 subtitle: 'סקירה כללית של הנכסים שלך',
                 netWorth: 'שווי נקי',
                 totalAssets: 'סה״כ נכסים',
@@ -1384,7 +1384,7 @@ const I18n = {
                 needsIncomeData: 'נדרש נתון הכנסה בפרופיל'
             },
             footer: {
-                rights: '© 2026 FinSight. כל הזכויות שמורות.',
+                rights: '© 2026 WizeMoney. כל הזכויות שמורות.',
                 disclaimer: 'כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.'
             }
         },
@@ -1485,7 +1485,7 @@ const I18n = {
             },
             // Dashboard
             dashboard: {
-                title: 'FinSight',
+                title: 'WizeMoney',
                 subtitle: 'Overview of your assets',
                 netWorth: 'Net Worth',
                 totalAssets: 'Total Assets',
@@ -2767,7 +2767,7 @@ const I18n = {
                 needsIncomeData: 'Income data required in profile'
             },
             footer: {
-                rights: '© 2026 FinSight. All rights reserved.',
+                rights: '© 2026 WizeMoney. All rights reserved.',
                 disclaimer: 'All content is provided for informational purposes only and does not constitute financial advice.'
             }
         },
@@ -2861,7 +2861,7 @@ const I18n = {
             },
             // Dashboard
             dashboard: {
-                title: 'FinSight',
+                title: 'WizeMoney',
                 subtitle: 'Visão geral dos seus ativos',
                 netWorth: 'Patrimônio Líquido',
                 totalAssets: 'Total de Ativos',
@@ -3433,7 +3433,7 @@ const I18n = {
                 needsIncomeData: 'Dados de renda necessários no perfil'
             },
             footer: {
-                rights: '© 2026 FinSight. Todos os direitos reservados.',
+                rights: '© 2026 WizeMoney. Todos os direitos reservados.',
                 disclaimer: 'Todo o conteúdo é fornecido apenas para fins informativos e não constitui aconselhamento financeiro.'
             },
             security: {

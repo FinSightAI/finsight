@@ -22,7 +22,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../img/logo.png">
-    <title>כרטיסי אשראי - FinSight</title>
+    <title>כרטיסי אשראי - WizeMoney</title>
     <link rel="stylesheet" href="../css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -596,7 +596,7 @@
             const container = document.getElementById('cardsContainer');
 
             if (data.cards.length === 0) {
-                container.innerHTML = `<p style="text-align: center; color: var(--color-text-secondary); padding: 20px;">${I18n.t('credit.noCards')}</p>`;
+                container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">💳</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין כרטיסי אשראי</div><div style="font-size:0.85rem;margin-bottom:20px">עקוב אחרי ההוצאות החודשיות שלך</div><button class="btn btn-primary btn-sm" onclick="openCardModal()">+ הוסף כרטיס</button></div>`;
                 return;
             }
 

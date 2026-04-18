@@ -139,8 +139,8 @@ const App = {
         header.innerHTML =
             '<button class="mobile-header-toggle" aria-label="תפריט">☰</button>' +
             '<a href="' + homeHref + '" class="mobile-header-brand">' +
-                (logoSrc ? '<img src="' + logoSrc + '" class="mobile-header-logo" alt="FinSight">' : '') +
-                '<span class="mobile-header-name">Fin<span class="brand-highlight">Sight</span></span>' +
+                (logoSrc ? '<img src="' + logoSrc + '" class="mobile-header-logo" alt="WizeMoney">' : '') +
+                '<span class="mobile-header-name">Wize<span class="brand-highlight">Money</span></span>' +
             '</a>' +
             '<div class="mobile-header-lang">' +
                 '<button class="lang-btn" data-lang="he" onclick="I18n.setLanguage(\'he\')">HE</button>' +
@@ -635,6 +635,63 @@ function sanitize(str) {
         .replace(/'/g, '&#039;');
 }
 window.sanitize = sanitize;
+
+// ─── PWA Install Prompt ───────────────────────────────────────────────────────
+(function () {
+    const DISMISSED_KEY = 'wl_pwa_install_dismissed';
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (localStorage.getItem(DISMISSED_KEY)) return;
+        // Show after 8s so it doesn't interrupt first load
+        setTimeout(showInstallToast, 8000);
+    });
+
+    function showInstallToast() {
+        if (document.getElementById('pwaInstallToast')) return;
+        const toast = document.createElement('div');
+        toast.id = 'pwaInstallToast';
+        toast.style.cssText = [
+            'position:fixed', 'bottom:80px', 'left:50%', 'transform:translateX(-50%)',
+            'background:#1e293b', 'border:1px solid #334155', 'border-radius:14px',
+            'padding:14px 18px', 'display:flex', 'align-items:center', 'gap:12px',
+            'box-shadow:0 8px 32px rgba(0,0,0,0.4)', 'z-index:9999',
+            'max-width:360px', 'width:90%', 'cursor:pointer',
+            'animation:slideUpToast 0.3s ease',
+        ].join(';');
+        toast.innerHTML = `
+            <span style="font-size:1.5rem">📲</span>
+            <div style="flex:1">
+                <div style="font-weight:700;font-size:0.9rem;color:#f1f5f9">הוסף למסך הבית</div>
+                <div style="font-size:0.78rem;color:#94a3b8;margin-top:2px">חוויה כמו אפליקציה — ללא דפדפן</div>
+            </div>
+            <button id="pwaInstallBtn" style="background:linear-gradient(135deg,#6c63ff,#a855f7);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap">התקן</button>
+            <button id="pwaInstallClose" style="background:none;border:none;color:#64748b;font-size:1.2rem;cursor:pointer;padding:0 2px;line-height:1">&times;</button>
+        `;
+        if (!document.getElementById('pwaInstallStyle')) {
+            const s = document.createElement('style');
+            s.id = 'pwaInstallStyle';
+            s.textContent = '@keyframes slideUpToast{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+            document.head.appendChild(s);
+        }
+        document.body.appendChild(toast);
+
+        document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
+            toast.remove();
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') localStorage.setItem(DISMISSED_KEY, '1');
+            deferredPrompt = null;
+        });
+        document.getElementById('pwaInstallClose').addEventListener('click', () => {
+            toast.remove();
+            localStorage.setItem(DISMISSED_KEY, '1');
+        });
+    }
+})();
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => App.init());

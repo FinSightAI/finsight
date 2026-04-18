@@ -1,7 +1,7 @@
 {
-  "name": "FinSight - ניהול פיננסי",
-  "short_name": "FinSight",
-  "description": "אפליקציית ניהול פיננסי אישי מקיפה",
+  "name": "WizeMoney - ניהול פיננסי",
+  "short_name": "WizeMoney",
+  "description": "אפליקציית ניהול פיננסי אישי חכמה — WizeLife",
   "start_url": "/finsight/",
   "scope": "/finsight/",
   "display": "standalone",

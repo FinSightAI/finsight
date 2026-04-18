@@ -209,7 +209,7 @@ const PinLock = {
         overlay.id = 'pinLockOverlay';
         overlay.innerHTML = `
             <div class="pin-lock-container">
-                <img src="" class="pin-lock-logo" alt="FinSight" id="pinLockLogo">
+                <img src="" class="pin-lock-logo" alt="WizeMoney" id="pinLockLogo">
                 <h2 class="pin-lock-title" id="pinLockTitle"></h2>
                 <div class="pin-lock-dots" id="pinLockDots"></div>
                 <div class="pin-lock-error" id="pinLockError"></div>
@@ -630,11 +630,11 @@ const PinLock = {
             const credential = await navigator.credentials.create({
                 publicKey: {
                     challenge,
-                    rp: { name: 'FinSight', id: hostname },
+                    rp: { name: 'WizeMoney', id: hostname },
                     user: {
                         id: new TextEncoder().encode('finsight-user'),
-                        name: 'FinSight',
-                        displayName: 'FinSight'
+                        name: 'WizeMoney',
+                        displayName: 'WizeMoney'
                     },
                     pubKeyCredParams: [
                         { type: 'public-key', alg: -7 },

@@ -140,9 +140,13 @@ const Auth = {
                         plan: 'free',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                    App.notify('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉', 'success');
+                } else {
+                    App.notify(`${I18n.t('auth.welcome')}, ${result.user.displayName}!`, 'success');
                 }
+            } else {
+                App.notify(`${I18n.t('auth.welcome')}, ${result.user.displayName}!`, 'success');
             }
-            App.notify(`${I18n.t('auth.welcome')}, ${result.user.displayName}!`, 'success');
             return result.user;
         } catch (error) {
             console.error('Sign in error:', error);
@@ -190,7 +194,7 @@ const Auth = {
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             }
-            App.notify(I18n.t('auth.registered'), 'success');
+            App.notify('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉', 'success');
             this.closeEmailModal();
             return result.user;
         } catch (error) {

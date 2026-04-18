@@ -22,7 +22,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../img/logo.png">
-    <title>חשבונות בנק - FinSight</title>
+    <title>חשבונות בנק - WizeMoney</title>
     <link rel="stylesheet" href="../css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -262,7 +262,7 @@
             const footerTotal = document.getElementById('totalBalanceFooter');
 
             if (accounts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--color-text-secondary);">${I18n.t('bank.noAccounts')}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏦</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין חשבונות בנק</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף את החשבון הראשון שלך כדי לעקוב אחרי היתרות</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף חשבון</button></div></td></tr>`;
                 totalEl.textContent = I18n.formatCurrency(0);
                 footer.style.display = 'none';
                 document.getElementById('historyCard').style.display = 'none';

@@ -231,7 +231,7 @@ const SummarySender = {
             insights.forEach(i => lines.push(`• ${i}`));
         }
 
-        lines.push(``, `_נשלח מ-FinSight_`);
+        lines.push(``, `_נשלח מ-WizeMoney_`);
 
         return lines.join('\n');
     },
@@ -296,7 +296,7 @@ const SummarySender = {
         const waUrl = whatsappNum
             ? `https://wa.me/${whatsappNum}?text=${encodeURIComponent(text)}`
             : `https://wa.me/?text=${encodeURIComponent(text)}`;
-        const emailUrl = `mailto:${schedule.recipientEmail || ''}?subject=${encodeURIComponent('סיכום פיננסי – FinSight')}&body=${encodeURIComponent(text)}`;
+        const emailUrl = `mailto:${schedule.recipientEmail || ''}?subject=${encodeURIComponent('סיכום פיננסי – WizeMoney')}&body=${encodeURIComponent(text)}`;
 
         document.getElementById('summaryShareWhatsApp').onclick = () => {
             window.open(waUrl, '_blank');

@@ -22,7 +22,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../img/logo.png">
-    <title>נכסים - FinSight</title>
+    <title>נכסים - WizeMoney</title>
     <link rel="stylesheet" href="../css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -237,7 +237,7 @@
             const totalEl = document.getElementById('totalAssetsValue');
 
             if (assets.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>${I18n.t('assets.noAssets')}</p></div>`;
+                container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏠</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין נכסים</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף דירה, רכב, או כל נכס אחר לחישוב שווי נקי</div><button class="btn btn-primary btn-sm" onclick="openAssetModal()">+ הוסף נכס</button></div>`;
                 totalEl.textContent = I18n.formatCurrency(0);
                 return;
             }

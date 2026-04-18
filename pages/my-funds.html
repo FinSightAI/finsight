@@ -22,7 +22,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../img/logo.png">
-    <title>הקופות שלי - FinSight</title>
+    <title>הקופות שלי - WizeMoney</title>
     <link rel="stylesheet" href="../css/app.css">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -633,7 +633,7 @@
             const filteredFunds = currentFilter === 'all' ? funds : funds.filter(f => f.type === currentFilter);
 
             if (filteredFunds.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--color-text-secondary);">${I18n.t('myFunds.noFundsToShow')}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">📊</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין קרנות / חסכונות</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף קרן השתלמות, פנסיה או גמל לעקוב אחרי הצמיחה</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף קרן</button></div></td></tr>`;
                 footer.style.display = 'none';
                 document.getElementById('chartCard').style.display = 'none';
                 return;
