@@ -4144,8 +4144,8 @@ const I18n = {
             this.currentLanguage = settings.language;
         } else {
             const bl = (navigator.language || 'en').toLowerCase();
-            if (bl.startsWith('he')) this.currentLanguage = 'he';
-            else if (bl.startsWith('pt')) this.currentLanguage = 'pt';
+            // Hebrew not auto-detected — user selects manually
+            if (bl.startsWith('pt')) this.currentLanguage = 'pt';
             else if (bl.startsWith('es')) this.currentLanguage = 'es';
             else this.currentLanguage = 'en';
         }
