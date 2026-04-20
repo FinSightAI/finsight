@@ -264,6 +264,7 @@
                 <button class="tab-btn active" onclick="switchTab('training')" data-i18n="marketUpdate.trainingTab">📚 קרנות השתלמות</button>
                 <button class="tab-btn" onclick="switchTab('pension')" data-i18n="marketUpdate.pensionTab">👴 פנסיה</button>
                 <button class="tab-btn" onclick="switchTab('gemel')" data-i18n="marketUpdate.gemelTab">💰 קופות גמל</button>
+                <button class="tab-btn" onclick="switchTab('brazil')" data-i18n="marketUpdate.brazilTab">🇧🇷 Brasil</button>
             </div>
 
             <!-- Training Funds Tab -->
@@ -453,6 +454,37 @@
                         <div class="success-message" id="success-gemel">
                             <span>✅</span>
                             <span data-i18n="marketUpdate.dataSaved">הנתונים נשמרו בהצלחה!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brazil Tab -->
+            <div class="tab-content" id="tab-brazil">
+                <div class="update-section">
+                    <h2><span>🇧🇷</span> <span data-i18n="marketUpdate.brazilTitle">Taxa de referência — Brasil</span></h2>
+                    <div class="instructions">
+                        <h4>📊 CDI / SELIC / IPCA</h4>
+                        <p style="margin:8px 0; color:var(--color-text-secondary); font-size:14px;" data-i18n="marketUpdate.brazilDesc">
+                            Use as taxas abaixo como benchmarks para comparar seus investimentos brasileiros.
+                        </p>
+                        <div style="display:grid; gap:10px; margin-top:12px;">
+                            <a href="https://www.bcb.gov.br/controleinflacao/taxaselic" target="_blank" class="source-link">
+                                <span>🔗</span> SELIC — Banco Central do Brasil <span>↗</span>
+                            </a>
+                            <a href="https://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-de-segmentos-e-setoriais/indice-brasil-100-ibrx-100.htm" target="_blank" class="source-link">
+                                <span>🔗</span> B3 — IBrX-100 / IBOVESPA <span>↗</span>
+                            </a>
+                            <a href="https://www.infomoney.com.br/ferramentas/calculadora-cdi/" target="_blank" class="source-link">
+                                <span>🔗</span> CDI — Calculadora InfoMoney <span>↗</span>
+                            </a>
+                            <a href="https://www.ibge.gov.br/explica/inflacao.php" target="_blank" class="source-link">
+                                <span>🔗</span> IPCA — IBGE Inflação <span>↗</span>
+                            </a>
+                        </div>
+                        <div style="margin-top:16px; padding:12px; background:var(--color-surface-2,#1a1a2e); border-radius:8px; font-size:13px;">
+                            <strong>💡 <span data-i18n="marketUpdate.brazilTip">Dica:</span></strong>
+                            <span data-i18n="marketUpdate.brazilTipText"> Para Tesouro Direto, CDB e LCI/LCA, use o ticker CDI ou SELIC como benchmark na aba de portfólio.</span>
                         </div>
                     </div>
                 </div>

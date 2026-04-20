@@ -394,6 +394,11 @@ const I18n = {
                     otsar: 'אוצר החייל',
                     yahav: 'בנק יהב',
                     massad: 'בנק מסד',
+                    nubank: 'Nubank',
+                    itau: 'Itaú',
+                    bradesco: 'Bradesco',
+                    caixa: 'Caixa Econômica',
+                    bb: 'Banco do Brasil',
                     other: 'אחר'
                 }
             },
@@ -586,7 +591,14 @@ const I18n = {
                     training: 'קרן השתלמות',
                     pension: 'פנסיה',
                     gemel: 'קופת גמל',
-                    savings: 'פוליסת חיסכון'
+                    savings: 'פוליסת חיסכון',
+                    tesouro: 'Tesouro Direto',
+                    cdb: 'CDB',
+                    lci_lca: 'LCI/LCA',
+                    fii: 'FII',
+                    poupanca: 'Poupança',
+                    fgts: 'FGTS',
+                    pgbl_vgbl: 'PGBL/VGBL'
                 },
                 noFunds: 'לא נבחרו קופות'
             },
@@ -691,6 +703,11 @@ const I18n = {
                 trainingTab: '📚 קרנות השתלמות',
                 pensionTab: '👴 פנסיה',
                 gemelTab: '💰 קופות גמל',
+                brazilTab: '🇧🇷 ברזיל',
+                brazilTitle: 'ריביות ייחוס — ברזיל',
+                brazilDesc: 'השתמש בריביות הבאות כמדד השוואה לתיק הברזילאי שלך.',
+                brazilTip: 'טיפ:',
+                brazilTipText: ' לתיקי Tesouro Direto, CDB ו-LCI/LCA — השתמש ב-CDI או SELIC כמדד ייחוס.',
                 updateTraining: 'עדכון קרנות השתלמות',
                 updatePension: 'עדכון קרנות פנסיה',
                 updateGemel: 'עדכון קופות גמל',
@@ -1282,7 +1299,11 @@ const I18n = {
                 compareTarget: 'השווה:',
                 wholePortfolio: 'כל התיק',
                 customTicker: 'טיקר אחר...',
-                tickerNotFound: 'סימול לא נמצא'
+                tickerNotFound: 'סימול לא נמצא',
+                brazilBenchmarks: 'מדדי ברזיל',
+                cdiDesc: 'CDI — ריבית בין-בנקאית ברזילאית (יחס ל-SELIC)',
+                selicDesc: 'SELIC — ריבית בסיס בנק מרכזי ברזיל',
+                ipcaDesc: 'IPCA — מדד אינפלציה ברזיל'
             },
             // Common
             common: {
@@ -1777,6 +1798,11 @@ const I18n = {
                     otsar: 'Otsar Hahayal',
                     yahav: 'Bank Yahav',
                     massad: 'Bank Massad',
+                    nubank: 'Nubank',
+                    itau: 'Itaú',
+                    bradesco: 'Bradesco',
+                    caixa: 'Caixa Econômica',
+                    bb: 'Banco do Brasil',
                     other: 'Other'
                 }
             },
@@ -1969,7 +1995,14 @@ const I18n = {
                     training: 'Training Fund',
                     pension: 'Pension',
                     gemel: 'Provident Fund',
-                    savings: 'Savings Policy'
+                    savings: 'Savings Policy',
+                    tesouro: 'Tesouro Direto',
+                    cdb: 'CDB',
+                    lci_lca: 'LCI/LCA',
+                    fii: 'FII (Real Estate Fund)',
+                    poupanca: 'Poupança',
+                    fgts: 'FGTS',
+                    pgbl_vgbl: 'PGBL/VGBL (Private Pension)'
                 },
                 noFunds: 'No accounts selected'
             },
@@ -2074,6 +2107,11 @@ const I18n = {
                 trainingTab: '📚 Training Funds',
                 pensionTab: '👴 Pension',
                 gemelTab: '💰 Provident Funds',
+                brazilTab: '🇧🇷 Brazil',
+                brazilTitle: 'Reference Rates — Brazil',
+                brazilDesc: 'Use the rates below as benchmarks to compare your Brazilian investments.',
+                brazilTip: 'Tip:',
+                brazilTipText: ' For Tesouro Direto, CDB and LCI/LCA, use CDI or SELIC ticker as benchmark in the portfolio tab.',
                 updateTraining: 'Update Training Funds',
                 updatePension: 'Update Pension Funds',
                 updateGemel: 'Update Provident Funds',
@@ -2662,6 +2700,10 @@ const I18n = {
                 removeIndex: 'Remove',
                 alpha: 'Alpha',
                 customBenchmark: 'Custom Index',
+                brazilBenchmarks: 'Brazil Benchmarks',
+                cdiDesc: 'CDI — Brazilian interbank rate (proxy to SELIC)',
+                selicDesc: 'SELIC — Brazil Central Bank base rate',
+                ipcaDesc: 'IPCA — Brazil inflation index',
                 compareTarget: 'Compare:',
                 wholePortfolio: 'Whole Portfolio',
                 customTicker: 'Other ticker...',
@@ -3069,6 +3111,11 @@ const I18n = {
                     otsar: 'Otsar Hahayal',
                     yahav: 'Banco Yahav',
                     massad: 'Banco Massad',
+                    nubank: 'Nubank',
+                    itau: 'Itaú',
+                    bradesco: 'Bradesco',
+                    caixa: 'Caixa Econômica',
+                    bb: 'Banco do Brasil',
                     other: 'Outro'
                 }
             },
@@ -3148,7 +3195,14 @@ const I18n = {
                     training: 'Fundo de Capacitação',
                     pension: 'Previdência',
                     gemel: 'Fundo de Investimento',
-                    savings: 'Apólice de Poupança'
+                    savings: 'Apólice de Poupança',
+                    tesouro: 'Tesouro Direto',
+                    cdb: 'CDB',
+                    lci_lca: 'LCI/LCA',
+                    fii: 'FII (Fundo Imobiliário)',
+                    poupanca: 'Poupança',
+                    fgts: 'FGTS',
+                    pgbl_vgbl: 'PGBL/VGBL (Previdência Privada)'
                 },
                 noFunds: 'Nenhuma conta selecionada'
             },
@@ -3345,6 +3399,10 @@ const I18n = {
                 removeIndex: 'Remover',
                 alpha: 'Alfa',
                 customBenchmark: 'Índice Personalizado',
+                brazilBenchmarks: 'Benchmarks Brasil',
+                cdiDesc: 'CDI — Taxa interbancária brasileira',
+                selicDesc: 'SELIC — Taxa básica do Banco Central',
+                ipcaDesc: 'IPCA — Índice de inflação do Brasil',
                 compareTarget: 'Comparar:',
                 wholePortfolio: 'Carteira Inteira',
                 customTicker: 'Outro ticker...',
@@ -3750,6 +3808,11 @@ const I18n = {
                     otsar: 'Otsar Hahayal',
                     yahav: 'Banco Yahav',
                     massad: 'Banco Massad',
+                    nubank: 'Nubank',
+                    itau: 'Itaú',
+                    bradesco: 'Bradesco',
+                    caixa: 'Caixa Econômica',
+                    bb: 'Banco do Brasil',
                     other: 'Otro'
                 }
             },
@@ -3829,7 +3892,14 @@ const I18n = {
                     training: 'Fondo de Capacitación',
                     pension: 'Pensión',
                     gemel: 'Fondo de Inversión',
-                    savings: 'Póliza de Ahorro'
+                    savings: 'Póliza de Ahorro',
+                    tesouro: 'Tesouro Direto',
+                    cdb: 'CDB',
+                    lci_lca: 'LCI/LCA',
+                    fii: 'FII (Fondo Inmobiliario)',
+                    poupanca: 'Poupança',
+                    fgts: 'FGTS',
+                    pgbl_vgbl: 'PGBL/VGBL (Pensión Privada)'
                 },
                 noFunds: 'No hay cuenta seleccionada'
             },
@@ -4026,6 +4096,10 @@ const I18n = {
                 removeIndex: 'Eliminar',
                 alpha: 'Alfa',
                 customBenchmark: 'Índice Personalizado',
+                brazilBenchmarks: 'Benchmarks Brasil',
+                cdiDesc: 'CDI — Taxa interbancária brasileira',
+                selicDesc: 'SELIC — Taxa básica do Banco Central',
+                ipcaDesc: 'IPCA — Índice de inflação do Brasil',
                 compareTarget: 'Comparar:',
                 wholePortfolio: 'Cartera Completa',
                 customTicker: 'Otro ticker...',

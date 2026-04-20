@@ -187,6 +187,11 @@
                             <option value="otsar" data-i18n="bank.banks.otsar">אוצר החייל</option>
                             <option value="yahav" data-i18n="bank.banks.yahav">בנק יהב</option>
                             <option value="massad" data-i18n="bank.banks.massad">בנק מסד</option>
+                            <option value="nubank" data-i18n="bank.banks.nubank">Nubank</option>
+                            <option value="itau" data-i18n="bank.banks.itau">Itaú</option>
+                            <option value="bradesco" data-i18n="bank.banks.bradesco">Bradesco</option>
+                            <option value="caixa" data-i18n="bank.banks.caixa">Caixa Econômica</option>
+                            <option value="bb" data-i18n="bank.banks.bb">Banco do Brasil</option>
                             <option value="other" data-i18n="bank.banks.other">אחר</option>
                         </select>
                     </div>
@@ -686,6 +691,11 @@
             if (bankLower.includes('אוצר') || bankLower.includes('otsar')) return 'otsar';
             if (bankLower.includes('יהב') || bankLower.includes('yahav')) return 'yahav';
             if (bankLower.includes('מסד') || bankLower.includes('massad')) return 'massad';
+            if (bankLower.includes('nubank')) return 'nubank';
+            if (bankLower.includes('itaú') || bankLower.includes('itau')) return 'itau';
+            if (bankLower.includes('bradesco')) return 'bradesco';
+            if (bankLower.includes('caixa')) return 'caixa';
+            if (bankLower.includes('banco do brasil') || bankLower === 'bb') return 'bb';
 
             return 'other';
         }
@@ -693,13 +703,20 @@
         // ============== STATEMENT IMPORT ==============
 
         const statementColumnMappings = {
-            date:        ['תאריך', 'תאריך ערך', 'תאריך עסקה', 'date'],
-            description: ['תיאור', 'תיאור פעולה', 'פרטים', 'שם בית העסק', 'description'],
-            debit:       ['חיוב', 'משיכות', 'משיכות/חיובים', 'debit'],
-            credit:      ['זכות', 'הפקדות', 'הפקדות/זיכויים', 'credit'],
-            balance:     ['יתרה', 'יתרה בשח', 'יתרה בש"ח', 'balance'],
-            reference:   ['אסמכתא', 'מסמך', 'reference']
+            date:        ['תאריך', 'תאריך ערך', 'תאריך עסקה', 'date', 'data', 'data lançamento'],
+            description: ['תיאור', 'תיאור פעולה', 'פרטים', 'שם בית העסק', 'description', 'descrição', 'histórico', 'lançamento'],
+            debit:       ['חיוב', 'משיכות', 'משיכות/חיובים', 'debit', 'débito', 'valor débito', 'saídas'],
+            credit:      ['זכות', 'הפקדות', 'הפקדות/זיכויים', 'credit', 'crédito', 'valor crédito', 'entradas'],
+            balance:     ['יתרה', 'יתרה בשח', 'יתרה בש"ח', 'balance', 'saldo'],
+            reference:   ['אסמכתא', 'מסמך', 'reference', 'documento', 'nº documento']
         };
+
+        // Brazilian payment method detection — PIX, TED, DOC
+        function isBrazilianTransfer(desc) {
+            const d = (desc || '').toLowerCase();
+            return d.includes('pix') || d.includes(' ted ') || d.includes(' doc ') ||
+                   d.startsWith('ted ') || d.startsWith('pix ') || d.startsWith('doc ');
+        }
 
         function detectBankFormat(rows) {
             const text = rows.slice(0, 10).map(r => (r || []).join(' ')).join(' ');
@@ -707,6 +724,11 @@
             if (text.includes('הפועלים')) return 'hapoalim';
             if (text.includes('דיסקונט')) return 'discount';
             if (text.includes('מזרחי')) return 'mizrahi';
+            if (text.toLowerCase().includes('nubank')) return 'nubank';
+            if (text.toLowerCase().includes('itaú') || text.toLowerCase().includes('itau')) return 'itau';
+            if (text.toLowerCase().includes('bradesco')) return 'bradesco';
+            if (text.toLowerCase().includes('caixa econômica') || text.toLowerCase().includes('caixa economica')) return 'caixa';
+            if (text.toLowerCase().includes('banco do brasil')) return 'bb';
             return null;
         }
 
