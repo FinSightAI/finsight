@@ -700,6 +700,23 @@
             return 'other';
         }
 
+        // Parses both Israeli (1,234.56) and Brazilian (1.234,56) number formats
+        function parseBankAmount(str) {
+            if (!str) return NaN;
+            str = str.trim().replace(/\s/g, '').replace(/[₪$R$]/g, '');
+            if (!str) return NaN;
+            // Brazilian format: digits, then periods as thousands, then comma+2 decimals e.g. 1.234,56
+            if (/^\-?\d{1,3}(\.\d{3})*(,\d+)?$/.test(str)) {
+                return parseFloat(str.replace(/\./g, '').replace(',', '.'));
+            }
+            // Brazilian without thousands e.g. 234,56
+            if (/^\-?\d+(,\d+)$/.test(str)) {
+                return parseFloat(str.replace(',', '.'));
+            }
+            // Standard: remove commas (thousands) keep dot (decimal)
+            return parseFloat(str.replace(/,/g, ''));
+        }
+
         // ============== STATEMENT IMPORT ==============
 
         const statementColumnMappings = {
@@ -911,9 +928,9 @@
                 const rawCredit = detected.credit !== undefined ? row[detected.credit] : null;
                 const rawBal    = detected.balance !== undefined ? row[detected.balance] : null;
 
-                const debit  = (rawDebit  !== null && rawDebit  !== undefined && rawDebit  !== '') ? Math.abs(parseFloat(String(rawDebit).replace(/[^\d.-]/g, '')) || 0) : 0;
-                const credit = (rawCredit !== null && rawCredit !== undefined && rawCredit !== '') ? Math.abs(parseFloat(String(rawCredit).replace(/[^\d.-]/g, '')) || 0) : 0;
-                const bal    = (rawBal    !== null && rawBal    !== undefined && rawBal    !== '') ? parseFloat(String(rawBal).replace(/[^\d.-]/g, '')) : NaN;
+                const debit  = (rawDebit  !== null && rawDebit  !== undefined && rawDebit  !== '') ? Math.abs(parseBankAmount(String(rawDebit))  || 0) : 0;
+                const credit = (rawCredit !== null && rawCredit !== undefined && rawCredit !== '') ? Math.abs(parseBankAmount(String(rawCredit)) || 0) : 0;
+                const bal    = (rawBal    !== null && rawBal    !== undefined && rawBal    !== '') ? parseBankAmount(String(rawBal)) : NaN;
 
                 const amount = credit - debit;
                 const tx = { date, description: desc, amount };

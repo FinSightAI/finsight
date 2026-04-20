@@ -215,9 +215,9 @@ const CSVImport = {
                     return;
                 }
 
-                // Parse amount (handle Hebrew number format and negative values)
-                amountVal = String(amountVal).replace(/[₪$,]/g, '').trim();
-                const amount = Math.abs(parseFloat(amountVal));
+                // Parse amount (handles Israeli 1,234.56 and Brazilian 1.234,56 formats)
+                amountVal = this.parseAmount(String(amountVal));
+                const amount = Math.abs(amountVal);
 
                 if (isNaN(amount) || amount === 0) {
                     errors.push(`Row ${index + 1}: Invalid amount "${amountVal}"`);
@@ -281,8 +281,7 @@ const CSVImport = {
                     return;
                 }
 
-                balanceVal = String(balanceVal).replace(/[₪$,]/g, '').trim();
-                const balance = parseFloat(balanceVal);
+                const balance = this.parseAmount(String(balanceVal));
 
                 if (isNaN(balance)) {
                     errors.push(`Row ${index + 1}: Invalid balance`);
@@ -430,6 +429,17 @@ const CSVImport = {
     /**
      * Parse various date formats
      */
+    parseAmount(str) {
+        if (!str) return NaN;
+        str = String(str).trim().replace(/\s/g, '').replace(/[₪$R$]/g, '');
+        if (!str) return NaN;
+        // Brazilian: 1.234,56 or 234,56
+        if (/^\-?\d{1,3}(\.\d{3})*(,\d+)?$/.test(str)) return parseFloat(str.replace(/\./g, '').replace(',', '.'));
+        if (/^\-?\d+(,\d+)$/.test(str)) return parseFloat(str.replace(',', '.'));
+        // Standard: remove thousands commas
+        return parseFloat(str.replace(/,/g, ''));
+    },
+
     parseDate(dateStr) {
         if (!dateStr) return null;
 
