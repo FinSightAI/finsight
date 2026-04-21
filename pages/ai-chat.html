@@ -158,6 +158,38 @@
 
     let conversationHistory = [];
     let isLoading = false;
+    let _crossAppData = null; // cached after first Firestore fetch
+
+    // ── Cross-app context (Yolo only) — reads from Firestore ──
+    async function fetchCrossAppContext(uid) {
+        if (_crossAppData !== null) return _crossAppData;
+        const lines = [];
+        try {
+            const snap = await firebaseDb
+                .collection('users').doc(uid)
+                .collection('cross_app')
+                .get();
+            if (snap.empty) {
+                _crossAppData = '';
+                return '';
+            }
+            lines.push('\n=== נתונים מכלי WizeLife נוספים ===\n');
+            snap.forEach(doc => {
+                const d = doc.data();
+                const appName = d.appName || doc.id;
+                lines.push(`\n── ${appName} ──`);
+                if (d.summary) lines.push(d.summary);
+                if (d.updatedAt) {
+                    const ts = d.updatedAt.toDate ? d.updatedAt.toDate() : new Date(d.updatedAt);
+                    lines.push(`(עודכן: ${ts.toLocaleDateString('he-IL')})`);
+                }
+            });
+        } catch(e) {
+            console.warn('cross_app fetch failed:', e);
+        }
+        _crossAppData = lines.join('\n');
+        return _crossAppData;
+    }
 
     // ── Build rich financial context from localStorage ──
     function buildFinancialContext() {
@@ -251,13 +283,23 @@
         return lines.join('\n');
     }
 
-    function buildSystemPrompt() {
+    async function buildSystemPrompt() {
         const ctx = buildFinancialContext();
         const today = new Date().toLocaleDateString('he-IL', { year:'numeric', month:'long', day:'numeric' });
+
+        let crossCtx = '';
+        if (currentUser && typeof Plan !== 'undefined' && Plan.isYolo()) {
+            crossCtx = await fetchCrossAppContext(currentUser.uid);
+        }
+
+        const yoloNote = crossCtx
+            ? '\n- יש לך גישה לנתונים מכמה כלי WizeLife — השתמש בהם לתמונה פיננסית מלאה'
+            : '';
+
         return `אתה יועץ פיננסי אישי של המשתמש, עם גישה מלאה לנתוניו הפיננסיים האמיתיים.
 תאריך היום: ${today}
 
-${ctx}
+${ctx}${crossCtx}
 
 הנחיות:
 - ענה תמיד בעברית
@@ -266,7 +308,7 @@ ${ctx}
 - היה ישיר ומעשי — תן המלצות ברורות, לא רק הסברים כלליים
 - אם יש מידע חסר, ציין זאת בקצרה ותן הערכה בכל זאת
 - פרמט תשובות ארוכות עם כותרות ורשימות לקריאות נוחה
-- אל תחזור על כל הנתונים — השתמש בהם בצורה חכמה בתוך התשובה`;
+- אל תחזור על כל הנתונים — השתמש בהם בצורה חכמה בתוך התשובה${yoloNote}`;
     }
 
     // ── Chat logic ──
@@ -340,7 +382,7 @@ ${ctx}
             // Keep history as Gemini format; last message already added above
             const result = await aiProxy({
                 messages: conversationHistory,
-                system: buildSystemPrompt(),
+                system: await buildSystemPrompt(),
             });
 
             removeTyping();
@@ -408,12 +450,20 @@ ${ctx}
         } catch(e) {}
     }
 
+    const YOLO_SUGGESTIONS = [
+        'תן לי תמונה פיננסית מלאה מכל הכלים שלי',
+        'איפה אני עומד ביחס ליעדי הבריאות והכספים שלי?',
+        'מה ההוצאה הכי גדולה שלי על נסיעות לפי Mega Traveller?',
+        'האם כדאי לי לנסוע לטיול עכשיו לפי המצב הכלכלי שלי?',
+    ];
+
     function updateApiStatus(user) {
         const el = document.getElementById('apiStatus');
         if (user) {
-            el.textContent = '✓ AI מחובר';
-            el.style.background = 'rgba(16,185,129,0.12)';
-            el.style.color = '#10b981';
+            const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
+            el.textContent = isYolo ? '✦ Yolo AI — כל הכלים' : '✓ AI מחובר';
+            el.style.background = isYolo ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.12)';
+            el.style.color = isYolo ? '#f59e0b' : '#10b981';
         } else {
             el.textContent = '🔒 נדרשת התחברות';
             el.style.background = 'rgba(245,158,11,0.1)';
@@ -424,7 +474,9 @@ ${ctx}
     // ── Suggestions ──
     function buildSuggestions() {
         const wrap = document.querySelector('#suggestions > div');
-        SUGGESTIONS.forEach(q => {
+        const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
+        const list = isYolo ? [...YOLO_SUGGESTIONS, ...SUGGESTIONS] : SUGGESTIONS;
+        list.forEach(q => {
             const btn = document.createElement('button');
             btn.className = 'suggestion-chip';
             btn.textContent = q;
@@ -436,8 +488,12 @@ ${ctx}
         });
     }
 
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(async user => {
         currentUser = user;
+        if (user && typeof Plan !== 'undefined') {
+            await Plan.load();
+            _crossAppData = null; // reset cache on login
+        }
         updateApiStatus(user);
     });
 

@@ -24,6 +24,11 @@ const Plan = (() => {
         unlimitedTx:     { he: "עסקאות ללא הגבלה",    en: "Unlimited Transactions" },
     };
 
+    // Yolo-only features — require plan === "yolo" explicitly
+    const YOLO_FEATURES = {
+        crossAppAI: { he: "AI פאנל — כל הכלים", en: "AI Panel — All Tools" },
+    };
+
     const FREE_TX_LIMIT = 50;
     let _plan = null;
     let _listeners = [];
@@ -129,8 +134,36 @@ const Plan = (() => {
     }
 
     function isYolo() {
-        if (!PAYWALL_ACTIVE) return true;
+        if (!PAYWALL_ACTIVE) return false; // yolo is always explicit, never free-tier
         return _plan === "yolo";
+    }
+
+    function checkYolo(featureKey, { silent = false } = {}) {
+        if (isYolo()) return true;
+        if (!silent) _showYoloWall(featureKey);
+        return false;
+    }
+
+    function _showYoloWall(featureKey) {
+        const lang = _lang();
+        const feat = YOLO_FEATURES[featureKey] || PRO_FEATURES[featureKey];
+        const name = feat ? (lang === "he" ? feat.he : feat.en) : featureKey;
+        const msg = lang === "he"
+            ? `✨ <strong>${name}</strong> זמין בתכנית <strong>Yolo</strong> בלבד.<br><span style="font-size:0.85em;opacity:0.8">צור קשר: support@wizelife.ai</span>`
+            : `✨ <strong>${name}</strong> is available on the <strong>Yolo</strong> plan only.<br><span style="font-size:0.85em;opacity:0.8">Contact: support@wizelife.ai</span>`;
+        if (typeof Paywall !== "undefined" && Paywall.showCustom) {
+            Paywall.showCustom(msg);
+        } else {
+            // Fallback inline banner
+            const id = "wlYoloBanner";
+            if (document.getElementById(id)) return;
+            const el = document.createElement("div");
+            el.id = id;
+            el.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:3000;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;text-align:center;padding:10px 50px;font-size:0.85rem;line-height:1.5;";
+            el.innerHTML = msg + `<button onclick="this.parentElement.remove()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.8);cursor:pointer;font-size:1.2rem;">×</button>`;
+            document.body.prepend(el);
+            setTimeout(() => el.remove(), 6000);
+        }
     }
 
     function isTrialing() { return _plan === "pro_trial"; }
@@ -165,5 +198,5 @@ const Plan = (() => {
         load();
     }
 
-    return { load, setPro, isPro, isYolo, isTrialing, isPaywallActive, check, redeemCode, getRedeemedCode, freeTxLimit, featureName, onChange };
+    return { load, setPro, isPro, isYolo, checkYolo, isTrialing, isPaywallActive, check, redeemCode, getRedeemedCode, freeTxLimit, featureName, onChange };
 })();

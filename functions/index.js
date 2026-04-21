@@ -220,6 +220,51 @@ exports.aiProxy = functions
         return { text };
     });
 
+// ─── Cross-app data sync — called by other WizeLife tools ────────────────────
+//
+// Each app calls this to push a plain-text summary of the user's state.
+// WizeMoney's AI reads it from users/{uid}/cross_app/{appId}.
+//
+// Payload: { appId: string, appName: string, summary: string }
+// appId must be one of the known WizeLife app identifiers.
+//
+const KNOWN_APP_IDS = new Set(["wize_tax", "wize_deal", "wize_travel", "wize_health"]);
+
+exports.syncCrossAppData = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        throw new functions.https.HttpsError("unauthenticated", "Login required");
+    }
+
+    const uid = context.auth.uid;
+
+    // Check caller is on yolo plan
+    const userSnap = await db.collection("users").doc(uid).get();
+    const plan = userSnap.exists ? (userSnap.data().plan || "free") : "free";
+    if (plan !== "yolo") {
+        throw new functions.https.HttpsError("permission-denied", "Yolo plan required for cross-app AI");
+    }
+
+    const { appId, appName, summary } = data;
+    if (!appId || !KNOWN_APP_IDS.has(appId)) {
+        throw new functions.https.HttpsError("invalid-argument", "Unknown appId");
+    }
+    if (typeof summary !== "string" || summary.length > 8000) {
+        throw new functions.https.HttpsError("invalid-argument", "summary must be a string ≤ 8000 chars");
+    }
+
+    await db
+        .collection("users").doc(uid)
+        .collection("cross_app").doc(appId)
+        .set({
+            appId,
+            appName: appName || appId,
+            summary,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+    return { ok: true };
+});
+
 // ─── PayPal token ─────────────────────────────────────────────────────────────
 
 function getAccessToken(clientId, secret) {

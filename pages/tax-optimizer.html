@@ -403,6 +403,55 @@
         .section-header .section-icon {
             font-size: 1.3rem;
         }
+
+        /* ── Market Selector ── */
+        .market-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--color-bg-tertiary);
+            border-radius: 12px;
+            padding: 5px;
+        }
+        .market-tab {
+            flex: 1;
+            padding: 9px 0;
+            border-radius: 9px;
+            border: none;
+            background: transparent;
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .market-tab.active {
+            background: var(--color-tax);
+            color: #fff;
+        }
+
+        /* ── IRPF bracket table ── */
+        .irpf-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin-top: 10px;
+        }
+        .irpf-table th {
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            padding: 6px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .irpf-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .irpf-table tr.active-bracket td {
+            color: var(--color-tax);
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -423,9 +472,16 @@
                 </h1>
             </header>
 
+            <!-- Market Selector -->
+            <div class="market-tabs">
+                <button class="market-tab active" id="tab-il" onclick="setMarket('il')">🇮🇱 ישראל</button>
+                <button class="market-tab" id="tab-br" onclick="setMarket('br')">🇧🇷 Brasil</button>
+            </div>
+
             <!-- ══════════════════════════════════════════════════
                  SECTION 1 — Income Details Inputs
             ═══════════════════════════════════════════════════ -->
+            <div id="il-sections">
             <div class="card" style="margin-bottom: 24px;">
                 <div class="section-header">
                     <span class="section-icon">📝</span>
@@ -709,6 +765,142 @@
                 </div>
             </div>
 
+            </div><!-- /il-sections -->
+
+            <!-- ══════════════════════════════════════════════════
+                 BRAZIL SECTIONS
+            ═══════════════════════════════════════════════════ -->
+            <div id="br-sections" style="display:none;">
+
+                <!-- BR Section 1 — Income Input -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="section-header">
+                        <span class="section-icon">📝</span>
+                        <h2>Dados de Renda</h2>
+                    </div>
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label for="br-inp-salary">Salário mensal bruto (R$)</label>
+                            <input type="number" id="br-inp-salary" value="5000" min="0" step="100" oninput="calcBrazil()">
+                        </div>
+                        <div class="form-group">
+                            <label for="br-inp-dependents">Número de dependentes</label>
+                            <input type="number" id="br-inp-dependents" value="0" min="0" max="20" step="1" oninput="calcBrazil()">
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="calc-btn" onclick="calcBrazil()">
+                            <span>🧮</span>
+                            Calcular
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BR Section 2 — Tax Breakdown -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="section-header">
+                        <span class="section-icon">💸</span>
+                        <h2>Carga Tributária Estimada</h2>
+                    </div>
+                    <div class="tax-summary-row">
+                        <div class="tax-badge">
+                            <div class="badge-label">Salário bruto</div>
+                            <div class="badge-value" id="br-out-salary">R$5.000</div>
+                        </div>
+                        <div class="tax-badge">
+                            <div class="badge-label">INSS (desconto)</div>
+                            <div class="badge-value" id="br-out-inss" style="color: var(--color-red);">R$0</div>
+                        </div>
+                        <div class="tax-badge">
+                            <div class="badge-label">Base de cálculo IRPF</div>
+                            <div class="badge-value" id="br-out-irpf-base">R$0</div>
+                        </div>
+                        <div class="tax-badge highlight">
+                            <div class="badge-label">IRPF mensal</div>
+                            <div class="badge-value" id="br-out-irpf">R$0</div>
+                        </div>
+                        <div class="tax-badge highlight">
+                            <div class="badge-label">Total retido (INSS+IRPF)</div>
+                            <div class="badge-value" id="br-out-total-tax" style="color: var(--color-red);">R$0</div>
+                        </div>
+                        <div class="tax-badge good">
+                            <div class="badge-label">Salário líquido estimado</div>
+                            <div class="badge-value" id="br-out-net">R$0</div>
+                        </div>
+                        <div class="tax-badge">
+                            <div class="badge-label">Alíquota efetiva total</div>
+                            <div class="badge-value" id="br-out-eff-rate">0%</div>
+                        </div>
+                        <div class="tax-badge">
+                            <div class="badge-label">Alíquota marginal IRPF</div>
+                            <div class="badge-value" id="br-out-marginal">0%</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.78rem; color: var(--color-text-secondary);">
+                        * INSS calculado pela tabela progressiva 2025. IRPF calculado sobre (salário − INSS − dedução por dependente). Desconto simplificado não aplicado. Consulte um contador.
+                    </div>
+                </div>
+
+                <!-- BR Section 3 — IRPF Bracket Table -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="section-header">
+                        <span class="section-icon">📊</span>
+                        <h2>Tabela do IRPF 2025</h2>
+                    </div>
+                    <table class="irpf-table">
+                        <thead>
+                            <tr>
+                                <th>Base de cálculo mensal</th>
+                                <th>Alíquota</th>
+                                <th>Parcela a deduzir</th>
+                            </tr>
+                        </thead>
+                        <tbody id="br-irpf-table">
+                            <tr id="br-bracket-0"><td>Até R$ 2.259,20</td><td>Isento</td><td>—</td></tr>
+                            <tr id="br-bracket-1"><td>R$ 2.259,21 a R$ 2.826,65</td><td>7,5%</td><td>R$ 169,44</td></tr>
+                            <tr id="br-bracket-2"><td>R$ 2.826,66 a R$ 3.751,05</td><td>15%</td><td>R$ 381,44</td></tr>
+                            <tr id="br-bracket-3"><td>R$ 3.751,06 a R$ 4.664,68</td><td>22,5%</td><td>R$ 662,77</td></tr>
+                            <tr id="br-bracket-4"><td>Acima de R$ 4.664,68</td><td>27,5%</td><td>R$ 896,00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- BR Section 4 — Tips -->
+                <div class="card" style="margin-bottom: 32px;">
+                    <div class="section-header">
+                        <span class="section-icon">💬</span>
+                        <h2>Dicas para Reduzir o IRPF</h2>
+                    </div>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <div class="tip-num">1</div>
+                            <div class="tip-text">
+                                <strong>Declare dependentes</strong> — cada dependente deduz R$ 189,59/mês da base de cálculo do IRPF, reduzindo o imposto direto.
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-num">2</div>
+                            <div class="tip-text">
+                                <strong>Contribua para Previdência Privada (PGBL)</strong> — deduções de até 12% da renda bruta anual para quem faz declaração completa.
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-num">3</div>
+                            <div class="tip-text">
+                                <strong>Despesas médicas são dedutíveis</strong> — consultas, cirurgias, plano de saúde e remédios com prescrição reduzem o IRPF na declaração anual.
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-num">4</div>
+                            <div class="tip-text">
+                                <strong>Invista em LCI/LCA e Poupança</strong> — rendimentos isentos de IR para pessoa física, otimizando o retorno líquido dos investimentos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /br-sections -->
+
             <!-- ══════════════════════════════════════════════════
                  SECTION 5 — Practical Tips
             ═══════════════════════════════════════════════════ -->
@@ -781,6 +973,117 @@
 
     <script>
     // ─────────────────────────────────────────────
+    // Market selector
+    // ─────────────────────────────────────────────
+    let _currentMarket = 'il';
+
+    function setMarket(m) {
+        _currentMarket = m;
+        document.getElementById('tab-il').classList.toggle('active', m === 'il');
+        document.getElementById('tab-br').classList.toggle('active', m === 'br');
+        document.getElementById('il-sections').style.display = m === 'il' ? '' : 'none';
+        document.getElementById('br-sections').style.display = m === 'br' ? '' : 'none';
+        if (m === 'br') calcBrazil();
+        else calculate();
+    }
+
+    // ─────────────────────────────────────────────
+    // Brazilian Tax Constants (2025)
+    // ─────────────────────────────────────────────
+    // INSS progressive table (monthly salary → rate on that slice)
+    const INSS_BRACKETS = [
+        { upTo: 1412.00,  rate: 0.075 },
+        { upTo: 2666.68,  rate: 0.09  },
+        { upTo: 4000.03,  rate: 0.12  },
+        { upTo: 7786.02,  rate: 0.14  },
+        { upTo: Infinity, rate: 0     }, // capped
+    ];
+    const INSS_MAX_MONTHLY = 908.85; // teto 2025
+
+    // IRPF monthly table 2025
+    const IRPF_BRACKETS = [
+        { upTo: 2259.20,  rate: 0,     deduction: 0      },
+        { upTo: 2826.65,  rate: 0.075, deduction: 169.44 },
+        { upTo: 3751.05,  rate: 0.15,  deduction: 381.44 },
+        { upTo: 4664.68,  rate: 0.225, deduction: 662.77 },
+        { upTo: Infinity, rate: 0.275, deduction: 896.00 },
+    ];
+    const IRPF_DEPENDENT_DEDUCTION = 189.59; // per dependent per month
+
+    function calcINSS(salary) {
+        let inss = 0;
+        let prev = 0;
+        for (const b of INSS_BRACKETS) {
+            if (b.rate === 0) break; // cap reached
+            if (salary <= prev) break;
+            const slice = Math.min(salary, b.upTo) - prev;
+            inss += slice * b.rate;
+            prev = b.upTo;
+            if (b.upTo === Infinity) break;
+        }
+        return Math.min(inss, INSS_MAX_MONTHLY);
+    }
+
+    function calcIRPF(base) {
+        if (base <= 0) return { tax: 0, marginalRate: 0 };
+        let tax = 0;
+        let marginalRate = 0;
+        for (const b of IRPF_BRACKETS) {
+            if (base <= b.upTo) {
+                // Use the simplified formula: rate × base − deduction
+                tax = Math.max(0, base * b.rate - b.deduction);
+                marginalRate = b.rate;
+                break;
+            }
+        }
+        return { tax, marginalRate };
+    }
+
+    function fmtBRL(n) {
+        if (isNaN(n) || n === null) n = 0;
+        try {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency', currency: 'BRL',
+                minimumFractionDigits: 0, maximumFractionDigits: 0
+            }).format(n);
+        } catch(e) {
+            return 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+        }
+    }
+
+    function calcBrazil() {
+        const salary   = parseFloat(document.getElementById('br-inp-salary').value) || 0;
+        const deps     = parseInt(document.getElementById('br-inp-dependents').value) || 0;
+
+        const inss     = calcINSS(salary);
+        const depDeduction = deps * IRPF_DEPENDENT_DEDUCTION;
+        const irpfBase = Math.max(0, salary - inss - depDeduction);
+        const { tax: irpf, marginalRate } = calcIRPF(irpfBase);
+        const totalTax = inss + irpf;
+        const net      = salary - totalTax;
+        const effRate  = salary > 0 ? (totalTax / salary) * 100 : 0;
+
+        document.getElementById('br-out-salary').textContent    = fmtBRL(salary);
+        document.getElementById('br-out-inss').textContent      = fmtBRL(-inss);
+        document.getElementById('br-out-irpf-base').textContent = fmtBRL(irpfBase);
+        document.getElementById('br-out-irpf').textContent      = fmtBRL(irpf);
+        document.getElementById('br-out-total-tax').textContent = fmtBRL(-totalTax);
+        document.getElementById('br-out-net').textContent       = fmtBRL(net);
+        document.getElementById('br-out-eff-rate').textContent  = pct(effRate);
+        document.getElementById('br-out-marginal').textContent  = pct(marginalRate * 100);
+
+        // Highlight active bracket
+        for (let i = 0; i < 5; i++) {
+            document.getElementById('br-bracket-' + i).classList.remove('active-bracket');
+        }
+        let bracketIdx = 0;
+        for (let i = 0; i < IRPF_BRACKETS.length; i++) {
+            if (irpfBase <= IRPF_BRACKETS[i].upTo) { bracketIdx = i; break; }
+        }
+        document.getElementById('br-bracket-' + bracketIdx).classList.add('active-bracket');
+    }
+
+    // ─────────────────────────────────────────────
     // Israeli Tax Constants (2025)
     // ─────────────────────────────────────────────
     const TAX_BRACKETS = [
@@ -816,6 +1119,7 @@
     // ─────────────────────────────────────────────
     function fmt(n) {
         if (isNaN(n) || n === null || n === undefined) n = 0;
+        if (_currentMarket === 'br') return fmtBRL(n);
         const abs = Math.abs(Math.round(n));
         const str = abs.toLocaleString('he-IL');
         return (n < 0 ? '-' : '') + '₪' + str;
@@ -1091,6 +1395,7 @@
     // ─────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
         calculate();
+        calcBrazil();
     });
     </script>
 </body>

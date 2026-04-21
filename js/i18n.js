@@ -4318,12 +4318,17 @@ const I18n = {
      * @param {string} currency - Currency code (default: ILS)
      * @returns {string} Formatted currency string
      */
-    formatCurrency(amount, currency = 'ILS') {
+    getCurrency() {
+        return this.t('common.currencyCode') || 'ILS';
+    },
+
+    formatCurrency(amount, currency) {
+        const cur = currency || this.getCurrency();
         const formatter = new Intl.NumberFormat(this.getLocale(), {
             style: 'currency',
-            currency: currency,
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+            currency: cur,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
         });
         return formatter.format(amount);
     },
