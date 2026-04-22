@@ -20,6 +20,22 @@ const StockAPI = {
     _taseJsonPromise: null,
     _taseJsonExpiry: 0,
 
+    // Historical data cache — keyed by symbol, stores {data, timestamp}
+    // Avoids re-fetching 1yr of OHLCV on every price refresh (expensive via CORS proxies)
+    HISTORICAL_TTL_MS: 24 * 60 * 60 * 1000, // 24 hours
+    _getHistoricalCache(symbol) {
+        try {
+            const raw = localStorage.getItem(`stock_hist_${symbol}`);
+            if (!raw) return null;
+            const { ts, data } = JSON.parse(raw);
+            if (Date.now() - ts > this.HISTORICAL_TTL_MS) { localStorage.removeItem(`stock_hist_${symbol}`); return null; }
+            return data;
+        } catch { return null; }
+    },
+    _setHistoricalCache(symbol, data) {
+        try { localStorage.setItem(`stock_hist_${symbol}`, JSON.stringify({ ts: Date.now(), data })); } catch {}
+    },
+
     async _fetchTaseJson() {
         const now = Date.now();
         if (this._taseJsonPromise && now < this._taseJsonExpiry) return this._taseJsonPromise;
@@ -246,13 +262,20 @@ const StockAPI = {
     },
 
     /**
-     * Fetch historical prices from Yahoo (for MA150 calculation)
+     * Fetch historical prices from Yahoo (for MA150 calculation).
+     * Caches result in localStorage for 24h — only re-fetches when stale.
      * @param {string} symbol - Stock symbol
      * @returns {Promise<Object>} Historical data + MA150
      */
     async _fetchYahooHistorical(symbol) {
         const detectedMarket = this.detectMarket(symbol);
         const formattedSymbol = this.formatSymbol(symbol, detectedMarket);
+        const cacheKey = formattedSymbol;
+
+        // Return cached data if fresh
+        const cached = this._getHistoricalCache(cacheKey);
+        if (cached) return cached;
+
         const suffix = `/${encodeURIComponent(formattedSymbol)}?interval=1d&range=1y&includePrePost=false`;
         const data = await Promise.any(
             this.YAHOO_URLS.map(base => this._fetchWithFallback(base + suffix)
@@ -272,12 +295,59 @@ const StockAPI = {
         }
 
         const closePrices = historicalData.map(d => d.close);
-        return {
+        const out = {
             historicalPrices: closePrices,
             historicalData,
             ma150: this.calculateMA150(closePrices),
             ma150Series: this.calculateMA150Series(historicalData)
         };
+        this._setHistoricalCache(cacheKey, out);
+        return out;
+    },
+
+    /**
+     * Fetch just the current price via Yahoo Finance (range=5d — much faster than range=1y).
+     * @param {string} formattedSymbol - Already-formatted Yahoo symbol
+     * @returns {Promise<Object>} Price fields only
+     */
+    async _fetchYahooPriceOnly(formattedSymbol) {
+        const suffix = `/${encodeURIComponent(formattedSymbol)}?interval=1d&range=5d&includePrePost=false`;
+        const tryFetch = url => fetch(url, { signal: AbortSignal.timeout(8000) })
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+            .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; });
+
+        const data = await Promise.any([
+            ...(this.CF_WORKER_URL ? [tryFetch(this.CF_WORKER_URL + suffix)] : []),
+            Promise.any(this.YAHOO_URLS.map(base => tryFetch(base + suffix))),
+        ]).catch(() =>
+            Promise.any(
+                this.YAHOO_URLS.map(base => this._fetchWithFallback(base + suffix)
+                    .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; })
+                )
+            ).catch(() => { throw new Error('All Yahoo endpoints failed'); })
+        );
+
+        const result = data.chart.result[0];
+        const meta = result.meta;
+        const quotes = result.indicators.quote[0];
+        const timestamps = result.timestamp || [];
+
+        const rawCurrency = meta.currency || 'USD';
+        const isGBX = rawCurrency === 'GBp' || rawCurrency === 'GBX';
+        const priceScale = isGBX ? 0.01 : 1;
+        const currency = isGBX ? 'GBP' : rawCurrency;
+        const currentPrice = meta.regularMarketPrice * priceScale;
+
+        // previousClose: use second-to-last close
+        const closes = timestamps.map((_, i) => quotes.close[i]).filter(c => c != null);
+        const previousClose = closes.length >= 2
+            ? closes[closes.length - 2] * priceScale
+            : (meta.previousClose || meta.chartPreviousClose || 0) * priceScale;
+
+        const priceChange = currentPrice - previousClose;
+        const priceChangePercent = previousClose ? (priceChange / previousClose) * 100 : 0;
+
+        return { currentPrice, previousClose, priceChange, priceChangePercent, currency };
     },
 
     /**
@@ -354,82 +424,24 @@ const StockAPI = {
             }
         }
 
-        // Yahoo Finance — Worker proxy → direct → CORS proxies
+        // Yahoo Finance — fast price-only fetch (range=5d), historical cached separately
         try {
-            const suffix = `/${encodeURIComponent(formattedSymbol)}?interval=1d&range=1y&includePrePost=false`;
+            const data = await this._fetchYahooPriceOnly(formattedSymbol).then(priceData => {
+                // Wrap in the shape the code below expects
+                return { _priceOnly: priceData };
+            });
 
-            const tryFetch = url => fetch(url, { signal: AbortSignal.timeout(8000) })
-                .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-                .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; });
+            const { currentPrice, previousClose, priceChange, priceChangePercent, currency } = data._priceOnly;
 
-            // 1. Cloudflare Worker (fastest, no CORS issues, works for all users)
-            const workerPromise = this.CF_WORKER_URL
-                ? tryFetch(this.CF_WORKER_URL + suffix)
-                : Promise.reject(new Error('no worker'));
+            // Load MA150 from cache (non-blocking) — stale cache returns null, fresh fetch happens in background
+            const cachedHist = this._getHistoricalCache(formattedSymbol);
+            const ma150 = cachedHist ? this.calculateMA150(cachedHist.historicalPrices) : null;
+            const ma150Position = ma150 !== null ? (currentPrice > ma150 ? 'above' : 'below') : null;
+            const ma150PositionPercent = ma150 !== null ? ((currentPrice - ma150) / ma150) * 100 : null;
 
-            // 2. Direct Yahoo (blocked by CORS on most browsers, but try anyway)
-            const directPromise = Promise.any(this.YAHOO_URLS.map(base => tryFetch(base + suffix)));
-
-            const data = await Promise.any([workerPromise, directPromise]).catch(() =>
-                // 3. Last resort: CORS proxies (usually broken)
-                Promise.any(
-                    this.YAHOO_URLS.map(base => this._fetchWithFallback(base + suffix)
-                        .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; })
-                    )
-                ).catch(() => { throw new Error('All Yahoo endpoints failed'); })
-            );
-
-            if (!data?.chart?.result?.length) {
-                throw new Error('No data found for symbol');
-            }
-
-            const result = data.chart.result[0];
-            const meta = result.meta;
-            const quotes = result.indicators.quote[0];
-            const timestamps = result.timestamp || [];
-
-            // Build historical data with timestamps
-            const historicalData = [];
-            for (let i = 0; i < timestamps.length; i++) {
-                if (quotes.close[i] !== null) {
-                    historicalData.push({
-                        date: new Date(timestamps[i] * 1000),
-                        close: quotes.close[i]
-                    });
-                }
-            }
-
-            const closePrices = historicalData.map(d => d.close);
-
-            // GBp/GBX = pence — Yahoo returns UK stocks in pence, convert to GBP (÷100)
-            const rawCurrency = meta.currency || 'USD';
-            const isGBX = rawCurrency === 'GBp' || rawCurrency === 'GBX';
-            const priceScale = isGBX ? 0.01 : 1;
-            const currency = isGBX ? 'GBP' : rawCurrency;
-
-            const currentPrice = meta.regularMarketPrice * priceScale;
-            // previousClose from meta is unreliable (often missing or shows chart start price)
-            // Use second-to-last close from historical data instead
-            const scaledClosePrices = closePrices.map(p => p * priceScale);
-            const previousClose = scaledClosePrices.length >= 2
-                ? scaledClosePrices[scaledClosePrices.length - 2]
-                : (meta.previousClose || meta.chartPreviousClose || 0) * priceScale;
-            const ma150 = this.calculateMA150(scaledClosePrices);
-
-            // Scale historical data for charting
-            const scaledHistoricalData = historicalData.map(d => ({ ...d, close: d.close * priceScale }));
-            const ma150Series = this.calculateMA150Series(scaledHistoricalData);
-
-            // Calculate price change
-            const priceChange = currentPrice - previousClose;
-            const priceChangePercent = previousClose ? ((priceChange / previousClose) * 100) : 0;
-
-            // Calculate position relative to MA150
-            let ma150Position = null;
-            let ma150PositionPercent = null;
-            if (ma150 !== null) {
-                ma150Position = currentPrice > ma150 ? 'above' : 'below';
-                ma150PositionPercent = ((currentPrice - ma150) / ma150) * 100;
+            // Refresh historical cache in background (doesn't block price display)
+            if (!cachedHist) {
+                this._fetchYahooHistorical(symbol).catch(() => {});
             }
 
             return {
@@ -444,9 +456,9 @@ const StockAPI = {
                 ma150,
                 ma150Position,
                 ma150PositionPercent,
-                historicalPrices: scaledClosePrices,
-                historicalData: scaledHistoricalData,
-                ma150Series,
+                historicalPrices: cachedHist?.historicalPrices || [],
+                historicalData: cachedHist?.historicalData || [],
+                ma150Series: cachedHist?.ma150Series || [],
                 lastUpdate: new Date().toISOString(),
                 success: true
             };
