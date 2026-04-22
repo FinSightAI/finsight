@@ -30,7 +30,17 @@ const I18n = {
                 subscriptions: 'תשלומים קבועים',
                 healthScore: 'בריאות פיננסית',
                 aiStory: 'סיפור השבוע',
-                pensionOptimizer: 'אופטימיזטור פנסיה'
+                pensionOptimizer: 'אופטימיזטור פנסיה',
+                income: 'מעקב הכנסות',
+                stockAnalytics: 'אנליטיקת תיק',
+                compareFunds: 'השוואת מוצרים',
+                simulator: 'סימולטור מה היה קורה',
+                aiChat: 'יועץ AI',
+                taxOptimizer: 'מייעל מס',
+                calendar: 'לוח שנה פיננסי',
+                family: 'דשבורד משפחתי',
+                export: 'ייצוא',
+                import: 'ייבוא'
             },
             // AI Story
             aiStory: {
@@ -1434,7 +1444,17 @@ const I18n = {
                 subscriptions: 'Recurring Payments',
                 healthScore: 'Financial Health',
                 aiStory: 'Weekly Story',
-                pensionOptimizer: 'Pension Optimizer'
+                pensionOptimizer: 'Pension Optimizer',
+                income: 'Income Tracker',
+                stockAnalytics: 'Portfolio Analytics',
+                compareFunds: 'Compare Products',
+                simulator: 'What-If Simulator',
+                aiChat: 'AI Advisor',
+                taxOptimizer: 'Tax Optimizer',
+                calendar: 'Financial Calendar',
+                family: 'Family Dashboard',
+                export: 'Export',
+                import: 'Import'
             },
             // AI Story
             aiStory: {
@@ -2831,7 +2851,25 @@ const I18n = {
                 loans: 'Empréstimos',
                 subscriptions: 'Pagamentos Recorrentes',
                 aiStory: 'História da Semana',
-                pensionOptimizer: 'Otimizador de Pensão'
+                pensionOptimizer: 'Otimizador de Previdência',
+                income: 'Controle de Renda',
+                stockAnalytics: 'Análise de Carteira',
+                compareFunds: 'Comparar Produtos',
+                simulator: 'Simulador E-Se',
+                aiChat: 'Consultor AI',
+                taxOptimizer: 'Otimizador Fiscal',
+                calendar: 'Calendário Financeiro',
+                family: 'Painel Familiar',
+                goals: 'Metas de Poupança',
+                reports: 'Relatórios',
+                financialProducts: 'Produtos Financeiros',
+                marketProducts: 'Produtos do Mercado',
+                myProducts: 'Meus Produtos',
+                pensionCalc: 'Calculadora de Previdência',
+                healthScore: 'Saúde Financeira',
+                settings: 'Configurações',
+                export: 'Exportar',
+                import: 'Importar'
             },
             // AI Story
             aiStory: {
@@ -3528,7 +3566,24 @@ const I18n = {
                 loans: 'Préstamos',
                 subscriptions: 'Pagos Recurrentes',
                 aiStory: 'Historia de la Semana',
-                pensionOptimizer: 'Optimizador de Pensión'
+                pensionOptimizer: 'Optimizador de Pensión',
+                income: 'Seguimiento de Ingresos',
+                stockAnalytics: 'Análisis de Cartera',
+                compareFunds: 'Comparar Productos',
+                simulator: 'Simulador Y-Si',
+                aiChat: 'Asesor AI',
+                taxOptimizer: 'Optimizador Fiscal',
+                calendar: 'Calendario Financiero',
+                family: 'Panel Familiar',
+                goals: 'Metas de Ahorro',
+                reports: 'Informes',
+                financialProducts: 'Productos Financieros',
+                marketProducts: 'Productos del Mercado',
+                myProducts: 'Mis Productos',
+                pensionCalc: 'Calculadora de Pensión',
+                healthScore: 'Salud Financiera',
+                export: 'Exportar',
+                import: 'Importar'
             },
             // AI Story
             aiStory: {
