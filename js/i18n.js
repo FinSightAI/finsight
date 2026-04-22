@@ -4268,9 +4268,13 @@ const I18n = {
      * Initialize i18n with saved language
      */
     init() {
+        // Priority: URL ?lang param → shared wl_lang key → app-specific setting → browser
+        const urlLang = new URLSearchParams(window.location.search).get('lang');
+        const wlLang  = localStorage.getItem('wl_lang');
         const settings = Storage.getSettings();
-        if (settings.language) {
-            this.currentLanguage = settings.language;
+        const resolved = urlLang || wlLang || settings.language;
+        if (resolved && this.languages.includes(resolved)) {
+            this.currentLanguage = resolved;
         } else {
             const bl = (navigator.language || 'en').toLowerCase();
             // Hebrew not auto-detected — user selects manually
@@ -4278,6 +4282,9 @@ const I18n = {
             else if (bl.startsWith('es')) this.currentLanguage = 'es';
             else this.currentLanguage = 'en';
         }
+        // Persist resolved language to both keys
+        localStorage.setItem('wl_lang', this.currentLanguage);
+        Storage.saveSettings({ ...settings, language: this.currentLanguage });
         this.updatePageDirection();
         this.translatePage();
     },
@@ -4321,6 +4328,7 @@ const I18n = {
     setLanguage(lang) {
         if (this.languages.includes(lang)) {
             this.currentLanguage = lang;
+            localStorage.setItem('wl_lang', lang);  // shared cross-app key
             Storage.saveSettings({ ...Storage.getSettings(), language: lang });
             this.updatePageDirection();
             this.translatePage();
