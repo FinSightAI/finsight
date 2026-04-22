@@ -31,18 +31,18 @@
         <!-- Top bar -->
         <div style="padding:18px 24px 14px;border-bottom:1px solid var(--color-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
             <div>
-                <h1 style="font-size:1.4rem;font-weight:700;margin:0;">🤖 יועץ פיננסי AI</h1>
-                <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;">שואל, מנתח, ממליץ — על בסיס הנתונים האמיתיים שלך</p>
+                <h1 style="font-size:1.4rem;font-weight:700;margin:0;" data-i18n="chat.title">🤖 יועץ פיננסי AI</h1>
+                <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;" data-i18n="chat.subtitle">שואל, מנתח, ממליץ — על בסיס הנתונים האמיתיים שלך</p>
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
                 <span id="apiStatus" style="font-size:0.78rem;padding:4px 10px;border-radius:99px;background:var(--color-bg-hover);color:var(--color-text-secondary);">בודק חיבור...</span>
-                <button onclick="clearChat()" style="padding:7px 14px;border-radius:9px;background:var(--color-bg-hover);border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.82rem;cursor:pointer;">🗑 נקה</button>
+                <button onclick="clearChat()" style="padding:7px 14px;border-radius:9px;background:var(--color-bg-hover);border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.82rem;cursor:pointer;" data-i18n="chat.clearBtn">🗑 נקה</button>
             </div>
         </div>
 
         <!-- Suggested questions (shown only when chat is empty) -->
         <div id="suggestions" style="padding:20px 24px 0;flex-shrink:0;">
-            <p style="color:var(--color-text-secondary);font-size:0.8rem;margin:0 0 10px;">שאלות לדוגמה:</p>
+            <p style="color:var(--color-text-secondary);font-size:0.8rem;margin:0 0 10px;" data-i18n="chat.suggestionsLabel">שאלות לדוגמה:</p>
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
             </div>
         </div>
@@ -57,6 +57,7 @@
             <div style="display:flex;gap:10px;align-items:flex-end;">
                 <textarea id="chatInput"
                     placeholder="שאל אותי כל שאלה פיננסית..."
+                    data-i18n-placeholder="chat.inputPlaceholder"
                     rows="1"
                     style="flex:1;resize:none;padding:12px 14px;border-radius:14px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;font-family:inherit;line-height:1.4;max-height:160px;overflow-y:auto;outline:none;"
                     onkeydown="handleKey(event)"
@@ -145,16 +146,18 @@
 <script>
     const CHAT_HISTORY_KEY = 'finsight_ai_chat_history';
 
-    const SUGGESTIONS = [
-        'האם כדאי לי לסגור את ההלוואה מוקדם?',
-        'מתי אגיע לשווי נקי של מיליון שקל?',
-        'כמה אני מוציא בממוצע על אוכל?',
-        'מה הסיכון הכי גדול בתיק שלי?',
-        'האם אני חוסך מספיק לפנסיה?',
-        'איזה מנוי שווה לבטל?',
-        'הראה לי את ה-3 הוצאות הכי גדולות שלי',
-        'כמה חודשים של מרגוע פיננסי יש לי?',
-    ];
+    function getSuggestions() {
+        return [
+            I18n.t('chat.suggest1'),
+            I18n.t('chat.suggest2'),
+            I18n.t('chat.suggest3'),
+            I18n.t('chat.suggest4'),
+            I18n.t('chat.suggest5'),
+            I18n.t('chat.suggest6'),
+            I18n.t('chat.suggest7'),
+            I18n.t('chat.suggest8'),
+        ];
+    }
 
     let conversationHistory = [];
     let isLoading = false;
@@ -438,7 +441,7 @@ ${rules}`;
         if (!text) return;
 
         if (!currentUser) {
-            renderMessage('assistant', '🔒 יש להתחבר לחשבון כדי להשתמש ביועץ ה-AI. לחץ על "התחבר" בתפריט.');
+            renderMessage('assistant', I18n.t('chat.errNotLoggedIn'));
             return;
         }
 
@@ -469,11 +472,11 @@ ${rules}`;
             removeTyping();
             const code = e.code || '';
             if (code === 'functions/unauthenticated') {
-                renderMessage('assistant', '🔒 יש להתחבר לחשבון.');
+                renderMessage('assistant', I18n.t('chat.errUnauthenticated'));
             } else if (code === 'functions/resource-exhausted') {
-                renderMessage('assistant', '⏳ ' + (e.message || 'הגעת למגבלה היומית. נסה מחר.'));
+                renderMessage('assistant', '⏳ ' + (e.message || I18n.t('chat.errRateLimit')));
             } else {
-                renderMessage('assistant', '❌ שגיאה. בדוק חיבור לאינטרנט ונסה שוב.');
+                renderMessage('assistant', I18n.t('chat.errGeneral'));
             }
         }
 
@@ -495,7 +498,7 @@ ${rules}`;
     }
 
     function clearChat() {
-        if (!confirm('לנקות את שיחה?')) return;
+        if (!confirm(I18n.t('chat.clearConfirm'))) return;
         conversationHistory = [];
         document.getElementById('chatMessages').innerHTML = '';
         document.getElementById('suggestions').style.display = 'block';
@@ -525,12 +528,14 @@ ${rules}`;
         } catch(e) {}
     }
 
-    const YOLO_SUGGESTIONS = [
-        'תן לי תמונה פיננסית מלאה מכל הכלים שלי',
-        'איפה אני עומד ביחס ליעדי הבריאות והכספים שלי?',
-        'מה ההוצאה הכי גדולה שלי על נסיעות לפי Mega Traveller?',
-        'האם כדאי לי לנסוע לטיול עכשיו לפי המצב הכלכלי שלי?',
-    ];
+    function getYoloSuggestions() {
+        return [
+            I18n.t('chat.yoloSuggest1'),
+            I18n.t('chat.yoloSuggest2'),
+            I18n.t('chat.yoloSuggest3'),
+            I18n.t('chat.yoloSuggest4'),
+        ];
+    }
 
     function updateApiStatus(user) {
         const el = document.getElementById('apiStatus');
@@ -549,8 +554,9 @@ ${rules}`;
     // ── Suggestions ──
     function buildSuggestions() {
         const wrap = document.querySelector('#suggestions > div');
+        wrap.innerHTML = '';
         const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
-        const list = isYolo ? [...YOLO_SUGGESTIONS, ...SUGGESTIONS] : SUGGESTIONS;
+        const list = isYolo ? [...getYoloSuggestions(), ...getSuggestions()] : getSuggestions();
         list.forEach(q => {
             const btn = document.createElement('button');
             btn.className = 'suggestion-chip';
@@ -573,7 +579,17 @@ ${rules}`;
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-        if (typeof I18n !== 'undefined') I18n.init();
+        if (typeof I18n !== 'undefined') {
+            I18n.init();
+            // Rebuild suggestions when language changes
+            const origSetLang = I18n.setLanguage?.bind(I18n);
+            if (origSetLang) {
+                I18n.setLanguage = function(lang) {
+                    origSetLang(lang);
+                    buildSuggestions();
+                };
+            }
+        }
         buildSuggestions();
         loadHistory();
     });

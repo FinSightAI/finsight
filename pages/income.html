@@ -22,7 +22,7 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../img/logo.png">
-    <title>הכנסות - WizeMoney</title>
+    <title data-i18n="income.pageTitle">הכנסות - WizeMoney</title>
     <link rel="stylesheet" href="../css/app.css">
     <style>
         :root {
@@ -258,22 +258,22 @@
             <header class="page-header">
                 <h1>
                     <span>💰</span>
-                    <span>הכנסות</span>
+                    <span data-i18n="income.title">הכנסות</span>
                 </h1>
             </header>
 
             <!-- Summary Bar -->
             <div class="income-summary-bar">
                 <div class="summary-stat">
-                    <div class="stat-label">סה״כ הכנסה חודשית</div>
+                    <div class="stat-label" data-i18n="income.totalMonthlyIncome">סה״כ הכנסה חודשית</div>
                     <div class="stat-value" id="totalMonthlyIncome">₪0</div>
                 </div>
                 <div class="summary-stat">
-                    <div class="stat-label">סה״כ הוצאות החודש</div>
+                    <div class="stat-label" data-i18n="income.totalMonthlyExpenses">סה״כ הוצאות החודש</div>
                     <div class="stat-value" id="totalMonthlyExpenses">₪0</div>
                 </div>
                 <div class="summary-stat">
-                    <div class="stat-label">תזרים נטו</div>
+                    <div class="stat-label" data-i18n="income.netCashflow">תזרים נטו</div>
                     <div class="stat-value" id="netCashflow">₪0</div>
                 </div>
             </div>
@@ -283,32 +283,32 @@
                 <div class="card-header">
                     <h2 class="card-title">
                         <span class="icon">📋</span>
-                        <span>רשימת הכנסות</span>
+                        <span data-i18n="income.incomeList">רשימת הכנסות</span>
                     </h2>
                     <button class="btn btn-primary" onclick="openAddModal()" style="margin-right: auto;">
                         <span>➕</span>
-                        <span>הוסף הכנסה</span>
+                        <span data-i18n="income.addBtn">הוסף הכנסה</span>
                     </button>
                 </div>
 
                 <!-- Quick add buttons -->
                 <div class="quick-add-row" style="padding: 0 4px 4px;">
-                    <button class="quick-btn" onclick="openAddModal('salary')">+ משכורת</button>
-                    <button class="quick-btn" onclick="openAddModal('rental')">+ שכר דירה</button>
-                    <button class="quick-btn" onclick="openAddModal('dividend')">+ דיבידנד</button>
-                    <button class="quick-btn" onclick="openAddModal('business')">+ עסק</button>
+                    <button class="quick-btn" onclick="openAddModal('salary')" data-i18n="income.quickSalary">+ משכורת</button>
+                    <button class="quick-btn" onclick="openAddModal('rental')" data-i18n="income.quickRental">+ שכר דירה</button>
+                    <button class="quick-btn" onclick="openAddModal('dividend')" data-i18n="income.quickDividend">+ דיבידנד</button>
+                    <button class="quick-btn" onclick="openAddModal('business')" data-i18n="income.quickBusiness">+ עסק</button>
                 </div>
 
                 <div class="table-container">
                     <table id="incomeTable">
                         <thead>
                             <tr>
-                                <th>שם</th>
-                                <th>סוג</th>
-                                <th>סכום</th>
-                                <th>תדירות</th>
-                                <th>תאריך</th>
-                                <th>פעולות</th>
+                                <th data-i18n="income.colName">שם</th>
+                                <th data-i18n="income.colType">סוג</th>
+                                <th data-i18n="income.colAmount">סכום</th>
+                                <th data-i18n="income.colFreq">תדירות</th>
+                                <th data-i18n="income.colDate">תאריך</th>
+                                <th data-i18n="income.colActions">פעולות</th>
                             </tr>
                         </thead>
                         <tbody id="incomeTableBody">
@@ -331,7 +331,7 @@
                 <div class="card-header">
                     <h2 class="card-title">
                         <span class="icon">📊</span>
-                        <span>הכנסות מול הוצאות — 6 חודשים אחרונים</span>
+                        <span data-i18n="income.chartTitle">הכנסות מול הוצאות — 6 חודשים אחרונים</span>
                     </h2>
                 </div>
                 <div class="chart-container">
@@ -345,50 +345,50 @@
     <div class="modal-overlay" id="incomeModal" style="display:none;" onclick="handleModalOverlayClick(event)">
         <div class="modal" onclick="event.stopPropagation()">
             <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">הוסף הכנסה</h3>
+                <h3 class="modal-title" id="modalTitle" data-i18n="income.modalAddTitle">הוסף הכנסה</h3>
                 <button class="modal-close" onclick="closeModal()">✕</button>
             </div>
             <div class="modal-body">
                 <div class="modal-form-grid">
                     <div class="form-group full-width">
-                        <label for="incomeName">שם ההכנסה *</label>
-                        <input type="text" id="incomeName" placeholder="לדוגמה: משכורת חברה א׳" required>
+                        <label for="incomeName" data-i18n="income.labelName">שם ההכנסה *</label>
+                        <input type="text" id="incomeName" placeholder="לדוגמה: משכורת חברה א׳" data-i18n-placeholder="income.namePlaceholder" required>
                     </div>
                     <div class="form-group">
-                        <label for="incomeAmount">סכום (₪) *</label>
+                        <label for="incomeAmount" data-i18n="income.labelAmount">סכום (₪) *</label>
                         <input type="number" id="incomeAmount" placeholder="0" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
-                        <label for="incomeType">סוג הכנסה *</label>
+                        <label for="incomeType" data-i18n="income.labelType">סוג הכנסה *</label>
                         <select id="incomeType">
-                            <option value="salary">💼 משכורת</option>
-                            <option value="rental">🏠 שכר דירה</option>
-                            <option value="dividend">📈 דיבידנד</option>
-                            <option value="business">🏪 עסק</option>
-                            <option value="other">💰 אחר</option>
+                            <option value="salary" data-i18n="income.typeSalary">💼 משכורת</option>
+                            <option value="rental" data-i18n="income.typeRental">🏠 שכר דירה</option>
+                            <option value="dividend" data-i18n="income.typeDividend">📈 דיבידנד</option>
+                            <option value="business" data-i18n="income.typeBusiness">🏪 עסק</option>
+                            <option value="other" data-i18n="income.typeOther">💰 אחר</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="incomeFrequency">תדירות *</label>
+                        <label for="incomeFrequency" data-i18n="income.labelFrequency">תדירות *</label>
                         <select id="incomeFrequency">
-                            <option value="monthly">חודשי</option>
-                            <option value="annual">שנתי</option>
-                            <option value="one_time">חד פעמי</option>
+                            <option value="monthly" data-i18n="income.freqMonthly">חודשי</option>
+                            <option value="annual" data-i18n="income.freqAnnual">שנתי</option>
+                            <option value="one_time" data-i18n="income.freqOneTime">חד פעמי</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="incomeDate">תאריך *</label>
+                        <label for="incomeDate" data-i18n="income.labelDate">תאריך *</label>
                         <input type="date" id="incomeDate" required>
                     </div>
                     <div class="form-group full-width">
-                        <label for="incomeNotes">הערות (אופציונלי)</label>
-                        <textarea id="incomeNotes" placeholder="הערות נוספות..."></textarea>
+                        <label for="incomeNotes" data-i18n="income.labelNotes">הערות (אופציונלי)</label>
+                        <textarea id="incomeNotes" placeholder="הערות נוספות..." data-i18n-placeholder="income.notesPlaceholder"></textarea>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
-                <button class="btn btn-primary" onclick="saveIncome()">שמור</button>
+                <button class="btn btn-secondary" onclick="closeModal()" data-i18n="income.cancelBtn">ביטול</button>
+                <button class="btn btn-primary" onclick="saveIncome()" data-i18n="income.saveBtn">שמור</button>
             </div>
         </div>
     </div>
@@ -404,19 +404,23 @@
 
     const STORAGE_KEY = 'finance_income';
 
-    const TYPE_LABELS = {
-        salary:   '💼 משכורת',
-        rental:   '🏠 שכר דירה',
-        dividend: '📈 דיבידנד',
-        business: '🏪 עסק',
-        other:    '💰 אחר',
-    };
+    function TYPE_LABELS() {
+        return {
+            salary:   I18n.t('income.typeSalary'),
+            rental:   I18n.t('income.typeRental'),
+            dividend: I18n.t('income.typeDividend'),
+            business: I18n.t('income.typeBusiness'),
+            other:    I18n.t('income.typeOther'),
+        };
+    }
 
-    const FREQ_LABELS = {
-        monthly:  'חודשי',
-        annual:   'שנתי',
-        one_time: 'חד פעמי',
-    };
+    function FREQ_LABELS() {
+        return {
+            monthly:  I18n.t('income.freqMonthly'),
+            annual:   I18n.t('income.freqAnnual'),
+            one_time: I18n.t('income.freqOneTime'),
+        };
+    }
 
     function monthlyEquiv(entry) {
         if (entry.frequency === 'annual')   return entry.amount / 12;
@@ -486,12 +490,15 @@
             tbody.innerHTML = `<tr><td colspan="6">
                 <div class="empty-state">
                     <span class="empty-icon">💰</span>
-                    <p>אין הכנסות עדיין</p>
-                    <small>לחץ "הוסף הכנסה" כדי להתחיל</small>
+                    <p>${I18n.t('income.emptyMsg')}</p>
+                    <small>${I18n.t('income.emptyHint')}</small>
                 </div>
             </td></tr>`;
             return;
         }
+
+        const typeLabels = TYPE_LABELS();
+        const freqLabels = FREQ_LABELS();
 
         tbody.innerHTML = entries.map(e => {
             const equiv = monthlyEquiv(e);
@@ -501,16 +508,16 @@
             let amountDisplay = formatCurrency(e.amount);
             let equivNote = '';
             if (e.frequency === 'annual') {
-                equivNote = `<span class="monthly-equiv">(${formatCurrency(equiv)}/חודש)</span>`;
+                equivNote = `<span class="monthly-equiv">(${formatCurrency(equiv)}${I18n.t('income.monthlyNote')})</span>`;
             } else if (e.frequency === 'one_time') {
-                equivNote = `<span class="monthly-equiv">לא נספר בחודשי</span>`;
+                equivNote = `<span class="monthly-equiv">${I18n.t('income.notCountedMonthly')}</span>`;
             }
 
             return `<tr>
                 <td><strong>${escapeHtml(e.name)}</strong>${e.notes ? `<br><small style="color:#94a3b8;font-size:0.75rem">${escapeHtml(e.notes)}</small>` : ''}</td>
-                <td><span class="type-badge">${TYPE_LABELS[e.type] || e.type}</span></td>
+                <td><span class="type-badge">${typeLabels[e.type] || e.type}</span></td>
                 <td class="${amountClass}">${amountDisplay}${equivNote}</td>
-                <td><span class="freq-badge">${FREQ_LABELS[e.frequency] || e.frequency}</span></td>
+                <td><span class="freq-badge">${freqLabels[e.frequency] || e.frequency}</span></td>
                 <td style="white-space:nowrap">${formatDate(e.date)}</td>
                 <td style="white-space:nowrap">
                     <button class="action-btn" onclick="openEditModal('${e.id}')" title="עריכה">✏️</button>
@@ -570,7 +577,7 @@
                 labels,
                 datasets: [
                     {
-                        label: 'הכנסות',
+                        label: I18n.t('income.chartIncome'),
                         data: incomeData,
                         backgroundColor: 'rgba(16, 185, 129, 0.7)',
                         borderColor: '#10b981',
@@ -578,7 +585,7 @@
                         borderRadius: 6,
                     },
                     {
-                        label: 'הוצאות',
+                        label: I18n.t('income.chartExpenses'),
                         data: expensesData,
                         backgroundColor: 'rgba(139, 92, 246, 0.7)',
                         borderColor: '#8b5cf6',
@@ -638,7 +645,7 @@
 
     function openAddModal(presetType) {
         editingId = null;
-        document.getElementById('modalTitle').textContent = 'הוסף הכנסה';
+        document.getElementById('modalTitle').textContent = I18n.t('income.modalAdd');
         document.getElementById('incomeName').value = '';
         document.getElementById('incomeAmount').value = '';
         document.getElementById('incomeType').value = presetType || 'salary';
@@ -655,7 +662,7 @@
         if (!entry) return;
 
         editingId = id;
-        document.getElementById('modalTitle').textContent = 'עריכת הכנסה';
+        document.getElementById('modalTitle').textContent = I18n.t('income.modalEdit');
         document.getElementById('incomeName').value = entry.name || '';
         document.getElementById('incomeAmount').value = entry.amount || '';
         document.getElementById('incomeType').value = entry.type || 'salary';
@@ -718,7 +725,7 @@
         const entries = loadIncome();
         const entry = entries.find(e => e.id === id);
         if (!entry) return;
-        if (!confirm(`למחוק את "${entry.name}"?`)) return;
+        if (!confirm(`${I18n.t('income.deleteConfirm')} "${entry.name}"?`)) return;
         saveIncomeList(entries.filter(e => e.id !== id));
         renderAll();
     }
@@ -732,6 +739,7 @@
     // ── Init ──────────────────────────────────────────────────────────────────
 
     document.addEventListener('DOMContentLoaded', () => {
+        if (typeof I18n !== 'undefined') I18n.init();
         renderAll();
     });
     </script>

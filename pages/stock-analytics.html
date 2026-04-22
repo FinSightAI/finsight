@@ -340,7 +340,7 @@
             <header class="page-header">
                 <h1>
                     <span>📊</span>
-                    <span>אנליטיקת תיק מניות</span>
+                    <span data-i18n="analytics.title">אנליטיקת תיק מניות</span>
                 </h1>
             </header>
 
@@ -376,31 +376,47 @@
     }
 
     // ── Sector Map ─────────────────────────────────────────────────────────────
-    const SECTOR_MAP = {
-        AAPL:'טכנולוגיה', MSFT:'טכנולוגיה', GOOGL:'טכנולוגיה', GOOG:'טכנולוגיה',
-        META:'טכנולוגיה', AMZN:'טכנולוגיה', NVDA:'טכנולוגיה', TSLA:'טכנולוגיה',
-        NFLX:'טכנולוגיה', AMD:'טכנולוגיה', INTC:'טכנולוגיה', CRM:'טכנולוגיה',
-        JPM:'פיננסים', GS:'פיננסים', BAC:'פיננסים', WFC:'פיננסים', BRK:'פיננסים',
-        JNJ:'בריאות', PFE:'בריאות', UNH:'בריאות', ABBV:'בריאות',
-        XOM:'אנרגיה', CVX:'אנרגיה',
-        TEVA:'פארמה', NICE:'טכנולוגיה', CHECK:'טכנולוגיה', CYBR:'טכנולוגיה',
-        ESLT:'ביטחון', ELBIT:'ביטחון', IAI:'ביטחון',
-        POLI:'ביטוח', MIGDAL:'ביטוח', HAREL:'ביטוח',
-        HAPO:'בנקאות', LUMI:'בנקאות', MIZR:'בנקאות', FIBI:'בנקאות',
-        DSCT:'בנקאות', MZTF:'בנקאות',
+    // Keys: symbol → sector key (used to look up translated label and color)
+    const SECTOR_KEY_MAP = {
+        AAPL:'tech', MSFT:'tech', GOOGL:'tech', GOOG:'tech',
+        META:'tech', AMZN:'tech', NVDA:'tech', TSLA:'tech',
+        NFLX:'tech', AMD:'tech', INTC:'tech', CRM:'tech',
+        JPM:'finance', GS:'finance', BAC:'finance', WFC:'finance', BRK:'finance',
+        JNJ:'health', PFE:'health', UNH:'health', ABBV:'health',
+        XOM:'energy', CVX:'energy',
+        TEVA:'pharma', NICE:'tech', CHECK:'tech', CYBR:'tech',
+        ESLT:'defense', ELBIT:'defense', IAI:'defense',
+        POLI:'insurance', MIGDAL:'insurance', HAREL:'insurance',
+        HAPO:'banking', LUMI:'banking', MIZR:'banking', FIBI:'banking',
+        DSCT:'banking', MZTF:'banking',
     };
 
-    // Sector colors
+    function getSectorLabel(key) {
+        const map = {
+            tech:      I18n.t('analytics.sectorTech'),
+            finance:   I18n.t('analytics.sectorFinance'),
+            health:    I18n.t('analytics.sectorHealth'),
+            energy:    I18n.t('analytics.sectorEnergy'),
+            pharma:    I18n.t('analytics.sectorPharma'),
+            defense:   I18n.t('analytics.sectorDefense'),
+            insurance: I18n.t('analytics.sectorInsurance'),
+            banking:   I18n.t('analytics.sectorBanking'),
+            other:     I18n.t('analytics.sectorOther'),
+        };
+        return map[key] || map.other;
+    }
+
+    // Sector colors (keyed by sector key)
     const SECTOR_COLORS = {
-        'טכנולוגיה': { bg: 'rgba(99,102,241,0.15)', border: 'rgba(99,102,241,0.5)', text: '#818cf8' },
-        'פיננסים':   { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.4)', text: '#34d399' },
-        'בריאות':    { bg: 'rgba(236,72,153,0.12)', border: 'rgba(236,72,153,0.4)', text: '#f472b6' },
-        'אנרגיה':    { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.4)', text: '#fbbf24' },
-        'פארמה':     { bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.4)', text: '#60a5fa' },
-        'ביטחון':    { bg: 'rgba(239,68,68,0.12)',  border: 'rgba(239,68,68,0.4)',  text: '#f87171' },
-        'ביטוח':     { bg: 'rgba(20,184,166,0.12)', border: 'rgba(20,184,166,0.4)', text: '#2dd4bf' },
-        'בנקאות':    { bg: 'rgba(168,85,247,0.12)', border: 'rgba(168,85,247,0.4)', text: '#c084fc' },
-        'אחר':       { bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.3)', text: '#94a3b8' },
+        tech:      { bg: 'rgba(99,102,241,0.15)', border: 'rgba(99,102,241,0.5)', text: '#818cf8' },
+        finance:   { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.4)', text: '#34d399' },
+        health:    { bg: 'rgba(236,72,153,0.12)', border: 'rgba(236,72,153,0.4)', text: '#f472b6' },
+        energy:    { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.4)', text: '#fbbf24' },
+        pharma:    { bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.4)', text: '#60a5fa' },
+        defense:   { bg: 'rgba(239,68,68,0.12)',  border: 'rgba(239,68,68,0.4)',  text: '#f87171' },
+        insurance: { bg: 'rgba(20,184,166,0.12)', border: 'rgba(20,184,166,0.4)', text: '#2dd4bf' },
+        banking:   { bg: 'rgba(168,85,247,0.12)', border: 'rgba(168,85,247,0.4)', text: '#c084fc' },
+        other:     { bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.3)', text: '#94a3b8' },
     };
 
     // Pie chart colors palette
@@ -471,22 +487,22 @@
         return `
         <div class="portfolio-summary-bar">
             <div class="summary-metric">
-                <div class="label">שווי תיק כולל</div>
+                <div class="label">${I18n.t('analytics.totalValue')}</div>
                 <div class="value">${fmt(totalValue)}</div>
-                <div class="sub">${enriched.length} אחזקות</div>
+                <div class="sub">${enriched.length} ${I18n.t('analytics.holdings')}</div>
             </div>
             <div class="summary-metric">
-                <div class="label">רווח / הפסד כולל</div>
+                <div class="label">${I18n.t('analytics.totalProfitLoss')}</div>
                 <div class="value ${profitClass}">${sign}${fmt(totalProfit)}</div>
                 <div class="sub">${fmtPct(totalPct)}</div>
             </div>
             <div class="summary-metric">
-                <div class="label">מספר אחזקות</div>
+                <div class="label">${I18n.t('analytics.holdingsCount')}</div>
                 <div class="value">${enriched.length}</div>
-                <div class="sub">${enriched.filter(h => h._profit >= 0).length} ברווח · ${enriched.filter(h => h._profit < 0).length} בהפסד</div>
+                <div class="sub">${enriched.filter(h => h._profit >= 0).length} ${I18n.t('analytics.inProfit')} · ${enriched.filter(h => h._profit < 0).length} ${I18n.t('analytics.inLoss')}</div>
             </div>
             <div class="summary-metric">
-                <div class="label">הביצועים הטובים</div>
+                <div class="label">${I18n.t('analytics.bestPerformer')}</div>
                 <div class="value positive">${bestH.symbol}</div>
                 <div class="sub">${fmtPct(bestH._pct)}</div>
             </div>
@@ -499,27 +515,27 @@
         <div class="perf-row">
             <div class="perf-card">
                 <div class="perf-icon">🏆</div>
-                <div class="perf-label">הביצועים הטובים</div>
+                <div class="perf-label">${I18n.t('analytics.bestPerformer')}</div>
                 <div class="perf-value text-positive">${fmtPct(bestH._pct)}</div>
                 <div class="perf-sub">${bestH.name || bestH.symbol}</div>
             </div>
             <div class="perf-card">
                 <div class="perf-icon">📉</div>
-                <div class="perf-label">הביצועים הגרועים</div>
+                <div class="perf-label">${I18n.t('analytics.worstPerformer')}</div>
                 <div class="perf-value text-negative">${fmtPct(worstH._pct)}</div>
                 <div class="perf-sub">${worstH.name || worstH.symbol}</div>
             </div>
             <div class="perf-card">
                 <div class="perf-icon">🎯</div>
-                <div class="perf-label">אחוז הצלחה</div>
+                <div class="perf-label">${I18n.t('analytics.winRate')}</div>
                 <div class="perf-value ${winRate >= 50 ? 'text-positive' : 'text-negative'}">${winRate.toFixed(0)}%</div>
-                <div class="perf-sub">אחזקות ברווח</div>
+                <div class="perf-sub">${I18n.t('analytics.holdingsInProfit')}</div>
             </div>
             <div class="perf-card">
                 <div class="perf-icon">📊</div>
-                <div class="perf-label">ממוצע P&L</div>
+                <div class="perf-label">${I18n.t('analytics.avgPL')}</div>
                 <div class="perf-value ${avgPct >= 0 ? 'text-positive' : 'text-negative'}">${fmtPct(avgPct)}</div>
-                <div class="perf-sub">ממוצע לאחזקה</div>
+                <div class="perf-sub">${I18n.t('analytics.perHolding')}</div>
             </div>
         </div>`;
     }
@@ -563,19 +579,19 @@
         <div class="holdings-table-wrap">
             <div class="card-header">
                 <span>📋</span>
-                <span>טבלת אחזקות</span>
+                <span>${I18n.t('analytics.holdingsTable')}</span>
             </div>
             <div style="overflow-x:auto;">
                 <table class="holdings-table">
                     <thead>
                         <tr>
-                            <th>סימול / שם</th>
-                            <th>כמות</th>
-                            <th>מחיר קנייה ממוצע</th>
-                            <th>מחיר נוכחי</th>
-                            <th>שווי</th>
-                            <th>רווח/הפסד (₪)</th>
-                            <th>רווח/הפסד (%)</th>
+                            <th>${I18n.t('analytics.colSymbol')}</th>
+                            <th>${I18n.t('analytics.colQty')}</th>
+                            <th>${I18n.t('analytics.colAvgPrice')}</th>
+                            <th>${I18n.t('analytics.colCurPrice')}</th>
+                            <th>${I18n.t('analytics.colValue')}</th>
+                            <th>${I18n.t('analytics.colPLils')}</th>
+                            <th>${I18n.t('analytics.colPLpct')}</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
@@ -589,13 +605,13 @@
         return `
         <div class="charts-row">
             <div class="chart-card">
-                <h3><span>🥧</span> חלוקת תיק לפי אחזקה</h3>
+                <h3><span>🥧</span> ${I18n.t('analytics.pieChartTitle')}</h3>
                 <div class="chart-container">
                     <canvas id="pieChart"></canvas>
                 </div>
             </div>
             <div class="chart-card">
-                <h3><span>📊</span> רווח/הפסד לפי מניה</h3>
+                <h3><span>📊</span> ${I18n.t('analytics.barChartTitle')}</h3>
                 <div class="chart-container">
                     <canvas id="barChart"></canvas>
                 </div>
@@ -670,7 +686,7 @@
             data: {
                 labels,
                 datasets: [{
-                    label: 'רווח/הפסד (₪)',
+                    label: I18n.t('analytics.barChartLabel'),
                     data,
                     backgroundColor: bgColors,
                     borderColor: bdColors,
@@ -714,22 +730,23 @@
 
     // ── Section: Sector Allocation ─────────────────────────────────────────────
     function renderSectorSection(enriched, totalValue) {
-        // Aggregate by sector
+        // Aggregate by sector key
         const sectorMap = {};
         enriched.forEach(h => {
-            const sector = SECTOR_MAP[h.symbol] || 'אחר';
-            if (!sectorMap[sector]) sectorMap[sector] = 0;
-            sectorMap[sector] += h._value;
+            const key = SECTOR_KEY_MAP[h.symbol] || 'other';
+            if (!sectorMap[key]) sectorMap[key] = 0;
+            sectorMap[key] += h._value;
         });
 
         const pills = Object.entries(sectorMap)
             .sort((a, b) => b[1] - a[1])
-            .map(([sector, value]) => {
+            .map(([key, value]) => {
                 const pct = totalValue > 0 ? ((value / totalValue) * 100).toFixed(1) : 0;
-                const col = SECTOR_COLORS[sector] || SECTOR_COLORS['אחר'];
+                const col = SECTOR_COLORS[key] || SECTOR_COLORS['other'];
+                const label = getSectorLabel(key);
                 return `
                 <div class="sector-pill" style="background:${col.bg}; border-color:${col.border};">
-                    <div class="sector-name" style="color:${col.text};">${sector}</div>
+                    <div class="sector-name" style="color:${col.text};">${label}</div>
                     <div class="sector-value">${fmt(value)}</div>
                     <div class="sector-pct" style="color:${col.text};">${pct}%</div>
                 </div>`;
@@ -737,7 +754,7 @@
 
         return `
         <div class="sector-card">
-            <h3><span>🏭</span> חלוקה לפי סקטור</h3>
+            <h3><span>🏭</span> ${I18n.t('analytics.sectorTitle')}</h3>
             <div class="sector-pills">${pills}</div>
         </div>`;
     }
@@ -752,12 +769,12 @@
                 <div>
                     <div class="harvest-symbol">${h.symbol} ${h.name ? '· ' + h.name : ''}</div>
                     <div style="font-size:12px; color:var(--color-text-secondary); margin-top:3px;">
-                        הפסד לא ממומש
+                        ${I18n.t('analytics.unrealizedLoss')}
                     </div>
                 </div>
                 <div style="text-align:left;">
                     <div class="harvest-loss">-${fmt(loss)}</div>
-                    <div class="harvest-saving">חיסכון מס: ${fmt(saving)}</div>
+                    <div class="harvest-saving">${I18n.t('analytics.taxSaving')}: ${fmt(saving)}</div>
                 </div>
             </div>`;
         }).join('');
@@ -766,11 +783,11 @@
         <div class="tax-harvest-box">
             <div class="harvest-header">
                 <span>⚠️</span>
-                <span>הזדמנויות מימוש הפסד לצרכי מס</span>
+                <span>${I18n.t('analytics.harvestTitle')}</span>
             </div>
             ${items}
             <div class="harvest-tip">
-                💡 מימוש הפסד לפני 31 דצמבר יחסוך לך מס רווחי הון בשיעור 25% מגובה ההפסד הממומש
+                💡 ${I18n.t('analytics.harvestTip')}
             </div>
         </div>`;
     }
@@ -780,17 +797,18 @@
         return `
         <div class="empty-state">
             <div class="empty-icon">📈</div>
-            <h2>אין נתוני מניות עדיין</h2>
-            <p>הוסף מניות לתיק שלך כדי לצפות בניתוח מפורט, גרפים, חלוקת סקטורים וכלים לתכנון מס.</p>
+            <h2>${I18n.t('analytics.emptyTitle')}</h2>
+            <p>${I18n.t('analytics.emptyDesc')}</p>
             <a href="stocks.html">
                 <span>➕</span>
-                <span>הוסף מניות לתיק</span>
+                <span>${I18n.t('analytics.emptyLink')}</span>
             </a>
         </div>`;
     }
 
     // ── Bootstrap ──────────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
+        I18n.init();
         // Wait briefly for Storage to init if needed
         if (typeof Storage !== 'undefined' && typeof Storage.getStocks === 'function') {
             renderAnalytics();

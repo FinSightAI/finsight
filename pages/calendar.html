@@ -330,8 +330,8 @@
 <div class="app-container">
     <header class="app-header">
         <button class="btn-back" onclick="history.back()">→</button>
-        <h1>📅 לוח שנה פיננסי</h1>
-        <button onclick="openAddModal()" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);border-radius:8px;color:#06b6d4;padding:6px 12px;font-size:0.82rem;cursor:pointer;font-weight:600;">+ אירוע</button>
+        <h1 data-i18n="cal.title">📅 לוח שנה פיננסי</h1>
+        <button onclick="openAddModal()" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);border-radius:8px;color:#06b6d4;padding:6px 12px;font-size:0.82rem;cursor:pointer;font-weight:600;" data-i18n="cal.addEventBtn">+ אירוע</button>
     </header>
 
     <main class="main-content">
@@ -350,48 +350,48 @@
         <!-- Add custom event modal -->
         <div class="add-modal-overlay" id="addModal" onclick="closeAddModal(event)">
             <div class="add-modal">
-                <h3>➕ הוסף אירוע פיננסי</h3>
+                <h3 data-i18n="cal.addModalTitle">➕ הוסף אירוע פיננסי</h3>
                 <div class="form-group">
-                    <label>שם האירוע</label>
-                    <input type="text" id="evtName" placeholder="לדוגמה: תשלום ביטוח">
+                    <label data-i18n="cal.evtNameLabel">שם האירוע</label>
+                    <input type="text" id="evtName" placeholder="לדוגמה: תשלום ביטוח" data-i18n-placeholder="cal.evtNamePlaceholder">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>תאריך</label>
+                        <label data-i18n="cal.evtDateLabel">תאריך</label>
                         <input type="date" id="evtDate">
                     </div>
                     <div class="form-group">
-                        <label>סכום (₪)</label>
+                        <label data-i18n="cal.evtAmountLabel">סכום (₪)</label>
                         <input type="number" id="evtAmount" placeholder="0" min="0">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>סוג</label>
+                        <label data-i18n="cal.evtTypeLabel">סוג</label>
                         <select id="evtType">
-                            <option value="custom">📌 כללי</option>
-                            <option value="salary">💰 משכורת</option>
-                            <option value="subscription">🔄 תשלום קבוע</option>
-                            <option value="loan">🏦 הלוואה</option>
-                            <option value="goal">🎯 יעד חיסכון</option>
+                            <option value="custom" data-i18n="cal.typeGeneral">📌 כללי</option>
+                            <option value="salary" data-i18n="cal.typeSalary">💰 משכורת</option>
+                            <option value="subscription" data-i18n="cal.typeSubscription">🔄 תשלום קבוע</option>
+                            <option value="loan" data-i18n="cal.typeLoan">🏦 הלוואה</option>
+                            <option value="goal" data-i18n="cal.typeGoal">🎯 יעד חיסכון</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>חזרה</label>
+                        <label data-i18n="cal.evtRecurLabel">חזרה</label>
                         <select id="evtRecur">
-                            <option value="none">חד פעמי</option>
-                            <option value="monthly">חודשי</option>
-                            <option value="annual">שנתי</option>
+                            <option value="none" data-i18n="cal.recurNone">חד פעמי</option>
+                            <option value="monthly" data-i18n="cal.recurMonthly">חודשי</option>
+                            <option value="annual" data-i18n="cal.recurAnnual">שנתי</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>הערה (אופציונלי)</label>
+                    <label data-i18n="cal.evtNoteLabel">הערה (אופציונלי)</label>
                     <input type="text" id="evtNote" placeholder="">
                 </div>
                 <div class="modal-actions">
-                    <button class="btn btn-cal-secondary" onclick="closeAddModal()">ביטול</button>
-                    <button class="btn btn-cal-primary" onclick="saveCustomEvent()">שמור</button>
+                    <button class="btn btn-cal-secondary" onclick="closeAddModal()" data-i18n="cal.cancelBtn">ביטול</button>
+                    <button class="btn btn-cal-primary" onclick="saveCustomEvent()" data-i18n="cal.saveBtn">שמור</button>
                 </div>
             </div>
         </div>
@@ -408,11 +408,11 @@
 
                 <!-- Legend -->
                 <div class="legend">
-                    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> מנויים</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> הלוואות</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> יעדים</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> משכורת</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> אירועים</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> <span data-i18n="cal.legendSubs">מנויים</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> <span data-i18n="cal.legendLoans">הלוואות</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> <span data-i18n="cal.legendGoals">יעדים</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> <span data-i18n="cal.legendSalary">משכורת</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> <span data-i18n="cal.legendEvents">אירועים</span></div>
                 </div>
 
                 <!-- Day headers -->
@@ -425,36 +425,36 @@
             <div class="cal-sidebar">
                 <!-- Month totals -->
                 <div class="month-summary">
-                    <h3>💸 סיכום חודש</h3>
+                    <h3 data-i18n="cal.monthSummaryTitle">💸 סיכום חודש</h3>
                     <div class="ms-row">
-                        <span class="ms-label">🔄 מנויים</span>
+                        <span class="ms-label" data-i18n="cal.sumSubsLabel">🔄 מנויים</span>
                         <span class="ms-val red" id="sumSubscriptions">₪0</span>
                     </div>
                     <div class="ms-row">
-                        <span class="ms-label">🏦 הלוואות</span>
+                        <span class="ms-label" data-i18n="cal.sumLoansLabel">🏦 הלוואות</span>
                         <span class="ms-val red" id="sumLoans">₪0</span>
                     </div>
                     <div class="ms-row">
-                        <span class="ms-label">📌 אירועים</span>
+                        <span class="ms-label" data-i18n="cal.sumEventsLabel">📌 אירועים</span>
                         <span class="ms-val yellow" id="sumCustom">₪0</span>
                     </div>
                     <div class="ms-row">
-                        <span class="ms-label">💰 הכנסות</span>
+                        <span class="ms-label" data-i18n="cal.sumIncomeLabel">💰 הכנסות</span>
                         <span class="ms-val green" id="sumIncome">₪0</span>
                     </div>
                     <div class="ms-total">
-                        <span>סה"כ הוצאות קבועות</span>
+                        <span data-i18n="cal.sumTotalLabel">סה"כ הוצאות קבועות</span>
                         <span id="sumTotal" style="color:#ef4444">₪0</span>
                     </div>
                 </div>
 
                 <!-- Upcoming events -->
                 <div class="upcoming-card">
-                    <h3>⏰ קרוב</h3>
+                    <h3 data-i18n="cal.upcomingTitle">⏰ קרוב</h3>
                     <div id="upcomingList"></div>
                 </div>
 
-                <button class="add-event-btn" onclick="openAddModal()">+ הוסף אירוע פיננסי</button>
+                <button class="add-event-btn" onclick="openAddModal()" data-i18n="cal.addEventFullBtn">+ הוסף אירוע פיננסי</button>
             </div>
         </div>
 
@@ -698,14 +698,14 @@
         const shown = upcoming.slice(0, 8);
 
         if (shown.length === 0) {
-            list.innerHTML = `<div style="color:var(--color-text-secondary);font-size:0.82rem;padding:8px 0;">אין אירועים קרובים</div>`;
+            list.innerHTML = `<div style="color:var(--color-text-secondary);font-size:0.82rem;padding:8px 0;">${I18n.t('cal.noUpcoming')}</div>`;
             return;
         }
 
         const colorMap = { subscription:'#06b6d4', loan:'#ef4444', goal:'#10b981', salary:'#f59e0b', custom:'#8b5cf6' };
 
         list.innerHTML = shown.map(ev => {
-            const dateStr = ev.diff === 0 ? 'היום' : ev.diff === 1 ? 'מחר' : `בעוד ${ev.diff} ימים`;
+            const dateStr = ev.diff === 0 ? I18n.t('cal.today') : ev.diff === 1 ? I18n.t('cal.tomorrow') : `${I18n.t('cal.inDays1')}${ev.diff}${I18n.t('cal.inDays2')}`;
             const isUrgent = ev.diff <= 3;
             const day = ev.date.getDate();
             const mon = MONTH_NAMES[ev.date.getMonth()];
@@ -775,7 +775,7 @@
         const recur  = document.getElementById('evtRecur').value;
         const note   = document.getElementById('evtNote').value.trim();
 
-        if (!name || !date) { alert('נא למלא שם ותאריך'); return; }
+        if (!name || !date) { alert(I18n.t('cal.fillNameDate')); return; }
 
         const events = getCustomEvents();
         events.push({ id: 'ev_' + Date.now(), name, date, amount, type, recur, note });
@@ -783,7 +783,7 @@
         closeAddModal();
         render();
 
-        if (typeof App !== 'undefined' && App.notify) App.notify('האירוע נשמר', 'success');
+        if (typeof App !== 'undefined' && App.notify) App.notify(I18n.t('cal.eventSaved'), 'success');
     }
 
     // ── Month navigation ──────────────────────────────────────────────

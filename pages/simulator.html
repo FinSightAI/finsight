@@ -156,120 +156,120 @@
     <div class="main-content">
         <div class="page-header">
             <div>
-                <h1 class="page-title">⏳ סימולטור מה היה קורה</h1>
-                <p class="page-subtitle">שנה הרגל אחד — וראה מה זה שווה בעוד 20 שנה</p>
+                <h1 class="page-title" data-i18n="sim.title">⏳ סימולטור מה היה קורה</h1>
+                <p class="page-subtitle" data-i18n="sim.subtitle">שנה הרגל אחד — וראה מה זה שווה בעוד 20 שנה</p>
             </div>
         </div>
 
         <!-- Hero stat -->
         <div class="sim-hero" id="heroSection">
-            <h1>💡 כל ₪1,000 שאתה חוסך היום</h1>
-            <p>שווה <strong id="heroAmount">₪5,427</strong> בעוד 20 שנה (תשואה שנתית 8.5%)</p>
+            <h1 data-i18n="sim.heroTitle">💡 כל ₪1,000 שאתה חוסך היום</h1>
+            <p data-i18n="sim.heroDesc">שווה <strong id="heroAmount">₪5,427</strong> בעוד 20 שנה (תשואה שנתית 8.5%)</p>
         </div>
 
         <div class="scenario-grid">
 
             <!-- ── 1. Coffee & Restaurants ── -->
             <div class="scenario-card">
-                <h3>☕ קפה, מסעדות והוצאות שגרה</h3>
-                <p class="subtitle" id="foodSubtitle">ממוצע חודשי מהכרטיסי אשראי שלך</p>
+                <h3 data-i18n="sim.foodTitle">☕ קפה, מסעדות והוצאות שגרה</h3>
+                <p class="subtitle" id="foodSubtitle" data-i18n="sim.foodSubtitle">ממוצע חודשי מהכרטיסי אשראי שלך</p>
 
                 <div class="slider-row">
-                    <div class="slider-label"><span>חיסכון חודשי מהרגל זה</span><span id="foodSaveVal">₪500</span></div>
+                    <div class="slider-label"><span data-i18n="sim.foodSaveLabel">חיסכון חודשי מהרגל זה</span><span id="foodSaveVal">₪500</span></div>
                     <input type="range" id="foodSlider" min="100" max="3000" step="50" value="500">
                 </div>
                 <div class="slider-row">
-                    <div class="slider-label"><span>אופק זמן</span><span id="foodYearsVal">10 שנים</span></div>
+                    <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="foodYearsVal">10 שנים</span></div>
                     <input type="range" id="foodYears" min="1" max="30" step="1" value="10">
                 </div>
 
                 <div class="result-banner" id="foodResult">
                     <div class="result-main" id="foodResultAmt">₪0</div>
-                    <div class="result-sub">אם תשקיע במקום</div>
+                    <div class="result-sub" data-i18n="sim.ifInvested">אם תשקיע במקום</div>
                 </div>
                 <div class="chart-wrap"><canvas id="foodChart"></canvas></div>
             </div>
 
             <!-- ── 2. Subscriptions ── -->
             <div class="scenario-card">
-                <h3>🔄 ביטול מנויים</h3>
-                <p class="subtitle">בחר מה לבטל — ראה כמה צובר</p>
+                <h3 data-i18n="sim.subsTitle">🔄 ביטול מנויים</h3>
+                <p class="subtitle" data-i18n="sim.subsSubtitle">בחר מה לבטל — ראה כמה צובר</p>
 
                 <div class="sub-list" id="subList">
-                    <div style="color:var(--text-muted);font-size:.85rem;">טוען מנויים...</div>
+                    <div style="color:var(--text-muted);font-size:.85rem;" data-i18n="sim.loadingSubs">טוען מנויים...</div>
                 </div>
 
                 <div class="slider-row">
-                    <div class="slider-label"><span>אופק זמן</span><span id="subYearsVal">10 שנים</span></div>
+                    <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="subYearsVal">10 שנים</span></div>
                     <input type="range" id="subYears" min="1" max="30" step="1" value="10">
                 </div>
 
                 <div class="result-banner" id="subResult">
                     <div class="result-main" id="subResultAmt">₪0</div>
-                    <div class="result-sub">חיסכון מצטבר + תשואה</div>
+                    <div class="result-sub" data-i18n="sim.cumulativeSavings">חיסכון מצטבר + תשואה</div>
                 </div>
             </div>
 
             <!-- ── 3. Pension boost ── -->
             <div class="scenario-card">
-                <h3>🎯 הגדלת הפרשה לפנסיה</h3>
-                <p class="subtitle" id="pensionSubtitle">על בסיס ההכנסה החודשית שלך</p>
+                <h3 data-i18n="sim.pensionTitle">🎯 הגדלת הפרשה לפנסיה</h3>
+                <p class="subtitle" id="pensionSubtitle" data-i18n="sim.pensionSubtitle">על בסיס ההכנסה החודשית שלך</p>
 
                 <div class="slider-row">
-                    <div class="slider-label"><span>הגדלה חודשית נוספת</span><span id="pensionAddVal">₪500</span></div>
+                    <div class="slider-label"><span data-i18n="sim.pensionAddLabel">הגדלה חודשית נוספת</span><span id="pensionAddVal">₪500</span></div>
                     <input type="range" id="pensionSlider" min="100" max="5000" step="100" value="500">
                 </div>
                 <div class="slider-row">
-                    <div class="slider-label"><span>שנים עד פרישה</span><span id="pensionYearsVal">25 שנים</span></div>
+                    <div class="slider-label"><span data-i18n="sim.yearsToRetire">שנים עד פרישה</span><span id="pensionYearsVal">25 שנים</span></div>
                     <input type="range" id="pensionYears" min="5" max="40" step="1" value="25">
                 </div>
                 <div class="slider-row">
-                    <div class="slider-label"><span>תשואה שנתית</span><span id="pensionReturnVal">5%</span></div>
+                    <div class="slider-label"><span data-i18n="sim.annualReturn">תשואה שנתית</span><span id="pensionReturnVal">5%</span></div>
                     <input type="range" id="pensionReturn" min="3" max="10" step="0.5" value="5">
                 </div>
 
                 <div class="result-banner" id="pensionResult">
                     <div class="result-main" id="pensionResultAmt">₪0</div>
-                    <div class="result-sub">סכום נוסף בפנסיה בפרישה</div>
+                    <div class="result-sub" data-i18n="sim.extraAtRetirement">סכום נוסף בפנסיה בפרישה</div>
                 </div>
             </div>
 
             <!-- ── 4. Loan prepayment ── -->
             <div class="scenario-card">
-                <h3>🏦 החזרת הלוואה מוקדמת</h3>
-                <p class="subtitle" id="loanSubtitle">מה הריבית שאתה חוסך</p>
+                <h3 data-i18n="sim.loanTitle">🏦 החזרת הלוואה מוקדמת</h3>
+                <p class="subtitle" id="loanSubtitle" data-i18n="sim.loanSubtitle">מה הריבית שאתה חוסך</p>
 
                 <div class="slider-row">
-                    <div class="slider-label"><span>יתרת הלוואה</span><span id="loanBalVal">₪200,000</span></div>
+                    <div class="slider-label"><span data-i18n="sim.loanBalLabel">יתרת הלוואה</span><span id="loanBalVal">₪200,000</span></div>
                     <input type="range" id="loanBal" min="10000" max="2000000" step="10000" value="200000">
                 </div>
                 <div class="slider-row">
-                    <div class="slider-label"><span>ריבית שנתית</span><span id="loanRateVal">4%</span></div>
+                    <div class="slider-label"><span data-i18n="sim.loanRateLabel">ריבית שנתית</span><span id="loanRateVal">4%</span></div>
                     <input type="range" id="loanRate" min="1" max="12" step="0.25" value="4">
                 </div>
                 <div class="slider-row">
-                    <div class="slider-label"><span>תשלום נוסף חודשי</span><span id="loanExtraVal">₪1,000</span></div>
+                    <div class="slider-label"><span data-i18n="sim.extraPaymentLabel">תשלום נוסף חודשי</span><span id="loanExtraVal">₪1,000</span></div>
                     <input type="range" id="loanExtra" min="100" max="10000" step="100" value="1000">
                 </div>
 
                 <div class="result-banner" id="loanResult">
                     <div class="result-main" id="loanResultAmt">₪0</div>
-                    <div class="result-sub" id="loanResultSub">חיסכון בריבית + קיצור תקופה</div>
+                    <div class="result-sub" id="loanResultSub" data-i18n="sim.interestSaving">חיסכון בריבית + קיצור תקופה</div>
                 </div>
             </div>
 
             <!-- ── 5. Compound comparison (wide) ── -->
             <div class="scenario-card wide">
-                <h3>📈 השקעה חודשית — כוח הריבית דריבית</h3>
-                <p class="subtitle">גרף השוואה בין אפיקי השקעה שונים</p>
+                <h3 data-i18n="sim.compoundTitle">📈 השקעה חודשית — כוח הריבית דריבית</h3>
+                <p class="subtitle" data-i18n="sim.compoundSubtitle">גרף השוואה בין אפיקי השקעה שונים</p>
 
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
                     <div class="slider-row">
-                        <div class="slider-label"><span>סכום חודשי</span><span id="cmpMonthlyVal">₪2,000</span></div>
+                        <div class="slider-label"><span data-i18n="sim.monthlyAmountLabel">סכום חודשי</span><span id="cmpMonthlyVal">₪2,000</span></div>
                         <input type="range" id="cmpMonthly" min="200" max="20000" step="200" value="2000">
                     </div>
                     <div class="slider-row">
-                        <div class="slider-label"><span>אופק זמן</span><span id="cmpYearsVal">20 שנים</span></div>
+                        <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="cmpYearsVal">20 שנים</span></div>
                         <input type="range" id="cmpYears" min="5" max="40" step="1" value="20">
                     </div>
                 </div>
@@ -278,7 +278,7 @@
 
                 <table class="cmp-table" id="cmpTable">
                     <thead>
-                        <tr><th>אפיק</th><th>תשואה</th><th>סכום סופי</th><th>רווח</th></tr>
+                        <tr><th data-i18n="sim.colChannel">אפיק</th><th data-i18n="sim.colReturn">תשואה</th><th data-i18n="sim.colFinal">סכום סופי</th><th data-i18n="sim.colProfit">רווח</th></tr>
                     </thead>
                     <tbody id="cmpBody"></tbody>
                 </table>
@@ -286,16 +286,16 @@
 
             <!-- ── 6. Net worth projection (wide) ── -->
             <div class="scenario-card wide">
-                <h3>🚀 תחזית שווי נקי — שנה לשנה</h3>
-                <p class="subtitle">בהנחה שתמשיך להכניס ולהוציא כמו היום</p>
+                <h3 data-i18n="sim.nwTitle">🚀 תחזית שווי נקי — שנה לשנה</h3>
+                <p class="subtitle" data-i18n="sim.nwSubtitle">בהנחה שתמשיך להכניס ולהוציא כמו היום</p>
 
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
                     <div class="slider-row">
-                        <div class="slider-label"><span>חיסכון חודשי נוסף</span><span id="nwSaveVal">₪0</span></div>
+                        <div class="slider-label"><span data-i18n="sim.extraMonthlySavings">חיסכון חודשי נוסף</span><span id="nwSaveVal">₪0</span></div>
                         <input type="range" id="nwSave" min="0" max="10000" step="200" value="0">
                     </div>
                     <div class="slider-row">
-                        <div class="slider-label"><span>תשואה שנתית על ההשקעות</span><span id="nwReturnVal">6%</span></div>
+                        <div class="slider-label"><span data-i18n="sim.annualReturnOnInv">תשואה שנתית על ההשקעות</span><span id="nwReturnVal">6%</span></div>
                         <input type="range" id="nwReturn" min="0" max="15" step="0.5" value="6">
                     </div>
                 </div>
@@ -311,6 +311,7 @@
 <script src="../js/profiles.js"></script>
 <script src="../js/idb.js"></script>
 <script src="../js/storage.js"></script>
+<script src="../js/i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 // ── Utilities ──────────────────────────────────────────────
@@ -374,10 +375,10 @@ function initFood() {
         const m = +slider.value, y = +years.value;
         const fv = fvMonthly(m, RATE, y);
         document.getElementById('foodSaveVal').textContent = fmt(m);
-        document.getElementById('foodYearsVal').textContent = y + ' שנים';
+        document.getElementById('foodYearsVal').textContent = y + ' ' + I18n.t('sim.years');
         document.getElementById('foodResultAmt').textContent = fmtShort(fv);
 
-        const labels = Array.from({length: y}, (_, i) => `שנה ${i+1}`);
+        const labels = Array.from({length: y}, (_, i) => I18n.t('sim.yearLabel') + (i+1));
         const saved = labels.map((_, i) => m * (i+1) * 12);
         const invested = labels.map((_, i) => fvMonthly(m, RATE, i+1));
 
@@ -386,8 +387,8 @@ function initFood() {
             data: {
                 labels,
                 datasets: [
-                    { label: 'חיסכון בלבד', data: saved,    borderColor: '#94a3b8', fill: false, pointRadius: 0, tension: .3 },
-                    { label: 'השקעה', data: invested, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.12)', fill: true, pointRadius: 0, tension: .3 }
+                    { label: I18n.t('sim.savingsOnly'), data: saved,    borderColor: '#94a3b8', fill: false, pointRadius: 0, tension: .3 },
+                    { label: I18n.t('sim.invested'), data: invested, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.12)', fill: true, pointRadius: 0, tension: .3 }
                 ]
             },
             options: {
@@ -413,7 +414,7 @@ function initSubs() {
     const listEl = document.getElementById('subList');
 
     if (!subs.length) {
-        listEl.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem;">לא נמצאו מנויים פעילים</div>';
+        listEl.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;">${I18n.t('sim.noActiveSubs')}</div>`;
     } else {
         listEl.innerHTML = subs.map((s, i) => {
             let amt = s.amount || 0;
@@ -422,7 +423,7 @@ function initSubs() {
             return `<div class="sub-row">
                 <input type="checkbox" id="sub${i}" data-amt="${amt.toFixed(2)}" onchange="updateSubs()">
                 <label for="sub${i}">${s.name || 'מנוי'}</label>
-                <span class="sub-amt">${fmt(amt)}/חודש</span>
+                <span class="sub-amt">${fmt(amt)}/${I18n.t('sim.month')}</span>
             </div>`;
         }).join('');
     }
@@ -437,7 +438,7 @@ function updateSubs() {
         monthly += parseFloat(cb.dataset.amt || 0);
     });
     const y = +document.getElementById('subYears').value;
-    document.getElementById('subYearsVal').textContent = y + ' שנים';
+    document.getElementById('subYearsVal').textContent = y + ' ' + I18n.t('sim.years');
     const fv = fvMonthly(monthly, 8.5, y);
     document.getElementById('subResultAmt').textContent = fmtShort(fv);
 }
@@ -469,14 +470,14 @@ function initPension() {
         const m = +slider.value, y = +years.value, r = +ret.value;
         const fv = fvMonthly(m, r, y);
         document.getElementById('pensionAddVal').textContent = fmt(m);
-        document.getElementById('pensionYearsVal').textContent = y + ' שנים';
+        document.getElementById('pensionYearsVal').textContent = y + ' ' + I18n.t('sim.years');
         document.getElementById('pensionReturnVal').textContent = r + '%';
         document.getElementById('pensionResultAmt').textContent = fmtShort(fv);
 
         // monthly income in retirement (25 years payout)
         const monthly = fv / (25 * 12);
         document.querySelector('#pensionResult .result-sub').textContent =
-            `≈ ${fmt(monthly)}/חודש נוסף לפנסיה (25 שנות תשלום)`;
+            `≈ ${fmt(monthly)}/${I18n.t('sim.month')} ${I18n.t('sim.extraPensionSub')}`;
     }
     slider.addEventListener('input', update);
     years.addEventListener('input', update);
@@ -547,7 +548,7 @@ function initLoan() {
 
         document.getElementById('loanResultAmt').textContent = fmtShort(Math.max(0, saved));
         document.getElementById('loanResultSub').textContent =
-            `חיסכון בריבית · קיצור תקופה: ${yearsSaved} שנים`;
+            `${I18n.t('sim.interestSaving')} · ${I18n.t('sim.periodShortened')}: ${yearsSaved} ${I18n.t('sim.years')}`;
     }
     balSlider.addEventListener('input', update);
     rateSlider.addEventListener('input', update);
@@ -558,13 +559,15 @@ function initLoan() {
 // ══════════════════════════════════════════════════════════════
 // SCENARIO 5 — Compound comparison
 // ══════════════════════════════════════════════════════════════
-const CHANNELS = [
-    { name: 'פיקדון בנקאי',   rate: 3.5,  color: '#94a3b8' },
-    { name: 'אגרות חוב',       rate: 5.0,  color: '#60a5fa' },
-    { name: 'קרן השתלמות',     rate: 6.5,  color: '#34d399' },
-    { name: 'S&P 500 (ETF)',    rate: 10.0, color: '#f59e0b' },
-    { name: 'מניות צמיחה',     rate: 12.0, color: '#f43f5e' },
-];
+function getChannels() {
+    return [
+        { name: I18n.t('sim.channelDeposit'),   rate: 3.5,  color: '#94a3b8' },
+        { name: I18n.t('sim.channelBonds'),      rate: 5.0,  color: '#60a5fa' },
+        { name: I18n.t('sim.channelTraining'),   rate: 6.5,  color: '#34d399' },
+        { name: 'S&P 500 (ETF)',                 rate: 10.0, color: '#f59e0b' },
+        { name: I18n.t('sim.channelGrowth'),     rate: 12.0, color: '#f43f5e' },
+    ];
+}
 
 function initCmp() {
     const monthly = document.getElementById('cmpMonthly');
@@ -573,9 +576,10 @@ function initCmp() {
     function update() {
         const m = +monthly.value, y = +years.value;
         document.getElementById('cmpMonthlyVal').textContent = fmt(m);
-        document.getElementById('cmpYearsVal').textContent   = y + ' שנים';
+        document.getElementById('cmpYearsVal').textContent   = y + ' ' + I18n.t('sim.years');
 
         const labels = Array.from({length: y}, (_, i) => `${i+1}`);
+        const CHANNELS = getChannels();
         const datasets = CHANNELS.map(c => ({
             label: c.name,
             data: labels.map((_, i) => fvMonthly(m, c.rate, i+1)),
@@ -593,7 +597,7 @@ function initCmp() {
                 plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
                 scales: {
                     y: { ticks: { callback: v => fmtShort(v), font: { size: 10 } }, grid: { color: 'rgba(0,0,0,.05)' } },
-                    x: { title: { display: true, text: 'שנה', font: { size: 10 } }, ticks: { font: { size: 10 } } }
+                    x: { title: { display: true, text: I18n.t('sim.yearLabel'), font: { size: 10 } }, ticks: { font: { size: 10 } } }
                 },
                 animation: { duration: 250 }
             }
@@ -601,7 +605,7 @@ function initCmp() {
 
         const tbody = document.getElementById('cmpBody');
         const contributed = m * y * 12;
-        tbody.innerHTML = CHANNELS.map(c => {
+        tbody.innerHTML = getChannels().map(c => {
             const fv = fvMonthly(m, c.rate, y);
             const profit = fv - contributed;
             return `<tr>
@@ -613,7 +617,7 @@ function initCmp() {
         }).join('');
         // Add "no investment" row
         tbody.innerHTML += `<tr style="opacity:.5">
-            <td>ללא השקעה (מזומן)</td><td>0%</td>
+            <td>${I18n.t('sim.channelCash')}</td><td>0%</td>
             <td>${fmtShort(contributed)}</td><td>₪0</td>
         </tr>`;
     }
@@ -636,7 +640,7 @@ function initNetWorth() {
         document.getElementById('nwReturnVal').textContent = rate + '%';
 
         const YEARS = 20;
-        const labels = ['היום', ...Array.from({length: YEARS}, (_, i) => `שנה ${i+1}`)];
+        const labels = [I18n.t('sim.today'), ...Array.from({length: YEARS}, (_, i) => I18n.t('sim.yearLabel') + (i+1))];
         const base = [], withSavings = [];
         let b0 = nw, b1 = nw;
         base.push(b0); withSavings.push(b1);
@@ -652,8 +656,8 @@ function initNetWorth() {
             data: {
                 labels,
                 datasets: [
-                    { label: 'ללא חיסכון נוסף',   data: base,         borderColor: '#94a3b8', fill: false, pointRadius: 2, tension: .3 },
-                    { label: `+${fmt(extra)}/חודש`, data: withSavings, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.1)', fill: true, pointRadius: 2, tension: .3 }
+                    { label: I18n.t('sim.noExtraSavings'), data: base,         borderColor: '#94a3b8', fill: false, pointRadius: 2, tension: .3 },
+                    { label: `+${fmt(extra)}/${I18n.t('sim.month')}`, data: withSavings, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.1)', fill: true, pointRadius: 2, tension: .3 }
                 ]
             },
             options: {
@@ -679,6 +683,7 @@ function updateHero() {
 
 // ── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof I18n !== 'undefined') I18n.init();
     updateHero();
     initFood();
     initSubs();

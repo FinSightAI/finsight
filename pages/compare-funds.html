@@ -363,7 +363,7 @@
 <div class="app-container">
     <header class="app-header">
         <button class="btn-back" onclick="history.back()">→</button>
-        <h1>⚖️ השוואת מוצרים פיננסיים</h1>
+        <h1 data-i18n="compare.title">⚖️ השוואת מוצרים פיננסיים</h1>
         <div></div>
     </header>
 
@@ -372,11 +372,11 @@
 
             <!-- Fund type selection -->
             <div class="card">
-                <h2>📋 בחר סוג מוצר להשוואה</h2>
+                <h2 data-i18n="compare.selectTypeTitle">📋 בחר סוג מוצר להשוואה</h2>
                 <div class="type-pills">
-                    <button class="type-pill active" onclick="setType('training')" id="pill-training">🎓 קרן השתלמות</button>
-                    <button class="type-pill" onclick="setType('pension')" id="pill-pension">🏛️ פנסיה</button>
-                    <button class="type-pill" onclick="setType('gemel')" id="pill-gemel">💼 קופת גמל</button>
+                    <button class="type-pill active" onclick="setType('training')" id="pill-training" data-i18n="compare.typeTraining">🎓 קרן השתלמות</button>
+                    <button class="type-pill" onclick="setType('pension')" id="pill-pension" data-i18n="compare.typePension">🏛️ פנסיה</button>
+                    <button class="type-pill" onclick="setType('gemel')" id="pill-gemel" data-i18n="compare.typeGemel">💼 קופת גמל</button>
                 </div>
             </div>
 
@@ -385,35 +385,35 @@
 
                 <!-- LEFT: Current fund -->
                 <div class="fund-selector-card is-current">
-                    <h3>🟢 הקרן הנוכחית שלך</h3>
+                    <h3 data-i18n="compare.currentFundTitle">🟢 הקרן הנוכחית שלך</h3>
 
                     <!-- My saved funds list -->
                     <div id="myFundsList"></div>
 
-                    <div class="or-divider" id="orDivider">או הזן ידנית</div>
+                    <div class="or-divider" id="orDivider" data-i18n="compare.orManual">או הזן ידנית</div>
 
                     <div id="manualCurrentInputs">
                         <div class="input-group">
-                            <label>שם הקרן</label>
-                            <input type="text" id="curName" placeholder="לדוגמה: מגדל מניות" oninput="onInputChange()">
+                            <label data-i18n="compare.fundNameLabel">שם הקרן</label>
+                            <input type="text" id="curName" placeholder="לדוגמה: מגדל מניות" oninput="onInputChange()" data-i18n-placeholder="compare.curNamePlaceholder">
                         </div>
                         <div class="input-row">
                             <div class="input-group">
-                                <label>שווי נוכחי (₪)</label>
+                                <label data-i18n="compare.currentValueLabel">שווי נוכחי (₪)</label>
                                 <input type="number" id="curValue" placeholder="0" min="0" oninput="onInputChange()">
                             </div>
                             <div class="input-group">
-                                <label>הפקדה חודשית (₪)</label>
+                                <label data-i18n="compare.monthlyDepositLabel">הפקדה חודשית (₪)</label>
                                 <input type="number" id="curMonthly" placeholder="0" min="0" oninput="onInputChange()">
                             </div>
                         </div>
                         <div class="input-row">
                             <div class="input-group">
-                                <label>תשואה שנתית ממוצעת (%)</label>
+                                <label data-i18n="compare.annualReturnLabel">תשואה שנתית ממוצעת (%)</label>
                                 <input type="number" id="curReturn" placeholder="8.0" min="-20" max="50" step="0.1" oninput="onInputChange()">
                             </div>
                             <div class="input-group">
-                                <label>דמי ניהול שנתיים (%)</label>
+                                <label data-i18n="compare.annualFeeLabel">דמי ניהול שנתיים (%)</label>
                                 <input type="number" id="curFee" placeholder="0.5" min="0" max="5" step="0.01" oninput="onInputChange()">
                             </div>
                         </div>
@@ -421,36 +421,36 @@
 
                     <!-- Mini stats for selected current fund -->
                     <div class="fund-mini-stats" id="curMiniStats" style="display:none;">
-                        <div class="mini-stat"><div class="ms-label">שווי</div><div class="ms-val ms-green" id="cur-stat-val">—</div></div>
-                        <div class="mini-stat"><div class="ms-label">תשואה שנה</div><div class="ms-val ms-blue" id="cur-stat-y1">—</div></div>
-                        <div class="mini-stat"><div class="ms-label">תשואה 5 שנים</div><div class="ms-val ms-blue" id="cur-stat-y5">—</div></div>
-                        <div class="mini-stat"><div class="ms-label">דמי ניהול</div><div class="ms-val ms-yellow" id="cur-stat-fee">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statValue">שווי</div><div class="ms-val ms-green" id="cur-stat-val">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statReturn1y">תשואה שנה</div><div class="ms-val ms-blue" id="cur-stat-y1">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statReturn5y">תשואה 5 שנים</div><div class="ms-val ms-blue" id="cur-stat-y5">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statFee">דמי ניהול</div><div class="ms-val ms-yellow" id="cur-stat-fee">—</div></div>
                     </div>
                 </div>
 
                 <!-- RIGHT: Alternative fund -->
                 <div class="fund-selector-card is-alt">
-                    <h3>🟡 הקרן החלופית</h3>
+                    <h3 data-i18n="compare.altFundTitle">🟡 הקרן החלופית</h3>
 
                     <div class="fund-search-wrap input-group">
-                        <label>חיפוש קרן מהשוק</label>
+                        <label data-i18n="compare.searchFundLabel">חיפוש קרן מהשוק</label>
                         <div style="position:relative;">
                             <span class="fund-search-icon">🔍</span>
-                            <input type="text" id="altSearch" placeholder="הקלד שם קרן, חברה..." autocomplete="off"
+                            <input type="text" id="altSearch" placeholder="הקלד שם קרן, חברה..." autocomplete="off" data-i18n-placeholder="compare.searchPlaceholder"
                                    oninput="searchAlt(this.value)" onfocus="searchAlt(this.value)">
                             <div class="fund-dropdown" id="altDropdown" style="display:none;"></div>
                         </div>
                     </div>
 
                     <div id="altManualSection">
-                        <div class="or-divider">או הזן ידנית</div>
+                        <div class="or-divider" data-i18n="compare.orManual">או הזן ידנית</div>
                         <div class="input-row">
                             <div class="input-group">
-                                <label>תשואה שנתית ממוצעת (%)</label>
+                                <label data-i18n="compare.annualReturnLabel">תשואה שנתית ממוצעת (%)</label>
                                 <input type="number" id="altReturn" placeholder="12.0" min="-20" max="50" step="0.1" oninput="onInputChange()">
                             </div>
                             <div class="input-group">
-                                <label>דמי ניהול שנתיים (%)</label>
+                                <label data-i18n="compare.annualFeeLabel">דמי ניהול שנתיים (%)</label>
                                 <input type="number" id="altFee" placeholder="0.3" min="0" max="5" step="0.01" oninput="onInputChange()">
                             </div>
                         </div>
@@ -458,20 +458,20 @@
 
                     <!-- Mini stats for selected alt fund -->
                     <div class="fund-mini-stats" id="altMiniStats" style="display:none;">
-                        <div class="mini-stat"><div class="ms-label">תשואה חודש</div><div class="ms-val ms-green" id="alt-stat-m">—</div></div>
-                        <div class="mini-stat"><div class="ms-label">תשואה שנה</div><div class="ms-val ms-blue" id="alt-stat-y1">—</div></div>
-                        <div class="mini-stat"><div class="ms-label">תשואה 5 שנים</div><div class="ms-val ms-blue" id="alt-stat-y5">—</div></div>
-                        <div class="mini-stat"><div class="ms-label">דמי ניהול</div><div class="ms-val ms-yellow" id="alt-stat-fee">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statReturnMonth">תשואה חודש</div><div class="ms-val ms-green" id="alt-stat-m">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statReturn1y">תשואה שנה</div><div class="ms-val ms-blue" id="alt-stat-y1">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statReturn5y">תשואה 5 שנים</div><div class="ms-val ms-blue" id="alt-stat-y5">—</div></div>
+                        <div class="mini-stat"><div class="ms-label" data-i18n="compare.statFee">דמי ניהול</div><div class="ms-val ms-yellow" id="alt-stat-fee">—</div></div>
                     </div>
                 </div>
             </div>
 
             <!-- Settings -->
             <div class="card">
-                <h2>⚙️ פרמטרי סימולציה</h2>
+                <h2 data-i18n="compare.simParamsTitle">⚙️ פרמטרי סימולציה</h2>
                 <div class="settings-row">
                     <div class="input-group">
-                        <label>תקופת השוואה</label>
+                        <label data-i18n="compare.simPeriodLabel">תקופת השוואה</label>
                         <select id="simYears" onchange="onInputChange()">
                             <option value="5">5 שנים</option>
                             <option value="10" selected>10 שנים</option>
@@ -481,11 +481,11 @@
                         </select>
                     </div>
                     <div class="input-group">
-                        <label>הפקדה חודשית (₪) — אם לא הוזנה בקרן</label>
+                        <label data-i18n="compare.simMonthlyLabel">הפקדה חודשית (₪) — אם לא הוזנה בקרן</label>
                         <input type="number" id="simMonthly" placeholder="0" min="0" oninput="onInputChange()">
                     </div>
                 </div>
-                <button class="btn-compare" onclick="runComparison()">⚖️ השווה עכשיו</button>
+                <button class="btn-compare" onclick="runComparison()" data-i18n="compare.compareBtn">⚖️ השווה עכשיו</button>
             </div>
 
             <!-- RESULTS -->
@@ -493,20 +493,20 @@
 
                 <!-- Summary boxes -->
                 <div class="card">
-                    <h2>📊 תוצאות ההשוואה</h2>
+                    <h2 data-i18n="compare.resultsTitle">📊 תוצאות ההשוואה</h2>
                     <div class="result-header">
                         <div class="result-box">
-                            <div class="rb-label">🟢 שווי קרן נוכחית בסוף התקופה</div>
+                            <div class="rb-label" data-i18n="compare.resCurLabel">🟢 שווי קרן נוכחית בסוף התקופה</div>
                             <div class="rb-val" id="res-cur-val">—</div>
                             <div class="rb-sub" id="res-cur-sub"></div>
                         </div>
                         <div class="result-box">
-                            <div class="rb-label">🟡 שווי קרן חלופית בסוף התקופה</div>
+                            <div class="rb-label" data-i18n="compare.resAltLabel">🟡 שווי קרן חלופית בסוף התקופה</div>
                             <div class="rb-val" id="res-alt-val">—</div>
                             <div class="rb-sub" id="res-alt-sub"></div>
                         </div>
                         <div class="result-box highlight">
-                            <div class="rb-label">⚡ הפרש לטובתך</div>
+                            <div class="rb-label" data-i18n="compare.resDiffLabel">⚡ הפרש לטובתך</div>
                             <div class="rb-val" id="res-diff">—</div>
                             <div class="rb-sub" id="res-diff-sub"></div>
                         </div>
@@ -529,8 +529,8 @@
 
                 <!-- Fee impact -->
                 <div class="card">
-                    <h2>💸 השפעת דמי הניהול</h2>
-                    <p style="font-size:0.82rem; color:var(--color-text-secondary); margin-bottom:14px;">
+                    <h2 data-i18n="compare.feeImpactTitle">💸 השפעת דמי הניהול</h2>
+                    <p style="font-size:0.82rem; color:var(--color-text-secondary); margin-bottom:14px;" data-i18n="compare.feeImpactDesc">
                         דמי ניהול נמוכים יותר בקרן החלופית — כמה זה שווה לך לאורך הזמן?
                     </p>
                     <div class="fee-breakdown" id="feeBreakdown"></div>
@@ -538,13 +538,13 @@
 
                 <!-- Return comparison bars -->
                 <div class="card">
-                    <h2>📈 השוואת תשואות</h2>
+                    <h2 data-i18n="compare.returnCompTitle">📈 השוואת תשואות</h2>
                     <div id="returnBars"></div>
                 </div>
 
                 <!-- Considerations -->
                 <div class="card">
-                    <h2>💡 דברים לקחת בחשבון לפני מעבר</h2>
+                    <h2 data-i18n="compare.considerationsTitle">💡 דברים לקחת בחשבון לפני מעבר</h2>
                     <ul class="considerations" id="considerationsList"></ul>
                 </div>
 
@@ -815,15 +815,15 @@
 
         // Validation
         if (isNaN(curReturn)) {
-            alert('נא למלא תשואה שנתית לקרן הנוכחית');
+            alert(I18n.t('compare.alertFillCurReturn'));
             return;
         }
         if (isNaN(altReturn)) {
-            alert('נא לבחור קרן חלופית או למלא תשואה שנתית');
+            alert(I18n.t('compare.alertFillAltReturn'));
             return;
         }
         if (curValue === 0 && curMonthly === 0) {
-            alert('נא למלא שווי נוכחי או הפקדה חודשית');
+            alert(I18n.t('compare.alertFillValueOrDeposit'));
             return;
         }
 
@@ -876,7 +876,7 @@
 
     // ─── Chart ────────────────────────────────────────────────────────
     function buildChart(curSeries, altSeries, years) {
-        const labels = Array.from({ length: years + 1 }, (_, i) => i === 0 ? 'היום' : `שנה ${i}`);
+        const labels = Array.from({ length: years + 1 }, (_, i) => i === 0 ? I18n.t('compare.chartToday') : `${I18n.t('compare.chartYear')}${i}`);
 
         if (compareChart) compareChart.destroy();
 
@@ -886,7 +886,7 @@
                 labels,
                 datasets: [
                     {
-                        label: 'קרן נוכחית',
+                        label: I18n.t('compare.currentFundLabel'),
                         data: curSeries,
                         borderColor: '#10b981',
                         backgroundColor: 'rgba(16,185,129,0.08)',
@@ -897,7 +897,7 @@
                         pointHoverRadius: 5,
                     },
                     {
-                        label: selectedAltFund ? selectedAltFund.nameHe : 'קרן חלופית',
+                        label: selectedAltFund ? selectedAltFund.nameHe : I18n.t('compare.altFundLabel'),
                         data: altSeries,
                         borderColor: '#f59e0b',
                         backgroundColor: 'rgba(245,158,11,0.08)',
