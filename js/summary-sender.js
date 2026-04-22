@@ -76,7 +76,7 @@ const SummarySender = {
 
     buildInsights(d) {
         const insights = [];
-        const fmt = (n) => '₪' + Math.round(n).toLocaleString('he-IL');
+        const fmt = (n) => (typeof I18n !== 'undefined' && I18n.formatCurrency) ? I18n.formatCurrency(n) : '₪' + Math.round(n).toLocaleString('he-IL');
 
         const catLabels = {
             food: 'מזון', transport: 'תחבורה', shopping: 'קניות',
@@ -170,7 +170,7 @@ const SummarySender = {
     },
 
     formatSummaryText(d) {
-        const fmt = (n) => n > 0 ? '₪' + Math.round(n).toLocaleString('he-IL') : '₪0';
+        const fmt = (n) => (typeof I18n !== 'undefined' && I18n.formatCurrency) ? I18n.formatCurrency(n) : (n > 0 ? '₪' + Math.round(n).toLocaleString('he-IL') : '₪0');
         const sign = (n) => n >= 0 ? '+' : '';
         const now = d.now;
         const monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];

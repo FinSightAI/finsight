@@ -193,122 +193,197 @@
 
     // ── Build rich financial context from localStorage ──
     function buildFinancialContext() {
-        const lines = ['=== נתונים פיננסיים אמיתיים של המשתמש ===\n'];
+        const lang = (typeof I18n !== 'undefined') ? I18n.current : 'he';
+        const isPt = lang === 'pt';
+        const isEs = lang === 'es';
+        const fmt = n => (typeof I18n !== 'undefined' && I18n.formatCurrency) ? I18n.formatCurrency(n) : '₪' + Math.round(n).toLocaleString('he-IL');
+
+        const L = {
+            header:   isPt ? '=== Dados financeiros reais do usuário ===' : isEs ? '=== Datos financieros reales del usuario ===' : '=== נתונים פיננסיים אמיתיים של המשתמש ===',
+            bank:     isPt ? 'Contas bancárias' : isEs ? 'Cuentas bancarias' : 'חשבונות בנק',
+            accounts: isPt ? 'contas' : isEs ? 'cuentas' : 'חשבונות',
+            balance:  isPt ? 'saldo total' : isEs ? 'saldo total' : 'יתרה כוללת',
+            stocks:   isPt ? 'Ações' : isEs ? 'Acciones' : 'מניות',
+            holdings: isPt ? 'posições' : isEs ? 'posiciones' : 'אחזקות',
+            value:    isPt ? 'valor total' : isEs ? 'valor total' : 'שווי כולל',
+            funds:    isPt ? 'Fundos / Previdência' : isEs ? 'Fondos / Pensión' : 'קרנות / פנסיה / גמל',
+            products: isPt ? 'produtos' : isEs ? 'productos' : 'מוצרים',
+            fee:      isPt ? 'taxa' : isEs ? 'tarifa' : 'דמי ניהול',
+            assets:   isPt ? 'Patrimônio' : isEs ? 'Activos' : 'נכסים',
+            items:    isPt ? 'itens' : isEs ? 'ítems' : 'פריטים',
+            loans:    isPt ? 'Empréstimos' : isEs ? 'Préstamos' : 'הלוואות',
+            monthly:  isPt ? 'pagamento mensal' : isEs ? 'pago mensual' : 'תשלום חודשי',
+            interest: isPt ? 'juros' : isEs ? 'interés' : 'ריבית',
+            subs:     isPt ? 'Assinaturas / Pagamentos fixos' : isEs ? 'Suscripciones / Pagos fijos' : 'מנויים / תשלומים קבועים',
+            goals:    isPt ? 'Metas de poupança' : isEs ? 'Metas de ahorro' : 'יעדי חיסכון',
+            networth: isPt ? 'Patrimônio líquido' : isEs ? 'Patrimonio neto' : 'שווי נקי',
+            change:   isPt ? 'variação mês anterior' : isEs ? 'cambio mes anterior' : 'שינוי מחודש קודם',
+            credit:   isPt ? 'Cartões de crédito' : isEs ? 'Tarjetas de crédito' : 'כרטיסי אשראי',
+            debt:     isPt ? 'dívida total' : isEs ? 'deuda total' : 'חוב כולל',
+            deadline: isPt ? 'prazo' : isEs ? 'fecha límite' : 'דדליין',
+            error:    isPt ? '(erro ao carregar alguns dados)' : isEs ? '(error al cargar algunos datos)' : '(שגיאה בטעינת חלק מהנתונים)',
+        };
+
+        const lines = [`${L.header}\n`];
 
         try {
-            // Bank
             const bank = Storage.getBankAccounts?.() || Storage.get('finance_bank_accounts') || [];
             if (bank.length) {
                 const total = bank.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
-                lines.push(`**חשבונות בנק:** ${bank.length} חשבונות, יתרה כוללת ₪${total.toLocaleString()}`);
-                bank.forEach(a => lines.push(`  • ${a.bankName || a.name || 'בנק'}: ₪${(parseFloat(a.balance)||0).toLocaleString()}`));
+                lines.push(`**${L.bank}:** ${bank.length} ${L.accounts}, ${L.balance} ${fmt(total)}`);
+                bank.forEach(a => lines.push(`  • ${a.bankName || a.name || 'Bank'}: ${fmt(parseFloat(a.balance)||0)}`));
             }
 
-            // Stocks
             const stocks = Storage.getStocks?.() || Storage.get('finance_stocks') || [];
             if (stocks.length) {
                 const total = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
-                lines.push(`\n**מניות:** ${stocks.length} אחזקות, שווי כולל ₪${total.toLocaleString()}`);
-                stocks.slice(0, 6).forEach(x => lines.push(`  • ${x.symbol || x.name}: ₪${(parseFloat(x.currentValue)||parseFloat(x.value)||0).toLocaleString()}`));
+                lines.push(`\n**${L.stocks}:** ${stocks.length} ${L.holdings}, ${L.value} ${fmt(total)}`);
+                stocks.slice(0, 6).forEach(x => lines.push(`  • ${x.symbol || x.name}: ${fmt(parseFloat(x.currentValue)||parseFloat(x.value)||0)}`));
             }
 
-            // My Funds
             const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
             if (funds.length) {
                 const total = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
-                lines.push(`\n**קרנות / פנסיה / גמל:** ${funds.length} מוצרים, שווי כולל ₪${total.toLocaleString()}`);
-                funds.forEach(f => lines.push(`  • ${f.name} (${f.type||''}): ₪${(parseFloat(f.currentValue)||parseFloat(f.balance)||0).toLocaleString()}, דמי ניהול ${f.fee||'?'}%`));
+                lines.push(`\n**${L.funds}:** ${funds.length} ${L.products}, ${L.value} ${fmt(total)}`);
+                funds.forEach(f => lines.push(`  • ${f.name} (${f.type||''}): ${fmt(parseFloat(f.currentValue)||parseFloat(f.balance)||0)}, ${L.fee} ${f.fee||'?'}%`));
             }
 
-            // Assets
             const assets = Storage.getAssets?.() || Storage.get('finance_assets') || [];
             if (assets.length) {
                 const total = assets.reduce((s, a) => s + (parseFloat(a.value) || 0), 0);
-                lines.push(`\n**נכסים:** ${assets.length} פריטים, שווי כולל ₪${total.toLocaleString()}`);
-                assets.forEach(a => lines.push(`  • ${a.name}: ₪${(parseFloat(a.value)||0).toLocaleString()}`));
+                lines.push(`\n**${L.assets}:** ${assets.length} ${L.items}, ${L.value} ${fmt(total)}`);
+                assets.forEach(a => lines.push(`  • ${a.name}: ${fmt(parseFloat(a.value)||0)}`));
             }
 
-            // Loans
             const loans = Storage.getLoans?.() || Storage.get('finance_loans') || [];
             if (loans.length) {
                 const total = loans.reduce((s, l) => s + (parseFloat(l.remainingBalance) || parseFloat(l.balance) || 0), 0);
-                const monthlyTotal = loans.reduce((s, l) => s + (parseFloat(l.monthlyPayment) || 0), 0);
-                lines.push(`\n**הלוואות:** ${loans.length} הלוואות, יתרה ₪${total.toLocaleString()}, תשלום חודשי ₪${monthlyTotal.toLocaleString()}`);
-                loans.forEach(l => lines.push(`  • ${l.name||l.type||'הלוואה'}: יתרה ₪${(parseFloat(l.remainingBalance)||parseFloat(l.balance)||0).toLocaleString()}, ${l.interestRate||'?'}% ריבית, ₪${(parseFloat(l.monthlyPayment)||0).toLocaleString()}/חודש`));
+                const mTotal = loans.reduce((s, l) => s + (parseFloat(l.monthlyPayment) || 0), 0);
+                lines.push(`\n**${L.loans}:** ${loans.length}, ${fmt(total)}, ${L.monthly} ${fmt(mTotal)}`);
+                loans.forEach(l => lines.push(`  • ${l.name||l.type||L.loans}: ${fmt(parseFloat(l.remainingBalance)||parseFloat(l.balance)||0)}, ${l.interestRate||'?'}% ${L.interest}, ${fmt(parseFloat(l.monthlyPayment)||0)}/mês`));
             }
 
-            // Subscriptions
             const subs = Storage.getSubscriptions?.() || Storage.get('finance_subscriptions') || [];
             if (subs.length) {
-                const monthlyTotal = subs.reduce((s, x) => {
+                const mTotal = subs.reduce((s, x) => {
                     const amt = parseFloat(x.amount) || 0;
                     const freq = x.frequency || 'monthly';
-                    const m = freq === 'annual' ? amt/12 : freq === 'quarterly' ? amt/3 : freq === 'weekly' ? amt*4.3 : amt;
-                    return s + m;
+                    return s + (freq === 'annual' ? amt/12 : freq === 'quarterly' ? amt/3 : freq === 'weekly' ? amt*4.3 : amt);
                 }, 0);
-                lines.push(`\n**מנויים / תשלומים קבועים:** ${subs.length} פריטים, סה"כ ~₪${Math.round(monthlyTotal).toLocaleString()}/חודש`);
-                subs.forEach(x => lines.push(`  • ${x.name}: ₪${x.amount} (${x.frequency||'monthly'})`));
+                lines.push(`\n**${L.subs}:** ${subs.length} ${L.items}, ~${fmt(Math.round(mTotal))}/mês`);
+                subs.forEach(x => lines.push(`  • ${x.name}: ${fmt(parseFloat(x.amount)||0)} (${x.frequency||'monthly'})`));
             }
 
-            // Goals
             const goals = Storage.get('finance_goals') || [];
             if (goals.length) {
-                lines.push(`\n**יעדי חיסכון:** ${goals.length} יעדים`);
+                lines.push(`\n**${L.goals}:** ${goals.length}`);
                 goals.forEach(g => {
                     const pct = g.targetAmount > 0 ? Math.round(((g.currentAmount||0)/g.targetAmount)*100) : 0;
-                    lines.push(`  • ${g.name}: ₪${(g.currentAmount||0).toLocaleString()} מתוך ₪${(g.targetAmount||0).toLocaleString()} (${pct}%)${g.deadline ? ', דדליין: ' + g.deadline : ''}`);
+                    lines.push(`  • ${g.name}: ${fmt(g.currentAmount||0)} / ${fmt(g.targetAmount||0)} (${pct}%)${g.deadline ? `, ${L.deadline}: ${g.deadline}` : ''}`);
                 });
             }
 
-            // Net worth history
             const nwHistory = Storage.get('finance_networth_history') || [];
             if (nwHistory.length >= 2) {
                 const last = nwHistory[nwHistory.length-1];
                 const prev = nwHistory[nwHistory.length-2];
                 const delta = last.value - prev.value;
-                lines.push(`\n**שווי נקי:** ₪${last.value.toLocaleString()} (שינוי מחודש קודם: ${delta >= 0 ? '+' : ''}₪${delta.toLocaleString()})`);
+                lines.push(`\n**${L.networth}:** ${fmt(last.value)} (${L.change}: ${delta >= 0 ? '+' : ''}${fmt(delta)})`);
             }
 
-            // Credit cards
             const credit = Storage.get('finance_credit_cards') || [];
             if (credit.length) {
                 const debt = credit.reduce((s, c) => s + (parseFloat(c.balance) || 0), 0);
-                lines.push(`\n**כרטיסי אשראי:** ${credit.length} כרטיסים, חוב כולל ₪${debt.toLocaleString()}`);
+                lines.push(`\n**${L.credit}:** ${credit.length}, ${L.debt} ${fmt(debt)}`);
             }
 
         } catch(e) {
-            lines.push('\n(שגיאה בטעינת חלק מהנתונים)');
+            lines.push(`\n${L.error}`);
         }
 
         return lines.join('\n');
     }
 
     async function buildSystemPrompt() {
+        const lang = (typeof I18n !== 'undefined') ? I18n.current : 'he';
         const ctx = buildFinancialContext();
-        const today = new Date().toLocaleDateString('he-IL', { year:'numeric', month:'long', day:'numeric' });
+        const locale = lang === 'pt' ? 'pt-BR' : lang === 'es' ? 'es-419' : lang === 'he' ? 'he-IL' : 'en-US';
+        const today = new Date().toLocaleDateString(locale, { year:'numeric', month:'long', day:'numeric' });
 
         let crossCtx = '';
         if (currentUser && typeof Plan !== 'undefined' && Plan.isYolo()) {
             crossCtx = await fetchCrossAppContext(currentUser.uid);
         }
 
-        const yoloNote = crossCtx
-            ? '\n- יש לך גישה לנתונים מכמה כלי WizeLife — השתמש בהם לתמונה פיננסית מלאה'
-            : '';
+        const prompts = {
+            he: {
+                intro: 'אתה יועץ פיננסי אישי של המשתמש, עם גישה מלאה לנתוניו הפיננסיים האמיתיים.',
+                date: `תאריך היום: ${today}`,
+                rules: [
+                    'ענה תמיד בעברית',
+                    'השתמש בנתונים האמיתיים שקיבלת כדי לתת עצות מדויקות ואישיות',
+                    'כאשר מתבקש חישוב — בצע את החישוב בפועל',
+                    'היה ישיר ומעשי — תן המלצות ברורות, לא רק הסברים כלליים',
+                    'אם יש מידע חסר, ציין זאת בקצרה ותן הערכה בכל זאת',
+                    'פרמט תשובות ארוכות עם כותרות ורשימות לקריאות נוחה',
+                    'אל תחזור על כל הנתונים — השתמש בהם בצורה חכמה בתוך התשובה',
+                ],
+                crossNote: 'יש לך גישה לנתונים מכמה כלי WizeLife — השתמש בהם לתמונה פיננסית מלאה',
+            },
+            pt: {
+                intro: 'Você é o consultor financeiro pessoal do usuário, com acesso completo aos seus dados financeiros reais.',
+                date: `Data de hoje: ${today}`,
+                rules: [
+                    'Responda sempre em português brasileiro',
+                    'Use os dados reais recebidos para dar conselhos precisos e personalizados',
+                    'Quando solicitado um cálculo — execute-o de verdade',
+                    'Seja direto e prático — dê recomendações claras, não apenas explicações gerais',
+                    'Se faltar informação, mencione brevemente e dê uma estimativa mesmo assim',
+                    'Formate respostas longas com títulos e listas para facilitar a leitura',
+                    'Não repita todos os dados — use-os de forma inteligente na resposta',
+                ],
+                crossNote: 'Você tem acesso a dados de várias ferramentas WizeLife — use-os para uma visão financeira completa',
+            },
+            es: {
+                intro: 'Eres el asesor financiero personal del usuario, con acceso completo a sus datos financieros reales.',
+                date: `Fecha de hoy: ${today}`,
+                rules: [
+                    'Responde siempre en español',
+                    'Usa los datos reales recibidos para dar consejos precisos y personalizados',
+                    'Cuando se solicite un cálculo — ejecútalo de verdad',
+                    'Sé directo y práctico — da recomendaciones claras, no solo explicaciones generales',
+                    'Si falta información, menciónalo brevemente y da una estimación de todos modos',
+                    'Formatea respuestas largas con títulos y listas para facilitar la lectura',
+                    'No repitas todos los datos — úsalos de forma inteligente en la respuesta',
+                ],
+                crossNote: 'Tienes acceso a datos de varias herramientas WizeLife — úsalos para una visión financiera completa',
+            },
+            en: {
+                intro: 'You are the user\'s personal financial advisor, with full access to their real financial data.',
+                date: `Today: ${today}`,
+                rules: [
+                    'Always respond in English',
+                    'Use the real data provided to give accurate, personalized advice',
+                    'When asked for a calculation — actually perform it',
+                    'Be direct and practical — give clear recommendations, not just general explanations',
+                    'If information is missing, mention it briefly and give an estimate anyway',
+                    'Format long responses with headers and lists for readability',
+                    'Don\'t repeat all the data — use it intelligently within the answer',
+                ],
+                crossNote: 'You have access to data from multiple WizeLife tools — use them for a complete financial picture',
+            },
+        };
 
-        return `אתה יועץ פיננסי אישי של המשתמש, עם גישה מלאה לנתוניו הפיננסיים האמיתיים.
-תאריך היום: ${today}
+        const p = prompts[lang] || prompts.en;
+        const rules = [...p.rules, ...(crossCtx ? [p.crossNote] : [])].map(r => `- ${r}`).join('\n');
+
+        return `${p.intro}
+${p.date}
 
 ${ctx}${crossCtx}
 
-הנחיות:
-- ענה תמיד בעברית
-- השתמש בנתונים האמיתיים שקיבלת כדי לתת עצות מדויקות ואישיות
-- כאשר מתבקש חישוב (כמה זמן עד יעד, כמה חסכתי וכו') — בצע את החישוב בפועל
-- היה ישיר ומעשי — תן המלצות ברורות, לא רק הסברים כלליים
-- אם יש מידע חסר, ציין זאת בקצרה ותן הערכה בכל זאת
-- פרמט תשובות ארוכות עם כותרות ורשימות לקריאות נוחה
-- אל תחזור על כל הנתונים — השתמש בהם בצורה חכמה בתוך התשובה${yoloNote}`;
+${lang === 'he' ? 'הנחיות' : lang === 'pt' ? 'Instruções' : lang === 'es' ? 'Instrucciones' : 'Instructions'}:
+${rules}`;
     }
 
     // ── Chat logic ──

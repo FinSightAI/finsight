@@ -216,7 +216,7 @@ const Alerts = {
 
     checkSmartAlerts() {
         const triggered = [];
-        const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
+        const fmt = n => (typeof I18n !== 'undefined' && I18n.formatCurrency) ? I18n.formatCurrency(n) : '₪' + Math.round(n).toLocaleString('he-IL');
         const config = this.getConfig();
 
         // 1. Bank balance below threshold
