@@ -134,7 +134,8 @@
         sw.innerHTML =
             '<button class="lang-btn" data-lang="he" onclick="I18n.setLanguage(\'he\')">HE</button>' +
             '<button class="lang-btn" data-lang="en" onclick="I18n.setLanguage(\'en\')">EN</button>' +
-            '<button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage(\'pt\')">PT</button>';
+            '<button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage(\'pt\')">PT</button>' +
+            '<button class="lang-btn" data-lang="es" onclick="I18n.setLanguage(\'es\')">ES</button>';
         sw.style.cssText =
             'position:fixed;top:14px;z-index:1200;' +
             'display:flex;gap:4px;' +
