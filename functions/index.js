@@ -26,11 +26,12 @@ const PAYPAL_SECRET     = defineSecret("PAYPAL_SECRET");
 const PAYPAL_WEBHOOK_ID = defineSecret("PAYPAL_WEBHOOK_ID");
 const GEMINI_API_KEY    = defineSecret("GEMINI_API_KEY");
 const ACCESS_CODES_SEC  = defineSecret("ACCESS_CODES");
+const YOLO_CODES_SEC    = defineSecret("YOLO_ACCESS_CODES");
 
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
 exports.validateCode = functions
-    .runWith({ secrets: [ACCESS_CODES_SEC] })
+    .runWith({ secrets: [ACCESS_CODES_SEC, YOLO_CODES_SEC] })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי לממש קוד");
@@ -39,21 +40,29 @@ exports.validateCode = functions
         const code = (data.code || "").trim().toUpperCase();
         if (!code) throw new functions.https.HttpsError("invalid-argument", "קוד נדרש");
 
-        const validCodes = new Set(
-            ACCESS_CODES_SEC.value()
+        const yoloCodes = new Set(
+            (YOLO_CODES_SEC.value() || "")
                 .split(",")
                 .map(c => c.trim().toUpperCase())
                 .filter(Boolean)
         );
 
-        if (!validCodes.has(code)) return { valid: false };
+        const proCodes = new Set(
+            (ACCESS_CODES_SEC.value() || "")
+                .split(",")
+                .map(c => c.trim().toUpperCase())
+                .filter(Boolean)
+        );
+
+        const grantedPlan = yoloCodes.has(code) ? "yolo" : proCodes.has(code) ? "pro" : null;
+        if (!grantedPlan) return { valid: false };
 
         await db.collection("users").doc(context.auth.uid).set(
-            { plan: "pro", accessCode: code, planActivatedAt: admin.firestore.FieldValue.serverTimestamp() },
+            { plan: grantedPlan, accessCode: code, planActivatedAt: admin.firestore.FieldValue.serverTimestamp() },
             { merge: true }
         );
 
-        return { valid: true };
+        return { valid: true, plan: grantedPlan };
     });
 
 // ─── Welcome Email — on new user registration ─────────────────────────────────

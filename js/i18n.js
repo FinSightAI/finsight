@@ -1466,7 +1466,9 @@ const I18n = {
                 errUnauthenticated: 'שגיאת אימות — נסה להתחבר מחדש',
                 errRateLimit: 'הגעת למגבלת השאילתות. נסה שוב מאוחר יותר.',
                 errGeneral: 'שגיאה בעת שליחת השאלה. נסה שוב.',
-                clearConfirm: 'למחוק את כל השיחה?'
+                clearConfirm: 'למחוק את כל השיחה?',
+                refreshContextBtn: '🔄 רענן קונטקסט',
+                contextRefreshed: 'קונטקסט cross-app אופס — יטען מחדש בשאלה הבאה'
             },
             cal: {
                 title: 'לוח שנה פיננסי',
@@ -3213,7 +3215,9 @@ const I18n = {
                 errUnauthenticated: 'Authentication error — try logging in again',
                 errRateLimit: 'You have reached the query limit. Please try again later.',
                 errGeneral: 'Error sending the question. Please try again.',
-                clearConfirm: 'Delete the entire conversation?'
+                clearConfirm: 'Delete the entire conversation?',
+                refreshContextBtn: '🔄 Refresh Context',
+                contextRefreshed: 'Cross-app context reset — will reload on next question'
             },
             cal: {
                 title: 'Financial Calendar',
@@ -4246,7 +4250,9 @@ const I18n = {
                 errUnauthenticated: 'Erro de autenticação — tente fazer login novamente',
                 errRateLimit: 'Você atingiu o limite de consultas. Tente novamente mais tarde.',
                 errGeneral: 'Erro ao enviar a pergunta. Tente novamente.',
-                clearConfirm: 'Excluir toda a conversa?'
+                clearConfirm: 'Excluir toda a conversa?',
+                refreshContextBtn: '🔄 Atualizar Contexto',
+                contextRefreshed: 'Contexto cross-app reiniciado — será recarregado na próxima pergunta'
             },
             cal: {
                 title: 'Calendário Financeiro',
@@ -5293,7 +5299,9 @@ const I18n = {
                 errUnauthenticated: 'Error de autenticación — intenta iniciar sesión nuevamente',
                 errRateLimit: 'Has alcanzado el límite de consultas. Inténtalo más tarde.',
                 errGeneral: 'Error al enviar la pregunta. Inténtalo de nuevo.',
-                clearConfirm: '¿Eliminar toda la conversación?'
+                clearConfirm: '¿Eliminar toda la conversación?',
+                refreshContextBtn: '🔄 Actualizar Contexto',
+                contextRefreshed: 'Contexto cross-app reiniciado — se recargará en la próxima pregunta'
             },
             cal: {
                 title: 'Calendario Financiero',
