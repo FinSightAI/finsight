@@ -20,6 +20,25 @@ const StockAPI = {
     _taseJsonPromise: null,
     _taseJsonExpiry: 0,
 
+    // Short-term price cache — avoids hitting the network on every page load
+    // Keyed by formatted symbol, stored in localStorage
+    PRICE_CACHE_TTL_MS: 10 * 60 * 1000, // 10 minutes
+    _getLsPrice(symbol) {
+        try {
+            const raw = localStorage.getItem(`sp_${symbol}`);
+            if (!raw) return null;
+            const { ts, data } = JSON.parse(raw);
+            if (Date.now() - ts > this.PRICE_CACHE_TTL_MS) { localStorage.removeItem(`sp_${symbol}`); return null; }
+            return data;
+        } catch { return null; }
+    },
+    _setLsPrice(symbol, data) {
+        try { localStorage.setItem(`sp_${symbol}`, JSON.stringify({ ts: Date.now(), data })); } catch {}
+    },
+    clearPriceCache() {
+        Object.keys(localStorage).filter(k => k.startsWith('sp_')).forEach(k => localStorage.removeItem(k));
+    },
+
     // Historical data cache — keyed by symbol, stores {data, timestamp}
     // Avoids re-fetching 1yr of OHLCV on every price refresh (expensive via CORS proxies)
     HISTORICAL_TTL_MS: 24 * 60 * 60 * 1000, // 24 hours
@@ -355,9 +374,15 @@ const StockAPI = {
      * @param {string} market - Market code ('US' or 'IL')
      * @returns {Promise<Object>} Stock data with price and MA150
      */
-    async fetchStockData(symbol, market = null) {
+    async fetchStockData(symbol, market = null, forceRefresh = false) {
         const detectedMarket = market || this.detectMarket(symbol);
         const formattedSymbol = this.formatSymbol(symbol, detectedMarket);
+
+        // Return cached price immediately (skip network entirely)
+        if (!forceRefresh) {
+            const cached = this._getLsPrice(formattedSymbol);
+            if (cached) return { ...cached, fromPriceCache: true };
+        }
 
         // Check GitHub Actions daily price cache (works for any symbol stored there)
         if (detectedMarket !== 'IL') {
@@ -405,7 +430,7 @@ const StockAPI = {
                     ? ((live.currentPrice - historical.ma150) / historical.ma150) * 100
                     : null;
 
-                return {
+                const taseResult = {
                     symbol: formattedSymbol,
                     originalSymbol: symbol,
                     market: detectedMarket,
@@ -417,6 +442,8 @@ const StockAPI = {
                     lastUpdate: new Date().toISOString(),
                     success: true
                 };
+                this._setLsPrice(formattedSymbol, taseResult);
+                return taseResult;
             } catch (e) {
                 console.warn('TASE API failed, falling back to Yahoo:', e.message);
             }
@@ -442,7 +469,7 @@ const StockAPI = {
                 this._fetchYahooHistorical(symbol).catch(() => {});
             }
 
-            return {
+            const yahooResult = {
                 symbol: formattedSymbol,
                 originalSymbol: symbol,
                 market: detectedMarket,
@@ -460,6 +487,8 @@ const StockAPI = {
                 lastUpdate: new Date().toISOString(),
                 success: true
             };
+            this._setLsPrice(formattedSymbol, yahooResult);
+            return yahooResult;
         } catch (error) {
             console.error(`Error fetching data for ${symbol}:`, error);
             return {
@@ -555,28 +584,125 @@ const StockAPI = {
     },
 
     /**
-     * Fetch data for multiple symbols
+     * Bulk-fetch prices for multiple US/global symbols in ONE Yahoo Finance request.
+     * Uses /v7/finance/quote?symbols=A,B,C — much faster than N individual calls.
+     * @param {string[]} formattedSymbols - Array of formatted Yahoo symbols
+     * @returns {Promise<Object>} Map of symbol → price fields
+     */
+    async _fetchYahooBulk(formattedSymbols) {
+        if (!formattedSymbols.length) return {};
+        const joined = formattedSymbols.join(',');
+        const fields = 'regularMarketPrice,regularMarketPreviousClose,currency,regularMarketChange,regularMarketChangePercent';
+        const directUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(joined)}&fields=${fields}`;
+        const directUrl2 = `https://query2.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(joined)}&fields=${fields}`;
+
+        const parse = d => {
+            if (!d?.quoteResponse?.result?.length) throw new Error('empty');
+            return d;
+        };
+        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(4000) })
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+            .then(parse);
+        const tryProxy = proxy => fetch(`${proxy}${encodeURIComponent(directUrl)}`, { signal: AbortSignal.timeout(5000) })
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+            .then(parse);
+
+        const data = await Promise.any([
+            tryDirect(directUrl),
+            tryDirect(directUrl2),
+            ...this.PROXY_URLS.map(tryProxy),
+        ]);
+
+        const map = {};
+        for (const q of data.quoteResponse.result) {
+            const rawCurrency = q.currency || 'USD';
+            const isGBX = rawCurrency === 'GBp' || rawCurrency === 'GBX';
+            const scale = isGBX ? 0.01 : 1;
+            const currency = isGBX ? 'GBP' : rawCurrency;
+            const currentPrice = (q.regularMarketPrice || 0) * scale;
+            const previousClose = (q.regularMarketPreviousClose || q.regularMarketPrice || 0) * scale;
+            const priceChange = (q.regularMarketChange || 0) * scale;
+            const priceChangePercent = q.regularMarketChangePercent || 0;
+            map[q.symbol] = { currentPrice, previousClose, priceChange, priceChangePercent, currency };
+        }
+        return map;
+    },
+
+    /**
+     * Fetch data for multiple symbols.
+     * Optimisation: all US symbols are fetched in ONE bulk Yahoo request instead of N.
      * @param {Array<{symbol: string, market?: string}>} symbols - Array of symbol objects
+     * @param {boolean} forceRefresh - Bypass price cache
      * @returns {Promise<Object>} Map of symbol to stock data
      */
-    async fetchMultiple(symbols) {
+    async fetchMultiple(symbols, forceRefresh = false) {
         const results = {};
+        const toFetchUS = [];   // { symbol, market, formatted }
+        const toFetchIL = [];
 
-        // Run all symbols in parallel — each fetchStockData already races multiple proxies
-        // internally, so parallel execution doesn't overload any single endpoint.
-        const allResults = await Promise.allSettled(
-            symbols.map(item => {
-                const symbol = typeof item === 'string' ? item : item.symbol;
-                const market = typeof item === 'string' ? null : item.market;
-                return this.fetchStockData(symbol, market);
-            })
-        );
+        // 1. Serve from cache where possible
+        for (const item of symbols) {
+            const symbol  = typeof item === 'string' ? item : item.symbol;
+            const market  = typeof item === 'string' ? this.detectMarket(symbol) : (item.market || this.detectMarket(symbol));
+            const formatted = this.formatSymbol(symbol, market);
 
-        allResults.forEach(r => {
-            if (r.status === 'fulfilled') {
-                results[r.value.symbol] = r.value;
+            if (!forceRefresh) {
+                const cached = this._getLsPrice(formatted);
+                if (cached) { results[formatted] = { ...cached, fromPriceCache: true }; continue; }
             }
-        });
+            (market === 'IL' ? toFetchIL : toFetchUS).push({ symbol, market, formatted });
+        }
+
+        // 2. Bulk-fetch all US symbols in ONE request
+        if (toFetchUS.length > 0) {
+            let bulkMap = {};
+            try {
+                bulkMap = await this._fetchYahooBulk(toFetchUS.map(s => s.formatted));
+            } catch (e) {
+                console.warn('[bulk] Yahoo bulk failed, falling back to individual:', e.message);
+            }
+
+            await Promise.allSettled(toFetchUS.map(async item => {
+                const bulk = bulkMap[item.formatted];
+                if (bulk) {
+                    // Got price from bulk — enrich with cached MA150 if available
+                    const cachedHist = this._getHistoricalCache(item.formatted);
+                    const ma150 = cachedHist ? this.calculateMA150(cachedHist.historicalPrices) : null;
+                    if (cachedHist && !cachedHist._refreshed) {
+                        cachedHist._refreshed = true; // don't re-fire
+                    } else if (!cachedHist) {
+                        this._fetchYahooHistorical(item.symbol).catch(() => {}); // background
+                    }
+                    const r = {
+                        symbol: item.formatted, originalSymbol: item.symbol, market: item.market,
+                        ...bulk,
+                        ma150,
+                        ma150Position: ma150 !== null ? (bulk.currentPrice > ma150 ? 'above' : 'below') : null,
+                        ma150PositionPercent: ma150 !== null ? ((bulk.currentPrice - ma150) / ma150) * 100 : null,
+                        historicalPrices: cachedHist?.historicalPrices || [],
+                        historicalData:   cachedHist?.historicalData   || [],
+                        ma150Series:      cachedHist?.ma150Series      || [],
+                        source: 'Yahoo bulk', lastUpdate: new Date().toISOString(), success: true
+                    };
+                    this._setLsPrice(item.formatted, r);
+                    results[item.formatted] = r;
+                } else {
+                    // Bulk didn't return this symbol — individual fallback
+                    try {
+                        const r = await this.fetchStockData(item.symbol, item.market, true);
+                        results[r.symbol] = r;
+                    } catch {}
+                }
+            }));
+        }
+
+        // 3. IL stocks — individual (parallel)
+        if (toFetchIL.length > 0) {
+            const ilRes = await Promise.allSettled(
+                toFetchIL.map(item => this.fetchStockData(item.symbol, item.market, true))
+            );
+            ilRes.forEach(r => { if (r.status === 'fulfilled') results[r.value.symbol] = r.value; });
+        }
 
         return results;
     },
