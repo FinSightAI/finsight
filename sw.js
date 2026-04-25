@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finsight-v168';
+const CACHE_NAME = 'finsight-v169';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -124,6 +124,11 @@ self.addEventListener('notificationclick', (event) => {
 // Fetch event - network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
+
+    // Never intercept cross-origin requests (API calls, CORS proxies, CDNs).
+    // Intercepting them breaks AbortSignal.timeout and adds overhead with no caching benefit.
+    if (url.origin !== self.location.origin) return;
+
     const isHTML = url.pathname.endsWith('.html') || url.pathname.endsWith('/') || url.pathname === '';
 
     if (isHTML) {

@@ -632,8 +632,8 @@ const StockAPI = {
 
     /**
      * Fetch data for multiple symbols.
-     * Bulk (spark) and per-symbol fetches start simultaneously — first to provide
-     * data for each symbol wins. No serial waiting for bulk to fail before fallback.
+     * Strategy: one bulk spark request for all US symbols; individual fallback only
+     * for symbols missing from the bulk response.
      * @param {Array<{symbol: string, market?: string}>} symbols
      * @param {boolean} forceRefresh - Bypass price cache
      * @returns {Promise<Object>} Map of symbol to stock data
@@ -644,8 +644,8 @@ const StockAPI = {
         const toFetchIL = [];
 
         for (const item of symbols) {
-            const symbol   = typeof item === 'string' ? item : item.symbol;
-            const market   = typeof item === 'string' ? this.detectMarket(symbol) : (item.market || this.detectMarket(symbol));
+            const symbol    = typeof item === 'string' ? item : item.symbol;
+            const market    = typeof item === 'string' ? this.detectMarket(symbol) : (item.market || this.detectMarket(symbol));
             const formatted = this.formatSymbol(symbol, market);
             if (!forceRefresh) {
                 const cached = this._getLsPrice(formatted);
@@ -655,47 +655,41 @@ const StockAPI = {
         }
 
         if (toFetchUS.length > 0) {
-            // Start bulk AND per-symbol fetches simultaneously — no serial waiting
-            const bulkPromise = this._fetchYahooBulk(toFetchUS.map(s => s.formatted)).catch(() => ({}));
-            const individualMap = new Map(
-                toFetchUS.map(item => [
-                    item.formatted,
-                    this._fetchYahooPriceOnly(item.formatted).catch(() => null)
-                ])
-            );
+            // One bulk request for all US symbols
+            let bulkMap = {};
+            try { bulkMap = await this._fetchYahooBulk(toFetchUS.map(s => s.formatted)); } catch {}
 
-            await Promise.allSettled(toFetchUS.map(async item => {
-                // Race: whichever source provides this symbol's price first wins
-                const priceData = await Promise.any([
-                    bulkPromise.then(map => {
-                        const v = map[item.formatted];
-                        if (!v) throw new Error('not in bulk');
-                        return { ...v, source: 'Yahoo bulk' };
-                    }),
-                    individualMap.get(item.formatted).then(v => {
-                        if (!v) throw new Error('individual failed');
-                        return { ...v, source: 'Yahoo chart' };
-                    }),
-                ]).catch(() => null);
+            const missing = [];
+            for (const item of toFetchUS) {
+                const p = bulkMap[item.formatted];
+                if (p) {
+                    const cachedHist = this._getHistoricalCache(item.formatted);
+                    const ma150 = cachedHist ? this.calculateMA150(cachedHist.historicalPrices) : null;
+                    if (!cachedHist) this._fetchYahooHistorical(item.symbol).catch(() => {});
+                    const r = {
+                        symbol: item.formatted, originalSymbol: item.symbol, market: item.market,
+                        ...p, ma150,
+                        ma150Position: ma150 !== null ? (p.currentPrice > ma150 ? 'above' : 'below') : null,
+                        ma150PositionPercent: ma150 !== null ? ((p.currentPrice - ma150) / ma150) * 100 : null,
+                        historicalPrices: cachedHist?.historicalPrices || [],
+                        historicalData:   cachedHist?.historicalData   || [],
+                        ma150Series:      cachedHist?.ma150Series      || [],
+                        source: 'Yahoo bulk', lastUpdate: new Date().toISOString(), success: true
+                    };
+                    this._setLsPrice(item.formatted, r);
+                    results[item.formatted] = r;
+                } else {
+                    missing.push(item);
+                }
+            }
 
-                if (!priceData) return;
-
-                const cachedHist = this._getHistoricalCache(item.formatted);
-                const ma150 = cachedHist ? this.calculateMA150(cachedHist.historicalPrices) : null;
-                if (!cachedHist) this._fetchYahooHistorical(item.symbol).catch(() => {});
-                const r = {
-                    symbol: item.formatted, originalSymbol: item.symbol, market: item.market,
-                    ...priceData, ma150,
-                    ma150Position: ma150 !== null ? (priceData.currentPrice > ma150 ? 'above' : 'below') : null,
-                    ma150PositionPercent: ma150 !== null ? ((priceData.currentPrice - ma150) / ma150) * 100 : null,
-                    historicalPrices: cachedHist?.historicalPrices || [],
-                    historicalData:   cachedHist?.historicalData   || [],
-                    ma150Series:      cachedHist?.ma150Series      || [],
-                    lastUpdate: new Date().toISOString(), success: true
-                };
-                this._setLsPrice(item.formatted, r);
-                results[item.formatted] = r;
-            }));
+            // Individual parallel fallback only for symbols not returned by bulk
+            if (missing.length > 0) {
+                const fallback = await Promise.allSettled(
+                    missing.map(item => this.fetchStockData(item.symbol, item.market, true))
+                );
+                fallback.forEach(r => { if (r.status === 'fulfilled') results[r.value.symbol] = r.value; });
+            }
         }
 
         if (toFetchIL.length > 0) {
