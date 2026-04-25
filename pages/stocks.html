@@ -906,6 +906,19 @@
             document.getElementById('stickyHeaderToggle').checked = stickyPref;
             if (stickyPref) document.getElementById('holdingsTableContainer').classList.add('sticky-header');
 
+            // Pre-populate priceCache from localStorage so first render shows prices instantly
+            try {
+                const _initHoldings = Storage.getStocks().holdings || [];
+                const _initWatchlist = (typeof StockAlerts !== 'undefined' && StockAlerts.getWatchlist) ? StockAlerts.getWatchlist() : [];
+                [..._initHoldings, ..._initWatchlist].forEach(item => {
+                    const sym = item.symbol || '';
+                    const mkt = item.market || StockAPI.detectMarket(sym);
+                    const fmt = StockAPI.formatSymbol(sym, mkt);
+                    const cached = StockAPI._getLsPrice(fmt);
+                    if (cached) { priceCache[sym] = cached; priceCache[fmt] = cached; }
+                });
+            } catch(e) {}
+
             loadStocks();
             loadWatchlist();
             checkTriggeredAlerts();
@@ -917,7 +930,7 @@
                 startAutoRefresh();
             }
 
-            // Initial price fetch
+            // Initial price fetch — uses localStorage cache (forceRefresh=false)
             refreshAllPrices();
         });
 
