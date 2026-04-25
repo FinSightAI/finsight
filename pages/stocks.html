@@ -1332,7 +1332,7 @@
                 }
 
                 // Fetch prices
-                const results = await StockAPI.fetchMultiple(uniqueSymbols);
+                const results = await StockAPI.fetchMultiple(uniqueSymbols, true);
 
                 // Update cache - keep prices in native currency
                 for (const result of Object.values(results)) {
