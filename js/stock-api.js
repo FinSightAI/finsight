@@ -584,68 +584,69 @@ const StockAPI = {
     },
 
     /**
-     * Bulk-fetch prices for multiple US/global symbols in ONE Yahoo Finance request.
-     * Uses /v7/finance/quote?symbols=A,B,C — much faster than N individual calls.
-     * @param {string[]} formattedSymbols - Array of formatted Yahoo symbols
+     * Bulk-fetch prices for multiple symbols in ONE Yahoo Finance spark request.
+     * Uses /v7/finance/spark — Yahoo's own multi-symbol endpoint, no auth needed.
+     * @param {string[]} formattedSymbols - Already-formatted Yahoo symbols
      * @returns {Promise<Object>} Map of symbol → price fields
      */
     async _fetchYahooBulk(formattedSymbols) {
         if (!formattedSymbols.length) return {};
         const joined = formattedSymbols.join(',');
-        const fields = 'regularMarketPrice,regularMarketPreviousClose,currency,regularMarketChange,regularMarketChangePercent';
-        const directUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(joined)}&fields=${fields}`;
-        const directUrl2 = `https://query2.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(joined)}&fields=${fields}`;
+        const base1 = `https://query1.finance.yahoo.com/v7/finance/spark?symbols=${encodeURIComponent(joined)}&range=5d&interval=1d&includePrePost=false`;
+        const base2 = `https://query2.finance.yahoo.com/v7/finance/spark?symbols=${encodeURIComponent(joined)}&range=5d&interval=1d&includePrePost=false`;
 
-        const parse = d => {
-            if (!d?.quoteResponse?.result?.length) throw new Error('empty');
-            return d;
-        };
-        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(4000) })
-            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-            .then(parse);
-        const tryProxy = proxy => fetch(`${proxy}${encodeURIComponent(directUrl)}`, { signal: AbortSignal.timeout(5000) })
-            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-            .then(parse);
+        const parse = d => { if (!d?.spark?.result?.length) throw new Error('empty'); return d; };
+        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(3000) })
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(parse);
+        const tryProxy = proxy => fetch(`${proxy}${encodeURIComponent(base1)}`, { signal: AbortSignal.timeout(4000) })
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(parse);
 
         const data = await Promise.any([
-            tryDirect(directUrl),
-            tryDirect(directUrl2),
+            tryDirect(base1), tryDirect(base2),
             ...this.PROXY_URLS.map(tryProxy),
         ]);
 
         const map = {};
-        for (const q of data.quoteResponse.result) {
-            const rawCurrency = q.currency || 'USD';
+        for (const item of (data.spark?.result || [])) {
+            const sym = item.symbol;
+            const resp = item.response?.[0];
+            if (!resp) continue;
+            const meta = resp.meta || {};
+            const quotes = resp.indicators?.quote?.[0] || {};
+            const timestamps = resp.timestamp || [];
+            const rawCurrency = meta.currency || 'USD';
             const isGBX = rawCurrency === 'GBp' || rawCurrency === 'GBX';
             const scale = isGBX ? 0.01 : 1;
             const currency = isGBX ? 'GBP' : rawCurrency;
-            const currentPrice = (q.regularMarketPrice || 0) * scale;
-            const previousClose = (q.regularMarketPreviousClose || q.regularMarketPrice || 0) * scale;
-            const priceChange = (q.regularMarketChange || 0) * scale;
-            const priceChangePercent = q.regularMarketChangePercent || 0;
-            map[q.symbol] = { currentPrice, previousClose, priceChange, priceChangePercent, currency };
+            const currentPrice = (meta.regularMarketPrice || 0) * scale;
+            const closes = timestamps.map((_, i) => quotes.close?.[i]).filter(c => c != null);
+            const previousClose = closes.length >= 2
+                ? closes[closes.length - 2] * scale
+                : (meta.previousClose || meta.chartPreviousClose || currentPrice) * scale;
+            const priceChange = currentPrice - previousClose;
+            const priceChangePercent = previousClose ? (priceChange / previousClose) * 100 : 0;
+            map[sym] = { currentPrice, previousClose, priceChange, priceChangePercent, currency };
         }
         return map;
     },
 
     /**
      * Fetch data for multiple symbols.
-     * Optimisation: all US symbols are fetched in ONE bulk Yahoo request instead of N.
-     * @param {Array<{symbol: string, market?: string}>} symbols - Array of symbol objects
+     * Bulk (spark) and per-symbol fetches start simultaneously — first to provide
+     * data for each symbol wins. No serial waiting for bulk to fail before fallback.
+     * @param {Array<{symbol: string, market?: string}>} symbols
      * @param {boolean} forceRefresh - Bypass price cache
      * @returns {Promise<Object>} Map of symbol to stock data
      */
     async fetchMultiple(symbols, forceRefresh = false) {
         const results = {};
-        const toFetchUS = [];   // { symbol, market, formatted }
+        const toFetchUS = [];
         const toFetchIL = [];
 
-        // 1. Serve from cache where possible
         for (const item of symbols) {
-            const symbol  = typeof item === 'string' ? item : item.symbol;
-            const market  = typeof item === 'string' ? this.detectMarket(symbol) : (item.market || this.detectMarket(symbol));
+            const symbol   = typeof item === 'string' ? item : item.symbol;
+            const market   = typeof item === 'string' ? this.detectMarket(symbol) : (item.market || this.detectMarket(symbol));
             const formatted = this.formatSymbol(symbol, market);
-
             if (!forceRefresh) {
                 const cached = this._getLsPrice(formatted);
                 if (cached) { results[formatted] = { ...cached, fromPriceCache: true }; continue; }
@@ -653,50 +654,50 @@ const StockAPI = {
             (market === 'IL' ? toFetchIL : toFetchUS).push({ symbol, market, formatted });
         }
 
-        // 2. Bulk-fetch all US symbols in ONE request
         if (toFetchUS.length > 0) {
-            let bulkMap = {};
-            try {
-                bulkMap = await this._fetchYahooBulk(toFetchUS.map(s => s.formatted));
-            } catch (e) {
-                console.warn('[bulk] Yahoo bulk failed, falling back to individual:', e.message);
-            }
+            // Start bulk AND per-symbol fetches simultaneously — no serial waiting
+            const bulkPromise = this._fetchYahooBulk(toFetchUS.map(s => s.formatted)).catch(() => ({}));
+            const individualMap = new Map(
+                toFetchUS.map(item => [
+                    item.formatted,
+                    this._fetchYahooPriceOnly(item.formatted).catch(() => null)
+                ])
+            );
 
             await Promise.allSettled(toFetchUS.map(async item => {
-                const bulk = bulkMap[item.formatted];
-                if (bulk) {
-                    // Got price from bulk — enrich with cached MA150 if available
-                    const cachedHist = this._getHistoricalCache(item.formatted);
-                    const ma150 = cachedHist ? this.calculateMA150(cachedHist.historicalPrices) : null;
-                    if (cachedHist && !cachedHist._refreshed) {
-                        cachedHist._refreshed = true; // don't re-fire
-                    } else if (!cachedHist) {
-                        this._fetchYahooHistorical(item.symbol).catch(() => {}); // background
-                    }
-                    const r = {
-                        symbol: item.formatted, originalSymbol: item.symbol, market: item.market,
-                        ...bulk,
-                        ma150,
-                        ma150Position: ma150 !== null ? (bulk.currentPrice > ma150 ? 'above' : 'below') : null,
-                        ma150PositionPercent: ma150 !== null ? ((bulk.currentPrice - ma150) / ma150) * 100 : null,
-                        historicalPrices: cachedHist?.historicalPrices || [],
-                        historicalData:   cachedHist?.historicalData   || [],
-                        ma150Series:      cachedHist?.ma150Series      || [],
-                        source: 'Yahoo bulk', lastUpdate: new Date().toISOString(), success: true
-                    };
-                    this._setLsPrice(item.formatted, r);
-                    results[item.formatted] = r;
-                } else {
-                    // Bulk didn't return this symbol — individual fallback
-                    try {
-                        const r = await this.fetchStockData(item.symbol, item.market, true);
-                        results[r.symbol] = r;
-                    } catch {}
-                }
+                // Race: whichever source provides this symbol's price first wins
+                const priceData = await Promise.any([
+                    bulkPromise.then(map => {
+                        const v = map[item.formatted];
+                        if (!v) throw new Error('not in bulk');
+                        return { ...v, source: 'Yahoo bulk' };
+                    }),
+                    individualMap.get(item.formatted).then(v => {
+                        if (!v) throw new Error('individual failed');
+                        return { ...v, source: 'Yahoo chart' };
+                    }),
+                ]).catch(() => null);
+
+                if (!priceData) return;
+
+                const cachedHist = this._getHistoricalCache(item.formatted);
+                const ma150 = cachedHist ? this.calculateMA150(cachedHist.historicalPrices) : null;
+                if (!cachedHist) this._fetchYahooHistorical(item.symbol).catch(() => {});
+                const r = {
+                    symbol: item.formatted, originalSymbol: item.symbol, market: item.market,
+                    ...priceData, ma150,
+                    ma150Position: ma150 !== null ? (priceData.currentPrice > ma150 ? 'above' : 'below') : null,
+                    ma150PositionPercent: ma150 !== null ? ((priceData.currentPrice - ma150) / ma150) * 100 : null,
+                    historicalPrices: cachedHist?.historicalPrices || [],
+                    historicalData:   cachedHist?.historicalData   || [],
+                    ma150Series:      cachedHist?.ma150Series      || [],
+                    lastUpdate: new Date().toISOString(), success: true
+                };
+                this._setLsPrice(item.formatted, r);
+                results[item.formatted] = r;
             }));
         }
 
-        // 3. IL stocks — individual (parallel)
         if (toFetchIL.length > 0) {
             const ilRes = await Promise.allSettled(
                 toFetchIL.map(item => this.fetchStockData(item.symbol, item.market, true))
