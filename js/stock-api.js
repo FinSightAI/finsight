@@ -78,12 +78,12 @@ const StockAPI = {
     /**
      * Fetch URL through CORS proxy with fallback
      */
-    async _fetchWithFallback(targetUrl) {	
+    async _fetchWithFallback(targetUrl) {
         // Run all proxies in parallel — resolves on first success, fails only when all fail
         return Promise.any(
             this.PROXY_URLS.map((proxy, i) => {
                 const url = `${proxy}${encodeURIComponent(targetUrl)}`;
-                return fetch(url, { signal: AbortSignal.timeout(5000) })
+                return fetch(url, { signal: AbortSignal.timeout(4000) })
                     .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
                     .then(data => { this._currentProxyIndex = i; return data; })
                     .catch(e => { console.warn(`Proxy ${i} failed:`, proxy, e.message); throw e; });
@@ -312,20 +312,18 @@ const StockAPI = {
      */
     async _fetchYahooPriceOnly(formattedSymbol) {
         const suffix = `/${encodeURIComponent(formattedSymbol)}?interval=1d&range=5d&includePrePost=false`;
-        const tryFetch = url => fetch(url, { signal: AbortSignal.timeout(8000) })
+        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(3000) })
             .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
             .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; });
+        const tryProxy = base => this._fetchWithFallback(base + suffix)
+            .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; });
 
+        // Race direct Yahoo AND proxies simultaneously — whichever wins first
         const data = await Promise.any([
-            ...(this.CF_WORKER_URL ? [tryFetch(this.CF_WORKER_URL + suffix)] : []),
-            Promise.any(this.YAHOO_URLS.map(base => tryFetch(base + suffix))),
-        ]).catch(() =>
-            Promise.any(
-                this.YAHOO_URLS.map(base => this._fetchWithFallback(base + suffix)
-                    .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; })
-                )
-            ).catch(() => { throw new Error('All Yahoo endpoints failed'); })
-        );
+            ...(this.CF_WORKER_URL ? [tryDirect(this.CF_WORKER_URL + suffix)] : []),
+            ...this.YAHOO_URLS.map(base => tryDirect(base + suffix)),
+            ...this.YAHOO_URLS.map(base => tryProxy(base)),
+        ]).catch(() => { throw new Error('All Yahoo endpoints failed'); });
 
         const result = data.chart.result[0];
         const meta = result.meta;
@@ -564,33 +562,21 @@ const StockAPI = {
     async fetchMultiple(symbols) {
         const results = {};
 
-        // Process in batches to avoid rate limiting
-        const batchSize = 5;
-        const batches = [];
-
-        for (let i = 0; i < symbols.length; i += batchSize) {
-            batches.push(symbols.slice(i, i + batchSize));
-        }
-
-        for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
-            const batch = batches[batchIndex];
-            const promises = batch.map(item => {
+        // Run all symbols in parallel — each fetchStockData already races multiple proxies
+        // internally, so parallel execution doesn't overload any single endpoint.
+        const allResults = await Promise.allSettled(
+            symbols.map(item => {
                 const symbol = typeof item === 'string' ? item : item.symbol;
                 const market = typeof item === 'string' ? null : item.market;
                 return this.fetchStockData(symbol, market);
-            });
+            })
+        );
 
-            const batchResults = await Promise.all(promises);
-
-            batchResults.forEach(result => {
-                results[result.symbol] = result;
-            });
-
-            // Small delay between batches to be respectful of rate limits
-            if (batchIndex < batches.length - 1) {
-                await new Promise(resolve => setTimeout(resolve, 200));
+        allResults.forEach(r => {
+            if (r.status === 'fulfilled') {
+                results[r.value.symbol] = r.value;
             }
-        }
+        });
 
         return results;
     },
