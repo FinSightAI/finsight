@@ -5,7 +5,7 @@
  */
 const Plan = (() => {
     // ─── MASTER SWITCH ────────────────────────────────────────────
-    const PAYWALL_ACTIVE = true;
+    const PAYWALL_ACTIVE = false;
 
     // Access codes validated server-side via Firebase Function (validateCode)
 
@@ -46,8 +46,8 @@ const Plan = (() => {
             const fn = firebase.functions().httpsCallable("validateCode");
             const result = await fn({ code: normalized });
             if (result.data.valid) {
-                _plan = "pro";
-                localStorage.setItem("wl_plan", "pro");
+                _plan = result.data.plan || "pro";
+                localStorage.setItem("wl_plan", _plan);
                 localStorage.setItem("wl_access_code", normalized);
                 _notify();
                 return true;
