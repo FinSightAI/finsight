@@ -256,7 +256,7 @@
                     <span>➕</span>
                     <span data-i18n="stocks.addStock">הוסף מניה</span>
                 </button>
-                <button class="btn btn-secondary" onclick="refreshAllPrices()" id="refreshBtn">
+                <button class="btn btn-secondary" onclick="refreshAllPrices(true)" id="refreshBtn">
                     <span>🔄</span>
                     <span data-i18n="stocks.refreshPrices">עדכן מחירים</span>
                 </button>
@@ -1306,7 +1306,7 @@
 
         // ========== Price Refresh ==========
 
-        async function refreshAllPrices() {
+        async function refreshAllPrices(forceRefresh = false) {
             if (isRefreshing) return;
 
             isRefreshing = true;
@@ -1332,7 +1332,7 @@
                 }
 
                 // Fetch prices
-                const results = await StockAPI.fetchMultiple(uniqueSymbols, true);
+                const results = await StockAPI.fetchMultiple(uniqueSymbols, forceRefresh);
 
                 // Update cache - keep prices in native currency
                 for (const result of Object.values(results)) {
@@ -1390,7 +1390,7 @@
                 const status = StockAPI.isMarketOpen(markets);
                 updateMarketStatusBadge(status);
                 if (status.anyOpen) {
-                    refreshAllPrices();
+                    refreshAllPrices(true);
                     const settings = StockAlerts.getSettings();
                     refreshInterval = setTimeout(tick, settings.refreshInterval * 1000);
                     startCountdown(settings.refreshInterval);
@@ -1693,7 +1693,7 @@
             if (result) {
                 closeAddWatchlistModal();
                 loadWatchlist();
-                refreshAllPrices();
+                refreshAllPrices(true);
                 App.notify('מניה נוספה לרשימת המעקב', 'success');
             } else {
                 App.notify('מניה זו כבר ברשימת המעקב', 'error');
@@ -1739,7 +1739,7 @@
             Storage.addStock({ symbol: formattedSymbol, name, quantity, avgPrice, currentPrice, currency, market });
             closeStockModal();
             loadStocks();
-            refreshAllPrices();
+            refreshAllPrices(true);
             App.notify(I18n.t('common.save') + ' ✓', 'success');
         }
 
