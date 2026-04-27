@@ -186,8 +186,75 @@
         document.head.appendChild(s);
     }
 
+    // ── WizeMoney Onboarding ───────────────────────────────────────────────────
+    const OB_KEY = 'wl_ob_money';
+    const OB = {
+        he: { title:'ברוך הבא ל-WizeMoney', sub:'הדאשבורד הפיננסי החכם שלך', color:'#10b981',
+              features:['🏦 מעקב חשבונות בנק וכרטיסי אשראי','📈 תיק מניות עם עדכוני מחיר חיים','🤖 יעדי חיסכון, סימולטורים ויועץ AI'],
+              btn:'בואו נתחיל ←', nosee:'אל תציג שוב בהפעלה', help:'?' },
+        en:  { title:'Welcome to WizeMoney', sub:'Your smart personal finance hub', color:'#10b981',
+              features:['🏦 Track bank accounts & credit cards','📈 Live stock portfolio tracking','🤖 Goals, simulators & AI advisor'],
+              btn:'Get started →', nosee:"Don't show on startup", help:'?' },
+        pt:  { title:'Bem-vindo ao WizeMoney', sub:'Seu painel financeiro inteligente', color:'#10b981',
+              features:['🏦 Acompanhe contas e cartões','📈 Carteira de ações em tempo real','🤖 Metas, simuladores e consultor IA'],
+              btn:'Vamos lá →', nosee:'Não mostrar na inicialização', help:'?' },
+        es:  { title:'Bienvenido a WizeMoney', sub:'Tu panel financiero inteligente', color:'#10b981',
+              features:['🏦 Seguimiento de cuentas y tarjetas','📈 Cartera de acciones en tiempo real','🤖 Metas, simuladores y asesor IA'],
+              btn:'Empecemos →', nosee:'No mostrar al iniciar', help:'?' },
+    };
+
+    function _obLang() {
+        const l = localStorage.getItem('wl_lang') || 'he';
+        return OB[l] || OB.he;
+    }
+
+    function injectOnboarding() {
+        // ? button always visible
+        if (!document.getElementById('wl-ob-btn')) {
+            const btn = document.createElement('button');
+            btn.id = 'wl-ob-btn';
+            btn.textContent = '?';
+            btn.title = 'WizeMoney — About';
+            btn.style.cssText = 'position:fixed;bottom:20px;left:20px;z-index:9998;width:32px;height:32px;border-radius:50%;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#10b981;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;line-height:1;';
+            btn.onclick = () => _showOb(true);
+            document.body.appendChild(btn);
+        }
+        // Auto-show on first visit
+        if (!localStorage.getItem(OB_KEY)) _showOb(false);
+    }
+
+    function _showOb(manual) {
+        if (document.getElementById('wl-ob-overlay')) return;
+        const t = _obLang();
+        const overlay = document.createElement('div');
+        overlay.id = 'wl-ob-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Inter,-apple-system,sans-serif;';
+        overlay.innerHTML = `
+          <div style="background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:36px;max-width:440px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.6);">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+              <svg width="36" height="36" viewBox="0 0 100 100"><defs><linearGradient id="obg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#059669"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#obg)"/><text x="50" y="72" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="58" fill="white">W</text></svg>
+              <div><div style="font-size:18px;font-weight:800;color:#eef2ff;letter-spacing:-0.4px;">${t.title}</div><div style="font-size:13px;color:#6b7280;margin-top:2px;">${t.sub}</div></div>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.07);margin:20px 0;"></div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+              ${t.features.map(f=>`<div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#94a3b8;">${f}</div>`).join('')}
+            </div>
+            <button id="wl-ob-close" style="width:100%;padding:12px;border-radius:10px;background:${t.color};border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">${t.btn}</button>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px;color:#4b5563;cursor:pointer;">
+              <input type="checkbox" id="wl-ob-nosee" style="cursor:pointer;"> ${t.nosee}
+            </label>
+          </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById('wl-ob-close').onclick = () => {
+            if (document.getElementById('wl-ob-nosee').checked) localStorage.setItem(OB_KEY, '1');
+            else if (!manual) localStorage.setItem(OB_KEY, '1'); // first visit auto-dismiss
+            overlay.remove();
+        };
+    }
+
     function inject() {
         injectWizeBar();
+        injectOnboarding();
         const aside = document.querySelector('aside.sidebar');
         if (aside) {
             aside.innerHTML = html;
