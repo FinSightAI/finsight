@@ -237,7 +237,7 @@ const PinLock = {
 
         // Logo path — detect if we're in pages/ or root
         const logo = overlay.querySelector('#pinLockLogo');
-        logo.src = location.pathname.includes('/pages/') ? '../img/logo.png' : './img/logo.png';
+        logo.src = location.pathname.includes('/pages/') ? '../img/logo.svg' : './img/logo.svg';
 
         // Inject styles
         const style = document.createElement('style');
