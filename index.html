@@ -432,9 +432,55 @@
         }
 
         // Onboarding — show to new users with no data
+        const OB_TR = {
+            he: { title:'ברוכים הבאים ל-WizeMoney 👋', sub:'רגע אחד להתחיל — בחר מה להוסיף ראשון:', dismiss:'אחר כך',
+                  steps:[
+                    {icon:'🏦',label:'הוסף חשבון בנק',desc:'רשום את יתרות החשבונות שלך',href:'pages/bank.html'},
+                    {icon:'💳',label:'הוסף כרטיס אשראי',desc:'עקוב אחרי ההוצאות החודשיות',href:'pages/credit.html'},
+                    {icon:'📊',label:'הוסף קרן / חיסכון',desc:'קרן השתלמות, פנסיה, גמל',href:'pages/my-funds.html'},
+                    {icon:'🎯',label:'הגדר יעד חיסכון',desc:'רכב, נסיעה, דירה — כל מה שחולמים',href:'pages/goals.html'},
+                  ]},
+            en: { title:'Welcome to WizeMoney 👋', sub:'One moment to start — choose what to add first:', dismiss:'Later',
+                  steps:[
+                    {icon:'🏦',label:'Add bank account',desc:'Track your account balances',href:'pages/bank.html'},
+                    {icon:'💳',label:'Add credit card',desc:'Monitor your monthly spending',href:'pages/credit.html'},
+                    {icon:'📊',label:'Add fund / savings',desc:'Education fund, pension, provident',href:'pages/my-funds.html'},
+                    {icon:'🎯',label:'Set savings goal',desc:'Car, trip, home — whatever you dream of',href:'pages/goals.html'},
+                  ]},
+            pt: { title:'Bem-vindo ao WizeMoney 👋', sub:'Um momento para começar — escolha o que adicionar primeiro:', dismiss:'Depois',
+                  steps:[
+                    {icon:'🏦',label:'Adicionar conta bancária',desc:'Registre os saldos das suas contas',href:'pages/bank.html'},
+                    {icon:'💳',label:'Adicionar cartão de crédito',desc:'Monitore seus gastos mensais',href:'pages/credit.html'},
+                    {icon:'📊',label:'Adicionar fundo / poupança',desc:'Fundo de educação, previdência',href:'pages/my-funds.html'},
+                    {icon:'🎯',label:'Definir meta de poupança',desc:'Carro, viagem, casa — tudo que você sonha',href:'pages/goals.html'},
+                  ]},
+            es: { title:'Bienvenido a WizeMoney 👋', sub:'Un momento para empezar — elige qué agregar primero:', dismiss:'Después',
+                  steps:[
+                    {icon:'🏦',label:'Agregar cuenta bancaria',desc:'Registra los saldos de tus cuentas',href:'pages/bank.html'},
+                    {icon:'💳',label:'Agregar tarjeta de crédito',desc:'Controla tus gastos mensuales',href:'pages/credit.html'},
+                    {icon:'📊',label:'Agregar fondo / ahorro',desc:'Fondo de educación, pensión',href:'pages/my-funds.html'},
+                    {icon:'🎯',label:'Definir meta de ahorro',desc:'Auto, viaje, casa — todo lo que sueñas',href:'pages/goals.html'},
+                  ]},
+        };
         const Onboarding = {
             STORAGE_KEY: 'wl_onboarding_dismissed',
             show() {
+                const lang = localStorage.getItem('wl_lang') || 'he';
+                const t = OB_TR[lang] || OB_TR.he;
+                const box = document.getElementById('onboardingBox');
+                if (box) {
+                    box.querySelector('h2').textContent = t.title;
+                    box.querySelector('.ob-subtitle').textContent = t.sub;
+                    box.querySelector('.ob-dismiss').textContent = t.dismiss;
+                    const steps = box.querySelectorAll('.ob-step');
+                    t.steps.forEach((s, i) => {
+                        if (!steps[i]) return;
+                        steps[i].href = s.href;
+                        steps[i].querySelector('.ob-icon').textContent = s.icon;
+                        steps[i].querySelector('.ob-label').textContent = s.label;
+                        steps[i].querySelector('.ob-desc').textContent = s.desc;
+                    });
+                }
                 const el = document.getElementById('onboardingOverlay');
                 if (el) el.classList.add('active');
             },
