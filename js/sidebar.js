@@ -180,7 +180,20 @@
         const l = localStorage.getItem('wl_lang') || 'he';
         const arrowMap = {he:'← כל הכלים',en:'← All Tools',pt:'← Todas as ferramentas',es:'← Todas las herramientas'};
         const arrow = arrowMap[l] || '← All Tools';
-        bar.innerHTML = '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;"><svg width="20" height="20" viewBox="0 0 100 100" style="flex-shrink:0"><defs><linearGradient id="wlbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#wlbg)"/><text x="50" y="72" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="58" fill="white">W</text></svg><span style="font-size:13px;font-weight:700;color:#eef2ff;letter-spacing:-0.3px;">WizeLife</span><span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a><a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>';
+        const LANGS = ['he','en','pt','es'];
+        const pillCSS = (active) => `background:${active?'rgba(16,185,129,0.18)':'none'};border:none;color:${active?'#10b981':'#6b7280'};padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.4px;`;
+        const langPills = LANGS.map(lng =>
+            `<button data-wl-lang="${lng}" onclick="(function(l){localStorage.setItem('wl_lang',l);if(typeof I18n!=='undefined')I18n.setLanguage(l);document.getElementById('wl-bar').querySelectorAll('[data-wl-lang]').forEach(function(b){b.style.cssText='${pillCSS(false)}';if(b.getAttribute('data-wl-lang')===l)b.style.cssText='${pillCSS(true)}'});})('${lng}')" style="${pillCSS(lng===l)}">${lng==='he'?'עב':lng.toUpperCase()}</button>`
+        ).join('');
+        bar.innerHTML =
+            '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
+            '<svg width="20" height="20" viewBox="0 0 100 100" style="flex-shrink:0"><defs><linearGradient id="wlbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#wlbg)"/><text x="50" y="72" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="58" fill="white">W</text></svg>' +
+            '<span style="font-size:13px;font-weight:700;color:#eef2ff;letter-spacing:-0.3px;">WizeLife</span>' +
+            '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
+            '<div style="display:flex;align-items:center;gap:10px;">' +
+            '<div style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
+            '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
+            '</div>';
         document.body.prepend(bar);
         const s = document.createElement('style');
         s.textContent = 'body{padding-top:36px!important}.sidebar{top:36px!important;height:calc(100vh - 36px)!important}';
@@ -194,7 +207,6 @@
             aside.innerHTML = html;
             attachProGates(aside);
         }
-        injectLangSwitcher();
         injectThemeToggle();
         // Apply current language to sidebar labels
         if (typeof I18n !== 'undefined') I18n.translatePage();
