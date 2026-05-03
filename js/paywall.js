@@ -3,7 +3,7 @@
  */
 const Paywall = (() => {
     const PAYPAL_PRO_PLAN_ID  = "P-42B26777LT293231BNHMVWNA";
-    const PAYPAL_YOLO_PLAN_ID = "YOLO_PLAN_ID_HERE"; // TODO: replace with real PayPal plan ID
+    const PAYPAL_YOLO_PLAN_ID = "P-3WT61990FP2103335NH32GVA";
 
     const PLANS = {
         he: {
