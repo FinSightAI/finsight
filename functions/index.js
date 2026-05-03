@@ -165,9 +165,9 @@ async function checkAiRateLimit(uid) {
         if (dayCount >= limit) {
             const minLeft = Math.ceil((dayResetAt - now) / 60000);
             const upgradeHint = plan === "free"
-                ? " שדרג ל-Pro ($4.90/חודש) לקבל 20 שאלות ביום."
+                ? " שדרג ל-Pro ($4.99/חודש) לקבל 20 שאלות ביום."
                 : plan === "pro"
-                ? " שדרג ל-YOLO ($9.90/חודש) לקבל 40 שאלות ביום."
+                ? " שדרג ל-YOLO ($9.99/חודש) לקבל 40 שאלות ביום."
                 : "";
             throw new functions.https.HttpsError(
                 "resource-exhausted",
