@@ -193,6 +193,7 @@
             '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
             '<div style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
+            '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
             '</div>';
         document.body.prepend(bar);
@@ -217,6 +218,21 @@
         }
     }
 
+
+    function updateWizeBarNick() {
+        const el = document.getElementById('wl-bar-nick');
+        if (!el) return;
+        const stored = localStorage.getItem('wl_nickname');
+        const authName = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser)
+            ? (firebase.auth().currentUser.displayName || firebase.auth().currentUser.email) : null;
+        const nick = stored || authName;
+        if (nick) {
+            const short = nick.length > 20 ? nick.substring(0, 18) + '\u2026' : nick;
+            el.textContent = '\u25cf ' + short;
+            el.style.display = 'inline';
+        }
+    }
+
     // Update pill once Plan is ready
     function waitForPlan() {
         if (typeof Plan !== 'undefined') { updatePlanPill(); Plan.onChange(updatePlanPill); }
@@ -224,6 +240,11 @@
     }
     function inject() {
         injectWizeBar();
+        updateWizeBarNick();
+        // re-check once Firebase Auth resolves
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); });
+        }
         const aside = document.querySelector('aside.sidebar');
         if (aside) {
             aside.innerHTML = html;
