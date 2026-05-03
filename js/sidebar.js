@@ -92,7 +92,8 @@
             <button class="btn btn-secondary btn-sm" id="importDataBtn">
                 <span>📥</span><span data-i18n="nav.import">ייבוא</span>
             </button>
-        </div>`;
+        </div>
+        <div id="sidebarPlanPill" style="margin-top:10px;"></div>`;
 
     const html = `
         <div class="sidebar-header">
@@ -200,6 +201,27 @@
         document.head.appendChild(s);
     }
 
+
+    function updatePlanPill() {
+        const el = document.getElementById('sidebarPlanPill');
+        if (!el || typeof Plan === 'undefined') return;
+        const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
+        if (Plan.isYolo()) {
+            el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 12px;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(239,68,68,0.15));border:1px solid rgba(245,158,11,0.3);border-radius:10px;font-size:0.78rem;font-weight:700;color:#f59e0b;">⚡ YOLO</div>';
+        } else if (Plan.isPro()) {
+            el.innerHTML = '<button onclick="if(typeof Paywall!=='undefined')Paywall.show('upgrade')" style="width:100%;padding:7px 12px;background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(239,68,68,0.12));border:1px solid rgba(245,158,11,0.25);border-radius:10px;font-size:0.78rem;font-weight:700;color:#f59e0b;cursor:pointer;font-family:inherit;">'
+                + (lang === 'he' ? '⚡ שדרג ל-YOLO' : '⚡ Upgrade to YOLO') + '</button>';
+        } else {
+            el.innerHTML = '<button onclick="if(typeof Paywall!=='undefined')Paywall.show('upgrade')" style="width:100%;padding:7px 12px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.3);border-radius:10px;font-size:0.78rem;font-weight:700;color:#818cf8;cursor:pointer;font-family:inherit;">'
+                + (lang === 'he' ? '💎 שדרג ל-Pro' : '💎 Upgrade to Pro') + '</button>';
+        }
+    }
+
+    // Update pill once Plan is ready
+    function waitForPlan() {
+        if (typeof Plan !== 'undefined') { updatePlanPill(); Plan.onChange(updatePlanPill); }
+        else setTimeout(waitForPlan, 300);
+    }
     function inject() {
         injectWizeBar();
         const aside = document.querySelector('aside.sidebar');
@@ -226,8 +248,9 @@
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', inject);
+        document.addEventListener('DOMContentLoaded', () => { inject(); waitForPlan(); });
     } else {
         inject();
+        waitForPlan();
     }
 })();
