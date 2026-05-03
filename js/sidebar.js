@@ -84,7 +84,7 @@
         </li>`;
     }
 
-    const footer = inPages ? '' : `
+    const footerBtns = inPages ? '' : `
         <div style="display:flex;gap:10px;">
             <button class="btn btn-secondary btn-sm" onclick="if(typeof Plan!=='undefined'&&!Plan.check('export'))return;ExportManager.showExportOptions()">
                 <span>📤</span><span data-i18n="nav.export">ייצוא</span>
@@ -92,8 +92,8 @@
             <button class="btn btn-secondary btn-sm" id="importDataBtn">
                 <span>📥</span><span data-i18n="nav.import">ייבוא</span>
             </button>
-        </div>
-        <div id="sidebarPlanPill" style="margin-top:10px;"></div>`;
+        </div>`;
+    const footer = footerBtns + '<div id="sidebarPlanPill" style="margin-top:10px;"></div>';
 
     const html = `
         <div class="sidebar-header">
