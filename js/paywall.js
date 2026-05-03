@@ -15,7 +15,7 @@ const Paywall = (() => {
             },
             pro: {
                 name: "Pro",
-                price: "$4.90",
+                price: "$4.99",
                 period: "/ חודש",
                 color: "#6366f1",
                 highlight: true,
@@ -23,7 +23,7 @@ const Paywall = (() => {
             },
             yolo: {
                 name: "YOLO",
-                price: "$9.90",
+                price: "$9.99",
                 period: "/ חודש",
                 color: "#f59e0b",
                 perks: ["40 שאלות AI ביום", "כל מה שב-Pro", "עדיפות בתמיכה", "גישה מוקדמת לפיצ'רים חדשים"],
@@ -38,7 +38,7 @@ const Paywall = (() => {
             },
             pro: {
                 name: "Pro",
-                price: "$4.90",
+                price: "$4.99",
                 period: "/ month",
                 color: "#6366f1",
                 highlight: true,
@@ -46,7 +46,7 @@ const Paywall = (() => {
             },
             yolo: {
                 name: "YOLO",
-                price: "$9.90",
+                price: "$9.99",
                 period: "/ month",
                 color: "#f59e0b",
                 perks: ["40 AI questions/day", "Everything in Pro", "Priority support", "Early access to new features"],
