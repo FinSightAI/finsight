@@ -5,7 +5,7 @@
  */
 const Plan = (() => {
     // ─── MASTER SWITCH ────────────────────────────────────────────
-    const PAYWALL_ACTIVE = false;
+    const PAYWALL_ACTIVE = true;
 
     // Access codes validated server-side via Firebase Function (validateCode)
 
