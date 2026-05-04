@@ -136,6 +136,9 @@ const TX = {
         fundsHeader: '=== קרנות / מכשירי השקעה ===',
         feesLabel: 'דמי ניהול',
         totalLabel: 'סה"כ:',
+        goalsHeader: '=== יעדי חיסכון ===',
+        bankHeader: '=== יתרת בנק כוללת:',
+        deadlineLabel: 'יעד לתאריך',
     },
     en: {
         title: '🌍 Investment Advisor',
@@ -170,6 +173,9 @@ Guidelines: Always respond in English | Give specific, in-depth analysis | Inclu
         fundsHeader: '=== Funds / investment instruments ===',
         feesLabel: 'management fee',
         totalLabel: 'Total:',
+        goalsHeader: '=== Savings Goals ===',
+        bankHeader: '=== Total bank balance:',
+        deadlineLabel: 'Target date',
     },
     pt: {
         title: '🌍 Consultor de Investimentos',
@@ -204,6 +210,9 @@ Diretrizes: Responda sempre em português brasileiro | Dê análise específica 
         fundsHeader: '=== Fundos / instrumentos de investimento ===',
         feesLabel: 'taxa de administração',
         totalLabel: 'Total:',
+        goalsHeader: '=== Metas de Poupança ===',
+        bankHeader: '=== Saldo bancário total:',
+        deadlineLabel: 'Data alvo',
     },
     es: {
         title: '🌍 Asesor de Inversiones',
@@ -238,6 +247,9 @@ Directrices: Responde siempre en español | Da análisis específico y detallado
         fundsHeader: '=== Fondos / instrumentos de inversión ===',
         feesLabel: 'comisión de gestión',
         totalLabel: 'Total:',
+        goalsHeader: '=== Metas de Ahorro ===',
+        bankHeader: '=== Saldo bancario total:',
+        deadlineLabel: 'Fecha objetivo',
     },
 };
 
@@ -311,6 +323,19 @@ function getPortfolioContext() {
                 lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%`);
             });
             lines.push(`${tx.totalLabel} ₪${Math.round(total).toLocaleString()}`);
+        }
+        const goals = Storage.get('finance_goals') || [];
+        if (goals.length) {
+            lines.push('\n' + tx.goalsHeader);
+            goals.forEach(g => {
+                const pct = g.targetAmount > 0 ? Math.round(((g.currentAmount||0)/g.targetAmount)*100) : 0;
+                lines.push(`  • ${g.name}: ₪${Math.round(g.currentAmount||0).toLocaleString()} / ₪${Math.round(g.targetAmount||0).toLocaleString()} (${pct}%)${g.deadline ? ', ' + tx.deadlineLabel + ': ' + g.deadline : ''}`);
+            });
+        }
+        const bank = Storage.getBankAccounts?.() || [];
+        if (bank.length) {
+            const total = bank.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+            lines.push('\n' + tx.bankHeader + ` ₪${Math.round(total).toLocaleString()}`);
         }
     } catch(e) {}
     return lines.join('\n');
