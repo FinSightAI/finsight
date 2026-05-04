@@ -130,7 +130,8 @@ const TX = {
         },
         systemBase: `אתה יועץ השקעות מומחה עם ידע עמוק בשוקי המניות הגלובליים ובכל מכשירי ההשקעה.
 התמחויות: NYSE, NASDAQ, S&P 500, ת"א 35, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | אג"ח | קריפטו | נדל"ן/REITs | סחורות | ניתוח טכני ופונדמנטלי
-הנחיות: ענה תמיד בעברית | תן ניתוח ספציפי ומעמיק | כלול תזה bullish ו-bearish | ציין "אין בזה ייעוץ מורשה" בהמלצות | פרמט עם כותרות ורשימות | היה ישיר`,
+הנחיות: ענה תמיד בעברית | תן ניתוח ספציפי ומעמיק | כלול תזה bullish ו-bearish | ציין "אין בזה ייעוץ מורשה" בהמלצות | פרמט עם כותרות ורשימות | היה ישיר
+נתוני מחיר חי מסומנים ב-[מחיר] — אלה המחירים האחרונים מדף המניות של המשתמש.`,
         portfolioHeader: '=== תיק ההשקעות הנוכחי של המשתמש ===',
         portfolioLabel: 'אחזקות, שווי כולל:',
         fundsHeader: '=== קרנות / מכשירי השקעה ===',
@@ -167,7 +168,8 @@ const TX = {
         },
         systemBase: `You are an expert investment advisor with deep knowledge of global stock markets and all investment instruments.
 Specialties: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Bonds | Crypto | Real Estate/REITs | Commodities | Technical & Fundamental analysis
-Guidelines: Always respond in English | Give specific, in-depth analysis | Include bullish and bearish thesis | Note "not licensed advice" on buy/sell recommendations | Format with headers and lists | Be direct`,
+Guidelines: Always respond in English | Give specific, in-depth analysis | Include bullish and bearish thesis | Note "not licensed advice" on buy/sell recommendations | Format with headers and lists | Be direct
+Live price data is marked with [price] — these are the latest prices from the user's stocks page.`,
         portfolioHeader: '=== User\'s current investment portfolio ===',
         portfolioLabel: 'holdings, total value:',
         fundsHeader: '=== Funds / investment instruments ===',
@@ -204,7 +206,8 @@ Guidelines: Always respond in English | Give specific, in-depth analysis | Inclu
         },
         systemBase: `Você é um consultor de investimentos especialista com profundo conhecimento dos mercados financeiros globais e todos os instrumentos de investimento.
 Especialidades: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Títulos | Cripto | Imóveis/REITs | Commodities | Análise técnica e fundamental
-Diretrizes: Responda sempre em português brasileiro | Dê análise específica e aprofundada | Inclua tese bullish e bearish | Note "não é consultoria licenciada" em recomendações | Formate com títulos e listas | Seja direto`,
+Diretrizes: Responda sempre em português brasileiro | Dê análise específica e aprofundada | Inclua tese bullish e bearish | Note "não é consultoria licenciada" em recomendações | Formate com títulos e listas | Seja direto
+Dados de preço ao vivo são marcados com [preço] — estes são os preços mais recentes da página de ações do usuário.`,
         portfolioHeader: '=== Carteira de investimentos atual do usuário ===',
         portfolioLabel: 'posições, valor total:',
         fundsHeader: '=== Fundos / instrumentos de investimento ===',
@@ -241,7 +244,8 @@ Diretrizes: Responda sempre em português brasileiro | Dê análise específica 
         },
         systemBase: `Eres un asesor de inversiones experto con profundo conocimiento de los mercados financieros globales y todos los instrumentos de inversión.
 Especialidades: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Bonos | Cripto | Inmuebles/REITs | Materias primas | Análisis técnico y fundamental
-Directrices: Responde siempre en español | Da análisis específico y detallado | Incluye tesis bullish y bearish | Nota "no es asesoramiento licenciado" en recomendaciones | Formatea con títulos y listas | Sé directo`,
+Directrices: Responde siempre en español | Da análisis específico y detallado | Incluye tesis bullish y bearish | Nota "no es asesoramiento licenciado" en recomendaciones | Formatea con títulos y listas | Sé directo
+Los datos de precio en vivo están marcados con [precio] — estos son los precios más recientes de la página de acciones del usuario.`,
         portfolioHeader: '=== Cartera de inversiones actual del usuario ===',
         portfolioLabel: 'posiciones, valor total:',
         fundsHeader: '=== Fondos / instrumentos de inversión ===',
@@ -298,6 +302,20 @@ function buildSuggestions() {
     });
 }
 
+function getLivePrice(symbol) {
+    // Read from StockAPI localStorage cache (sp_SYMBOL)
+    const variants = [symbol, symbol.replace(':', '-'), symbol.split(':').pop()];
+    for (const s of variants) {
+        try {
+            const raw = localStorage.getItem('sp_' + s);
+            if (!raw) continue;
+            const { ts, data } = JSON.parse(raw);
+            if (Date.now() - ts < 24 * 60 * 60 * 1000) return data; // fresh within 24h
+        } catch(e) {}
+    }
+    return null;
+}
+
 function getPortfolioContext() {
     const tx = t();
     const lines = [];
@@ -309,9 +327,14 @@ function getPortfolioContext() {
             lines.push('\n' + tx.portfolioHeader);
             lines.push(`${stocks.length} ${tx.portfolioLabel} ₪${Math.round(total).toLocaleString()}`);
             stocks.forEach(x => {
-                const val = parseFloat(x.currentValue) || parseFloat(x.value) || 0;
-                const gain = x.gainPercent != null ? ` (${x.gainPercent > 0 ? '+' : ''}${x.gainPercent}%)` : '';
-                lines.push(`  • ${x.symbol || x.name}: ₪${Math.round(val).toLocaleString()}${gain}`);
+                const live = getLivePrice(x.symbol);
+                const currentP = live?.currentPrice || x.currentPrice || x.avgPrice;
+                const val = currentP ? currentP * (x.quantity || 1) : (parseFloat(x.currentValue) || parseFloat(x.value) || 0);
+                const dailyChg = live?.priceChangePercent != null ? ` יומי:${live.priceChangePercent >= 0 ? '+' : ''}${live.priceChangePercent.toFixed(1)}%` : '';
+                const gainPct = x.avgPrice && currentP ? (((currentP - x.avgPrice) / x.avgPrice) * 100).toFixed(1) : null;
+                const gainStr = gainPct ? ` רווח:${gainPct >= 0 ? '+' : ''}${gainPct}%` : '';
+                const liveTag = live ? ` [${currentP?.toFixed(2)}]` : '';
+                lines.push(`  • ${x.symbol || x.name}${liveTag}: ₪${Math.round(val).toLocaleString()}${gainStr}${dailyChg}`);
             });
         }
         const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
