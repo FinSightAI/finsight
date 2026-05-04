@@ -38,6 +38,7 @@
         <div id="disclaimer" style="margin:12px 20px 0;padding:10px 14px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.78rem;color:#d97706;line-height:1.5;flex-shrink:0;" id="disclaimer">
         </div>
 
+
         <div style="padding:12px 20px 0;flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <span id="marketLabel" style="font-size:0.78rem;color:var(--color-text-secondary);margin-left:4px;"></span>
             <button class="mfilter active" data-filter="global" onclick="setFilter(this,'global')">🌍</button>
@@ -140,6 +141,8 @@ const TX = {
         goalsHeader: '=== יעדי חיסכון ===',
         bankHeader: '=== יתרת בנק כוללת:',
         deadlineLabel: 'יעד לתאריך',
+        avConnected: '✓ Alpha Vantage מחובר — מחירים חיים + ניתוח טכני',
+        avPlaceholder: 'Alpha Vantage API Key (חינם בalphavantage.co)',
     },
     en: {
         title: '🌍 Investment Advisor',
@@ -178,6 +181,8 @@ Live price data is marked with [price] — these are the latest prices from the 
         goalsHeader: '=== Savings Goals ===',
         bankHeader: '=== Total bank balance:',
         deadlineLabel: 'Target date',
+        avConnected: '✓ Alpha Vantage connected — live prices + technical analysis',
+        avPlaceholder: 'Alpha Vantage API Key (free at alphavantage.co)',
     },
     pt: {
         title: '🌍 Consultor de Investimentos',
@@ -216,6 +221,8 @@ Dados de preço ao vivo são marcados com [preço] — estes são os preços mai
         goalsHeader: '=== Metas de Poupança ===',
         bankHeader: '=== Saldo bancário total:',
         deadlineLabel: 'Data alvo',
+        avConnected: '✓ Alpha Vantage conectado — preços ao vivo + análise técnica',
+        avPlaceholder: 'Alpha Vantage API Key (grátis em alphavantage.co)',
     },
     es: {
         title: '🌍 Asesor de Inversiones',
@@ -254,6 +261,8 @@ Los datos de precio en vivo están marcados con [precio] — estos son los preci
         goalsHeader: '=== Metas de Ahorro ===',
         bankHeader: '=== Saldo bancario total:',
         deadlineLabel: 'Fecha objetivo',
+        avConnected: '✓ Alpha Vantage conectado — precios en vivo + análisis técnico',
+        avPlaceholder: 'Alpha Vantage API Key (gratis en alphavantage.co)',
     },
 };
 
@@ -301,6 +310,72 @@ function buildSuggestions() {
         wrap.appendChild(btn);
     });
 }
+
+// ─── Market Data via Firebase Function (server-side, Firestore cached) ──────
+const marketDataFn = firebase.functions().httpsCallable('marketData');
+const _mdLocalCache = {}; // in-memory cache within this session
+
+async function fetchMarketData(ticker) {
+    const key = ticker.toUpperCase();
+    // Check in-memory cache (TTL: 1h)
+    if (_mdLocalCache[key] && Date.now() - _mdLocalCache[key].ts < 3600000) {
+        return _mdLocalCache[key].data;
+    }
+    try {
+        const res = await marketDataFn({ ticker: key });
+        const d = res.data;
+        if (d?.price) {
+            _mdLocalCache[key] = { ts: Date.now(), data: d };
+            return d;
+        }
+    } catch(e) { console.warn('marketData failed for', key, e.message); }
+    return null;
+}
+
+// Extract ticker symbols mentioned in user message
+function extractTickers(text) {
+    const matches = text.match(/\b([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\b/g) || [];
+    const skip = new Set(['AI','ETF','RSI','MACD','SMA','EMA','IPO','CEO','PE','EPS','GDP','CPI','FED','ECB','USA','EU','US','OK','PM','AM','MA','BB','IV']);
+    return [...new Set(matches.filter(m => !skip.has(m) && m.length >= 2))].slice(0, 3);
+}
+
+function formatMarketContext(d) {
+    if (!d?.price) return '';
+    const isHe = getLang() === 'he';
+    const lines = [`\n=== ${isHe ? 'נתוני שוק חיים' : 'Live Market Data'}: ${d.name || d.ticker} (${d.ticker}) ===`];
+
+    lines.push(`${isHe ? 'מחיר' : 'Price'}: $${d.price}  ${d.changePct >= 0 ? '+' : ''}${d.changePct}% ${isHe ? 'היום' : 'today'}`);
+    if (d.high) lines.push(`${isHe ? 'טווח יומי' : 'Range'}: $${d.low}–$${d.high}${d.volume ? '  |  Vol: ' + d.volume : ''}`);
+
+    // Technical analysis
+    const ta = [];
+    if (d.rsi != null) {
+        const r = parseFloat(d.rsi);
+        const tag = r > 70 ? (isHe ? 'קנוי יתר ⚠️' : 'Overbought ⚠️') : r < 30 ? (isHe ? 'מכור יתר ⚠️' : 'Oversold ⚠️') : (isHe ? 'נייטרלי' : 'Neutral');
+        ta.push(`RSI(14): ${d.rsi} (${tag})`);
+    }
+    if (d.macd != null) {
+        const bull = parseFloat(d.macdHist) > 0;
+        ta.push(`MACD: ${d.macd} | Signal: ${d.macdSig} | Hist: ${d.macdHist} → ${bull ? (isHe ? 'מומנטום חיובי 📈' : 'Bullish 📈') : (isHe ? 'מומנטום שלילי 📉' : 'Bearish 📉')}`);
+    }
+    if (d.sma50 && d.price) {
+        const abv = parseFloat(d.price) > parseFloat(d.sma50);
+        ta.push(`SMA50: $${d.sma50} → ${isHe ? 'מחיר' : 'Price'} ${abv ? (isHe ? 'מעל' : 'above') : (isHe ? 'מתחת' : 'below')} SMA50`);
+    }
+    if (d.sma200 && d.price && d.sma50) {
+        const gc = parseFloat(d.sma50) > parseFloat(d.sma200);
+        ta.push(`SMA200: $${d.sma200} → ${gc ? (isHe ? 'Golden Cross ✨' : 'Golden Cross ✨') : (isHe ? 'Death Cross ⚠️' : 'Death Cross ⚠️')}`);
+    }
+    if (ta.length) lines.push('\n' + (isHe ? 'ניתוח טכני:' : 'Technical Analysis:'), ...ta.map(l => '  ' + l));
+
+    // News
+    if (d.news?.length) {
+        lines.push('\n' + (isHe ? 'חדשות אחרונות (3 ימים):' : 'Recent news (3 days):'));
+        d.news.forEach(n => lines.push(`  • [${n.source}] ${n.headline}`));
+    }
+    return lines.join('\n');
+}
+
 
 function getLivePrice(symbol) {
     // Read from StockAPI localStorage cache (sp_SYMBOL)
