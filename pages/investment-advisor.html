@@ -290,7 +290,8 @@ function getPortfolioContext() {
     const tx = t();
     const lines = [];
     try {
-        const stocks = Storage.getStocks?.() || Storage.get('finance_stocks') || [];
+        const stockData = Storage.getStocks?.() || { holdings: [] };
+        const stocks = stockData.holdings || stockData || [];
         if (stocks.length) {
             const total = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
             lines.push('\n' + tx.portfolioHeader);
