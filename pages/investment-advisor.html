@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="../img/logo.svg">
     <meta name="theme-color" content="#8b5cf6">
-    <title>יועץ השקעות – WizeMoney</title>
+    <title data-i18n-title="invest.pageTitle">Investment Advisor – WizeMoney</title>
     <link rel="stylesheet" href="../css/app.css">
 </head>
 <body>
@@ -24,81 +24,64 @@
 
     <main class="main-content" style="padding:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;">
 
-        <!-- Top bar -->
         <div style="padding:18px 24px 14px;border-bottom:1px solid var(--color-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
             <div>
-                <h1 style="font-size:1.4rem;font-weight:700;margin:0;">🌍 יועץ השקעות</h1>
-                <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;">ניתוח שווקים גלובליים · מניות · ETF · אג"ח · קריפטו · נדל"ן · סחורות</p>
+                <h1 style="font-size:1.4rem;font-weight:700;margin:0;" id="pageTitle">🌍 ...</h1>
+                <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;" id="pageSubtitle">...</p>
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
-                <span id="apiStatus" style="font-size:0.78rem;padding:4px 10px;border-radius:99px;background:var(--color-bg-hover);color:var(--color-text-secondary);">בודק חיבור...</span>
-                <button onclick="clearChat()" style="padding:7px 14px;border-radius:9px;background:var(--color-bg-hover);border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.82rem;cursor:pointer;">🗑 נקה</button>
+                <span id="apiStatus" style="font-size:0.78rem;padding:4px 10px;border-radius:99px;background:var(--color-bg-hover);color:var(--color-text-secondary);">...</span>
+                <button id="clearBtn" onclick="clearChat()" style="padding:7px 14px;border-radius:9px;background:var(--color-bg-hover);border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.82rem;cursor:pointer;">🗑 ...</button>
             </div>
         </div>
 
-        <!-- Disclaimer -->
-        <div id="disclaimer" style="margin:12px 20px 0;padding:10px 14px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.78rem;color:#d97706;line-height:1.5;flex-shrink:0;">
-            ⚠️ <strong>הצהרת גילוי:</strong> המידע כאן הוא לצורכי מידע בלבד ואינו מהווה ייעוץ השקעות מורשה. אין לראות בתשובות המלצה לקנות או למכור ניירות ערך. כל החלטת השקעה היא באחריות המשתמש.
+        <div id="disclaimer" style="margin:12px 20px 0;padding:10px 14px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.78rem;color:#d97706;line-height:1.5;flex-shrink:0;" id="disclaimer">
         </div>
 
-        <!-- Market filter chips -->
-        <div id="marketFilters" style="padding:12px 20px 0;flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-            <span style="font-size:0.78rem;color:var(--color-text-secondary);margin-left:4px;">שוק:</span>
-            <button class="mfilter active" data-filter="global" onclick="setFilter(this,'global')">🌍 גלובלי</button>
-            <button class="mfilter" data-filter="us" onclick="setFilter(this,'us')">🇺🇸 ארה"ב</button>
-            <button class="mfilter" data-filter="il" onclick="setFilter(this,'il')">🇮🇱 ישראל</button>
-            <button class="mfilter" data-filter="eu" onclick="setFilter(this,'eu')">🇪🇺 אירופה</button>
-            <button class="mfilter" data-filter="asia" onclick="setFilter(this,'asia')">🌏 אסיה</button>
-            <button class="mfilter" data-filter="crypto" onclick="setFilter(this,'crypto')">₿ קריפטו</button>
-            <button class="mfilter" data-filter="bonds" onclick="setFilter(this,'bonds')">📄 אג"ח</button>
-            <button class="mfilter" data-filter="realestate" onclick="setFilter(this,'realestate')">🏠 נדל"ן</button>
+        <div style="padding:12px 20px 0;flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <span id="marketLabel" style="font-size:0.78rem;color:var(--color-text-secondary);margin-left:4px;"></span>
+            <button class="mfilter active" data-filter="global" onclick="setFilter(this,'global')">🌍</button>
+            <button class="mfilter" data-filter="us"   onclick="setFilter(this,'us')">🇺🇸</button>
+            <button class="mfilter" data-filter="il"   onclick="setFilter(this,'il')">🇮🇱</button>
+            <button class="mfilter" data-filter="eu"   onclick="setFilter(this,'eu')">🇪🇺</button>
+            <button class="mfilter" data-filter="asia" onclick="setFilter(this,'asia')">🌏</button>
+            <button class="mfilter" data-filter="crypto" onclick="setFilter(this,'crypto')">₿</button>
+            <button class="mfilter" data-filter="bonds" onclick="setFilter(this,'bonds')">📄</button>
+            <button class="mfilter" data-filter="realestate" onclick="setFilter(this,'realestate')">🏠</button>
         </div>
 
-        <!-- Suggestions -->
         <div id="suggestions" style="padding:10px 20px 0;flex-shrink:0;">
             <div id="suggestionChips" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
         </div>
 
-        <!-- Chat messages -->
         <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;"></div>
 
-        <!-- Input bar -->
         <div style="padding:14px 24px 20px;border-top:1px solid var(--color-border);flex-shrink:0;padding-bottom:max(20px,env(safe-area-inset-bottom));">
             <div style="display:flex;gap:10px;align-items:flex-end;">
-                <textarea id="chatInput"
-                    placeholder="שאל על מניות, ETF, מאקרו, שווקים..."
-                    rows="1"
+                <textarea id="chatInput" rows="1"
                     style="flex:1;resize:none;padding:12px 14px;border-radius:14px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;font-family:inherit;line-height:1.4;max-height:160px;overflow-y:auto;outline:none;"
-                    onkeydown="handleKey(event)"
-                    oninput="autoResize(this)"
-                ></textarea>
+                    onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
                 <button id="sendBtn" onclick="sendMessage()"
-                    style="padding:12px 18px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;border-radius:14px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;">
-                    ➤
-                </button>
+                    style="padding:12px 18px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;border-radius:14px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;">➤</button>
             </div>
         </div>
     </main>
 </div>
 
 <style>
-    .chat-bubble { max-width:75%;padding:12px 16px;border-radius:18px;font-size:0.9rem;line-height:1.55;white-space:pre-wrap;word-break:break-word; }
-    .chat-user { align-self:flex-start;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:white;border-radius:18px 18px 4px 18px; }
-    .chat-assistant { align-self:flex-end;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:18px 18px 18px 4px;color:var(--color-text-primary); }
-    .chat-row { display:flex; }
-    .chat-row.user { justify-content:flex-start; }
-    .chat-row.assistant { justify-content:flex-end; }
-    .typing-dot { width:7px;height:7px;border-radius:50%;background:var(--color-text-secondary);animation:typingBounce 1.2s infinite ease-in-out;display:inline-block; }
-    .typing-dot:nth-child(2) { animation-delay:0.15s; }
-    .typing-dot:nth-child(3) { animation-delay:0.3s; }
-    @keyframes typingBounce { 0%,80%,100%{transform:scale(0.7);opacity:0.4} 40%{transform:scale(1);opacity:1} }
-    .suggestion-chip { padding:7px 13px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-primary);font-size:0.8rem;cursor:pointer;transition:background 0.15s,border-color 0.15s;white-space:nowrap; }
-    .suggestion-chip:hover { background:var(--color-bg-hover);border-color:#8b5cf6;color:#8b5cf6; }
-    .chat-assistant strong { color:#a78bfa; }
-    .chat-assistant em { color:var(--color-text-secondary); }
-    .mfilter { padding:4px 11px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;transition:all 0.15s; }
-    .mfilter.active { background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.5);color:#818cf8;font-weight:700; }
-    .mfilter:hover:not(.active) { border-color:#6366f1;color:#818cf8; }
+    .chat-bubble{max-width:75%;padding:12px 16px;border-radius:18px;font-size:0.9rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;}
+    .chat-user{align-self:flex-start;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:white;border-radius:18px 18px 4px 18px;}
+    .chat-assistant{align-self:flex-end;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:18px 18px 18px 4px;color:var(--color-text-primary);}
+    .chat-row{display:flex;}.chat-row.user{justify-content:flex-start;}.chat-row.assistant{justify-content:flex-end;}
+    .typing-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-secondary);animation:typingBounce 1.2s infinite ease-in-out;display:inline-block;}
+    .typing-dot:nth-child(2){animation-delay:0.15s;}.typing-dot:nth-child(3){animation-delay:0.3s;}
+    @keyframes typingBounce{0%,80%,100%{transform:scale(0.7);opacity:0.4}40%{transform:scale(1);opacity:1}}
+    .suggestion-chip{padding:7px 13px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-primary);font-size:0.8rem;cursor:pointer;transition:background 0.15s,border-color 0.15s;white-space:nowrap;}
+    .suggestion-chip:hover{background:var(--color-bg-hover);border-color:#8b5cf6;color:#8b5cf6;}
+    .chat-assistant strong{color:#a78bfa;}.chat-assistant em{color:var(--color-text-secondary);}
+    .mfilter{padding:4px 11px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;transition:all 0.15s;}
+    .mfilter.active{background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.5);color:#818cf8;font-weight:700;}
+    .mfilter:hover:not(.active){border-color:#6366f1;color:#818cf8;}
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -112,296 +95,353 @@
 <script src="../js/i18n.js"></script>
 
 <script>
-    const CHAT_HISTORY_KEY = 'finsight_invest_chat_history';
-    let conversationHistory = [];
-    let isLoading = false;
-    let currentUser = null;
-    let activeFilter = 'global';
+const CHAT_HISTORY_KEY = 'finsight_invest_chat_history';
+let conversationHistory = [];
+let isLoading = false;
+let currentUser = null;
+let activeFilter = 'global';
 
-    const SUGGESTIONS = {
-        global: [
-            'ניתח את מצב השוק הגלובלי כרגע',
-            'השוואה: S&P 500 מול MSCI World',
-            'אילו סקטורים חזקים ב-2025?',
-            'מה ההשפעה של ריבית Fed על המניות?',
-            'הסבר מה זה ETF ואיך לבחור?',
-            'איך מגדרים תיק בתקופת אי וודאות?',
-        ],
-        us: [
-            'נתח את מניית Apple (AAPL)',
-            'מה דעתך על NVIDIA לטווח ארוך?',
-            'השוואה: MSFT מול GOOGL מול META',
-            'S&P 500 vs NASDAQ — מה עדיף עכשיו?',
-            'אילו מניות דיבידנד מומלצות ב-NYSE?',
-            'הסבר את הסקטור Magnificent 7',
-        ],
-        il: [
-            'נתח את ת"א 35 לעומת S&P 500',
-            'אילו מניות ישראליות מעניינות ב-TASE?',
-            'Check Point vs CyberArk — מה עדיף?',
-            'השפעת המצב הגיאופוליטי על שוק ישראל',
-            'קרנות מחקות בישראל — מה כדאי?',
-            'מניות בנקים ישראלים — הזדמנות?',
-        ],
-        eu: [
-            'DAX vs FTSE 100 — מה עדיף לאירופאי?',
-            'מניות אירופאיות בתחום אנרגיה ירוקה',
-            'LVMH ו-Luxury Goods אירופה — ניתוח',
-            'השפעת ה-ECB על שוקי אירופה',
-            'ETF על EURO STOXX 50 — כדאי?',
-        ],
-        asia: [
-            'מה קורה בשוק הסיני כרגע?',
-            'Alibaba vs Tencent — מה עדיף?',
-            'יפן — Nikkei 225 הזדמנות או בועה?',
-            'השפעת מדיניות ה-PBOC על מניות סין',
-            'ETF על אסיה — אפשרויות ומה לבחור?',
-        ],
-        crypto: [
-            'Bitcoin — ניתוח טכני + פונדמנטלי',
-            'Ethereum vs Solana — מה עדיף לטווח ארוך?',
-            'מה אחוז קריפטו מומלץ בתיק?',
-            'Staking — איך עובד ומה הסיכונים?',
-            'Bitcoin ETF — כדאי לקנות?',
-        ],
-        bonds: [
-            'אג"ח ממשלתי ארה"ב — האם כדאי עכשיו?',
-            'Treasury 10Y yield — מה המשמעות?',
-            'אג"ח קונצרני vs ממשלתי — הבדלים',
-            'Duration Risk — הסבר פשוט',
-            'אג"ח ישראלי vs גלי עם קנייה עכשיו?',
-        ],
-        realestate: [
-            'נדל"ן ישראל vs מניות — מה עדיף?',
-            'REITs — איך משקיעים בנדל"ן דרך הבורסה?',
-            'מגמות נדל"ן עולמי 2025',
-            'REIT ETF — אילו מומלצים?',
-            'נדל"ן vs אג"ח בסביבת ריבית גבוהה?',
-        ],
-    };
+// ── All UI strings in 4 languages ──
+const TX = {
+    he: {
+        title: '🌍 יועץ השקעות',
+        subtitle: 'ניתוח שווקים גלובליים · מניות · ETF · אג"ח · קריפטו · נדל"ן · סחורות',
+        disclaimer: '⚠️ <strong>הצהרת גילוי:</strong> המידע כאן הוא לצורכי מידע בלבד ואינו מהווה ייעוץ השקעות מורשה. אין לראות בתשובות המלצה לקנות או למכור ניירות ערך. כל החלטת השקעה היא באחריות המשתמש.',
+        marketLabel: 'שוק:',
+        placeholder: 'שאל על מניות, ETF, מאקרו, שווקים...',
+        clearBtn: '🗑 נקה',
+        clearConfirm: 'למחוק את כל השיחה?',
+        connected: '✓ מחובר',
+        yolo: '✦ YOLO',
+        loginRequired: '🔒 נדרשת התחברות',
+        loginMsg: '🔒 נדרשת התחברות לשירות.',
+        rateLimit: '⏳ הגעת למכסה היומית. נסה שוב מחר או שדרג תכנית.',
+        error: 'שגיאה בחיבור לשרת. נסה שוב.',
+        filters: { global:'🌍 גלובלי', us:'🇺🇸 ארה"ב', il:'🇮🇱 ישראל', eu:'🇪🇺 אירופה', asia:'🌏 אסיה', crypto:'₿ קריפטו', bonds:'📄 אג"ח', realestate:'🏠 נדל"ן' },
+        suggestions: {
+            global: ['ניתח את מצב השוק הגלובלי כרגע','השוואה: S&P 500 מול MSCI World','אילו סקטורים חזקים ב-2025?','מה ההשפעה של ריבית Fed על המניות?','הסבר מה זה ETF ואיך לבחור?','איך מגדרים תיק בתקופת אי וודאות?'],
+            us:     ['נתח את מניית Apple (AAPL)','מה דעתך על NVIDIA לטווח ארוך?','השוואה: MSFT מול GOOGL מול META','S&P 500 vs NASDAQ — מה עדיף עכשיו?','אילו מניות דיבידנד מומלצות ב-NYSE?','הסבר את הסקטור Magnificent 7'],
+            il:     ['נתח את ת"א 35 לעומת S&P 500','אילו מניות ישראליות מעניינות ב-TASE?','Check Point vs CyberArk — מה עדיף?','השפעת המצב הגיאופוליטי על שוק ישראל','קרנות מחקות בישראל — מה כדאי?','מניות בנקים ישראלים — הזדמנות?'],
+            eu:     ['DAX vs FTSE 100 — מה עדיף?','מניות אירופאיות בתחום אנרגיה ירוקה','LVMH ו-Luxury Goods — ניתוח','השפעת ה-ECB על שוקי אירופה','ETF על EURO STOXX 50 — כדאי?'],
+            asia:   ['מה קורה בשוק הסיני כרגע?','Alibaba vs Tencent — מה עדיף?','יפן — Nikkei 225 הזדמנות או בועה?','השפעת מדיניות ה-PBOC על מניות סין','ETF על אסיה — מה לבחור?'],
+            crypto: ['Bitcoin — ניתוח טכני + פונדמנטלי','Ethereum vs Solana — מה עדיף?','מה אחוז קריפטו מומלץ בתיק?','Staking — איך עובד ומה הסיכונים?','Bitcoin ETF — כדאי לקנות?'],
+            bonds:  ['אג"ח ממשלתי ארה"ב — האם כדאי עכשיו?','Treasury 10Y yield — מה המשמעות?','אג"ח קונצרני vs ממשלתי — הבדלים','Duration Risk — הסבר פשוט','אג"ח ישראלי vs גלי — מה לקנות?'],
+            realestate: ['נדל"ן ישראל vs מניות — מה עדיף?','REITs — איך משקיעים בנדל"ן דרך הבורסה?','מגמות נדל"ן עולמי 2025','REIT ETF — אילו מומלצים?','נדל"ן vs אג"ח בסביבת ריבית גבוהה?'],
+        },
+        systemBase: `אתה יועץ השקעות מומחה עם ידע עמוק בשוקי המניות הגלובליים ובכל מכשירי ההשקעה.
+התמחויות: NYSE, NASDAQ, S&P 500, ת"א 35, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | אג"ח | קריפטו | נדל"ן/REITs | סחורות | ניתוח טכני ופונדמנטלי
+הנחיות: ענה תמיד בעברית | תן ניתוח ספציפי ומעמיק | כלול תזה bullish ו-bearish | ציין "אין בזה ייעוץ מורשה" בהמלצות | פרמט עם כותרות ורשימות | היה ישיר`,
+        portfolioHeader: '=== תיק ההשקעות הנוכחי של המשתמש ===',
+        portfolioLabel: 'אחזקות, שווי כולל:',
+        fundsHeader: '=== קרנות / מכשירי השקעה ===',
+        feesLabel: 'דמי ניהול',
+        totalLabel: 'סה"כ:',
+    },
+    en: {
+        title: '🌍 Investment Advisor',
+        subtitle: 'Global market analysis · Stocks · ETF · Bonds · Crypto · Real Estate · Commodities',
+        disclaimer: '⚠️ <strong>Disclosure:</strong> This information is for informational purposes only and does not constitute licensed investment advice. Nothing here should be considered a recommendation to buy or sell securities. All investment decisions are the user\'s own responsibility.',
+        marketLabel: 'Market:',
+        placeholder: 'Ask about stocks, ETFs, macro, markets...',
+        clearBtn: '🗑 Clear',
+        clearConfirm: 'Delete the entire conversation?',
+        connected: '✓ Connected',
+        yolo: '✦ YOLO',
+        loginRequired: '🔒 Login required',
+        loginMsg: '🔒 Login required.',
+        rateLimit: '⏳ Daily quota reached. Try again tomorrow or upgrade your plan.',
+        error: 'Connection error. Please try again.',
+        filters: { global:'🌍 Global', us:'🇺🇸 USA', il:'🇮🇱 Israel', eu:'🇪🇺 Europe', asia:'🌏 Asia', crypto:'₿ Crypto', bonds:'📄 Bonds', realestate:'🏠 Real Estate' },
+        suggestions: {
+            global: ['Analyze current global market conditions','S&P 500 vs MSCI World comparison','Which sectors are strong in 2025?','How does Fed rate affect stocks?','Explain ETFs and how to choose one','How to hedge a portfolio during uncertainty?'],
+            us:     ['Analyze Apple (AAPL) stock','Your view on NVIDIA long-term?','MSFT vs GOOGL vs META comparison','S&P 500 vs NASDAQ — which is better now?','Best dividend stocks on NYSE?','Explain the Magnificent 7 sector'],
+            il:     ['TA-35 vs S&P 500 analysis','Interesting Israeli stocks on TASE?','Check Point vs CyberArk — which to prefer?','Geopolitical impact on Israeli market','Index-tracking funds in Israel — what\'s good?','Israeli bank stocks — opportunity?'],
+            eu:     ['DAX vs FTSE 100 — which is better?','European stocks in green energy','LVMH & Luxury Goods analysis','ECB policy impact on European markets','EURO STOXX 50 ETF — worth it?'],
+            asia:   ['What\'s happening in the Chinese market?','Alibaba vs Tencent — which is better?','Japan — Nikkei 225 opportunity or bubble?','PBOC policy impact on Chinese stocks','Asia ETF — what to choose?'],
+            crypto: ['Bitcoin — technical + fundamental analysis','Ethereum vs Solana — long term?','What % of portfolio in crypto is recommended?','Staking — how it works and risks?','Bitcoin ETF — worth buying?'],
+            bonds:  ['US government bonds — worth it now?','10Y Treasury yield — what does it mean?','Corporate vs government bonds — differences','Duration Risk — simple explanation','Short vs long bonds — what to buy now?'],
+            realestate: ['Israel real estate vs stocks — which is better?','REITs — how to invest in real estate via stocks?','Global real estate trends 2025','Recommended REIT ETFs?','Real estate vs bonds in a high-rate environment?'],
+        },
+        systemBase: `You are an expert investment advisor with deep knowledge of global stock markets and all investment instruments.
+Specialties: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Bonds | Crypto | Real Estate/REITs | Commodities | Technical & Fundamental analysis
+Guidelines: Always respond in English | Give specific, in-depth analysis | Include bullish and bearish thesis | Note "not licensed advice" on buy/sell recommendations | Format with headers and lists | Be direct`,
+        portfolioHeader: '=== User\'s current investment portfolio ===',
+        portfolioLabel: 'holdings, total value:',
+        fundsHeader: '=== Funds / investment instruments ===',
+        feesLabel: 'management fee',
+        totalLabel: 'Total:',
+    },
+    pt: {
+        title: '🌍 Consultor de Investimentos',
+        subtitle: 'Análise de mercados globais · Ações · ETF · Títulos · Cripto · Imóveis · Commodities',
+        disclaimer: '⚠️ <strong>Divulgação:</strong> As informações aqui são apenas para fins informativos e não constituem consultoria de investimentos licenciada. Nada aqui deve ser considerado uma recomendação para comprar ou vender valores mobiliários. Todas as decisões de investimento são de responsabilidade do usuário.',
+        marketLabel: 'Mercado:',
+        placeholder: 'Pergunte sobre ações, ETFs, macro, mercados...',
+        clearBtn: '🗑 Limpar',
+        clearConfirm: 'Deletar toda a conversa?',
+        connected: '✓ Conectado',
+        yolo: '✦ YOLO',
+        loginRequired: '🔒 Login necessário',
+        loginMsg: '🔒 Login necessário.',
+        rateLimit: '⏳ Cota diária atingida. Tente amanhã ou faça upgrade.',
+        error: 'Erro de conexão. Tente novamente.',
+        filters: { global:'🌍 Global', us:'🇺🇸 EUA', il:'🇮🇱 Israel', eu:'🇪🇺 Europa', asia:'🌏 Ásia', crypto:'₿ Cripto', bonds:'📄 Títulos', realestate:'🏠 Imóveis' },
+        suggestions: {
+            global: ['Analise as condições atuais do mercado global','S&P 500 vs MSCI World — comparação','Quais setores estão fortes em 2025?','Como a taxa do Fed afeta as ações?','Explique ETFs e como escolher um','Como proteger carteira em períodos de incerteza?'],
+            us:     ['Analise a ação da Apple (AAPL)','Sua visão sobre NVIDIA no longo prazo?','MSFT vs GOOGL vs META — comparação','S&P 500 vs NASDAQ — qual é melhor agora?','Melhores ações de dividendos na NYSE?','Explique o setor Magnificent 7'],
+            il:     ['TA-35 vs S&P 500 análise','Ações israelenses interessantes na TASE?','Check Point vs CyberArk — qual preferir?','Impacto geopolítico no mercado israelense','Fundos de índice em Israel — o que é bom?','Ações de bancos israelenses — oportunidade?'],
+            eu:     ['DAX vs FTSE 100 — qual é melhor?','Ações europeias em energia verde','Análise LVMH & Luxury Goods','Impacto do BCE nos mercados europeus','ETF EURO STOXX 50 — vale a pena?'],
+            asia:   ['O que está acontecendo no mercado chinês?','Alibaba vs Tencent — qual é melhor?','Japão — Nikkei 225 oportunidade ou bolha?','Impacto da política do PBOC nas ações chinesas','ETF Ásia — o que escolher?'],
+            crypto: ['Bitcoin — análise técnica + fundamental','Ethereum vs Solana — longo prazo?','Qual % da carteira em cripto é recomendado?','Staking — como funciona e riscos?','ETF de Bitcoin — vale comprar?'],
+            bonds:  ['Títulos do governo dos EUA — vale a pena agora?','Rendimento do Treasury 10Y — o que significa?','Títulos corporativos vs governamentais — diferenças','Duration Risk — explicação simples','Títulos curtos vs longos — o que comprar agora?'],
+            realestate: ['Imóveis Israel vs ações — qual é melhor?','REITs — como investir em imóveis pela bolsa?','Tendências imobiliárias globais 2025','ETFs de REIT recomendados?','Imóveis vs títulos em ambiente de juros altos?'],
+        },
+        systemBase: `Você é um consultor de investimentos especialista com profundo conhecimento dos mercados financeiros globais e todos os instrumentos de investimento.
+Especialidades: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Títulos | Cripto | Imóveis/REITs | Commodities | Análise técnica e fundamental
+Diretrizes: Responda sempre em português brasileiro | Dê análise específica e aprofundada | Inclua tese bullish e bearish | Note "não é consultoria licenciada" em recomendações | Formate com títulos e listas | Seja direto`,
+        portfolioHeader: '=== Carteira de investimentos atual do usuário ===',
+        portfolioLabel: 'posições, valor total:',
+        fundsHeader: '=== Fundos / instrumentos de investimento ===',
+        feesLabel: 'taxa de administração',
+        totalLabel: 'Total:',
+    },
+    es: {
+        title: '🌍 Asesor de Inversiones',
+        subtitle: 'Análisis de mercados globales · Acciones · ETF · Bonos · Cripto · Inmuebles · Materias primas',
+        disclaimer: '⚠️ <strong>Divulgación:</strong> La información aquí es solo con fines informativos y no constituye asesoramiento de inversión licenciado. Nada aquí debe considerarse una recomendación para comprar o vender valores. Todas las decisiones de inversión son responsabilidad del usuario.',
+        marketLabel: 'Mercado:',
+        placeholder: 'Pregunta sobre acciones, ETFs, macro, mercados...',
+        clearBtn: '🗑 Limpiar',
+        clearConfirm: '¿Eliminar toda la conversación?',
+        connected: '✓ Conectado',
+        yolo: '✦ YOLO',
+        loginRequired: '🔒 Inicio de sesión requerido',
+        loginMsg: '🔒 Inicio de sesión requerido.',
+        rateLimit: '⏳ Cuota diaria alcanzada. Intenta mañana o actualiza tu plan.',
+        error: 'Error de conexión. Inténtalo de nuevo.',
+        filters: { global:'🌍 Global', us:'🇺🇸 EE.UU.', il:'🇮🇱 Israel', eu:'🇪🇺 Europa', asia:'🌏 Asia', crypto:'₿ Cripto', bonds:'📄 Bonos', realestate:'🏠 Inmuebles' },
+        suggestions: {
+            global: ['Analiza las condiciones actuales del mercado global','S&P 500 vs MSCI World — comparación','¿Qué sectores son fuertes en 2025?','¿Cómo afecta la tasa Fed a las acciones?','Explica los ETFs y cómo elegir uno','¿Cómo cubrir una cartera en períodos de incertidumbre?'],
+            us:     ['Analiza la acción de Apple (AAPL)','¿Tu opinión sobre NVIDIA a largo plazo?','MSFT vs GOOGL vs META — comparación','S&P 500 vs NASDAQ — ¿cuál es mejor ahora?','¿Mejores acciones de dividendos en NYSE?','Explica el sector Magnificent 7'],
+            il:     ['TA-35 vs S&P 500 análisis','¿Acciones israelíes interesantes en TASE?','Check Point vs CyberArk — ¿cuál preferir?','Impacto geopolítico en el mercado israelí','Fondos indexados en Israel — ¿qué es bueno?','¿Acciones de bancos israelíes — oportunidad?'],
+            eu:     ['DAX vs FTSE 100 — ¿cuál es mejor?','Acciones europeas en energía verde','Análisis LVMH & Luxury Goods','Impacto del BCE en los mercados europeos','ETF EURO STOXX 50 — ¿vale la pena?'],
+            asia:   ['¿Qué pasa en el mercado chino ahora?','Alibaba vs Tencent — ¿cuál es mejor?','Japón — Nikkei 225 ¿oportunidad o burbuja?','Impacto de la política del PBOC en acciones chinas','ETF Asia — ¿qué elegir?'],
+            crypto: ['Bitcoin — análisis técnico + fundamental','Ethereum vs Solana — ¿largo plazo?','¿Qué % de cartera en cripto se recomienda?','Staking — ¿cómo funciona y cuáles son los riesgos?','ETF de Bitcoin — ¿vale comprar?'],
+            bonds:  ['Bonos del gobierno de EE.UU. — ¿vale la pena ahora?','Rendimiento Treasury 10Y — ¿qué significa?','Bonos corporativos vs gubernamentales — diferencias','Duration Risk — explicación simple','¿Bonos cortos vs largos — qué comprar ahora?'],
+            realestate: ['Inmuebles Israel vs acciones — ¿cuál es mejor?','REITs — ¿cómo invertir en inmuebles por bolsa?','Tendencias inmobiliarias globales 2025','¿ETFs de REIT recomendados?','¿Inmuebles vs bonos en entorno de tasas altas?'],
+        },
+        systemBase: `Eres un asesor de inversiones experto con profundo conocimiento de los mercados financieros globales y todos los instrumentos de inversión.
+Especialidades: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Bonos | Cripto | Inmuebles/REITs | Materias primas | Análisis técnico y fundamental
+Directrices: Responde siempre en español | Da análisis específico y detallado | Incluye tesis bullish y bearish | Nota "no es asesoramiento licenciado" en recomendaciones | Formatea con títulos y listas | Sé directo`,
+        portfolioHeader: '=== Cartera de inversiones actual del usuario ===',
+        portfolioLabel: 'posiciones, valor total:',
+        fundsHeader: '=== Fondos / instrumentos de inversión ===',
+        feesLabel: 'comisión de gestión',
+        totalLabel: 'Total:',
+    },
+};
 
-    function setFilter(el, filter) {
-        activeFilter = filter;
-        document.querySelectorAll('.mfilter').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        buildSuggestions();
-    }
+function getLang() {
+    return (typeof I18n !== 'undefined' && I18n.current) || localStorage.getItem('wl_lang') || 'he';
+}
+function t() { return TX[getLang()] || TX.he; }
 
-    function buildSuggestions() {
-        const wrap = document.getElementById('suggestionChips');
-        wrap.innerHTML = '';
-        const list = SUGGESTIONS[activeFilter] || SUGGESTIONS.global;
-        list.forEach(q => {
-            const btn = document.createElement('button');
-            btn.className = 'suggestion-chip';
-            btn.textContent = q;
-            btn.onclick = () => {
-                document.getElementById('chatInput').value = q;
-                sendMessage();
-            };
-            wrap.appendChild(btn);
-        });
-    }
+function applyLang() {
+    const tx = t();
+    const dir = getLang() === 'he' ? 'rtl' : 'ltr';
+    document.documentElement.lang = getLang() === 'he' ? 'he' : getLang() === 'pt' ? 'pt' : getLang() === 'es' ? 'es' : 'en';
+    document.documentElement.dir = dir;
+    document.getElementById('pageTitle').textContent = tx.title;
+    document.getElementById('pageSubtitle').textContent = tx.subtitle;
+    document.getElementById('disclaimer').innerHTML = tx.disclaimer;
+    document.getElementById('marketLabel').textContent = tx.marketLabel;
+    document.getElementById('chatInput').placeholder = tx.placeholder;
+    document.getElementById('clearBtn').textContent = tx.clearBtn;
+    // Update filter button labels
+    document.querySelectorAll('.mfilter').forEach(btn => {
+        const key = btn.dataset.filter;
+        if (tx.filters[key]) btn.textContent = tx.filters[key];
+    });
+    buildSuggestions();
+    updateApiStatus(currentUser);
+}
 
-    function getPortfolioContext() {
-        const lines = [];
-        try {
-            const stocks = Storage.getStocks?.() || Storage.get('finance_stocks') || [];
-            if (stocks.length) {
-                const total = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
-                lines.push('\n=== תיק המניות הנוכחי של המשתמש ===' );
-                lines.push(`${stocks.length} אחזקות, שווי כולל: ₪${Math.round(total).toLocaleString('he-IL')}`);
-                stocks.forEach(x => {
-                    const val = parseFloat(x.currentValue) || parseFloat(x.value) || 0;
-                    const gain = x.gainPercent != null ? ` (${x.gainPercent > 0 ? '+' : ''}${x.gainPercent}%)` : '';
-                    lines.push(`  • ${x.symbol || x.name}: ₪${Math.round(val).toLocaleString('he-IL')}${gain}`);
-                });
-            }
-            const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
-            if (funds.length) {
-                const total = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
-                lines.push('\n=== קרנות / מכשירי השקעה ===' );
-                funds.forEach(f => {
-                    const val = parseFloat(f.currentValue) || parseFloat(f.balance) || 0;
-                    lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString('he-IL')}, דמי ניהול ${f.fee || '?'}%`);
-                });
-                lines.push(`סה"כ: ₪${Math.round(total).toLocaleString('he-IL')}`);
-            }
-        } catch(e) {}
-        return lines.join('\n');
-    }
+function setFilter(el, filter) {
+    activeFilter = filter;
+    document.querySelectorAll('.mfilter').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    buildSuggestions();
+}
 
-    function buildSystemPrompt() {
-        const portfolioCtx = getPortfolioContext();
-        const filterName = {
-            global: 'שוקי מניות גלובליים',
-            us: 'שוק המניות האמריקאי (NYSE/NASDAQ)',
-            il: 'שוק המניות הישראלי (TASE)',
-            eu: 'שוקי אירופה',
-            asia: 'שוקי אסיה (סין, יפן, קוריאה)',
-            crypto: 'שוק הקריפטו',
-            bonds: 'שוק האג"ח',
-            realestate: 'נדל"ן ושוק ה-REIT',
-        }[activeFilter] || 'שוקי השקעות';
+function buildSuggestions() {
+    const wrap = document.getElementById('suggestionChips');
+    wrap.innerHTML = '';
+    const list = (t().suggestions[activeFilter] || t().suggestions.global);
+    list.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'suggestion-chip';
+        btn.textContent = q;
+        btn.onclick = () => { document.getElementById('chatInput').value = q; sendMessage(); };
+        wrap.appendChild(btn);
+    });
+}
 
-        return `אתה יועץ השקעות מומחה עם ידע עמוק ב${filterName} ובכל מכשירי ההשקעה הגלובליים.
-
-התמחויות שלך:
-- שוק המניות: NYSE, NASDAQ, S&P 500, Dow Jones, ת"א 35, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai
-- ETFs: Vanguard, iShares, SPDR — ניתוח, השוואה, בחירה
-- אג"ח: Treasuries, Corporate bonds, מח"מ, yield curve, duration risk
-- קריפטו: Bitcoin, Ethereum, altcoins, DeFi, staking
-- נדל"ן: REITs, מגמות נדל"ן גלובלי, REIT ETFs
-- סחורות: זהב, נפט, גז, חיטה
-- מאקרו: ריבית Fed/ECB/BoJ, אינפלציה, תשואות אג"ח, מדד PMI, earnings season
-- ניתוח טכני: תמיכה/התנגדות, moving averages, RSI, MACD (ברמה בסיסית-בינונית)
-- ניתוח פונדמנטלי: P/E, P/B, EPS, revenue growth, moat, valuation
-
-${portfolioCtx ? portfolioCtx + '\n' : ''}
-הנחיות:
-- ענה תמיד בעברית
-- תן ניתוח ספציפי ומעמיק, לא תשובות כלליות
-- כאשר מנתח מניה — כלול: מה החברה עושה, מספרים עיקריים, תזה bullish ו-bearish, סיכום
-- ציין תמיד: "אין בזה ייעוץ השקעות מורשה" בסוף תשובות עם המלצת קנייה/מכירה
-- אם יש נתוני תיק — התייחס אליהם ותן המלצות ספציפיות לתיק של המשתמש
-- פרמט תשובות עם כותרות ורשימות לקריאות נוחה
-- היה ישיר: "אני חושב ש..." ולא "ייתכן שמשקיעים מסוימים..."`;
-    }
-
-    function renderMessage(role, text) {
-        const container = document.getElementById('chatMessages');
-        const row = document.createElement('div');
-        row.className = `chat-row ${role}`;
-        const bubble = document.createElement('div');
-        bubble.className = `chat-bubble chat-${role}`;
-        bubble.innerHTML = markdownToHtml(text);
-        row.appendChild(bubble);
-        container.appendChild(row);
-        container.scrollTop = container.scrollHeight;
-        return bubble;
-    }
-
-    function markdownToHtml(text) {
-        return text
-            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>')
-            .replace(/^#{1,3}\s+(.+)$/gm, '<strong>$1</strong>')
-            .replace(/^[-•]\s+(.+)$/gm, '• $1')
-            .replace(/\n/g, '<br>');
-    }
-
-    function showTyping() {
-        const container = document.getElementById('chatMessages');
-        const row = document.createElement('div');
-        row.className = 'chat-row assistant';
-        row.id = 'typingIndicator';
-        row.innerHTML = `<div class="chat-bubble chat-assistant" style="padding:14px 18px;">
-            <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
-        </div>`;
-        container.appendChild(row);
-        container.scrollTop = container.scrollHeight;
-    }
-    function removeTyping() { document.getElementById('typingIndicator')?.remove(); }
-
-    const aiProxy = firebase.functions().httpsCallable('aiProxy');
-
-    async function sendMessage() {
-        if (isLoading) return;
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
-        if (!currentUser) { renderMessage('assistant', '🔒 נדרשת התחברות לשירות.'); return; }
-
-        document.getElementById('suggestions').style.display = 'none';
-        input.value = '';
-        autoResize(input);
-        isLoading = true;
-        document.getElementById('sendBtn').style.opacity = '0.5';
-
-        renderMessage('user', text);
-        conversationHistory.push({ role: 'user', parts: [{ text }] });
-        showTyping();
-
-        try {
-            const result = await aiProxy({
-                messages: conversationHistory,
-                system: buildSystemPrompt(),
+function getPortfolioContext() {
+    const tx = t();
+    const lines = [];
+    try {
+        const stocks = Storage.getStocks?.() || Storage.get('finance_stocks') || [];
+        if (stocks.length) {
+            const total = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
+            lines.push('\n' + tx.portfolioHeader);
+            lines.push(`${stocks.length} ${tx.portfolioLabel} ₪${Math.round(total).toLocaleString()}`);
+            stocks.forEach(x => {
+                const val = parseFloat(x.currentValue) || parseFloat(x.value) || 0;
+                const gain = x.gainPercent != null ? ` (${x.gainPercent > 0 ? '+' : ''}${x.gainPercent}%)` : '';
+                lines.push(`  • ${x.symbol || x.name}: ₪${Math.round(val).toLocaleString()}${gain}`);
             });
-            removeTyping();
-            const reply = result.data.text;
-            conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
-            renderMessage('assistant', reply);
-            saveHistory();
-        } catch(e) {
-            removeTyping();
-            const code = e.code || '';
-            if (code === 'functions/resource-exhausted') {
-                renderMessage('assistant', '⏳ הגעת למכסה היומית. נסה שוב מחר או שדרג תכנית.');
-            } else {
-                renderMessage('assistant', 'שגיאה בחיבור לשרת. נסה שוב.');
-            }
         }
-
-        isLoading = false;
-        document.getElementById('sendBtn').style.opacity = '1';
-        input.focus();
-    }
-
-    function handleKey(e) {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    }
-    function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 160) + 'px'; }
-
-    function clearChat() {
-        if (!confirm('למחוק את כל השיחה?')) return;
-        conversationHistory = [];
-        document.getElementById('chatMessages').innerHTML = '';
-        document.getElementById('suggestions').style.display = 'block';
-        localStorage.removeItem(CHAT_HISTORY_KEY);
-    }
-
-    function saveHistory() {
-        try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(conversationHistory.slice(-40))); } catch(e) {}
-    }
-    function loadHistory() {
-        try {
-            const saved = localStorage.getItem(CHAT_HISTORY_KEY);
-            if (saved) {
-                conversationHistory = JSON.parse(saved);
-                conversationHistory.forEach(m => {
-                    const role = m.role === 'model' ? 'assistant' : m.role;
-                    renderMessage(role, m.parts?.[0]?.text || '');
-                });
-                if (conversationHistory.length > 0) document.getElementById('suggestions').style.display = 'none';
-            }
-        } catch(e) {}
-    }
-
-    function updateApiStatus(user) {
-        const el = document.getElementById('apiStatus');
-        if (user) {
-            const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
-            el.textContent = isYolo ? '✦ YOLO' : '✓ מחובר';
-            el.style.background = isYolo ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.12)';
-            el.style.color = isYolo ? '#f59e0b' : '#10b981';
-        } else {
-            el.textContent = '🔒 נדרשת התחברות';
-            el.style.background = 'rgba(245,158,11,0.1)';
-            el.style.color = '#f59e0b';
+        const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
+        if (funds.length) {
+            const total = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
+            lines.push('\n' + tx.fundsHeader);
+            funds.forEach(f => {
+                const val = parseFloat(f.currentValue) || parseFloat(f.balance) || 0;
+                lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%`);
+            });
+            lines.push(`${tx.totalLabel} ₪${Math.round(total).toLocaleString()}`);
         }
+    } catch(e) {}
+    return lines.join('\n');
+}
+
+function buildSystemPrompt() {
+    const tx = t();
+    const portfolioCtx = getPortfolioContext();
+    return tx.systemBase + (portfolioCtx ? '\n' + portfolioCtx : '');
+}
+
+function renderMessage(role, text) {
+    const container = document.getElementById('chatMessages');
+    const row = document.createElement('div');
+    row.className = `chat-row ${role}`;
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble chat-${role}`;
+    bubble.innerHTML = markdownToHtml(text);
+    row.appendChild(bubble);
+    container.appendChild(row);
+    container.scrollTop = container.scrollHeight;
+}
+
+function markdownToHtml(text) {
+    return text
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g,'<em>$1</em>')
+        .replace(/^#{1,3}\s+(.+)$/gm,'<strong>$1</strong>')
+        .replace(/^[-•]\s+(.+)$/gm,'• $1')
+        .replace(/\n/g,'<br>');
+}
+
+function showTyping() {
+    const container = document.getElementById('chatMessages');
+    const row = document.createElement('div');
+    row.className = 'chat-row assistant';
+    row.id = 'typingIndicator';
+    row.innerHTML = '<div class="chat-bubble chat-assistant" style="padding:14px 18px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+    container.appendChild(row);
+    container.scrollTop = container.scrollHeight;
+}
+function removeTyping() { document.getElementById('typingIndicator')?.remove(); }
+
+const aiProxy = firebase.functions().httpsCallable('aiProxy');
+
+async function sendMessage() {
+    if (isLoading) return;
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    if (!currentUser) { renderMessage('assistant', t().loginMsg); return; }
+
+    document.getElementById('suggestions').style.display = 'none';
+    input.value = '';
+    autoResize(input);
+    isLoading = true;
+    document.getElementById('sendBtn').style.opacity = '0.5';
+
+    renderMessage('user', text);
+    conversationHistory.push({ role: 'user', parts: [{ text }] });
+    showTyping();
+
+    try {
+        const result = await aiProxy({ messages: conversationHistory, system: buildSystemPrompt() });
+        removeTyping();
+        const reply = result.data.text;
+        conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+        renderMessage('assistant', reply);
+        saveHistory();
+    } catch(e) {
+        removeTyping();
+        renderMessage('assistant', e.code === 'functions/resource-exhausted' ? t().rateLimit : t().error);
     }
 
-    firebase.auth().onAuthStateChanged(async user => {
-        currentUser = user;
-        if (user && typeof Plan !== 'undefined') await Plan.load();
-        updateApiStatus(user);
-    });
+    isLoading = false;
+    document.getElementById('sendBtn').style.opacity = '1';
+    input.focus();
+}
 
-    document.addEventListener('DOMContentLoaded', () => {
-        buildSuggestions();
-        loadHistory();
-    });
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 160) + 'px'; }
+
+function clearChat() {
+    if (!confirm(t().clearConfirm)) return;
+    conversationHistory = [];
+    document.getElementById('chatMessages').innerHTML = '';
+    document.getElementById('suggestions').style.display = 'block';
+    localStorage.removeItem(CHAT_HISTORY_KEY);
+}
+function saveHistory() { try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(conversationHistory.slice(-40))); } catch(e) {} }
+function loadHistory() {
+    try {
+        const saved = localStorage.getItem(CHAT_HISTORY_KEY);
+        if (saved) {
+            conversationHistory = JSON.parse(saved);
+            conversationHistory.forEach(m => renderMessage(m.role === 'model' ? 'assistant' : m.role, m.parts?.[0]?.text || ''));
+            if (conversationHistory.length > 0) document.getElementById('suggestions').style.display = 'none';
+        }
+    } catch(e) {}
+}
+
+function updateApiStatus(user) {
+    const el = document.getElementById('apiStatus');
+    const tx = t();
+    if (user) {
+        const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
+        el.textContent = isYolo ? tx.yolo : tx.connected;
+        el.style.background = isYolo ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.12)';
+        el.style.color = isYolo ? '#f59e0b' : '#10b981';
+    } else {
+        el.textContent = tx.loginRequired;
+        el.style.background = 'rgba(245,158,11,0.1)';
+        el.style.color = '#f59e0b';
+    }
+}
+
+firebase.auth().onAuthStateChanged(async user => {
+    currentUser = user;
+    if (user && typeof Plan !== 'undefined') await Plan.load();
+    updateApiStatus(user);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof I18n !== 'undefined') {
+        I18n.init();
+        const origSet = I18n.setLanguage?.bind(I18n);
+        if (origSet) I18n.setLanguage = lang => { origSet(lang); applyLang(); };
+    }
+    applyLang();
+    loadHistory();
+});
 </script>
 </body>
 </html>
