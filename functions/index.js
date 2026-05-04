@@ -27,6 +27,8 @@ const PAYPAL_WEBHOOK_ID = defineSecret("PAYPAL_WEBHOOK_ID");
 const GEMINI_API_KEY    = defineSecret("GEMINI_API_KEY");
 const ACCESS_CODES_SEC  = defineSecret("ACCESS_CODES");
 const YOLO_CODES_SEC    = defineSecret("YOLO_ACCESS_CODES");
+const TWELVE_DATA_KEY   = defineSecret("TWELVE_DATA_KEY");
+const FINNHUB_KEY       = defineSecret("FINNHUB_KEY");
 
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
@@ -467,3 +469,108 @@ exports.paypalWebhook = functions
         res.json({ received: true });
     }
 );
+
+// ─── Market Data (Twelve Data + Finnhub, server-side cached) ─────────────────
+
+exports.marketData = functions
+    .runWith({ secrets: [TWELVE_DATA_KEY, FINNHUB_KEY] })
+    .https.onCall(async (data, context) => {
+        if (!context.auth) {
+            throw new functions.https.HttpsError("unauthenticated", "Login required");
+        }
+
+        const ticker = (data.ticker || "").toUpperCase().trim();
+        if (!ticker || ticker.length > 12) {
+            throw new functions.https.HttpsError("invalid-argument", "Invalid ticker");
+        }
+
+        const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+        const cacheRef = db.collection("marketDataCache").doc(ticker);
+
+        // Return cached if fresh
+        const cached = await cacheRef.get();
+        if (cached.exists) {
+            const d = cached.data();
+            if (Date.now() - d.ts < CACHE_TTL_MS) return d.result;
+        }
+
+        const tdKey = TWELVE_DATA_KEY.value();
+        const fhKey = FINNHUB_KEY.value();
+        const result = { ticker };
+
+        // Helper: fetch JSON via https
+        function fetchJson(url) {
+            return new Promise((resolve, reject) => {
+                https.get(url, res => {
+                    let body = "";
+                    res.on("data", c => body += c);
+                    res.on("end", () => { try { resolve(JSON.parse(body)); } catch { resolve(null); } });
+                }).on("error", reject);
+            });
+        }
+
+        // Twelve Data: quote + RSI + MACD + SMA50 + SMA200 in parallel
+        const tdBase = "https://api.twelvedata.com";
+        const sym = encodeURIComponent(ticker);
+        const [quote, rsi, macd, sma50, sma200, news] = await Promise.allSettled([
+            fetchJson(`${tdBase}/quote?symbol=${sym}&apikey=${tdKey}`),
+            fetchJson(`${tdBase}/rsi?symbol=${sym}&interval=1day&time_period=14&outputsize=1&apikey=${tdKey}`),
+            fetchJson(`${tdBase}/macd?symbol=${sym}&interval=1day&outputsize=1&apikey=${tdKey}`),
+            fetchJson(`${tdBase}/sma?symbol=${sym}&interval=1day&time_period=50&outputsize=1&apikey=${tdKey}`),
+            fetchJson(`${tdBase}/sma?symbol=${sym}&interval=1day&time_period=200&outputsize=1&apikey=${tdKey}`),
+            fetchJson(`https://finnhub.io/api/v1/company-news?symbol=${sym}&from=${new Date(Date.now()-3*86400000).toISOString().split("T")[0]}&to=${new Date().toISOString().split("T")[0]}&token=${fhKey}`),
+        ]);
+
+        // Quote
+        if (quote.status === "fulfilled" && quote.value?.close) {
+            const q = quote.value;
+            result.price     = parseFloat(q.close).toFixed(2);
+            result.open      = parseFloat(q.open).toFixed(2);
+            result.high      = parseFloat(q.high).toFixed(2);
+            result.low       = parseFloat(q.low).toFixed(2);
+            result.change    = parseFloat(q.change).toFixed(2);
+            result.changePct = parseFloat(q.percent_change).toFixed(2);
+            result.volume    = q.volume ? parseInt(q.volume).toLocaleString() : null;
+            result.name      = q.name || ticker;
+            result.exchange  = q.exchange || null;
+        }
+
+        // RSI
+        if (rsi.status === "fulfilled" && rsi.value?.values?.[0]?.rsi) {
+            result.rsi = parseFloat(rsi.value.values[0].rsi).toFixed(1);
+        }
+
+        // MACD
+        if (macd.status === "fulfilled" && macd.value?.values?.[0]) {
+            const m = macd.value.values[0];
+            result.macd      = parseFloat(m.macd).toFixed(4);
+            result.macdSig   = parseFloat(m.macd_signal).toFixed(4);
+            result.macdHist  = parseFloat(m.macd_hist).toFixed(4);
+        }
+
+        // SMA 50 / 200
+        if (sma50.status === "fulfilled" && sma50.value?.values?.[0]?.sma) {
+            result.sma50 = parseFloat(sma50.value.values[0].sma).toFixed(2);
+        }
+        if (sma200.status === "fulfilled" && sma200.value?.values?.[0]?.sma) {
+            result.sma200 = parseFloat(sma200.value.values[0].sma).toFixed(2);
+        }
+
+        // News (Finnhub)
+        if (news.status === "fulfilled" && Array.isArray(news.value)) {
+            result.news = news.value.slice(0, 5).map(n => ({
+                headline: n.headline,
+                source:   n.source,
+                url:      n.url,
+                datetime: n.datetime,
+            }));
+        }
+
+        // Cache result
+        if (result.price) {
+            await cacheRef.set({ ts: Date.now(), result }).catch(() => {});
+        }
+
+        return result;
+    });
+
