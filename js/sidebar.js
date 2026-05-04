@@ -25,7 +25,10 @@
         {
             icon: '📊', label: 'מוצרים פיננסיים', i18n: 'nav.financialProducts',
             submenu: [
-                { icon: '🏪', label: 'מוצרים בשוק',   i18n: 'nav.marketProducts', file: prefix + 'market-products.html', category: 'market-products' },
+                { icon: '🇧🇷', label: 'Tesouro Direto',    i18n: 'nav.tesouroDireto',   file: prefix + 'tesouro-direto.html',    category: 'tesouro-direto',   market: 'br' },
+        { icon: '🏢', label: 'FIIs',                i18n: 'nav.fiis',            file: prefix + 'fiis.html',              category: 'fiis',             market: 'br' },
+        { icon: '📄', label: 'Renda Fixa',           i18n: 'nav.rendaFixa',       file: prefix + 'renda-fixa.html',        category: 'renda-fixa',       market: 'br' },
+        { icon: '🏪', label: 'מוצרים בשוק',   i18n: 'nav.marketProducts', file: prefix + 'market-products.html', category: 'market-products' },
                 { icon: '💎', label: 'החסכונות שלי',  i18n: 'nav.myProducts',     file: prefix + 'my-funds.html',        category: 'my-products' },
                 { icon: '⚖️', label: 'השוואת מוצרים', i18n: 'nav.compareFunds',   file: prefix + 'compare-funds.html',   category: 'compare-funds',  pro: true, proKey: 'compareFunds' },
             ]
@@ -94,7 +97,17 @@
                 <span>📥</span><span data-i18n="nav.import">ייבוא</span>
             </button>
         </div>`;
-    const footer = footerBtns + '<div id="sidebarPlanPill" style="margin-top:10px;"></div>';
+    const mkt = localStorage.getItem('wl_market');
+    const mktToggle = `<div style="margin-top:10px;">
+        <button id="wlMarketToggle" onclick="(function(){
+            var m=localStorage.getItem('wl_market');
+            if(m==='br'){localStorage.removeItem('wl_market');}else{localStorage.setItem('wl_market','br');}
+            location.reload();
+        })()" style="width:100%;padding:7px 12px;border-radius:10px;border:1px solid ${mkt==='br'?'rgba(34,197,94,0.4)':'var(--color-border)'};background:${mkt==='br'?'rgba(34,197,94,0.1)':'none'};color:${mkt==='br'?'#22c55e':'var(--color-text-secondary)'};font-size:0.78rem;cursor:pointer;font-family:inherit;text-align:center;">
+            ${mkt==='br'?'🇧🇷 Mercado BR ✓':'🇧🇷 Mercado Brasileiro'}
+        </button>
+    </div>`;
+    const footer = footerBtns + mktToggle + '<div id="sidebarPlanPill" style="margin-top:6px;"></div>';
 
     const html = `
         <div class="sidebar-header">
@@ -105,7 +118,7 @@
         </div>
         <nav>
             <ul class="nav-menu">
-                ${NAV.map(buildItem).join('\n')}
+                ${NAV.filter(item => !item.market || localStorage.getItem('wl_market') === item.market).map(buildItem).join('\n')}
             </ul>
         </nav>
         <div class="sidebar-footer">${footer}</div>`;

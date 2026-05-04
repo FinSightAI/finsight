@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DB63NWYGX5');</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="../img/logo.svg">
+<meta name="theme-color" content="#6366f1">
+<title>Tesouro Direto – WizeMoney</title>
+<link rel="stylesheet" href="../css/app.css">
+</head>
+<body>
+<div class="app-container">
+<aside class="sidebar"></aside>
+<main class="main-content">
+
+<div style="padding:24px 24px 16px;border-bottom:1px solid var(--color-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+  <div>
+    <h1 style="font-size:1.4rem;font-weight:700;margin:0;">🇧🇷 Tesouro Direto</h1>
+    <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;">Acompanhe seus títulos públicos federais</p>
+  </div>
+  <button onclick="openModal()" style="padding:9px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;font-size:0.88rem;">+ Adicionar Título</button>
+</div>
+
+<!-- Summary cards -->
+<div id="summaryCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;padding:20px 24px 0;"></div>
+
+<!-- Holdings table -->
+<div style="padding:20px 24px;">
+  <div style="overflow-x:auto;border-radius:12px;border:1px solid var(--color-border);">
+    <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+      <thead>
+        <tr style="background:var(--color-bg-hover);">
+          <th style="padding:12px 14px;text-align:left;font-weight:600;color:var(--color-text-secondary);">Título</th>
+          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Investido</th>
+          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Valor Atual</th>
+          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Rendimento</th>
+          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">IR Est.</th>
+          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Vencimento</th>
+          <th style="padding:12px 14px;"></th>
+        </tr>
+      </thead>
+      <tbody id="holdingsBody">
+        <tr id="emptyRow"><td colspan="7" style="padding:40px;text-align:center;color:var(--color-text-secondary);">Nenhum título cadastrado. Clique em "+ Adicionar Título".</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:var(--color-bg-card);border-radius:16px;padding:28px;width:min(480px,95vw);border:1px solid var(--color-border);">
+    <h2 style="margin:0 0 20px;font-size:1.1rem;">Adicionar Título</h2>
+    <div style="display:grid;gap:14px;">
+      <div>
+        <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Tipo de Título</label>
+        <select id="mType" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;">
+          <option value="selic">Tesouro SELIC</option>
+          <option value="ipca">Tesouro IPCA+</option>
+          <option value="prefixado">Tesouro Prefixado</option>
+          <option value="ipca_juros">Tesouro IPCA+ com Juros</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Valor Investido (R$)</label>
+          <input id="mAmount" type="number" min="30" step="0.01" placeholder="1000.00" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Taxa Anual (%)</label>
+          <input id="mRate" type="number" step="0.01" placeholder="ex: 10.65" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Data de Compra</label>
+          <input id="mBuyDate" type="date" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Vencimento</label>
+          <input id="mMaturity" type="date" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Nome / Observação (opcional)</label>
+        <input id="mName" type="text" placeholder="ex: SELIC 2026" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;">
+      <button onclick="closeModal()" style="padding:9px 18px;border-radius:9px;border:1px solid var(--color-border);background:none;color:var(--color-text-secondary);cursor:pointer;">Cancelar</button>
+      <button onclick="saveHolding()" style="padding:9px 20px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;font-weight:600;cursor:pointer;">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/idb.js"></script>
+<script src="../js/sidebar.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/i18n.js"></script>
+<script>
+const SK = 'finance_tesouro';
+const TYPE_LABELS = {
+  selic:'Tesouro SELIC', ipca:'Tesouro IPCA+',
+  prefixado:'Tesouro Prefixado', ipca_juros:'Tesouro IPCA+ c/ Juros'
+};
+
+function load() { return Storage.get(SK) || []; }
+function save(data) { Storage.set(SK, data); }
+
+function calcCurrentValue(h) {
+  const days = Math.max(0, (Date.now() - new Date(h.buyDate).getTime()) / 86400000);
+  const years = days / 365;
+  // Compound interest: V = P × (1 + r)^t
+  return h.amount * Math.pow(1 + h.rate / 100, years);
+}
+
+// IR table: >720 days=15%, 361-720=17.5%, 181-360=20%, <=180=22.5%
+function calcIR(h, gain) {
+  const days = Math.max(0, (Date.now() - new Date(h.buyDate).getTime()) / 86400000);
+  const rate = days > 720 ? 0.15 : days > 360 ? 0.175 : days > 180 ? 0.20 : 0.225;
+  return gain * rate;
+}
+
+function fmtBRL(v) { return 'R$ ' + Math.abs(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtDate(d) { return d ? new Date(d).toLocaleDateString('pt-BR') : '—'; }
+
+function renderAll() {
+  const holdings = load();
+  const tbody = document.getElementById('holdingsBody');
+  const empty = document.getElementById('emptyRow');
+
+  let totalInv = 0, totalCurr = 0;
+
+  if (!holdings.length) {
+    empty.style.display = '';
+    tbody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
+  } else {
+    empty.style.display = 'none';
+    tbody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
+    holdings.forEach((h, i) => {
+      const curr = calcCurrentValue(h);
+      const gain = curr - h.amount;
+      const ir = calcIR(h, Math.max(0, gain));
+      const gainPct = (gain / h.amount * 100).toFixed(2);
+      totalInv += h.amount;
+      totalCurr += curr;
+      const isPos = gain >= 0;
+      const tr = document.createElement('tr');
+      tr.style.borderTop = '1px solid var(--color-border)';
+      tr.innerHTML = `
+        <td style="padding:12px 14px;font-weight:600;">${TYPE_LABELS[h.type] || h.type}${h.name ? '<br><small style="font-weight:400;color:var(--color-text-secondary)">'+h.name+'</small>' : ''}</td>
+        <td style="padding:12px 14px;text-align:right;">${fmtBRL(h.amount)}</td>
+        <td style="padding:12px 14px;text-align:right;font-weight:600;">${fmtBRL(curr)}</td>
+        <td style="padding:12px 14px;text-align:right;color:${isPos?'#10b981':'#ef4444'};">${isPos?'+':''}${fmtBRL(gain)}<br><small>${isPos?'+':''}${gainPct}%</small></td>
+        <td style="padding:12px 14px;text-align:right;color:var(--color-text-secondary);font-size:0.82rem;">${fmtBRL(ir)}</td>
+        <td style="padding:12px 14px;text-align:right;font-size:0.82rem;">${fmtDate(h.maturity)}</td>
+        <td style="padding:12px 14px;text-align:right;"><button onclick="removeHolding(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;">✕</button></td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Summary cards
+  const totalGain = totalCurr - totalInv;
+  const cards = document.getElementById('summaryCards');
+  cards.innerHTML = `
+    ${card('💰','Total Investido', fmtBRL(totalInv), '')}
+    ${card('📈','Valor Atual', fmtBRL(totalCurr), '')}
+    ${card('🎯','Rendimento Total', fmtBRL(totalGain), totalGain >= 0 ? '#10b981' : '#ef4444')}
+    ${card('📦','Títulos', holdings.length + ' títulos', '')}`;
+}
+
+function card(icon, label, value, color) {
+  return `<div style="padding:16px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:12px;">
+    <div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:4px;">${icon} ${label}</div>
+    <div style="font-size:1.2rem;font-weight:700;${color?'color:'+color:''}">${value}</div>
+  </div>`;
+}
+
+function openModal() {
+  document.getElementById('mBuyDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal').style.display = 'flex';
+}
+function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+function saveHolding() {
+  const type = document.getElementById('mType').value;
+  const amount = parseFloat(document.getElementById('mAmount').value);
+  const rate = parseFloat(document.getElementById('mRate').value);
+  const buyDate = document.getElementById('mBuyDate').value;
+  const maturity = document.getElementById('mMaturity').value;
+  const name = document.getElementById('mName').value.trim();
+  if (!amount || !rate || !buyDate) { alert('Preencha os campos obrigatórios.'); return; }
+  const holdings = load();
+  holdings.push({ type, amount, rate, buyDate, maturity, name });
+  save(holdings);
+  closeModal();
+  renderAll();
+  // reset form
+  ['mAmount','mRate','mMaturity','mName'].forEach(id => document.getElementById(id).value = '');
+}
+
+function removeHolding(i) {
+  if (!confirm('Remover este título?')) return;
+  const holdings = load();
+  holdings.splice(i, 1);
+  save(holdings);
+  renderAll();
+}
+
+document.addEventListener('DOMContentLoaded', renderAll);
+</script>
+</main></div>
+</body></html>
