@@ -107,7 +107,8 @@
             ${mkt==='br'?'🇧🇷 Mercado BR ✓':'🇧🇷 Mercado Brasileiro'}
         </button>
     </div>`;
-    const footer = footerBtns + mktToggle + '<div id="sidebarPlanPill" style="margin-top:6px;"></div>';
+    const wizeAILink = '<a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-right:auto;">יועץ cross-app</span></a>';
+    const footer = wizeAILink + footerBtns + mktToggle + '<div id="sidebarPlanPill" style="margin-top:6px;"></div>';
 
     const html = `
         <div class="sidebar-header">
