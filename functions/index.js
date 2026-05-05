@@ -606,11 +606,21 @@ exports.getUserContext = functions.https.onCall(async (data, context) => {
 
     if (ctx.tax) {
         const t = ctx.tax;
-        parts.push('[WizeTax] Deductibles: ' + t.deductibles + ' | Est. tax: ' + t.estimatedTax);
+        let tline = '[WizeTax]';
+        if (t.totalIncomeUSD) tline += ' Income: $' + t.totalIncomeUSD;
+        if (t.residency) tline += ' | Residency: ' + t.residency;
+        if (Array.isArray(t.citizenships) && t.citizenships.length) tline += ' | Citizenships: ' + t.citizenships.join(', ');
+        if (t.totalAssetsUSD) tline += ' | Assets: $' + t.totalAssetsUSD;
+        if (Array.isArray(t.goals) && t.goals.length) tline += ' | Goals: ' + t.goals.join(', ');
+        parts.push(tline);
     }
     if (ctx.travel) {
         const t = ctx.travel;
-        parts.push('[WizeTravel] Watched routes: ' + ((t.watchedRoutes || []).join(', ')) + ' | Budget: ' + t.travelBudget);
+        const routes = Array.isArray(t.watchedRoutes) ? t.watchedRoutes : [];
+        let tline = '[WizeTravel] Watched routes: ' + (routes.join(', ') || 'none');
+        if (t.travelBudget) tline += ' | Budget: $' + t.travelBudget;
+        if (Array.isArray(t.topDestinations) && t.topDestinations.length) tline += ' | Top destinations: ' + t.topDestinations.join(', ');
+        parts.push(tline);
     }
     if (ctx.health) {
         const h = ctx.health;
@@ -625,10 +635,10 @@ exports.getUserContext = functions.https.onCall(async (data, context) => {
         const d = ctx.deals;
         let dline = '[WizeDeal] Deals tracked: ' + (d.dealCount || 0);
         if (d.totalValue) dline += ' | Total value: $' + d.totalValue;
-        if (d.countries && d.countries.arrayValue) {
-            const countries = (d.countries.arrayValue.values || []).map(v => v.stringValue).filter(Boolean);
-            if (countries.length) dline += ' | Markets: ' + countries.join(', ');
-        }
+        const countries = Array.isArray(d.countries) ? d.countries : [];
+        if (countries.length) dline += ' | Markets: ' + countries.join(', ');
+        const strategies = Array.isArray(d.strategies) ? d.strategies : [];
+        if (strategies.length) dline += ' | Strategies: ' + strategies.join(', ');
         parts.push(dline);
     }
 
