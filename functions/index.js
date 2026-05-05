@@ -613,10 +613,23 @@ exports.getUserContext = functions.https.onCall(async (data, context) => {
         parts.push('[WizeTravel] Watched routes: ' + ((t.watchedRoutes || []).join(', ')) + ' | Budget: ' + t.travelBudget);
     }
     if (ctx.health) {
-        parts.push('[WizeHealth] Medical expenses: ' + ctx.health.medicalExpenses);
+        const h = ctx.health;
+        let hline = '[WizeHealth]';
+        if (h.age) hline += ' Age: ' + h.age;
+        if (h.conditions) hline += ' | Conditions: ' + h.conditions;
+        if (h.meds) hline += ' | Meds: ' + h.meds;
+        if (h.allergies) hline += ' | Allergies: ' + h.allergies;
+        parts.push(hline);
     }
     if (ctx.deals) {
-        parts.push('[WizeDeal] Tracked items: ' + ctx.deals.trackedCount + ' | Saved: ' + ctx.deals.totalSaved);
+        const d = ctx.deals;
+        let dline = '[WizeDeal] Deals tracked: ' + (d.dealCount || 0);
+        if (d.totalValue) dline += ' | Total value: $' + d.totalValue;
+        if (d.countries && d.countries.arrayValue) {
+            const countries = (d.countries.arrayValue.values || []).map(v => v.stringValue).filter(Boolean);
+            if (countries.length) dline += ' | Markets: ' + countries.join(', ');
+        }
+        parts.push(dline);
     }
 
     return { summary: parts.join('\n'), apps: Object.keys(ctx) };
