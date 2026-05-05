@@ -22,11 +22,19 @@ const Paywall = (() => {
                 perks: ["20 שאלות AI ביום", "AI Story יומי", "ייצוא CSV & PDF", "מעקב מניות + התראות", "דוחות ואופטימיזציית מס", "פנסיה, סימולטור, השוואת קרנות", "עסקאות ויעדים ללא הגבלה"],
             },
             yolo: {
-                name: "YOLO",
+                name: "YOLO ⚡",
                 price: "$9.99",
                 period: "/ חודש",
                 color: "#f59e0b",
-                perks: ["40 שאלות AI ביום", "כל מה שב-Pro", "עדיפות בתמיכה", "גישה מוקדמת לפיצ'רים חדשים"],
+                perks: [
+                    "40 שאלות AI ביום — פי 2 מ-Pro",
+                    "יועץ השקעות עם נתוני שוק חיים — מחיר, RSI, MACD, P/E, חדשות",
+                    "AI שמכיר את כל החיים הפיננסיים שלך — 5 כלים מחוברים",
+                    "השוואת מסים גלובלית — 20 מדינות עם נתוני PwC/OECD 2025",
+                    "גישה ראשונה לכל פיצ'ר חדש לפני כולם",
+                    "תמיכה מועדפת — תגובה תוך 24 שעות",
+                    "כל מה שב-Pro ✓",
+                ],
             },
         },
         en: {
@@ -45,11 +53,19 @@ const Paywall = (() => {
                 perks: ["20 AI questions/day", "Daily AI Story", "Export CSV & PDF", "Stock tracker + alerts", "Reports & Tax Optimizer", "Pension, Simulator & Fund Comparison", "Unlimited transactions & goals"],
             },
             yolo: {
-                name: "YOLO",
+                name: "YOLO ⚡",
                 price: "$9.99",
                 period: "/ month",
                 color: "#f59e0b",
-                perks: ["40 AI questions/day", "Everything in Pro", "Priority support", "Early access to new features"],
+                perks: [
+                    "40 AI questions/day — 2× more than Pro",
+                    "Investment advisor with live market data — price, RSI, MACD, P/E, news",
+                    "AI that knows your full financial life — 5 apps connected",
+                    "Global tax comparison — 20 countries, PwC/OECD 2025 data",
+                    "First access to every new feature before anyone else",
+                    "Priority support — response within 24 hours",
+                    "Everything in Pro ✓",
+                ],
             },
         },
     };
