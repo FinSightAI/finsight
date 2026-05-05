@@ -947,6 +947,8 @@ select.form-control {
     .sidebar {
         transform: translateX(100%);
         z-index: 200;
+        top: 92px;
+        height: calc(100vh - 92px);
     }
 
     body.ltr .sidebar {
@@ -967,13 +969,14 @@ select.form-control {
 
     .mobile-header {
         display: flex;
+        top: 36px;
     }
 
     .main-content {
         margin-right: 0;
         margin-left: 0;
         padding: var(--spacing-md);
-        padding-top: calc(56px + env(safe-area-inset-top, 0px) + var(--spacing-md));
+        padding-top: calc(36px + 56px + env(safe-area-inset-top, 0px) + var(--spacing-md));
         padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + var(--spacing-md));
     }
 
