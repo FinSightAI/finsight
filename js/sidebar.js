@@ -254,42 +254,8 @@
         else setTimeout(waitForPlan, 300);
     }
 
-    function injectMobileHeader() {
-        if (document.getElementById('wl-mobile-header')) return;
-        const mh = document.createElement('div');
-        mh.id = 'wl-mobile-header';
-        mh.className = 'mobile-header';
-        mh.innerHTML =
-            '<button class="mobile-header-toggle" id="wl-sidebar-toggle" aria-label="תפריט">☰</button>' +
-            '<span style="font-weight:700;font-size:17px;color:var(--color-text-primary);">Wize<span style="color:#6366f1;">Money</span></span>' +
-            '<span style="flex:1"></span>';
-        document.body.insertBefore(mh, document.body.firstChild);
-
-        const overlay = document.createElement('div');
-        overlay.id = 'wl-sidebar-overlay';
-        overlay.className = 'sidebar-overlay';
-        document.body.appendChild(overlay);
-
-        function openSidebar() {
-            const aside = document.querySelector('aside.sidebar');
-            if (aside) aside.classList.add('open');
-            overlay.classList.add('active');
-        }
-        function closeSidebar() {
-            const aside = document.querySelector('aside.sidebar');
-            if (aside) aside.classList.remove('open');
-            overlay.classList.remove('active');
-        }
-        document.getElementById('wl-sidebar-toggle').addEventListener('click', function() {
-            const aside = document.querySelector('aside.sidebar');
-            if (aside && aside.classList.contains('open')) closeSidebar();
-            else openSidebar();
-        });
-        overlay.addEventListener('click', closeSidebar);
-    }
     function inject() {
         injectWizeBar();
-        injectMobileHeader();
         updateWizeBarNick();
         // re-check once Firebase Auth resolves
         if (typeof firebase !== 'undefined' && firebase.auth) {
