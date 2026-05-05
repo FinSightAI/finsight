@@ -27,8 +27,8 @@ const PAYPAL_WEBHOOK_ID = defineSecret("PAYPAL_WEBHOOK_ID");
 const GEMINI_API_KEY    = defineSecret("GEMINI_API_KEY");
 const ACCESS_CODES_SEC  = defineSecret("ACCESS_CODES");
 const YOLO_CODES_SEC    = defineSecret("YOLO_ACCESS_CODES");
-// const TWELVE_DATA_KEY   = defineSecret("TWELVE_DATA_KEY");
-// const FINNHUB_KEY       = defineSecret("FINNHUB_KEY");
+const TWELVE_DATA_KEY   = defineSecret("TWELVE_DATA_KEY");
+const FINNHUB_KEY       = defineSecret("FINNHUB_KEY");
 
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
@@ -470,8 +470,6 @@ exports.paypalWebhook = functions
     }
 );
 
-/* MARKET_DATA_DISABLED
-
 // ─── Market Data (Twelve Data + Finnhub, server-side cached) ─────────────────
 
 exports.marketData = functions
@@ -578,7 +576,6 @@ exports.marketData = functions
 
 
 // ── getUserContext ────────────────────────────────────────────────────────────
-MARKET_DATA_DISABLED */
 exports.getUserContext = functions.https.onCall(async (data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError('unauthenticated', 'Login required');
