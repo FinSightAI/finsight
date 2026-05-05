@@ -104,7 +104,7 @@
             if(m==='br'){localStorage.removeItem('wl_market');}else{localStorage.setItem('wl_market','br');}
             location.reload();
         })()" style="width:100%;padding:7px 12px;border-radius:10px;border:1px solid ${mkt==='br'?'rgba(34,197,94,0.4)':'var(--color-border)'};background:${mkt==='br'?'rgba(34,197,94,0.1)':'none'};color:${mkt==='br'?'#22c55e':'var(--color-text-secondary)'};font-size:0.78rem;cursor:pointer;font-family:inherit;text-align:center;">
-            ${mkt==='br'?'🇧🇷 Mercado BR ✓':'🇧🇷 Mercado Brasileiro'}
+            ${mkt==='br'?'🇧🇷 שוק ברזיל ✓':'🇧🇷 שוק ברזיל'}
         </button>
     </div>`;
     const wizeAILink = '<a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-right:auto;">יועץ cross-app</span></a>';
