@@ -60,7 +60,7 @@
     function buildItem(item) {
         if (item.submenu) {
             const subActive = item.submenu.some(s => currentFile === s.file.split('/').pop());
-            const subItems = item.submenu.map(s => {
+            const subItems = item.submenu.filter(s => !s.market || localStorage.getItem('wl_market') === s.market).map(s => {
                 const a = subActive && currentFile === s.file.split('/').pop() ? ' active' : '';
                 const lockAttr = s.pro ? ` data-pro="${s.proKey}"` : '';
                 const lockBadge = s.pro ? ' <span class="pro-lock">Pro</span>' : '';
