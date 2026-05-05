@@ -22,6 +22,8 @@ const Auth = {
             if (user) {
                 // Sync data from cloud on login
                 await this.syncFromCloud();
+                // Push aggregated context to Firestore for WizeAI
+                if (typeof WizeAISync !== 'undefined') WizeAISync.sync(user.uid);
             }
         });
     },
