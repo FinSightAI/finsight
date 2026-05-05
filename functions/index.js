@@ -644,3 +644,56 @@ exports.getUserContext = functions.https.onCall(async (data, context) => {
 
     return { summary: parts.join('\n'), apps: Object.keys(ctx) };
 });
+
+
+// ── Tax data annual review reminder ──────────────────────────────────────────
+// Fires every January 15th at 09:00 Israel time (07:00 UTC).
+// Sends an email reminder to update wizelife/js/tax-data.js for the new year.
+exports.taxDataReviewReminder = functions
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .pubsub.schedule('0 7 15 1 *')
+    .timeZone('UTC')
+    .onRun(async () => {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: { user: GMAIL_EMAIL.value(), pass: GMAIL_PASSWORD.value() },
+        });
+
+        const year = new Date().getFullYear();
+
+        await transporter.sendMail({
+            from: `WizeLife Alerts <${GMAIL_EMAIL.value()}>`,
+            to: 'ofirshamir57@gmail.com',
+            subject: `[WizeTax] תזכורת עדכון נתוני מס ${year}`,
+            text: [
+                `שלום,`,
+                ``,
+                `הגיע הזמן לעדכן את קובץ נתוני המס השנתיים ל-${year}.`,
+                ``,
+                `הקובץ לעדכון: wizelife/js/tax-data.js`,
+                ``,
+                `שלבים (כ-30 דקות):`,
+                `1. כנס ל: https://taxsummaries.pwc.com/`,
+                `   עבור לכל מדינה → "Individual" → "Taxes on personal income"`,
+                `   עדכן brackets[] בהתאם לשנת המס החדשה`,
+                ``,
+                `2. עדכן גם: socialSec%, socialCeil, health% לכל מדינה`,
+                ``,
+                `3. עדכן TAX_META בתחתית הקובץ:`,
+                `   validYear: ${year}`,
+                `   updatedAt: '${new Date().toISOString().slice(0, 10)}'`,
+                `   nextReview: '${year + 1}-01-15'`,
+                ``,
+                `4. git commit -m "tax: update rates for ${year}" && git push`,
+                ``,
+                `מקורות נוספים לבדיקה:`,
+                `- OECD Taxing Wages: https://stats.oecd.org/Index.aspx?DataSetCode=AWCORC`,
+                `- KPMG Individual Tax: https://kpmg.com/xx/en/home/services/tax/tax-tools-and-resources/tax-rates-online.html`,
+                ``,
+                `— WizeLife Automation`,
+            ].join('\n'),
+        });
+
+        console.log(`Tax data review reminder sent for ${year}`);
+        return null;
+    });
