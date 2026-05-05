@@ -27,8 +27,8 @@ const PAYPAL_WEBHOOK_ID = defineSecret("PAYPAL_WEBHOOK_ID");
 const GEMINI_API_KEY    = defineSecret("GEMINI_API_KEY");
 const ACCESS_CODES_SEC  = defineSecret("ACCESS_CODES");
 const YOLO_CODES_SEC    = defineSecret("YOLO_ACCESS_CODES");
-const TWELVE_DATA_KEY   = defineSecret("TWELVE_DATA_KEY");
-const FINNHUB_KEY       = defineSecret("FINNHUB_KEY");
+// const TWELVE_DATA_KEY   = defineSecret("TWELVE_DATA_KEY");
+// const FINNHUB_KEY       = defineSecret("FINNHUB_KEY");
 
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
@@ -470,6 +470,8 @@ exports.paypalWebhook = functions
     }
 );
 
+/* MARKET_DATA_DISABLED
+
 // ─── Market Data (Twelve Data + Finnhub, server-side cached) ─────────────────
 
 exports.marketData = functions
@@ -574,3 +576,48 @@ exports.marketData = functions
         return result;
     });
 
+
+// ── getUserContext ────────────────────────────────────────────────────────────
+MARKET_DATA_DISABLED */
+exports.getUserContext = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'Login required');
+    }
+    const uid = context.auth.uid;
+    const snap = await db.collection('users').doc(uid).collection('context').get();
+    const ctx = {};
+    snap.forEach(doc => { ctx[doc.id] = doc.data(); });
+
+    const parts = [];
+
+    if (ctx.money) {
+        const m = ctx.money;
+        let line = '[WizeMoney] Income: ' + m.monthlyIncome + '/mo | Expenses: ' + m.monthlyExpenses + '/mo';
+        if (m.expenseDelta !== 0) line += ' (' + (m.expenseDelta > 0 ? '+' : '') + m.expenseDelta + '% vs last month)';
+        line += '\nTop categories: ' + ((m.topCategories || []).map(c => c.cat + ' ' + c.amt).join(', '));
+        line += '\nBank: ' + m.bankBalance + ' | Stocks: ' + m.stocksValue + ' | Net worth: ' + m.netWorth;
+        if (m.loansBalance > 0) line += '\nLoans: ' + m.loansBalance + ' (payments: ' + m.loanPayments + '/mo)';
+        if (m.subscriptions > 0) line += '\nSubscriptions: ' + m.subscriptions + '/mo';
+        if (m.goals && m.goals.length > 0) {
+            line += '\nGoals: ' + m.goals.map(g => g.name + ' ' + g.current + '/' + g.target + ' (' + g.pct + '%)').join(' | ');
+        }
+        parts.push(line);
+    }
+
+    if (ctx.tax) {
+        const t = ctx.tax;
+        parts.push('[WizeTax] Deductibles: ' + t.deductibles + ' | Est. tax: ' + t.estimatedTax);
+    }
+    if (ctx.travel) {
+        const t = ctx.travel;
+        parts.push('[WizeTravel] Watched routes: ' + ((t.watchedRoutes || []).join(', ')) + ' | Budget: ' + t.travelBudget);
+    }
+    if (ctx.health) {
+        parts.push('[WizeHealth] Medical expenses: ' + ctx.health.medicalExpenses);
+    }
+    if (ctx.deals) {
+        parts.push('[WizeDeal] Tracked items: ' + ctx.deals.trackedCount + ' | Saved: ' + ctx.deals.totalSaved);
+    }
+
+    return { summary: parts.join('\n'), apps: Object.keys(ctx) };
+});
