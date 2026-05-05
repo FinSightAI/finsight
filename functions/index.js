@@ -509,16 +509,21 @@ exports.marketData = functions
             });
         }
 
-        // Twelve Data: quote + RSI + MACD + SMA50 + SMA200 in parallel
+        // Fetch everything in parallel
         const tdBase = "https://api.twelvedata.com";
         const sym = encodeURIComponent(ticker);
-        const [quote, rsi, macd, sma50, sma200, news] = await Promise.allSettled([
+        const today = new Date().toISOString().split("T")[0];
+        const threeDaysAgo = new Date(Date.now() - 3 * 86400000).toISOString().split("T")[0];
+
+        const [quote, rsi, macd, sma50, sma200, news, fundamentals, peers] = await Promise.allSettled([
             fetchJson(`${tdBase}/quote?symbol=${sym}&apikey=${tdKey}`),
             fetchJson(`${tdBase}/rsi?symbol=${sym}&interval=1day&time_period=14&outputsize=1&apikey=${tdKey}`),
             fetchJson(`${tdBase}/macd?symbol=${sym}&interval=1day&outputsize=1&apikey=${tdKey}`),
             fetchJson(`${tdBase}/sma?symbol=${sym}&interval=1day&time_period=50&outputsize=1&apikey=${tdKey}`),
             fetchJson(`${tdBase}/sma?symbol=${sym}&interval=1day&time_period=200&outputsize=1&apikey=${tdKey}`),
-            fetchJson(`https://finnhub.io/api/v1/company-news?symbol=${sym}&from=${new Date(Date.now()-3*86400000).toISOString().split("T")[0]}&to=${new Date().toISOString().split("T")[0]}&token=${fhKey}`),
+            fetchJson(`https://finnhub.io/api/v1/company-news?symbol=${sym}&from=${threeDaysAgo}&to=${today}&token=${fhKey}`),
+            fetchJson(`https://finnhub.io/api/v1/stock/metric?metric=all&symbol=${sym}&token=${fhKey}`),
+            fetchJson(`https://finnhub.io/api/v1/stock/peers?symbol=${sym}&token=${fhKey}`),
         ]);
 
         // Quote
@@ -564,6 +569,30 @@ exports.marketData = functions
                 url:      n.url,
                 datetime: n.datetime,
             }));
+        }
+
+        // Fundamentals (Finnhub /stock/metric)
+        if (fundamentals.status === "fulfilled" && fundamentals.value?.metric) {
+            const m = fundamentals.value.metric;
+            const f = {};
+            if (m["52WeekHigh"])                  f.week52High      = m["52WeekHigh"];
+            if (m["52WeekLow"])                   f.week52Low       = m["52WeekLow"];
+            if (m["peNormalizedAnnual"])           f.pe              = m["peNormalizedAnnual"].toFixed(1);
+            if (m["epsNormalizedAnnual"])          f.eps             = m["epsNormalizedAnnual"].toFixed(2);
+            if (m["revenueGrowthTTMYoy"] != null)  f.revenueGrowth  = (m["revenueGrowthTTMYoy"] * 100).toFixed(1) + "%";
+            if (m["grossMarginTTM"] != null)       f.grossMargin    = m["grossMarginTTM"].toFixed(1) + "%";
+            if (m["netMarginTTM"] != null)         f.netMargin      = m["netMarginTTM"].toFixed(1) + "%";
+            if (m["debtEquityQuarterly"] != null)  f.debtEquity     = m["debtEquityQuarterly"].toFixed(2);
+            if (m["marketCapitalization"])         f.marketCap      = m["marketCapitalization"];
+            if (m["dividendYieldIndicatedAnnual"]) f.dividendYield  = m["dividendYieldIndicatedAnnual"].toFixed(2) + "%";
+            if (m["beta"])                         f.beta           = m["beta"].toFixed(2);
+            if (m["roeTTM"] != null)               f.roe            = m["roeTTM"].toFixed(1) + "%";
+            if (Object.keys(f).length) result.fundamentals = f;
+        }
+
+        // Peers (Finnhub /stock/peers)
+        if (peers.status === "fulfilled" && Array.isArray(peers.value)) {
+            result.peers = peers.value.filter(p => p !== ticker).slice(0, 5);
         }
 
         // Cache result

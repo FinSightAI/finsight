@@ -349,6 +349,23 @@ function formatMarketContext(d) {
     lines.push(`${isHe ? 'מחיר' : 'Price'}: $${d.price}  ${d.changePct >= 0 ? '+' : ''}${d.changePct}% ${isHe ? 'היום' : 'today'}`);
     if (d.high) lines.push(`${isHe ? 'טווח יומי' : 'Range'}: $${d.low}–$${d.high}${d.volume ? '  |  Vol: ' + d.volume : ''}`);
 
+    // Fundamentals
+    if (d.fundamentals) {
+        const f = d.fundamentals;
+        lines.push('\n' + (isHe ? 'פונדמנטאלי:' : 'Fundamentals:'));
+        if (f.marketCap)    lines.push(`  Market Cap: $${(f.marketCap / 1000).toFixed(1)}B`);
+        if (f.pe)           lines.push(`  P/E: ${f.pe}`);
+        if (f.eps)          lines.push(`  EPS: $${f.eps}`);
+        if (f.revenueGrowth)lines.push(`  ${isHe ? 'צמיחת הכנסות' : 'Revenue Growth'} (YoY): ${f.revenueGrowth}`);
+        if (f.grossMargin)  lines.push(`  ${isHe ? 'מרווח גולמי' : 'Gross Margin'}: ${f.grossMargin}`);
+        if (f.netMargin)    lines.push(`  ${isHe ? 'מרווח נקי' : 'Net Margin'}: ${f.netMargin}`);
+        if (f.roe)          lines.push(`  ROE: ${f.roe}`);
+        if (f.debtEquity)   lines.push(`  Debt/Equity: ${f.debtEquity}`);
+        if (f.beta)         lines.push(`  Beta: ${f.beta}`);
+        if (f.dividendYield)lines.push(`  ${isHe ? 'תשואת דיבידנד' : 'Dividend Yield'}: ${f.dividendYield}`);
+        if (f.week52High)   lines.push(`  52W: $${f.week52Low}–$${f.week52High}`);
+    }
+
     // Technical analysis
     const ta = [];
     if (d.rsi != null) {
@@ -366,9 +383,14 @@ function formatMarketContext(d) {
     }
     if (d.sma200 && d.price && d.sma50) {
         const gc = parseFloat(d.sma50) > parseFloat(d.sma200);
-        ta.push(`SMA200: $${d.sma200} → ${gc ? (isHe ? 'Golden Cross ✨' : 'Golden Cross ✨') : (isHe ? 'Death Cross ⚠️' : 'Death Cross ⚠️')}`);
+        ta.push(`SMA200: $${d.sma200} → ${gc ? 'Golden Cross ✨' : (isHe ? 'Death Cross ⚠️' : 'Death Cross ⚠️')}`);
     }
     if (ta.length) lines.push('\n' + (isHe ? 'ניתוח טכני:' : 'Technical Analysis:'), ...ta.map(l => '  ' + l));
+
+    // Peers
+    if (d.peers?.length) {
+        lines.push(`\n${isHe ? 'מתחרים באותו סקטור' : 'Sector peers'}: ${d.peers.join(', ')}`);
+    }
 
     // News
     if (d.news?.length) {
@@ -500,7 +522,16 @@ async function sendMessage() {
     showTyping();
 
     try {
-        const result = await aiProxy({ messages: conversationHistory, system: buildSystemPrompt() });
+        // Fetch live market data for any tickers mentioned
+        const tickers = extractTickers(text);
+        let marketCtx = '';
+        if (tickers.length) {
+            const mdResults = await Promise.allSettled(tickers.map(fetchMarketData));
+            mdResults.forEach(r => { if (r.status === 'fulfilled' && r.value) marketCtx += formatMarketContext(r.value); });
+        }
+        const system = buildSystemPrompt() + marketCtx;
+
+        const result = await aiProxy({ messages: conversationHistory, system });
         removeTyping();
         const reply = result.data.text;
         conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
