@@ -526,8 +526,13 @@ async function sendMessage() {
         const tickers = extractTickers(text);
         let marketCtx = '';
         if (tickers.length) {
+            const typingEl = document.getElementById('typingIndicator');
+            if (typingEl) typingEl.querySelector('.chat-bubble').innerHTML =
+                `<span style="font-size:0.8rem;color:var(--color-text-secondary)">📡 טוען נתוני שוק: ${tickers.join(', ')}...</span>`;
             const mdResults = await Promise.allSettled(tickers.map(fetchMarketData));
             mdResults.forEach(r => { if (r.status === 'fulfilled' && r.value) marketCtx += formatMarketContext(r.value); });
+            if (typingEl) typingEl.querySelector('.chat-bubble').innerHTML =
+                '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
         }
         const system = buildSystemPrompt() + marketCtx;
 
