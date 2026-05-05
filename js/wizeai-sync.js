@@ -5,6 +5,16 @@
 const WizeAISync = {
     THROTTLE_MS: 5 * 60 * 1000, // sync at most once per 5 min
 
+    _debounceTimer: null,
+
+    scheduleSync() {
+        clearTimeout(this._debounceTimer);
+        this._debounceTimer = setTimeout(async () => {
+            const user = typeof firebase !== 'undefined' && firebase.auth().currentUser;
+            if (user) await this.sync(user.uid);
+        }, 8000); // 8s debounce — batch rapid changes
+    },
+
     async sync(uid) {
         if (!uid || typeof Storage === 'undefined' || typeof firebase === 'undefined') return;
         const lastSync = parseInt(localStorage.getItem('wizeai_last_sync') || '0');

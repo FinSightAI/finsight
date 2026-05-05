@@ -213,6 +213,7 @@ const Storage = {
 
     saveBankAccounts(accounts) {
         this.set(this.KEYS.BANK_ACCOUNTS, accounts);
+        if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
     addBankAccount(account) {
@@ -252,6 +253,7 @@ const Storage = {
 
     saveCreditCards(data) {
         this.set(this.KEYS.CREDIT_CARDS, data);
+        if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
     addCreditCard(card) {
@@ -324,6 +326,7 @@ const Storage = {
 
     saveStocks(data) {
         this.set(this.KEYS.STOCKS, data);
+        if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
     addStock(holding) {
@@ -438,6 +441,7 @@ const Storage = {
 
     saveAssets(assets) {
         this.set(this.KEYS.ASSETS, assets);
+        if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
     addAsset(asset) {
@@ -471,6 +475,7 @@ const Storage = {
 
     saveMyFunds(funds) {
         this.set(this.KEYS.MY_FUNDS, funds);
+        if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
     addMyFund(fund) {
@@ -549,6 +554,7 @@ const Storage = {
 
     saveLoans(loans) {
         this.set(this.KEYS.LOANS, loans);
+        if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
     addLoan(loan) {
@@ -642,6 +648,7 @@ const Storage = {
 
     saveSubscriptions(subs) {
         this.set(this.KEYS.SUBSCRIPTIONS, subs);
+        if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
     addSubscription(sub) {

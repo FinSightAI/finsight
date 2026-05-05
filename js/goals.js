@@ -16,6 +16,7 @@ const Goals = {
      */
     saveAll(goals) {
         Storage.set(this.STORAGE_KEY, goals);
+        if(typeof WizeAISync!=='undefined') WizeAISync.scheduleSync();
     },
 
     /**

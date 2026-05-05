@@ -397,6 +397,7 @@
     <script src="../js/sidebar.js"></script>
     <script src="../js/profiles.js"></script>
     <script src="../js/storage.js"></script>
+    <script src="../js/wizeai-sync.js"></script>
     <script src="../js/i18n.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -461,6 +462,7 @@
 
     function saveIncomeList(arr) {
         Storage.set(STORAGE_KEY, arr);
+        if(typeof WizeAISync!=='undefined') WizeAISync.scheduleSync();
     }
 
     // ── Summary ───────────────────────────────────────────────────────────────
