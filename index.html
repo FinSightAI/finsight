@@ -887,7 +887,7 @@
 
             if (tips.length === 0) {
                 widget.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">
-                    <a href="pages/profile.html" style="color: var(--color-primary);">${lang === 'he' ? 'מלא פרופיל לקבלת טיפים' : 'Fill your profile to get tips'}</a>
+                    <a href="pages/profile.html" style="color: var(--color-primary);">${lang === 'he' ? 'מלא פרופיל לקבלת טיפים' : lang === 'pt' ? 'Preencha seu perfil para dicas' : lang === 'es' ? 'Completa tu perfil para consejos' : 'Fill your profile to get tips'}</a>
                 </div>`;
                 return;
             }
@@ -897,8 +897,8 @@
                 <div style="display: flex; gap: 12px; padding: 12px 15px; border-bottom: 1px solid var(--color-border);">
                     <span style="font-size: 1.3rem;">${tip.icon}</span>
                     <div>
-                        <div style="font-weight: 500; margin-bottom: 2px;">${tip.title[lang] || tip.title.he}</div>
-                        <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${tip.description[lang] || tip.description.he}</div>
+                        <div style="font-weight: 500; margin-bottom: 2px;">${tip.title[lang] || tip.title.en || tip.title.he}</div>
+                        <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${tip.description[lang] || tip.description.en || tip.description.he}</div>
                     </div>
                 </div>
             `).join('');
