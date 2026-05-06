@@ -2,7 +2,7 @@
  * Stock API Module - Fetches stock data from Yahoo Finance + TASE
  */
 const StockAPI = {
-    CF_WORKER_URL: null, // Cloudflare Worker disabled (returning 500)
+    CF_WORKER_URL: 'https://lucky-hill-f215.ofirshamir57.workers.dev/v8/finance/chart',
 
     YAHOO_URLS: [
         'https://query1.finance.yahoo.com/v8/finance/chart',
@@ -601,7 +601,13 @@ const StockAPI = {
         const tryProxy = proxy => fetch(`${proxy}${encodeURIComponent(base1)}`, { signal: AbortSignal.timeout(8000) })
             .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(parse);
 
+        // Cloudflare Worker (your own) — fastest path, no CORS issues
+        const workerBase = `https://lucky-hill-f215.ofirshamir57.workers.dev/v7/finance/spark?symbols=${encodeURIComponent(joined)}&range=5d&interval=1d&includePrePost=false`;
+        const tryWorker = () => fetch(workerBase, { signal: AbortSignal.timeout(6000) })
+            .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(parse);
+
         const data = await Promise.any([
+            tryWorker(),  // ← preferred
             tryDirect(base1), tryDirect(base2),
             ...this.PROXY_URLS.map(tryProxy),
         ]);
