@@ -1005,7 +1005,7 @@
             },
 
             init() {
-                if (localStorage.getItem('finance_onboarding_done')) return;
+                if (localStorage.getItem('wl_onboarding_dismissed') || localStorage.getItem('finance_onboarding_done')) return;
                 this._buildSlides();
                 this._initSwipe();
                 document.getElementById('onboardingOverlay').style.display = 'block';
@@ -1113,7 +1113,7 @@
                 if (this._step > 0) { this._step--; this._render(); }
             },
             finish() {
-                localStorage.setItem('finance_onboarding_done', '1');
+                localStorage.setItem('wl_onboarding_dismissed', '1'); localStorage.setItem('finance_onboarding_done', '1');
                 const el = document.getElementById('onboardingOverlay');
                 el.style.transition = 'opacity 0.3s';
                 el.style.opacity = '0';
