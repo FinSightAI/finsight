@@ -1,4 +1,8 @@
-@import url('https://wizelife.ai/wizelife-design.css');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* WizeLife smooth-transition base */
+html { scroll-behavior: smooth; }
+body { transition: background 200ms ease; }
 
 /* ===== CSS Variables ===== */
 :root {
