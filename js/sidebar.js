@@ -175,10 +175,20 @@
                 return `<li class="nav-item"><a href="${s.file}" class="nav-link${a}"${lockAttr} data-category="${s.category}"><span class="icon">${getIcon(s)}</span><span${i18nAttr}>${s.label}</span>${lockBadge}</a></li>`;
             }).join('');
             const i18nAttr = item.i18n ? ` data-i18n="${item.i18n}"` : '';
-            return `<li class="nav-item">
-                <span class="nav-link" style="cursor:default;">
+            const groupKey = item.i18n || item.label;
+            // Default closed unless this group contains the active page
+            const openByDefault = subActive;
+            let isOpen;
+            try {
+                const stored = localStorage.getItem('wl_nav_open_' + groupKey);
+                isOpen = stored === null ? openByDefault : stored === '1';
+            } catch(e) { isOpen = openByDefault; }
+            const openCls = isOpen ? ' open' : '';
+            return `<li class="nav-item nav-group${openCls}" data-group="${groupKey}">
+                <span class="nav-link nav-group-toggle" style="cursor:pointer;user-select:none;" onclick="(function(li){const o=li.classList.toggle('open');try{localStorage.setItem('wl_nav_open_'+li.dataset.group,o?'1':'0');}catch(e){}})(this.parentElement)">
                     <span class="icon">${getIcon(item)}</span>
                     <span${i18nAttr}>${item.label}</span>
+                    <span class="nav-chevron" style="margin-inline-start:auto;font-size:10px;opacity:.6;transition:transform .2s;">▾</span>
                 </span>
                 <ul class="nav-submenu">${subItems}</ul>
             </li>`;
