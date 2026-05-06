@@ -1731,3 +1731,22 @@ body.light .fund-type-tab.active {
 body.light .nav-link.active .icon {
     color: #10b981 !important;
 }
+
+
+/* FinSight — onboarding overlay light mode */
+body.light #onboardingOverlay.active {
+    background: rgba(248,250,252,0.98) !important;
+}
+body.light #onboardingBox {
+    background: #ffffff !important;
+    color: #1e293b !important;
+}
+body.light #onboardingBox h2,
+body.light #onboardingBox .ob-subtitle {
+    color: #1e293b !important;
+}
+body.light .ob-step {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    color: #1e293b !important;
+}
