@@ -320,6 +320,15 @@
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
             '</div>';
         document.body.prepend(bar);
+
+    // Hook Firebase auth state to refresh link status
+    try {
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            firebase.auth().onAuthStateChanged(function() {
+                setTimeout(function(){ updateWizeBarPlan(); updateWizeBarLink(); }, 100);
+            });
+        }
+    } catch(e) {}
         const s = document.createElement('style');
         s.textContent = 'body{padding-top:36px!important}.sidebar{top:36px!important;height:calc(100vh - 36px)!important}';
         document.head.appendChild(s);
@@ -373,6 +382,57 @@
         }
     }
 
+    // Show link status: connected user vs WizeLife SSO user
+    function updateWizeBarLink() {
+        const el = document.getElementById('wl-bar-link');
+        if (!el) return;
+        let ssoEmail = null, fbEmail = null, fbUid = null;
+        try {
+            const sso = JSON.parse(localStorage.getItem('wl_sso') || '{}');
+            ssoEmail = sso.email || null;
+        } catch(e) {}
+        try {
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                const u = firebase.auth().currentUser;
+                if (u) { fbEmail = u.email; fbUid = u.uid; }
+            }
+        } catch(e) {}
+        // No data to display
+        if (!ssoEmail && !fbEmail) {
+            el.style.display = 'none';
+            return;
+        }
+        el.style.display = 'inline-flex';
+        // Match
+        if (ssoEmail && fbEmail && ssoEmail.toLowerCase() === fbEmail.toLowerCase()) {
+            el.textContent = '✓ ' + (fbEmail.length > 22 ? fbEmail.slice(0,20)+'…' : fbEmail);
+            el.style.background = 'rgba(16,185,129,0.12)';
+            el.style.color = '#34d399';
+            el.style.border = '1px solid rgba(16,185,129,0.3)';
+            el.title = 'מקושר ל-WizeLife: ' + fbEmail;
+        } else if (fbEmail && !ssoEmail) {
+            el.textContent = fbEmail.length > 22 ? fbEmail.slice(0,20)+'…' : fbEmail;
+            el.style.background = 'rgba(99,102,241,0.12)';
+            el.style.color = '#a5b4fc';
+            el.style.border = '1px solid rgba(99,102,241,0.25)';
+            el.title = 'חשבון WizeMoney: ' + fbEmail + ' — לא מחובר ל-WizeLife';
+        } else if (ssoEmail && !fbEmail) {
+            el.textContent = '⚠ ' + (ssoEmail.length > 22 ? ssoEmail.slice(0,20)+'…' : ssoEmail);
+            el.style.background = 'rgba(245,158,11,0.12)';
+            el.style.color = '#fbbf24';
+            el.style.border = '1px solid rgba(245,158,11,0.3)';
+            el.title = 'WizeLife: ' + ssoEmail + ' — היכנס בדף זה כדי לסנכרן';
+        } else if (ssoEmail && fbEmail) {
+            // Mismatch
+            el.textContent = '⚠ אימייל שונה';
+            el.style.background = 'rgba(239,68,68,0.12)';
+            el.style.color = '#f87171';
+            el.style.border = '1px solid rgba(239,68,68,0.3)';
+            el.title = 'WizeMoney: ' + fbEmail + ' | WizeLife: ' + ssoEmail;
+        }
+    }
+
+
     function updateWizeBarNick() {
         const el = document.getElementById('wl-bar-nick');
         if (!el) return;
@@ -389,7 +449,7 @@
 
     // Update pill once Plan is ready
     function waitForPlan() {
-        if (typeof Plan !== 'undefined') { updatePlanPill(); updateWizeBarPlan(); Plan.onChange(function(){updatePlanPill();updateWizeBarPlan();}); }
+        if (typeof Plan !== 'undefined') { updatePlanPill(); updateWizeBarPlan(); updateWizeBarLink(); Plan.onChange(function(){updatePlanPill();updateWizeBarPlan(); updateWizeBarLink();}); }
         else setTimeout(waitForPlan, 300);
     }
 
@@ -488,9 +548,9 @@
     function inject() {
         injectWizeBar();
         updateWizeBarNick();
-        updateWizeBarPlan();
+        updateWizeBarPlan(); updateWizeBarLink();
         // Re-update plan when localStorage changes
-        window.addEventListener('storage', function(e){if(e.key==='wl_plan')updateWizeBarPlan();});
+        window.addEventListener('storage', function(e){if(e.key==='wl_plan')updateWizeBarPlan(); updateWizeBarLink();});
         // re-check once Firebase Auth resolves
         if (typeof firebase !== 'undefined' && firebase.auth) {
             firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); });
