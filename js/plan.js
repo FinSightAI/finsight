@@ -78,6 +78,15 @@ const Plan = (() => {
     async function load() {
         if (!PAYWALL_ACTIVE) { _plan = "pro"; _notify(); return "pro"; }
 
+        // Honor previously-redeemed access code — don't make user re-enter
+        const _storedCode = localStorage.getItem("wl_access_code");
+        const _storedPlan = localStorage.getItem("wl_plan");
+        if (_storedCode && (_storedPlan === "pro" || _storedPlan === "yolo")) {
+            _plan = _storedPlan;
+            _notify();
+            return _plan;
+        }
+
         if (typeof firebaseAuth !== "undefined" && firebaseAuth.currentUser) {
             try {
                 const uid = firebaseAuth.currentUser.uid;
