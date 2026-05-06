@@ -1482,3 +1482,23 @@ table th {
     color: #6b7280;
     font-weight: 600;
 }
+
+
+/* ── WizeMoney sidebar SVG enhancement ── */
+.sidebar .nav-link .icon { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar .nav-link .icon svg { width: 16px; height: 16px; opacity: .8; transition: opacity .15s; }
+.sidebar .nav-link:hover .icon svg { opacity: 1; }
+.sidebar .nav-link.active .icon svg { opacity: 1; color: var(--color-dashboard, #10b981); }
+
+/* Brand wordmark — gradient like web-apps.html */
+.sidebar .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; letter-spacing: -0.3px; }
+.sidebar .brand-highlight {
+    background: linear-gradient(135deg, #10b981, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Nav menu typography */
+.sidebar .nav-link { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; }
+.sidebar .nav-link.active { font-weight: 700; }
