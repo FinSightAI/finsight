@@ -413,7 +413,17 @@
             overflow-y: auto;
         }
         .summary-share-btns { display: flex; flex-wrap: wrap; gap: 10px; }
-    </style>
+    
+        body.light #onboardingOverlay,
+        body.light #onboardingOverlay.active {
+            background: rgba(248,250,252,0.98) !important;
+        }
+        body.light #onboardingOverlay h2,
+        body.light #onboardingOverlay p,
+        body.light #onboardingOverlay div {
+            color: #1e293b !important;
+        }
+</style>
     <script src="js/idb.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/profiles.js"></script>
