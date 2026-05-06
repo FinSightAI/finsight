@@ -951,6 +951,10 @@
             },
             dismiss() {
                 localStorage.setItem(this.STORAGE_KEY, '1');
+                localStorage.setItem('finance_onboarding_done', '1');  // also stop OnboardingTour
+                // Hide OnboardingTour overlay if open
+                var ovTour = document.getElementById('onboardingOverlay');
+                if (ovTour) ovTour.style.display = 'none';
                 const el = document.getElementById('onboardingOverlay');
                 if (el) el.classList.remove('active');
             },
