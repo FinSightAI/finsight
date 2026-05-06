@@ -299,7 +299,8 @@
 
         const panel = document.createElement('aside');
         panel.id = 'wl-money-rpanel';
-        panel.style.cssText = 'position:fixed;top:36px;left:0;width:240px;height:calc(100vh - 36px);background:#060810;border-right:1px solid rgba(255,255,255,0.07);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:ltr;';
+        panel.style.cssText = 'position:fixed;top:36px;left:0;width:240px;height:calc(100vh - 36px);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:ltr;';
+        panel.classList.add('wl-rpanel-themed');
         panel.innerHTML = `
             <button id="wl-rp-collapse" aria-label="Collapse panel" style="position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0">×</button>
             <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px;padding-right:30px">AI Insights</div>

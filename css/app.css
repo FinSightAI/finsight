@@ -1570,3 +1570,67 @@ table th {
     font-weight: 700 !important;
     letter-spacing: 0.3px !important;
 }
+
+
+/* ── WizeMoney right panel + sidebar light/dark themes ── */
+.wl-rpanel-themed {
+    background: #060810;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    color: #eef2ff;
+}
+body.light .wl-rpanel-themed {
+    background: #ffffff;
+    border-right: 1px solid rgba(0,0,0,0.08);
+    color: #1e293b;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.04);
+}
+.wl-rpanel-themed > div {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.07);
+}
+body.light .wl-rpanel-themed > div {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.08) !important;
+}
+body.light .wl-rpanel-themed div[style*="color:#94a3b8"],
+body.light .wl-rpanel-themed div[style*="color: #94a3b8"] {
+    color: #475569 !important;
+}
+body.light .wl-rpanel-themed div[style*="color:#eef2ff"] {
+    color: #1e293b !important;
+}
+body.light .wl-rpanel-themed div[style*="color:rgba(255,255,255,0.3)"] {
+    color: rgba(0,0,0,0.4) !important;
+}
+body.light .wl-rpanel-themed a[href*="wize-ai"] {
+    background: rgba(99,102,241,0.06) !important;
+}
+
+/* Sidebar light mode */
+body.light .sidebar {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.08) !important;
+}
+body.light .sidebar .nav-link {
+    color: #475569 !important;
+}
+body.light .sidebar .nav-link:hover {
+    background: rgba(0,0,0,0.04) !important;
+    color: #1e293b !important;
+}
+body.light .sidebar .nav-link.active {
+    background: rgba(16,185,129,0.1) !important;
+    color: #10b981 !important;
+}
+body.light .sidebar .nav-link .icon svg {
+    color: #475569;
+}
+body.light .sidebar-footer {
+    border-color: rgba(0,0,0,0.08) !important;
+}
+
+/* Re-open tab in light mode */
+body.light #wl-rp-reopen {
+    background: rgba(99,102,241,0.1) !important;
+    color: #6366f1 !important;
+}
