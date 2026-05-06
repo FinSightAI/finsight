@@ -11,9 +11,9 @@ const StockAPI = {
     YAHOO_URL: 'https://query1.finance.yahoo.com/v8/finance/chart',
     TASE_API_URL: 'https://api.tase.co.il/api',
     PROXY_URLS: [
-        'https://api.allorigins.win/raw?url=',
+        'https://api.codetabs.com/v1/proxy/?quest=',  // ← currently the only reliable one
         'https://corsproxy.io/?url=',
-        'https://api.codetabs.com/v1/proxy/?quest='
+        'https://api.allorigins.win/raw?url='
     ],
     _currentProxyIndex: 0,
     _taseIdCache: {},
@@ -331,7 +331,7 @@ const StockAPI = {
      */
     async _fetchYahooPriceOnly(formattedSymbol) {
         const suffix = `/${encodeURIComponent(formattedSymbol)}?interval=1d&range=5d&includePrePost=false`;
-        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(3000) })
+        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(4000) })
             .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
             .then(d => { if (!d?.chart?.result?.length) throw new Error('empty'); return d; });
         const tryProxy = base => this._fetchWithFallback(base + suffix)
@@ -596,9 +596,9 @@ const StockAPI = {
         const base2 = `https://query2.finance.yahoo.com/v7/finance/spark?symbols=${encodeURIComponent(joined)}&range=5d&interval=1d&includePrePost=false`;
 
         const parse = d => { if (!d?.spark?.result?.length) throw new Error('empty'); return d; };
-        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(3000) })
+        const tryDirect = url => fetch(url, { signal: AbortSignal.timeout(4000) })
             .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(parse);
-        const tryProxy = proxy => fetch(`${proxy}${encodeURIComponent(base1)}`, { signal: AbortSignal.timeout(4000) })
+        const tryProxy = proxy => fetch(`${proxy}${encodeURIComponent(base1)}`, { signal: AbortSignal.timeout(8000) })
             .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(parse);
 
         const data = await Promise.any([
