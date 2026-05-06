@@ -1151,6 +1151,30 @@
         };
     </script>
 
+
+<script>
+/* WL: onboarding overlay reactive style */
+(function() {
+    function syncOverlay() {
+        var ov = document.getElementById('onboardingOverlay');
+        if (!ov) return;
+        var isLight = document.body.classList.contains('light');
+        ov.style.background = isLight ? 'rgba(248,250,252,0.98)' : 'rgba(0,0,0,0.75)';
+        // Also color the title and subtitle
+        var titles = ov.querySelectorAll('h2, p, .ob-subtitle');
+        titles.forEach(function(t) { t.style.color = isLight ? '#1e293b' : ''; });
+    }
+    // Initial run
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncOverlay);
+    } else { syncOverlay(); }
+    // Watch for body class changes (theme toggle)
+    var obs = new MutationObserver(syncOverlay);
+    obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    // Also poll every 2s — Onboarding.show() may set inline style
+    setInterval(syncOverlay, 2000);
+})();
+</script>
 </body>
 </html>
 <!-- Mon Feb  2 18:38:29 -03 2026 -->
