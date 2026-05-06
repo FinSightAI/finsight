@@ -322,7 +322,7 @@
 
         // Add main padding-left to account for panel
         const s = document.createElement('style');
-        s.textContent = '@media (min-width: 1280px) { main, .main-content, .container, body > *:not(#wl-bar):not(#wl-money-rpanel):not(aside.sidebar):not(#wlThemeToggle):not(#globalLangSwitcher) { padding-left: 240px !important; box-sizing: border-box; } }';
+        s.textContent = '@media (min-width: 1280px) { body { padding-left: 240px !important; box-sizing: border-box; } #wl-bar { padding-left: 256px !important; } }';
         document.head.appendChild(s);
 
         // Try to populate net worth if Plan/data is available
