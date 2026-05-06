@@ -306,7 +306,7 @@
         const LANGS = ['he','en','pt','es'];
         const pillCSS = (active) => `background:${active?'rgba(16,185,129,0.18)':'none'};border:none;color:${active?'#10b981':'#6b7280'};padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.4px;`;
         const langPills = LANGS.map(lng =>
-            `<button data-wl-lang="${lng}" onclick="(function(l){localStorage.setItem('wl_lang',l);if(typeof I18n!=='undefined')I18n.setLanguage(l);document.getElementById('wl-bar').querySelectorAll('[data-wl-lang]').forEach(function(b){b.style.cssText='${pillCSS(false)}';if(b.getAttribute('data-wl-lang')===l)b.style.cssText='${pillCSS(true)}'});})('${lng}')" style="${pillCSS(lng===l)}">${lng==='he'?'עב':lng.toUpperCase()}</button>`
+            `<button data-wl-lang="${lng}" onclick="(function(l){localStorage.setItem('wl_lang',l);if(typeof I18n!=='undefined')I18n.setLanguage(l);document.getElementById('wl-bar').querySelectorAll('[data-wl-lang]').forEach(function(b){b.style.cssText='${pillCSS(false)}';if(b.getAttribute('data-wl-lang')===l)b.style.cssText='${pillCSS(true)}'});})('${lng}')" style="${pillCSS(lng===l)}">${lng.toUpperCase()}</button>`
         ).join('');
         bar.innerHTML =
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
