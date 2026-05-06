@@ -315,6 +315,7 @@
             '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
             '<div style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
+            '<span id="wl-bar-plan" style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
             '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
             '</div>';
@@ -341,6 +342,28 @@
     }
 
 
+    
+    function updateWizeBarPlan() {
+        const el = document.getElementById('wl-bar-plan');
+        if (!el) return;
+        const plan = localStorage.getItem('wl_plan') || 'free';
+        const labels = { yolo: '⚡ YOLO', pro: '✦ PRO', free: 'FREE', pro_trial: '✦ PRO' };
+        el.textContent = labels[plan] || 'FREE';
+        if (plan === 'yolo') {
+            el.style.background = 'linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2))';
+            el.style.color = '#fbbf24';
+            el.style.borderColor = 'rgba(245,158,11,0.35)';
+        } else if (plan === 'pro' || plan === 'pro_trial') {
+            el.style.background = 'rgba(16,185,129,0.18)';
+            el.style.color = '#34d399';
+            el.style.borderColor = 'rgba(16,185,129,0.35)';
+        } else {
+            el.style.background = 'rgba(99,102,241,0.15)';
+            el.style.color = '#a5b4fc';
+            el.style.borderColor = 'rgba(99,102,241,0.25)';
+        }
+    }
+
     function updateWizeBarNick() {
         const el = document.getElementById('wl-bar-nick');
         if (!el) return;
@@ -357,7 +380,7 @@
 
     // Update pill once Plan is ready
     function waitForPlan() {
-        if (typeof Plan !== 'undefined') { updatePlanPill(); Plan.onChange(updatePlanPill); }
+        if (typeof Plan !== 'undefined') { updatePlanPill(); updateWizeBarPlan(); Plan.onChange(function(){updatePlanPill();updateWizeBarPlan();}); }
         else setTimeout(waitForPlan, 300);
     }
 
@@ -438,6 +461,9 @@
     function inject() {
         injectWizeBar();
         updateWizeBarNick();
+        updateWizeBarPlan();
+        // Re-update plan when localStorage changes
+        window.addEventListener('storage', function(e){if(e.key==='wl_plan')updateWizeBarPlan();});
         // re-check once Firebase Auth resolves
         if (typeof firebase !== 'undefined' && firebase.auth) {
             firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); });
