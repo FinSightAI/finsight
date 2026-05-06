@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+<script>
+(function() {
+    try {
+        var t = localStorage.getItem('wl_theme');
+        var isLight = t === 'light';
+        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+        if (isLight) {
+            document.documentElement.classList.add('light');
+            // body class set on DOMContentLoaded
+            if (document.body) document.body.classList.add('light');
+            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+        }
+    } catch(e) {}
+})();
+</script>
     <meta charset="UTF-8">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
     <script>
