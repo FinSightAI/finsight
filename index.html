@@ -1159,7 +1159,7 @@
         var ov = document.getElementById('onboardingOverlay');
         if (!ov) return;
         var isLight = document.body.classList.contains('light');
-        ov.style.background = isLight ? 'rgba(248,250,252,0.98)' : 'rgba(0,0,0,0.75)';
+        ov.style.setProperty('background', isLight ? 'rgba(248,250,252,0.98)' : 'rgba(0,0,0,0.75)', 'important');
         // Also color the title and subtitle
         var titles = ov.querySelectorAll('h2, p, .ob-subtitle');
         titles.forEach(function(t) { t.style.color = isLight ? '#1e293b' : ''; });
