@@ -1506,3 +1506,67 @@ table th {
 /* Nav menu typography */
 .sidebar .nav-link { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; }
 .sidebar .nav-link.active { font-weight: 700; }
+
+
+/* ── WizeLife — page polish (matches web-apps.html design language) ── */
+/* Cards across all 38 pages */
+.card, .data-card, .info-card {
+    border-radius: 14px !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    background: rgba(255,255,255,0.03) !important;
+}
+
+/* Stat values use Plus Jakarta Sans + tabular numerics */
+.stat-num, .stat-value, .metric-value, .big-num {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+/* Stat labels uppercase + spaced */
+.stat-label, .metric-label {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    color: var(--color-text-secondary, #6b7280) !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Tables — header styling */
+table th {
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.7px !important;
+    color: #6b7280 !important;
+}
+
+/* Section headers (h2/h3) use Plus Jakarta Sans */
+.page-content h1, .page-content h2, .page-content h3,
+.dashboard h1, .dashboard h2, .dashboard h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    letter-spacing: -0.4px !important;
+}
+
+/* Money values (numbers in ₪/$) — JetBrains Mono */
+.money-value, .price, .amount, td.numeric, .total-value {
+    font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+/* Buttons — primary uses money green gradient */
+.btn-primary, button[type="submit"]:not(.cancel):not(.close) {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.2px !important;
+}
+
+/* Badges */
+.badge, .pill, .chip {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.3px !important;
+}
