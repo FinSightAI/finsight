@@ -463,46 +463,6 @@
                     {icon:'🎯',label:'Definir meta de ahorro',desc:'Auto, viaje, casa — todo lo que sueñas',href:'pages/goals.html'},
                   ]},
         };
-        const Onboarding = {
-            STORAGE_KEY: 'wl_onboarding_dismissed',
-            show() {
-                const lang = localStorage.getItem('wl_lang') || 'he';
-                const t = OB_TR[lang] || OB_TR.he;
-                const box = document.getElementById('onboardingBox');
-                if (box) {
-                    box.querySelector('h2').textContent = t.title;
-                    box.querySelector('.ob-subtitle').textContent = t.sub;
-                    box.querySelector('.ob-dismiss').textContent = t.dismiss;
-                    const steps = box.querySelectorAll('.ob-step');
-                    t.steps.forEach((s, i) => {
-                        if (!steps[i]) return;
-                        steps[i].href = s.href;
-                        steps[i].querySelector('.ob-icon').textContent = s.icon;
-                        steps[i].querySelector('.ob-label').textContent = s.label;
-                        steps[i].querySelector('.ob-desc').textContent = s.desc;
-                    });
-                }
-                const el = document.getElementById('onboardingOverlay');
-                if (el) el.classList.add('active');
-            },
-            dismiss() {
-                localStorage.setItem(this.STORAGE_KEY, '1');
-                const el = document.getElementById('onboardingOverlay');
-                if (el) el.classList.remove('active');
-            },
-            check() {
-                if (localStorage.getItem(this.STORAGE_KEY)) return;
-                const hasBank    = Storage.getBankAccounts().length > 0;
-                const hasCredit  = Storage.getCreditCards().length > 0;
-                const hasStocks  = Storage.getStocks().holdings?.length > 0;
-                const hasFunds   = (Storage.getMyFunds?.() || []).length > 0;
-                const hasAssets  = Storage.getAssets().length > 0;
-                const hasLoans   = Storage.getLoans().length > 0;
-                if (!hasBank && !hasCredit && !hasStocks && !hasFunds && !hasAssets && !hasLoans) {
-                    setTimeout(() => this.show(), 800);
-                }
-            }
-        };
 
         // Dashboard specific initialization
         document.addEventListener('DOMContentLoaded', () => {
