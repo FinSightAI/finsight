@@ -4,6 +4,32 @@
  * Determines root vs pages/ prefix from window.location, marks the active item.
  */
 (function () {
+    // ── WL SSO bridge: read wl_token + wl_nick from URL, save to wl_sso ──
+    try {
+        var _p = new URLSearchParams(window.location.search);
+        var _t = _p.get('wl_token'), _n = _p.get('wl_nick');
+        if (_t || _n) {
+            var _st = JSON.parse(localStorage.getItem('wl_sso') || '{}');
+            if (_t) {
+                _st.token = _t;
+                try {
+                    var _pl = JSON.parse(atob(_t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+                    if (_pl.email) _st.email = _pl.email;
+                    if (_pl.user_id) _st.uid = _pl.user_id;
+                } catch(e) {}
+            }
+            if (_n) _st.nick = decodeURIComponent(_n);
+            localStorage.setItem('wl_sso', JSON.stringify(_st));
+            // Also save nickname for display
+            if (_n) localStorage.setItem('wl_nickname', decodeURIComponent(_n));
+            // Clean URL
+            var _url = new URL(window.location.href);
+            _url.searchParams.delete('wl_token');
+            _url.searchParams.delete('wl_nick');
+            window.history.replaceState({}, '', _url.toString());
+        }
+    } catch(e) {}
+
     // Detect whether we're at root or inside pages/
     const path = window.location.pathname;
     const inPages = path.includes('/pages/');
