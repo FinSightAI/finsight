@@ -876,7 +876,7 @@
             loadQuickStatsWidget();
             loadCurrencyWidget();
             loadSmartTipsWidget();
-            Onboarding.init();
+            OnboardingTour.init();
         });
     </script>
 
@@ -890,7 +890,7 @@
 
         <!-- Top bar: skip + counter -->
         <div style="position:absolute;top:3px;left:0;right:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;">
-            <button onclick="Onboarding.finish()" style="background:rgba(255,255,255,0.08);border:none;border-radius:20px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;padding:6px 14px;font-family:inherit;">דלג</button>
+            <button onclick="OnboardingTour.finish()" style="background:rgba(255,255,255,0.08);border:none;border-radius:20px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;padding:6px 14px;font-family:inherit;">דלג</button>
             <span id="obCounter" style="color:rgba(255,255,255,0.3);font-size:13px;"></span>
         </div>
 
@@ -901,9 +901,9 @@
 
         <!-- Bottom nav -->
         <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 36px;display:flex;gap:12px;align-items:center;z-index:3;">
-            <button id="obPrevBtn" onclick="Onboarding.prev()"
+            <button id="obPrevBtn" onclick="OnboardingTour.prev()"
                 style="width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;font-size:22px;cursor:pointer;flex-shrink:0;display:none;font-family:inherit;">→</button>
-            <button id="obNextBtn" onclick="Onboarding.next()"
+            <button id="obNextBtn" onclick="OnboardingTour.next()"
                 style="flex:1;height:52px;border-radius:14px;background:linear-gradient(135deg,#10b981,#3b82f6);border:none;color:white;font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;transition:transform 0.1s;"></button>
         </div>
     </div>
@@ -928,6 +928,47 @@
 
     <script>
         const Onboarding = {
+            STORAGE_KEY: 'wl_onboarding_dismissed',
+            show() {
+                const lang = localStorage.getItem('wl_lang') || 'he';
+                const t = OB_TR[lang] || OB_TR.he;
+                const box = document.getElementById('onboardingBox');
+                if (box) {
+                    box.querySelector('h2').textContent = t.title;
+                    box.querySelector('.ob-subtitle').textContent = t.sub;
+                    box.querySelector('.ob-dismiss').textContent = t.dismiss;
+                    const steps = box.querySelectorAll('.ob-step');
+                    t.steps.forEach((s, i) => {
+                        if (!steps[i]) return;
+                        steps[i].href = s.href;
+                        steps[i].querySelector('.ob-icon').textContent = s.icon;
+                        steps[i].querySelector('.ob-label').textContent = s.label;
+                        steps[i].querySelector('.ob-desc').textContent = s.desc;
+                    });
+                }
+                const el = document.getElementById('onboardingOverlay');
+                if (el) el.classList.add('active');
+            },
+            dismiss() {
+                localStorage.setItem(this.STORAGE_KEY, '1');
+                const el = document.getElementById('onboardingOverlay');
+                if (el) el.classList.remove('active');
+            },
+            check() {
+                if (localStorage.getItem(this.STORAGE_KEY)) return;
+                const hasBank    = Storage.getBankAccounts().length > 0;
+                const hasCredit  = Storage.getCreditCards().length > 0;
+                const hasStocks  = Storage.getStocks().holdings?.length > 0;
+                const hasFunds   = (Storage.getMyFunds?.() || []).length > 0;
+                const hasAssets  = Storage.getAssets().length > 0;
+                const hasLoans   = Storage.getLoans().length > 0;
+                if (!hasBank && !hasCredit && !hasStocks && !hasFunds && !hasAssets && !hasLoans) {
+                    setTimeout(() => this.show(), 800);
+                }
+            }
+        };
+
+                const OnboardingTour = {
             _step: 0,
 
             _getSlides() {
@@ -1009,8 +1050,8 @@
                             const card = document.createElement('a');
                             card.className = 'ob-action-card';
                             card.href = a.href || '#';
-                            if (!a.href) card.addEventListener('click', e => { e.preventDefault(); Onboarding.finish(); });
-                            else card.addEventListener('click', () => Onboarding.finish());
+                            if (!a.href) card.addEventListener('click', e => { e.preventDefault(); OnboardingTour.finish(); });
+                            else card.addEventListener('click', () => OnboardingTour.finish());
                             card.innerHTML = `<span style="font-size:1.6rem;line-height:1;">${a.e}</span><span style="font-size:12px;font-weight:600;text-align:center;line-height:1.3;">${a.label}</span>`;
                             card.style.borderColor = a.color + '44';
                             card.style.background = a.color + '18';
