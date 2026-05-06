@@ -346,7 +346,16 @@
     function updateWizeBarPlan() {
         const el = document.getElementById('wl-bar-plan');
         if (!el) return;
-        const plan = localStorage.getItem('wl_plan') || 'free';
+        // Prefer Plan.get() if available (it's source-of-truth from Firestore)
+        let plan = 'free';
+        try {
+            if (typeof Plan !== 'undefined' && Plan.get) {
+                const p = Plan.get();
+                if (p) plan = p;
+            }
+        } catch(e) {}
+        // Fallback to localStorage
+        if (plan === 'free' || !plan) plan = localStorage.getItem('wl_plan') || 'free';
         const labels = { yolo: '⚡ YOLO', pro: '✦ PRO', free: 'FREE', pro_trial: '✦ PRO' };
         el.textContent = labels[plan] || 'FREE';
         if (plan === 'yolo') {
