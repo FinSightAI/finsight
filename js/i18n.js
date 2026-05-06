@@ -9,6 +9,11 @@ const I18n = {
             // Navigation
             nav: {
                 dashboard: 'דאשבורד',
+                accounts: 'חשבונות',
+                investments: 'השקעות',
+                planning: 'תכנון',
+                aiTools: 'AI',
+                account: 'חשבון',
                 bankAccounts: 'חשבונות בנק',
                 creditCards: 'כרטיסי אשראי',
                 stocks: 'מניות',
@@ -1783,6 +1788,11 @@ const I18n = {
             // Navigation
             nav: {
                 dashboard: 'Dashboard',
+                accounts: 'Accounts',
+                investments: 'Investments',
+                planning: 'Planning',
+                aiTools: 'AI',
+                account: 'Account',
                 bankAccounts: 'Bank Accounts',
                 creditCards: 'Credit Cards',
                 stocks: 'Stocks',
@@ -3557,6 +3567,11 @@ const I18n = {
             // Navigation
             nav: {
                 dashboard: 'Painel',
+                accounts: 'Contas',
+                investments: 'Investimentos',
+                planning: 'Planejamento',
+                aiTools: 'IA',
+                account: 'Conta',
                 bankAccounts: 'Contas Bancárias',
                 creditCards: 'Cartões de Crédito',
                 stocks: 'Ações',
@@ -4611,6 +4626,11 @@ const I18n = {
             // Navigation
             nav: {
                 dashboard: 'Panel',
+                accounts: 'Cuentas',
+                investments: 'Inversiones',
+                planning: 'Planificación',
+                aiTools: 'IA',
+                account: 'Cuenta',
                 bankAccounts: 'Cuentas Bancarias',
                 creditCards: 'Tarjetas de Crédito',
                 stocks: 'Acciones',
