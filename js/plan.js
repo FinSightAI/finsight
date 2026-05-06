@@ -49,6 +49,16 @@ const Plan = (() => {
                 _plan = result.data.plan || "pro";
                 localStorage.setItem("wl_plan", _plan);
                 localStorage.setItem("wl_access_code", normalized);
+                // Save to Firestore so it persists across devices/browsers
+                try {
+                    if (typeof firebaseAuth !== "undefined" && firebaseAuth.currentUser) {
+                        await firebaseDb.collection("users").doc(firebaseAuth.currentUser.uid).set({
+                            plan: _plan,
+                            accessCode: normalized,
+                            accessCodeRedeemedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        }, { merge: true });
+                    }
+                } catch (e) { console.warn("Could not save plan to Firestore:", e); }
                 _notify();
                 return true;
             }
@@ -96,6 +106,8 @@ const Plan = (() => {
 
                 if (storedPlan === "pro" || storedPlan === "yolo") {
                     _plan = storedPlan;
+                    // Sync access code to localStorage (for offline/cache)
+                    if (data.accessCode) localStorage.setItem("wl_access_code", data.accessCode);
                 } else if (data.createdAt && _trialDaysLeft(data.createdAt) > 0) {
                     _plan = "pro_trial";
                 } else {
