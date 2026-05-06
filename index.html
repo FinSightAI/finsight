@@ -423,6 +423,16 @@
         body.light #onboardingOverlay div {
             color: #1e293b !important;
         }
+
+        /* Force onboarding overlay light mode — high specificity */
+        html.light #onboardingOverlay.active,
+        body.light #onboardingOverlay.active {
+            background: rgba(248,250,252,0.98) !important;
+        }
+        html.light #onboardingOverlay,
+        body.light #onboardingOverlay {
+            background: rgba(248,250,252,0.98) !important;
+        }
 </style>
     <script src="js/idb.js"></script>
     <script src="js/sidebar.js"></script>
