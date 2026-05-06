@@ -289,6 +289,53 @@
         else setTimeout(waitForPlan, 300);
     }
 
+    
+
+    // ── WizeMoney right panel injector ──
+    function injectRightPanel() {
+        if (document.getElementById('wl-money-rpanel')) return;
+        // Don't inject on small screens
+        if (window.innerWidth < 1280) return;
+
+        const panel = document.createElement('aside');
+        panel.id = 'wl-money-rpanel';
+        panel.style.cssText = 'position:fixed;top:36px;left:0;width:240px;height:calc(100vh - 36px);background:#060810;border-right:1px solid rgba(255,255,255,0.07);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:ltr;';
+        panel.innerHTML = `
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px">AI Insights</div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">Net Worth</div>
+                <div id="wl-rp-networth" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:900;color:#10b981;letter-spacing:-0.5px">—</div>
+                <div style="font-size:10px;color:#6b7280;margin-top:4px">Connect bank for live data</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">Quick Tips</div>
+                <div style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Track all accounts in Bank tab</div>
+                <div style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Set goals to see progress charts</div>
+                <div style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0">Pro unlocks AI advisor & sims</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">WizeAI</div>
+                <a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:6px;text-decoration:none;color:#a5b4fc;font-size:12px;font-weight:600;padding:8px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:8px">🤖 Cross-app advisor →</a>
+            </div>
+        `;
+        document.body.appendChild(panel);
+
+        // Add main padding-left to account for panel
+        const s = document.createElement('style');
+        s.textContent = '@media (min-width: 1280px) { main, .main-content, .container, body > *:not(#wl-bar):not(#wl-money-rpanel):not(aside.sidebar):not(#wlThemeToggle):not(#globalLangSwitcher) { padding-left: 240px !important; box-sizing: border-box; } }';
+        document.head.appendChild(s);
+
+        // Try to populate net worth if Plan/data is available
+        setTimeout(() => {
+            try {
+                const nw = window.NetWorthCalculator?.getCurrent?.() || window.netWorth;
+                if (typeof nw === 'number') {
+                    document.getElementById('wl-rp-networth').textContent = '₪' + nw.toLocaleString();
+                }
+            } catch(e) {}
+        }, 800);
+    }
+
     function inject() {
         injectWizeBar();
         updateWizeBarNick();
@@ -302,6 +349,7 @@
             attachProGates(aside);
         }
         injectThemeToggle();
+        injectRightPanel();
         // Apply current language to sidebar labels
         if (typeof I18n !== 'undefined') I18n.translatePage();
         else setTimeout(() => { if (typeof I18n !== 'undefined') I18n.translatePage(); }, 200);
