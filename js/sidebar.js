@@ -338,24 +338,6 @@
 
 
 
-    // ── WizeAI FAB ──
-    function injectAIFab() {
-        if (document.getElementById('wl-ai-fab')) return;
-        const fab = document.createElement('a');
-        fab.id = 'wl-ai-fab';
-        fab.href = 'https://wizelife.ai/wize-ai.html';
-        fab.target = '_blank';
-        fab.rel = 'noopener';
-        fab.setAttribute('aria-label', 'WizeAI');
-        fab.style.cssText = 'position:fixed;bottom:22px;right:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 8px 28px rgba(99,102,241,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;z-index:9990;transition:all .18s ease;';
-        fab.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 1 8 8c0 3-1.5 5.5-4 7l-4 2-4-2c-2.5-1.5-4-4-4-7a8 8 0 0 1 8-8z"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M9 14s1 1.5 3 1.5 3-1.5 3-1.5"/></svg>';
-        if (document.documentElement.dir === 'rtl') {
-            fab.style.right = 'auto';
-            fab.style.left = '22px';
-        }
-        document.body.appendChild(fab);
-    }
-
     function inject() {
         injectWizeBar();
         updateWizeBarNick();
@@ -370,7 +352,6 @@
         }
         injectThemeToggle();
         injectRightPanel();
-        injectAIFab();
         // Apply current language to sidebar labels
         if (typeof I18n !== 'undefined') I18n.translatePage();
         else setTimeout(() => { if (typeof I18n !== 'undefined') I18n.translatePage(); }, 200);
