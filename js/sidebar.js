@@ -301,7 +301,8 @@
         panel.id = 'wl-money-rpanel';
         panel.style.cssText = 'position:fixed;top:36px;left:0;width:240px;height:calc(100vh - 36px);background:#060810;border-right:1px solid rgba(255,255,255,0.07);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:ltr;';
         panel.innerHTML = `
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px">AI Insights</div>
+            <button id="wl-rp-collapse" aria-label="Collapse panel" style="position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0">×</button>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px;padding-right:30px">AI Insights</div>
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
                 <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">Net Worth</div>
                 <div id="wl-rp-networth" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:900;color:#10b981;letter-spacing:-0.5px">—</div>
@@ -320,8 +321,31 @@
         `;
         document.body.appendChild(panel);
 
+        // Reopen tab (visible when collapsed)
+        const reopenTab = document.createElement('button');
+        reopenTab.id = 'wl-rp-reopen';
+        reopenTab.setAttribute('aria-label', 'Open AI panel');
+        reopenTab.style.cssText = 'position:fixed;top:50%;left:0;transform:translateY(-50%);width:24px;height:60px;border-radius:0 8px 8px 0;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);border-left:none;color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:51;display:none';
+        reopenTab.innerHTML = '›';
+        document.body.appendChild(reopenTab);
+
+        // Wire up collapse/reopen
+        const collapseBtn = panel.querySelector('#wl-rp-collapse');
+        const KEY = 'wl_rp_collapsed';
+        const setState = (collapsed) => {
+            panel.style.display = collapsed ? 'none' : 'flex';
+            reopenTab.style.display = collapsed ? 'block' : 'none';
+            const styleTag = document.getElementById('wl-rp-padding-style');
+            if (styleTag) styleTag.disabled = collapsed;
+            localStorage.setItem(KEY, collapsed ? '1' : '0');
+        };
+        collapseBtn.onclick = () => setState(true);
+        reopenTab.onclick = () => setState(false);
+        if (localStorage.getItem(KEY) === '1') setState(true);
+
         // Add main padding-left to account for panel
         const s = document.createElement('style');
+        s.id = 'wl-rp-padding-style';
         s.textContent = '@media (min-width: 1280px) { body { padding-left: 240px !important; box-sizing: border-box; } #wl-bar { padding-left: 256px !important; } }';
         document.head.appendChild(s);
 
