@@ -19,13 +19,21 @@
                 } catch(e) {}
             }
             if (_n) _st.nick = decodeURIComponent(_n);
+            // Read wl_plan from URL too
+            var _plan = _p.get('wl_plan');
+            if (_plan && ['pro', 'yolo', 'free'].includes(_plan)) {
+                _st.plan = _plan;
+                localStorage.setItem('wl_plan', _plan);
+                // Set a synthetic access code so plan persists
+                if (_plan !== 'free') localStorage.setItem('wl_access_code', 'WL_SSO_' + _plan.toUpperCase());
+            }
             localStorage.setItem('wl_sso', JSON.stringify(_st));
-            // Also save nickname for display
             if (_n) localStorage.setItem('wl_nickname', decodeURIComponent(_n));
             // Clean URL
             var _url = new URL(window.location.href);
             _url.searchParams.delete('wl_token');
             _url.searchParams.delete('wl_nick');
+            _url.searchParams.delete('wl_plan');
             window.history.replaceState({}, '', _url.toString());
         }
     } catch(e) {}
