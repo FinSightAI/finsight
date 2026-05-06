@@ -31,6 +31,7 @@ const ASSETS_TO_CACHE = [
     './js/plan.js',
     './js/paywall.js',
     './js/summary-sender.js',
+    './js/wizeai-sync.js',
     './pages/bank.html',
     './pages/credit.html',
     './pages/income.html',
