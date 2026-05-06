@@ -1718,3 +1718,16 @@ body.light nav.fixed[style*="rgba(15,23,42"] {
     background: rgba(255,255,255,0.97) !important;
     border-top-color: rgba(0,0,0,0.08) !important;
 }
+
+
+/* FinSight — active items in light mode */
+body.light .nav-link.active,
+body.light .tab.active,
+body.light .filter-chip.active,
+body.light .fund-type-tab.active {
+    background: rgba(16,185,129,0.1) !important;
+    color: #10b981 !important;
+}
+body.light .nav-link.active .icon {
+    color: #10b981 !important;
+}
