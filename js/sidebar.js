@@ -415,9 +415,9 @@
             </div>
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
                 <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">Quick Tips</div>
-                <div style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Track all accounts in Bank tab</div>
-                <div style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Set goals to see progress charts</div>
-                <div style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0">Pro unlocks AI advisor & sims</div>
+                <div class="wl-rp-tip-row" data-tip-key="tip1" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Track all accounts in Bank tab</div>
+                <div class="wl-rp-tip-row" data-tip-key="tip2" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Set goals to see progress charts</div>
+                <div class="wl-rp-tip-row" data-tip-key="tip3" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0">Pro unlocks AI advisor & sims</div>
             </div>
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
                 <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">WizeAI</div>
@@ -425,6 +425,24 @@
             </div>
         `;
         document.body.appendChild(panel);
+
+        // Translate right panel tips
+        function wlMoneyRpTranslate() {
+            const TR = {
+                he: { tip1: 'עקוב אחרי כל החשבונות בלשונית בנק', tip2: 'הגדר יעדים כדי לראות גרפי התקדמות', tip3: 'Pro פותח יועץ AI וסימולטורים', tipsLabel: 'טיפים מהירים', netLabel: 'שווי נטו', netSub: 'חבר בנק לנתונים חיים' },
+                en: { tip1: 'Track all accounts in Bank tab', tip2: 'Set goals to see progress charts', tip3: 'Pro unlocks AI advisor & sims', tipsLabel: 'Quick Tips', netLabel: 'Net Worth', netSub: 'Connect bank for live data' },
+                pt: { tip1: 'Acompanhe contas na aba Banco', tip2: 'Defina metas para ver progresso', tip3: 'Pro libera consultor IA', tipsLabel: 'Dicas', netLabel: 'Patrimônio', netSub: 'Conecte banco para dados ao vivo' },
+                es: { tip1: 'Sigue cuentas en la pestaña Banco', tip2: 'Define metas para ver progreso', tip3: 'Pro desbloquea asesor IA', tipsLabel: 'Consejos', netLabel: 'Patrimonio', netSub: 'Conecta banco para datos en vivo' },
+            };
+            const lang = localStorage.getItem('wl_lang') || 'he';
+            const t = TR[lang] || TR.en;
+            document.querySelectorAll('[data-tip-key]').forEach(el => {
+                const k = el.dataset.tipKey;
+                if (t[k]) el.textContent = t[k];
+            });
+        }
+        wlMoneyRpTranslate();
+
 
         // Reopen tab (visible when collapsed)
         const reopenTab = document.createElement('button');
