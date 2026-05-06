@@ -1750,3 +1750,27 @@ body.light .ob-step {
     border-color: rgba(0,0,0,0.08) !important;
     color: #1e293b !important;
 }
+
+
+/* Collapsible nav groups */
+.nav-group .nav-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+.nav-group.open .nav-submenu {
+    max-height: 800px;
+}
+.nav-group .nav-chevron {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+.nav-group.open .nav-chevron {
+    transform: rotate(180deg);
+}
+.nav-group-toggle {
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    user-select: none;
+}
