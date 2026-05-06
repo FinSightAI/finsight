@@ -42,40 +42,78 @@
     // Nav definition — single source of truth
     // Each item: { icon, label, file, category, pro?, proKey? }
     const NAV = [
-        { icon: '🏠', label: 'דאשבורד',           i18n: 'nav.dashboard',         file: inPages ? '../index.html' : 'index.html', category: 'dashboard' },
-        { icon: '🏦', label: 'חשבונות בנק',         i18n: 'nav.bankAccounts',      file: prefix + 'bank.html',              category: 'bank' },
-        { icon: '💰', label: 'מעקב הכנסות',          i18n: 'nav.income',            file: prefix + 'income.html',            category: 'income' },
-        { icon: '💳', label: 'כרטיסי אשראי',         i18n: 'nav.creditCards',       file: prefix + 'credit.html',            category: 'credit' },
-        { icon: '📈', label: 'מניות',                i18n: 'nav.stocks',            file: prefix + 'stocks.html',            category: 'stocks',           pro: true, proKey: 'stocks' },
-        { icon: '📊', label: 'אנליטיקת תיק',          i18n: 'nav.stockAnalytics',    file: prefix + 'stock-analytics.html',   category: 'stock-analytics',  pro: true, proKey: 'stocks' },
+        { icon: '🏠', label: 'דאשבורד', i18n: 'nav.dashboard', file: inPages ? '../index.html' : 'index.html', category: 'dashboard' },
+
+        // ── חשבונות (Bank, Income, Credit, Loans, Subscriptions) ──
+        {
+            icon: '🏦', label: 'חשבונות', i18n: 'nav.accounts',
+            submenu: [
+                { icon: '🏦', label: 'חשבונות בנק', i18n: 'nav.bankAccounts', file: prefix + 'bank.html', category: 'bank' },
+                { icon: '💰', label: 'מעקב הכנסות', i18n: 'nav.income', file: prefix + 'income.html', category: 'income' },
+                { icon: '💳', label: 'כרטיסי אשראי', i18n: 'nav.creditCards', file: prefix + 'credit.html', category: 'credit' },
+                { icon: '🏦', label: 'הלוואות', i18n: 'nav.loans', file: prefix + 'loans.html', category: 'loans' },
+                { icon: '🔄', label: 'תשלומים קבועים', i18n: 'nav.subscriptions', file: prefix + 'subscriptions.html', category: 'subscriptions' },
+            ]
+        },
+
+        // ── השקעות (Stocks, Analytics, Investment Advisor) ──
+        {
+            icon: '📈', label: 'השקעות', i18n: 'nav.investments',
+            submenu: [
+                { icon: '📈', label: 'מניות', i18n: 'nav.stocks', file: prefix + 'stocks.html', category: 'stocks', pro: true, proKey: 'stocks' },
+                { icon: '📊', label: 'אנליטיקת תיק', i18n: 'nav.stockAnalytics', file: prefix + 'stock-analytics.html', category: 'stock-analytics', pro: true, proKey: 'stocks' },
+                { icon: '🌍', label: 'יועץ השקעות', i18n: 'nav.investAdvisor', file: prefix + 'investment-advisor.html', category: 'investment-advisor', pro: true, proKey: 'aiChat' },
+            ]
+        },
+
+        // ── מוצרים פיננסיים (existing submenu — kept) ──
         {
             icon: '📊', label: 'מוצרים פיננסיים', i18n: 'nav.financialProducts',
             submenu: [
-                { icon: '🇧🇷', label: 'Tesouro Direto',    i18n: 'nav.tesouroDireto',   file: prefix + 'tesouro-direto.html',    category: 'tesouro-direto',   market: 'br' },
-        { icon: '🏢', label: 'FIIs',                i18n: 'nav.fiis',            file: prefix + 'fiis.html',              category: 'fiis',             market: 'br' },
-        { icon: '📄', label: 'Renda Fixa',           i18n: 'nav.rendaFixa',       file: prefix + 'renda-fixa.html',        category: 'renda-fixa',       market: 'br' },
-        { icon: '🏪', label: 'מוצרים בשוק',   i18n: 'nav.marketProducts', file: prefix + 'market-products.html', category: 'market-products' },
-                { icon: '💎', label: 'החסכונות שלי',  i18n: 'nav.myProducts',     file: prefix + 'my-funds.html',        category: 'my-products' },
-                { icon: '⚖️', label: 'השוואת מוצרים', i18n: 'nav.compareFunds',   file: prefix + 'compare-funds.html',   category: 'compare-funds',  pro: true, proKey: 'compareFunds' },
+                { icon: '🇧🇷', label: 'Tesouro Direto', i18n: 'nav.tesouroDireto', file: prefix + 'tesouro-direto.html', category: 'tesouro-direto', market: 'br' },
+                { icon: '🏢', label: 'FIIs', i18n: 'nav.fiis', file: prefix + 'fiis.html', category: 'fiis', market: 'br' },
+                { icon: '📄', label: 'Renda Fixa', i18n: 'nav.rendaFixa', file: prefix + 'renda-fixa.html', category: 'renda-fixa', market: 'br' },
+                { icon: '🏪', label: 'מוצרים בשוק', i18n: 'nav.marketProducts', file: prefix + 'market-products.html', category: 'market-products' },
+                { icon: '💎', label: 'החסכונות שלי', i18n: 'nav.myProducts', file: prefix + 'my-funds.html', category: 'my-products' },
+                { icon: '⚖️', label: 'השוואת מוצרים', i18n: 'nav.compareFunds', file: prefix + 'compare-funds.html', category: 'compare-funds', pro: true, proKey: 'compareFunds' },
             ]
         },
-        { icon: '🏠', label: 'נכסים',                i18n: 'nav.assets',            file: prefix + 'assets.html',            category: 'assets' },
-        { icon: '🏦', label: 'הלוואות',               i18n: 'nav.loans',             file: prefix + 'loans.html',             category: 'loans' },
-        { icon: '🔄', label: 'תשלומים קבועים',        i18n: 'nav.subscriptions',     file: prefix + 'subscriptions.html',     category: 'subscriptions' },
-        { icon: '🎯', label: 'יעדי חיסכון',           i18n: 'nav.goals',             file: prefix + 'goals.html',             category: 'goals' },
-        { icon: '⏳', label: 'סימולטור מה היה קורה',   i18n: 'nav.simulator',         file: prefix + 'simulator.html',         category: 'simulator',        pro: true, proKey: 'simulator' },
-        { icon: '🌍', label: 'יועץ השקעות',           i18n: 'nav.investAdvisor',     file: prefix + 'investment-advisor.html',category: 'investment-advisor',pro: true, proKey: 'aiChat' },
-        { icon: '🤖', label: 'יועץ AI',               i18n: 'nav.aiChat',            file: prefix + 'ai-chat.html',           category: 'ai-chat',          pro: true, proKey: 'aiChat' },
-        { icon: '✨', label: 'סיפור השבוע',            i18n: 'nav.aiStory',           file: prefix + 'ai-story.html',          category: 'ai-story',         pro: true, proKey: 'aiStory' },
-        { icon: '🧾', label: 'מייעל מס',              i18n: 'nav.taxOptimizer',      file: prefix + 'tax-optimizer.html',     category: 'tax-optimizer',    pro: true, proKey: 'taxOptimizer' },
-        { icon: '🎯', label: 'אופטימיזטור פנסיה',     i18n: 'nav.pensionOptimizer',  file: prefix + 'pension-optimizer.html', category: 'pension-optimizer',pro: true, proKey: 'pensionOptimizer' },
-        { icon: '🧮', label: 'מחשבון פנסיה',          i18n: 'nav.pensionCalc',       file: prefix + 'pension-calc.html',      category: 'pension-calc' },
-        { icon: '📋', label: 'דוחות',                 i18n: 'nav.reports',           file: prefix + 'reports.html',           category: 'reports',          pro: true, proKey: 'reports' },
-        { icon: '📅', label: 'לוח שנה פיננסי',        i18n: 'nav.calendar',          file: prefix + 'calendar.html',          category: 'calendar' },
-        { icon: '👨‍👩‍👧‍👦', label: 'דשבורד משפחתי',     i18n: 'nav.family',            file: prefix + 'family.html',            category: 'family',           pro: true, proKey: 'multiProfile' },
-        { icon: '🩺', label: 'בריאות פיננסית',        i18n: 'nav.healthScore',       file: prefix + 'health-score.html',      category: 'health-score' },
-        { icon: '👤', label: 'פרופיל פיננסי',          i18n: 'nav.profile',           file: prefix + 'profile.html',           category: 'profile' },
-        { icon: '⚙️', label: 'הגדרות',                i18n: 'nav.settings',          file: prefix + 'settings.html',          category: 'settings' },
+
+        { icon: '🏠', label: 'נכסים', i18n: 'nav.assets', file: prefix + 'assets.html', category: 'assets' },
+
+        // ── תכנון (Goals, Simulator, Pension, Tax) ──
+        {
+            icon: '🎯', label: 'תכנון', i18n: 'nav.planning',
+            submenu: [
+                { icon: '🎯', label: 'יעדי חיסכון', i18n: 'nav.goals', file: prefix + 'goals.html', category: 'goals' },
+                { icon: '⏳', label: 'סימולטור', i18n: 'nav.simulator', file: prefix + 'simulator.html', category: 'simulator', pro: true, proKey: 'simulator' },
+                { icon: '🧮', label: 'מחשבון פנסיה', i18n: 'nav.pensionCalc', file: prefix + 'pension-calc.html', category: 'pension-calc' },
+                { icon: '🎯', label: 'אופטימיזטור פנסיה', i18n: 'nav.pensionOptimizer', file: prefix + 'pension-optimizer.html', category: 'pension-optimizer', pro: true, proKey: 'pensionOptimizer' },
+                { icon: '🧾', label: 'מייעל מס', i18n: 'nav.taxOptimizer', file: prefix + 'tax-optimizer.html', category: 'tax-optimizer', pro: true, proKey: 'taxOptimizer' },
+                { icon: '📅', label: 'לוח שנה', i18n: 'nav.calendar', file: prefix + 'calendar.html', category: 'calendar' },
+            ]
+        },
+
+        // ── AI Tools (Chat, Story, Reports) ──
+        {
+            icon: '🤖', label: 'AI', i18n: 'nav.aiTools',
+            submenu: [
+                { icon: '🤖', label: 'יועץ AI', i18n: 'nav.aiChat', file: prefix + 'ai-chat.html', category: 'ai-chat', pro: true, proKey: 'aiChat' },
+                { icon: '✨', label: 'סיפור השבוע', i18n: 'nav.aiStory', file: prefix + 'ai-story.html', category: 'ai-story', pro: true, proKey: 'aiStory' },
+                { icon: '📋', label: 'דוחות', i18n: 'nav.reports', file: prefix + 'reports.html', category: 'reports', pro: true, proKey: 'reports' },
+            ]
+        },
+
+        // ── חשבון (Family, Health Score, Profile, Settings) ──
+        {
+            icon: '👤', label: 'חשבון', i18n: 'nav.account',
+            submenu: [
+                { icon: '👨‍👩‍👧‍👦', label: 'דשבורד משפחתי', i18n: 'nav.family', file: prefix + 'family.html', category: 'family', pro: true, proKey: 'multiProfile' },
+                { icon: '🩺', label: 'בריאות פיננסית', i18n: 'nav.healthScore', file: prefix + 'health-score.html', category: 'health-score' },
+                { icon: '👤', label: 'פרופיל פיננסי', i18n: 'nav.profile', file: prefix + 'profile.html', category: 'profile' },
+                { icon: '⚙️', label: 'הגדרות', i18n: 'nav.settings', file: prefix + 'settings.html', category: 'settings' },
+            ]
+        },
     ];
 
     // SVG icon map — by category. Falls back to emoji if not found.
