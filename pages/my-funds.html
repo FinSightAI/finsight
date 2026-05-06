@@ -137,7 +137,10 @@
         .summary-card.gemel .value { color: #3b82f6; }
         .summary-card.savings .value { color: #ec4899; }
         .summary-card.total .value { color: var(--color-funds); }
-    </style>
+    
+/* Brazilian items — visible only when wl_market === 'br' */
+body:not(.market-br) .br-only { display: none !important; }
+</style>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -232,25 +235,25 @@
                 <button class="fund-type-tab" data-type="savings" onclick="filterByType('savings')">
                     <span class="icon">🐷</span><span data-i18n="myFunds.savingsPolicy">פוליסת חיסכון</span>
                 </button>
-                <button class="fund-type-tab" data-type="tesouro" onclick="filterByType('tesouro')">
+                <button class="fund-type-tab br-only" data-type="tesouro" data-br="1" onclick="filterByType('tesouro')">
                     <span class="icon">🇧🇷</span><span data-i18n="myFunds.types.tesouro">Tesouro Direto</span>
                 </button>
-                <button class="fund-type-tab" data-type="cdb" onclick="filterByType('cdb')">
+                <button class="fund-type-tab br-only" data-type="cdb" data-br="1" onclick="filterByType('cdb')">
                     <span class="icon">🏦</span><span>CDB</span>
                 </button>
-                <button class="fund-type-tab" data-type="lci_lca" onclick="filterByType('lci_lca')">
+                <button class="fund-type-tab br-only" data-type="lci_lca" data-br="1" onclick="filterByType('lci_lca')">
                     <span class="icon">📄</span><span>LCI/LCA</span>
                 </button>
-                <button class="fund-type-tab" data-type="fii" onclick="filterByType('fii')">
+                <button class="fund-type-tab br-only" data-type="fii" data-br="1" onclick="filterByType('fii')">
                     <span class="icon">🏢</span><span>FII</span>
                 </button>
-                <button class="fund-type-tab" data-type="poupanca" onclick="filterByType('poupanca')">
+                <button class="fund-type-tab br-only" data-type="poupanca" data-br="1" onclick="filterByType('poupanca')">
                     <span class="icon">💰</span><span>Poupança</span>
                 </button>
-                <button class="fund-type-tab" data-type="fgts" onclick="filterByType('fgts')">
+                <button class="fund-type-tab br-only" data-type="fgts" data-br="1" onclick="filterByType('fgts')">
                     <span class="icon">🛡️</span><span>FGTS</span>
                 </button>
-                <button class="fund-type-tab" data-type="pgbl_vgbl" onclick="filterByType('pgbl_vgbl')">
+                <button class="fund-type-tab br-only" data-type="pgbl_vgbl" data-br="1" onclick="filterByType('pgbl_vgbl')">
                     <span class="icon">🧾</span><span>PGBL/VGBL</span>
                 </button>
             </div>
@@ -331,14 +334,14 @@
                             <option value="training">🎓 קרן השתלמות</option>
                             <option value="gemel">💼 קופת גמל</option>
                             <option value="savings">🐷 פוליסת חיסכון</option>
-                            <option disabled>── 🇧🇷 Brazil ──</option>
-                            <option value="tesouro">🇧🇷 Tesouro Direto</option>
-                            <option value="cdb">🏦 CDB</option>
-                            <option value="lci_lca">📄 LCI/LCA</option>
-                            <option value="fii">🏢 FII</option>
-                            <option value="poupanca">💰 Poupança</option>
-                            <option value="fgts">🛡️ FGTS</option>
-                            <option value="pgbl_vgbl">🧾 PGBL/VGBL</option>
+                            <option class="br-only" disabled>── 🇧🇷 Brazil ──</option>
+                            <option class="br-only" data-br="1" value="tesouro">🇧🇷 Tesouro Direto</option>
+                            <option class="br-only" data-br="1" value="cdb">🏦 CDB</option>
+                            <option class="br-only" data-br="1" value="lci_lca">📄 LCI/LCA</option>
+                            <option class="br-only" data-br="1" value="fii">🏢 FII</option>
+                            <option class="br-only" data-br="1" value="poupanca">💰 Poupança</option>
+                            <option class="br-only" data-br="1" value="fgts">🛡️ FGTS</option>
+                            <option class="br-only" data-br="1" value="pgbl_vgbl">🧾 PGBL/VGBL</option>
                         </select>
                     </div>
 
@@ -1561,5 +1564,18 @@
             }
         }
     </script>
+
+<script>
+(function() {
+    function applyMarket() {
+        var br = localStorage.getItem('wl_market') === 'br';
+        document.body.classList.toggle('market-br', br);
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyMarket);
+    } else { applyMarket(); }
+    window.addEventListener('storage', applyMarket);
+})();
+</script>
 </body>
 </html>
