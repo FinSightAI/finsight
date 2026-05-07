@@ -52,11 +52,30 @@ const Plan = (() => {
                 // Save to Firestore so it persists across devices/browsers
                 try {
                     if (typeof firebaseAuth !== "undefined" && firebaseAuth.currentUser) {
-                        await firebaseDb.collection("users").doc(firebaseAuth.currentUser.uid).set({
+                        const _uid = firebaseAuth.currentUser.uid;
+                        await firebaseDb.collection("users").doc(_uid).set({
                             plan: _plan,
                             accessCode: normalized,
                             accessCodeRedeemedAt: firebase.firestore.FieldValue.serverTimestamp(),
                         }, { merge: true });
+                        // Referral reward: if this user was referred, give the referrer
+                        // 30 days of the matching tier (pro/yolo). Inline since wizelife-auth.js
+                        // is not loaded inside individual app pages.
+                        try {
+                            if (["pro","yolo"].includes(_plan)) {
+                                const _udoc = await firebaseDb.collection("users").doc(_uid).get();
+                                const _u = _udoc.exists ? _udoc.data() : {};
+                                if (_u.referredBy && !_u.referralRewardSent) {
+                                    await firebaseDb.collection("users").doc(_u.referredBy).set({
+                                        referralRewards: firebase.firestore.FieldValue.arrayUnion({
+                                            tier: _plan, days: 30, from: _uid, ts: Date.now(),
+                                        }),
+                                        referralCount: firebase.firestore.FieldValue.increment(1),
+                                    }, { merge: true });
+                                    await firebaseDb.collection("users").doc(_uid).set({ referralRewardSent: true }, { merge: true });
+                                }
+                            }
+                        } catch (e) { console.warn("Referral reward failed:", e); }
                     }
                 } catch (e) { console.warn("Could not save plan to Firestore:", e); }
                 _notify();
