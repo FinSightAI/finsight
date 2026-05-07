@@ -161,14 +161,10 @@ body.ltr .sidebar-header {
 
 .main-content {
     flex: 1;
-    margin-right: 230px;
     padding: var(--spacing-xl);
     max-width: 1400px;
-}
-
-body.ltr .main-content {
-    margin-right: 0;
-    margin-left: 230px;
+    margin-inline-start: max(230px, calc((100vw - 1400px) / 2));
+    margin-inline-end: auto;
 }
 
 /* ===== Sidebar ===== */
