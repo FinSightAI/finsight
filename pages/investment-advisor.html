@@ -517,7 +517,21 @@ function showTyping() {
 }
 function removeTyping() { document.getElementById('typingIndicator')?.remove(); }
 
-const aiProxy = firebase.functions().httpsCallable('aiProxy');
+const AI_PROXY_URL = 'https://master-backend-79jx.onrender.com/api/ai-proxy';
+async function aiProxy({ messages, system, maxTokens = 2048 }) {
+    const res = await fetch(AI_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, system, maxTokens }),
+    });
+    if (!res.ok) {
+        if (res.status === 429) { const e = new Error('rate'); e.code = 'functions/resource-exhausted'; throw e; }
+        throw new Error('AI error: ' + res.status);
+    }
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    return { data: { text: json.text } };
+}
 
 async function sendMessage() {
     if (isLoading) return;

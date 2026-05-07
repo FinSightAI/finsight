@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<script>
+(function() {
+    try {
+        var t = localStorage.getItem('wl_theme');
+        var isLight = t === 'light';
+        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+        if (isLight) {
+            document.documentElement.classList.add('light');
+            if (document.body) document.body.classList.add('light');
+            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+        }
+    } catch(e) {}
+})();
+</script>
+    <meta charset="UTF-8">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DB63NWYGX5');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="apple-touch-icon" href="../img/logo.svg">
+    <link rel="icon" type="image/png" href="../img/logo.svg">
+    <link rel="manifest" href="../manifest.json">
+    <title data-i18n-title="sectors.pageTitle">סקטורים – WizeMoney</title>
+    <link rel="stylesheet" href="../css/app.css">
+    <style>
+        .nav-link.active { background: var(--color-stocks) !important; }
+        .sec-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            padding: 14px 18px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+        }
+        .sec-tf-group { display: inline-flex; gap: 4px; padding: 4px; background: var(--color-bg-hover); border-radius: 10px; }
+        .sec-tf {
+            padding: 7px 14px; border-radius: 7px; border: 0; background: transparent;
+            color: var(--color-text-secondary); font-size: 0.84rem; font-weight: 600; cursor: pointer;
+            transition: all 0.15s;
+        }
+        .sec-tf.active { background: var(--color-stocks); color: white; }
+        .sec-grid {
+            display: grid; grid-template-columns: 1fr; gap: 10px;
+        }
+        .sec-row {
+            display: grid;
+            grid-template-columns: minmax(180px, 1.6fr) 80px 110px 1fr;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            transition: border-color 0.15s, transform 0.15s;
+            cursor: pointer;
+        }
+        .sec-row:hover { border-color: var(--color-stocks); }
+        .sec-row.expanded { border-color: var(--color-stocks); }
+        .sec-name {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 700; font-size: 0.95rem; color: var(--color-text-primary);
+        }
+        .sec-icon { font-size: 1.4rem; }
+        .sec-etf {
+            font-family: ui-monospace, monospace;
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+        }
+        .sec-pct {
+            font-size: 1.05rem; font-weight: 800; text-align: end;
+            font-variant-numeric: tabular-nums;
+        }
+        .sec-pct.up { color: #10b981; }
+        .sec-pct.down { color: #ef4444; }
+        .sec-pct.neutral { color: var(--color-text-secondary); }
+        .sec-bar-wrap {
+            position: relative; height: 8px; background: var(--color-bg-hover);
+            border-radius: 99px; overflow: hidden;
+        }
+        .sec-bar {
+            position: absolute; top: 0; bottom: 0; border-radius: 99px;
+            transition: width 0.4s ease;
+        }
+        .sec-bar.up { background: linear-gradient(90deg, #10b981, #34d399); inset-inline-start: 50%; }
+        .sec-bar.down { background: linear-gradient(90deg, #ef4444, #f87171); inset-inline-end: 50%; }
+        .sec-bar-zero {
+            position: absolute; top: -2px; bottom: -2px;
+            inset-inline-start: 50%; width: 1px; background: var(--color-border);
+        }
+        .sec-leaders {
+            grid-column: 1 / -1; padding-top: 14px; margin-top: 8px;
+            border-top: 1px solid var(--color-border);
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px;
+            display: none;
+        }
+        .sec-row.expanded .sec-leaders { display: grid; }
+        .sec-leader {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 12px; background: var(--color-bg-hover); border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .sec-leader-symbol { font-family: ui-monospace, monospace; font-weight: 700; color: var(--color-text-primary); }
+        .sec-leader-pct { font-variant-numeric: tabular-nums; font-weight: 700; }
+        .sec-leader-pct.up { color: #10b981; }
+        .sec-leader-pct.down { color: #ef4444; }
+        .sec-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px; margin-bottom: 16px;
+        }
+        .sec-summary-card {
+            padding: 14px 16px; background: var(--color-bg-card);
+            border: 1px solid var(--color-border); border-radius: 12px;
+        }
+        .sec-summary-label { font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .sec-summary-value { font-size: 1.4rem; font-weight: 800; margin-top: 4px; }
+        .sec-loading { text-align: center; padding: 60px 20px; color: var(--color-text-secondary); }
+        .sec-spinner {
+            width: 32px; height: 32px; margin: 0 auto 14px;
+            border: 3px solid var(--color-border); border-top-color: var(--color-stocks);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 720px) {
+            .sec-row { grid-template-columns: 1fr 90px; gap: 10px; padding: 14px; }
+            .sec-etf { grid-column: 1; font-size: 0.8rem; }
+            .sec-bar-wrap { grid-column: 1 / -1; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+        <div class="logo-hero">
+            <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+        </div>
+        <header class="page-header">
+            <h1>
+                <span>🏛️</span>
+                <span data-i18n="sectors.title">סקטורים</span>
+            </h1>
+            <p style="color:var(--color-text-secondary);font-size:0.9rem;margin-top:4px;" data-i18n="sectors.subtitle">
+                סקירה והשוואה של 11 סקטורי השוק העיקריים, כולל ה-ETF המוביל בכל סקטור
+            </p>
+        </header>
+
+        <div class="sec-summary" id="secSummary"></div>
+
+        <div class="sec-toolbar">
+            <div class="sec-tf-group" role="tablist">
+                <button class="sec-tf active" data-tf="1d" data-i18n="sectors.daily">יומי</button>
+                <button class="sec-tf" data-tf="1w" data-i18n="sectors.weekly">שבועי</button>
+                <button class="sec-tf" data-tf="1m" data-i18n="sectors.monthly">חודשי</button>
+                <button class="sec-tf" data-tf="ytd" data-i18n="sectors.ytd">YTD</button>
+                <button class="sec-tf" data-tf="1y" data-i18n="sectors.yearly">שנתי</button>
+            </div>
+            <button id="refreshBtn" style="padding:8px 14px;border-radius:8px;background:var(--color-bg-hover);border:1px solid var(--color-border);color:var(--color-text-secondary);cursor:pointer;font-size:0.85rem;">
+                🔄 <span data-i18n="sectors.refresh">רענן</span>
+            </button>
+        </div>
+
+        <div id="secGrid" class="sec-grid">
+            <div class="sec-loading">
+                <div class="sec-spinner"></div>
+                <div data-i18n="sectors.loading">טוען נתוני סקטורים…</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="../js/idb.js"></script>
+<script src="../js/sidebar.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/stock-api.js"></script>
+
+<script>
+// ── Sectors data (GICS 11 sectors + leading ETF + top holdings) ────────────────
+const SECTORS = [
+    { id: 'tech',            icon: '💻', he: 'טכנולוגיה',          en: 'Technology',            etf: 'XLK',  leaders: ['AAPL','MSFT','NVDA','AVGO','ORCL'] },
+    { id: 'health',          icon: '🏥', he: 'בריאות',             en: 'Health Care',           etf: 'XLV',  leaders: ['LLY','UNH','JNJ','ABBV','MRK'] },
+    { id: 'financial',       icon: '🏦', he: 'פיננסים',            en: 'Financials',            etf: 'XLF',  leaders: ['BRK-B','JPM','V','MA','BAC'] },
+    { id: 'consumer-disc',   icon: '🛍️', he: 'צריכה לא מחזורית',  en: 'Consumer Discretionary',etf: 'XLY',  leaders: ['AMZN','TSLA','HD','MCD','LOW'] },
+    { id: 'communication',   icon: '📡', he: 'תקשורת',             en: 'Communication',         etf: 'XLC',  leaders: ['META','GOOGL','NFLX','DIS','VZ'] },
+    { id: 'industrial',      icon: '🏭', he: 'תעשייה',             en: 'Industrials',           etf: 'XLI',  leaders: ['GE','CAT','RTX','HON','UNP'] },
+    { id: 'consumer-staples',icon: '🛒', he: 'צריכה בסיסית',       en: 'Consumer Staples',      etf: 'XLP',  leaders: ['PG','COST','WMT','KO','PEP'] },
+    { id: 'energy',          icon: '⛽', he: 'אנרגיה',              en: 'Energy',                etf: 'XLE',  leaders: ['XOM','CVX','COP','EOG','SLB'] },
+    { id: 'utilities',       icon: '💡', he: 'תשתיות',              en: 'Utilities',             etf: 'XLU',  leaders: ['NEE','SO','DUK','CEG','AEP'] },
+    { id: 'realestate',      icon: '🏢', he: 'נדל״ן',              en: 'Real Estate',           etf: 'XLRE', leaders: ['PLD','AMT','EQIX','WELL','SPG'] },
+    { id: 'materials',       icon: '🧪', he: 'חומרים',              en: 'Materials',             etf: 'XLB',  leaders: ['LIN','SHW','APD','ECL','FCX'] },
+];
+
+const SPY = 'SPY';
+
+const TF = { '1d': 1, '1w': 5, '1m': 21, 'ytd': null, '1y': 252 };
+
+const TX = {
+    he: {
+        marketLabel: 'שוק כללי (S&P 500)', bestSectorLabel: 'הסקטור המוביל', worstSectorLabel: 'הסקטור החלש',
+        spreadLabel: 'פער מהמוביל לחלש',
+        loading: 'טוען נתוני סקטורים…', error: 'שגיאה בטעינת נתוני שוק. נסה לרענן.',
+        leadersTitle: 'מובילים בסקטור',
+    },
+    en: {
+        marketLabel: 'Market (S&P 500)', bestSectorLabel: 'Top Sector', worstSectorLabel: 'Bottom Sector',
+        spreadLabel: 'Top–Bottom Spread',
+        loading: 'Loading sector data…', error: 'Error loading market data. Try refresh.',
+        leadersTitle: 'Top Holdings',
+    }
+};
+
+function getLang() { try { return localStorage.getItem('wl_lang') === 'en' ? 'en' : 'he'; } catch { return 'he'; } }
+function tx() { return TX[getLang()] || TX.he; }
+function fmtPct(n, sign = true) { if (n == null || isNaN(n)) return '–'; const s = (sign && n > 0) ? '+' : ''; return s + n.toFixed(2) + '%'; }
+function pctClass(n) { return n > 0 ? 'up' : n < 0 ? 'down' : 'neutral'; }
+
+// ── Compute % change from historical data for a given timeframe ────────────────
+function computeChange(historicalData, tf) {
+    if (!historicalData || historicalData.length < 2) return null;
+    const last = historicalData[historicalData.length - 1].close;
+    if (tf === 'ytd') {
+        const yearStart = new Date(new Date().getFullYear(), 0, 1);
+        const firstThisYear = historicalData.find(d => d.date >= yearStart);
+        if (!firstThisYear) return null;
+        return ((last - firstThisYear.close) / firstThisYear.close) * 100;
+    }
+    const idx = TF[tf];
+    if (!idx) return null;
+    const back = historicalData.length - 1 - idx;
+    if (back < 0) return null;
+    const prev = historicalData[back].close;
+    return ((last - prev) / prev) * 100;
+}
+
+// ── Cache for ETF historical data (1 hour TTL) ─────────────────────────────────
+const HIST_CACHE = {};
+const HIST_TTL_MS = 60 * 60 * 1000;
+async function getHistory(symbol) {
+    const cached = HIST_CACHE[symbol];
+    if (cached && Date.now() - cached.ts < HIST_TTL_MS) return cached.data;
+    const res = await StockAPI.fetchBenchmarkData(symbol, '1y');
+    if (!res.success) return null;
+    HIST_CACHE[symbol] = { ts: Date.now(), data: res.historicalData };
+    return res.historicalData;
+}
+
+let SECTOR_DATA = {};
+let LEADER_CACHE = {};
+let CURRENT_TF = '1d';
+
+// ── Render summary cards ───────────────────────────────────────────────────────
+function renderSummary() {
+    const root = document.getElementById('secSummary');
+    const t = tx();
+    const spy = SECTOR_DATA[SPY];
+    const spyPct = spy ? computeChange(spy, CURRENT_TF) : null;
+
+    const sectorPcts = SECTORS
+        .map(s => ({ s, pct: SECTOR_DATA[s.etf] ? computeChange(SECTOR_DATA[s.etf], CURRENT_TF) : null }))
+        .filter(x => x.pct != null);
+
+    if (!sectorPcts.length) { root.innerHTML = ''; return; }
+
+    sectorPcts.sort((a, b) => b.pct - a.pct);
+    const best = sectorPcts[0];
+    const worst = sectorPcts[sectorPcts.length - 1];
+    const spread = best.pct - worst.pct;
+
+    root.innerHTML = `
+        <div class="sec-summary-card">
+            <div class="sec-summary-label">${t.marketLabel}</div>
+            <div class="sec-summary-value ${pctClass(spyPct)}">${fmtPct(spyPct)}</div>
+        </div>
+        <div class="sec-summary-card">
+            <div class="sec-summary-label">${t.bestSectorLabel}</div>
+            <div class="sec-summary-value up">${best.s.icon} ${getLang()==='he'?best.s.he:best.s.en}</div>
+            <div style="font-size:0.85rem;color:var(--color-text-secondary)">${fmtPct(best.pct)}</div>
+        </div>
+        <div class="sec-summary-card">
+            <div class="sec-summary-label">${t.worstSectorLabel}</div>
+            <div class="sec-summary-value down">${worst.s.icon} ${getLang()==='he'?worst.s.he:worst.s.en}</div>
+            <div style="font-size:0.85rem;color:var(--color-text-secondary)">${fmtPct(worst.pct)}</div>
+        </div>
+        <div class="sec-summary-card">
+            <div class="sec-summary-label">${t.spreadLabel}</div>
+            <div class="sec-summary-value">${spread.toFixed(2)}%</div>
+        </div>
+    `;
+}
+
+// ── Render the sector grid (sorted by current TF % change) ────────────────────
+function renderGrid() {
+    const root = document.getElementById('secGrid');
+    const isHe = getLang() === 'he';
+    const t = tx();
+
+    const rows = SECTORS.map(s => {
+        const hist = SECTOR_DATA[s.etf];
+        const pct = hist ? computeChange(hist, CURRENT_TF) : null;
+        const lastPrice = hist ? hist[hist.length - 1].close : null;
+        return { s, pct, lastPrice };
+    });
+
+    rows.sort((a, b) => {
+        if (a.pct == null && b.pct == null) return 0;
+        if (a.pct == null) return 1;
+        if (b.pct == null) return -1;
+        return b.pct - a.pct;
+    });
+
+    const maxAbs = Math.max(0.5, ...rows.filter(r => r.pct != null).map(r => Math.abs(r.pct)));
+
+    root.innerHTML = rows.map(({ s, pct, lastPrice }) => {
+        const barWidth = pct == null ? 0 : Math.min(50, Math.abs(pct) / maxAbs * 50);
+        return `
+            <div class="sec-row" data-sector="${s.id}" data-etf="${s.etf}">
+                <div class="sec-name">
+                    <span class="sec-icon">${s.icon}</span>
+                    <span>${isHe ? s.he : s.en}</span>
+                </div>
+                <div class="sec-etf">${s.etf}<br><span style="font-size:0.75rem;opacity:0.7">${lastPrice ? '$' + lastPrice.toFixed(2) : '–'}</span></div>
+                <div class="sec-pct ${pctClass(pct)}">${fmtPct(pct)}</div>
+                <div class="sec-bar-wrap">
+                    <div class="sec-bar-zero"></div>
+                    ${pct != null ? `<div class="sec-bar ${pct >= 0 ? 'up' : 'down'}" style="width:${barWidth}%"></div>` : ''}
+                </div>
+                <div class="sec-leaders" data-leaders="${s.id}"></div>
+            </div>
+        `;
+    }).join('');
+
+    // attach click handlers for expansion
+    root.querySelectorAll('.sec-row').forEach(row => {
+        row.addEventListener('click', async (e) => {
+            const expanded = row.classList.toggle('expanded');
+            if (expanded) {
+                const sector = SECTORS.find(s => s.id === row.dataset.sector);
+                await renderLeaders(row, sector);
+            }
+        });
+    });
+}
+
+async function renderLeaders(rowEl, sector) {
+    const container = rowEl.querySelector('.sec-leaders');
+    if (container.dataset.loaded === '1') return;
+    container.innerHTML = '<div style="grid-column:1/-1;color:var(--color-text-secondary);font-size:0.8rem;">⏳ ' + tx().loading + '</div>';
+
+    const items = await Promise.all(sector.leaders.map(async sym => {
+        if (!LEADER_CACHE[sym]) {
+            const hist = await getHistory(sym).catch(() => null);
+            LEADER_CACHE[sym] = hist;
+        }
+        const pct = LEADER_CACHE[sym] ? computeChange(LEADER_CACHE[sym], CURRENT_TF) : null;
+        return { sym, pct };
+    }));
+    items.sort((a, b) => (b.pct ?? -999) - (a.pct ?? -999));
+
+    container.innerHTML = '<div style="grid-column:1/-1;font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:6px;font-weight:600;">' + tx().leadersTitle + '</div>' +
+        items.map(({ sym, pct }) => `
+            <div class="sec-leader">
+                <span class="sec-leader-symbol">${sym}</span>
+                <span class="sec-leader-pct ${pctClass(pct)}">${fmtPct(pct)}</span>
+            </div>
+        `).join('');
+    container.dataset.loaded = '1';
+}
+
+// ── Initial load: fetch all sector ETFs + SPY in parallel ──────────────────────
+async function loadAll() {
+    const symbols = [SPY, ...SECTORS.map(s => s.etf)];
+    const results = await Promise.allSettled(symbols.map(sym => getHistory(sym)));
+    results.forEach((r, i) => {
+        if (r.status === 'fulfilled' && r.value) SECTOR_DATA[symbols[i]] = r.value;
+    });
+    renderSummary();
+    renderGrid();
+}
+
+// ── Timeframe switcher ─────────────────────────────────────────────────────────
+document.querySelectorAll('.sec-tf').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.sec-tf').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        CURRENT_TF = btn.dataset.tf;
+        // reset leader-loaded flag so leaders re-render on next expand
+        document.querySelectorAll('.sec-leaders').forEach(el => el.dataset.loaded = '');
+        renderSummary();
+        renderGrid();
+    });
+});
+
+document.getElementById('refreshBtn').addEventListener('click', () => {
+    Object.keys(HIST_CACHE).forEach(k => delete HIST_CACHE[k]);
+    LEADER_CACHE = {};
+    document.getElementById('secGrid').innerHTML = '<div class="sec-loading"><div class="sec-spinner"></div><div>' + tx().loading + '</div></div>';
+    loadAll();
+});
+
+// kick off
+loadAll().catch(err => {
+    console.error('Sectors load error:', err);
+    document.getElementById('secGrid').innerHTML = '<div class="sec-loading">' + tx().error + '</div>';
+});
+</script>
+
+</body>
+</html>

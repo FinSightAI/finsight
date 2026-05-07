@@ -70,6 +70,7 @@
             submenu: [
                 { icon: '📈', label: 'מניות', i18n: 'nav.stocks', file: prefix + 'stocks.html', category: 'stocks', pro: true, proKey: 'stocks' },
                 { icon: '📊', label: 'אנליטיקת תיק', i18n: 'nav.stockAnalytics', file: prefix + 'stock-analytics.html', category: 'stock-analytics', pro: true, proKey: 'stocks' },
+                { icon: '🏛️', label: 'סקטורים', i18n: 'nav.sectors', file: prefix + 'sectors.html', category: 'sectors' },
                 { icon: '🌍', label: 'יועץ השקעות', i18n: 'nav.investAdvisor', file: prefix + 'investment-advisor.html', category: 'investment-advisor', pro: true, proKey: 'aiChat' },
             ]
         },
@@ -132,6 +133,7 @@
         'credit':            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
         'stocks':            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg>',
         'stock-analytics':   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+        'sectors':           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l4-4 4 4v13M13 21V12l4-4 4 4v9"/></svg>',
         'assets':            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
         'loans':             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
         'subscriptions':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
