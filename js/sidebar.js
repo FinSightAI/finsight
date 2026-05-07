@@ -449,9 +449,12 @@
         const el = document.getElementById('wl-bar-nick');
         if (!el) return;
         const stored = localStorage.getItem('wl_nickname');
-        const authName = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser)
-            ? (firebase.auth().currentUser.displayName || firebase.auth().currentUser.email) : null;
-        const nick = stored || authName;
+        const cu = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser : null;
+        // prefer real display name; fall back to local-part of email (never show full email)
+        let nick = stored || (cu && cu.displayName) || null;
+        if (!nick && cu && cu.email) {
+            nick = cu.email.includes('@') ? cu.email.split('@')[0] : cu.email;
+        }
         if (nick) {
             const short = nick.length > 20 ? nick.substring(0, 18) + '\u2026' : nick;
             el.textContent = '\u25cf ' + short;
