@@ -5,22 +5,42 @@ const SmartImport = {
     // Column name mappings in different languages
     columnMappings: {
         date: [
-            'תאריך', 'תאריך עסקה', 'תאריך חיוב', 'date', 'transaction date',
+            // Hebrew (incl. Israeli banks: Hapoalim/Leumi/Discount/Mizrahi/FIBI/Yahav)
+            'תאריך', 'תאריך עסקה', 'תאריך חיוב', 'תאריך ערך', 'תאריך הפעולה',
+            'תאריך פעולה', 'תאריך ביצוע',
+            'date', 'transaction date', 'value date', 'posting date',
             'data', 'data da transação', 'fecha', 'fecha de transacción',
             'datum', 'transaktionsdatum', 'date de transaction'
         ],
         amount: [
-            'סכום', 'סכום חיוב', 'סכום עסקה', 'amount', 'charge amount', 'total',
-            'valor', 'montante', 'importe', 'monto', 'betrag', 'summe', 'montant'
+            // Hebrew
+            'סכום', 'סכום חיוב', 'סכום עסקה', 'סכום העסקה', 'סכום בש"ח', 'סכום בשח',
+            // Israeli banks separate debit/credit columns
+            'חובה', 'זכות', 'חיוב', 'זיכוי',
+            'amount', 'charge amount', 'total', 'debit', 'credit',
+            'valor', 'montante', 'débito', 'crédito',
+            'importe', 'monto', 'débito', 'crédito',
+            'betrag', 'summe', 'soll', 'haben', 'montant', 'débit', 'crédit'
         ],
         originalAmount: [
             'סכום מקורי', 'סכום עסקה מקורי', 'original amount', 'original value',
             'valor original', 'importe original', 'ursprünglicher betrag'
         ],
         description: [
-            'תיאור', 'שם בית העסק', 'פרטים', 'description', 'merchant', 'merchant name',
+            // Hebrew (incl. Israeli banks)
+            'תיאור', 'שם בית העסק', 'פרטים', 'תיאור הפעולה', 'תיאור פעולה',
+            'פירוט', 'פירוט פעולה', 'הפעולה', 'מהות העסקה', 'מהות הפעולה',
+            'description', 'merchant', 'merchant name', 'memo', 'narrative',
             'descrição', 'estabelecimento', 'descripción', 'comercio',
             'beschreibung', 'händler', 'description du marchand'
+        ],
+        balance: [
+            'יתרה', 'יתרה שוטפת', 'יתרת חשבון', 'יתרה בש"ח', 'balance',
+            'saldo', 'solde'
+        ],
+        reference: [
+            'אסמכתא', 'מספר אסמכתא', 'מס\' אסמכתא', 'reference', 'ref', 'ref no',
+            'referencia', 'referência'
         ],
         category: [
             'קטגוריה', 'סוג', 'category', 'type', 'categoria', 'categoría',
