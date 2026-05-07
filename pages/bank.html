@@ -500,8 +500,16 @@
                     const headerIdx = findBankHeaderRow(rows);
                     const headers = rows[headerIdx];
 
-                    // Auto-detect columns
-                    const detected = detectBankColumns(headers);
+                    // Compute fingerprint of headers (for template auto-load)
+                    const fingerprint = headers.map(h => String(h||'').trim().toLowerCase()).join('|');
+
+                    // Try to load saved template for this exact header signature
+                    let templates = {};
+                    try { templates = JSON.parse(localStorage.getItem('finsight_import_templates') || '{}'); } catch(e){}
+                    const savedTemplate = templates[fingerprint];
+
+                    // Auto-detect columns (or use saved template)
+                    let detected = savedTemplate?.mapping || detectBankColumns(headers);
 
                     // If balance column not found, show manual mapping
                     if (detected.balance === undefined) {
@@ -509,10 +517,52 @@
                         return;
                     }
 
+                    // Build preview: first 5 data rows showing key columns
+                    const dataRows = rows.slice(headerIdx + 1).filter(r => {
+                        const fc = String(r[0]||'').trim();
+                        return fc && !fc.includes('סה"כ') && !fc.includes('total');
+                    });
+                    const previewCount = Math.min(5, dataRows.length);
+                    const colKeys = Object.keys(detected);
+                    const previewHtml = `
+                        <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">
+                            ${I18n.t('bank.previewIntro') || 'נמצאו'} <b>${dataRows.length}</b> ${I18n.t('bank.rowsTotal') || 'שורות'}.
+                            ${savedTemplate ? `<span style="color:var(--color-success);font-size:11px;margin-inline-start:6px">✓ ${I18n.t('bank.templateLoaded') || 'תבנית טעונה'}</span>` : ''}
+                        </div>
+                        <div style="overflow-x:auto;border:1px solid var(--color-border);border-radius:8px;">
+                            <table style="width:100%;font-size:12px;border-collapse:collapse;">
+                                <thead>
+                                    <tr style="background:var(--color-bg-secondary)">
+                                        ${colKeys.map(k => `<th style="padding:6px 10px;text-align:start;font-weight:700;color:var(--color-primary)">${k}<br><span style="font-weight:400;color:var(--color-text-secondary);font-size:10px">${headers[detected[k]] || ''}</span></th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${dataRows.slice(0, previewCount).map(row => `
+                                        <tr style="border-top:1px solid var(--color-border)">
+                                            ${colKeys.map(k => `<td style="padding:6px 10px;color:var(--color-text)">${String(row[detected[k]] || '').slice(0, 40)}</td>`).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:10px">
+                            ${I18n.t('bank.previewShowing') || 'מציג'} ${previewCount} ${I18n.t('bank.outOf') || 'מתוך'} ${dataRows.length}
+                        </div>
+                    `;
+
+                    // Show preview modal with confirm/cancel
+                    const confirmed = await showPreviewModal(previewHtml, dataRows.length);
+                    if (!confirmed) return;
+
                     // Import the data
                     const imported = importBankData(rows, headerIdx, detected);
 
                     if (imported > 0) {
+                        // Save template for future auto-import
+                        try {
+                            templates[fingerprint] = { mapping: detected, savedAt: new Date().toISOString() };
+                            localStorage.setItem('finsight_import_templates', JSON.stringify(templates));
+                        } catch(e){}
                         App.notify(I18n.t('bank.importedAccounts') + ` (${imported})`, 'success');
                         loadAccounts();
                     } else {
@@ -525,6 +575,29 @@
             };
 
             input.click();
+        }
+
+        // Preview modal — shows first 5 rows + Confirm/Cancel before final import
+        function showPreviewModal(innerHtml, totalCount) {
+            return new Promise(resolve => {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+                const modal = document.createElement('div');
+                modal.style.cssText = 'background:var(--color-bg);border:1px solid var(--color-border);border-radius:14px;padding:20px;max-width:760px;width:100%;max-height:80vh;overflow-y:auto;';
+                modal.innerHTML = `
+                    <h3 style="margin:0 0 14px;font-size:18px;font-weight:700">📋 ${I18n.t('bank.previewTitle') || 'תצוגה מקדימה'}</h3>
+                    ${innerHtml}
+                    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+                        <button id="prev-cancel" class="btn btn-secondary">${I18n.t('common.cancel') || 'ביטול'}</button>
+                        <button id="prev-ok" class="btn btn-primary">${I18n.t('bank.confirmImport') || 'אשר וייבא'} (${totalCount})</button>
+                    </div>
+                `;
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+                modal.querySelector('#prev-cancel').onclick = () => { overlay.remove(); resolve(false); };
+                modal.querySelector('#prev-ok').onclick = () => { overlay.remove(); resolve(true); };
+                overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
+            });
         }
 
         function findBankHeaderRow(rows) {
