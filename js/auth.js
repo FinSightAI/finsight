@@ -57,11 +57,7 @@ const Auth = {
         authSection.style.cssText = 'padding: 10px 15px; border-bottom: 1px solid var(--color-border);';
         authSection.innerHTML = `
             <div id="userInfo" style="display: none; align-items: center; gap: 10px; margin-bottom: 10px;"></div>
-            <div id="authButtons" class="auth-buttons">
-                <button class="btn btn-auth" onclick="Auth.showEmailLogin()">
-                    <span>📧</span> <span data-i18n="auth.email">${typeof I18n !== 'undefined' ? I18n.t('auth.email') : 'התחבר'}</span>
-                </button>
-            </div>
+            <div id="authButtons" class="auth-buttons" style="display:none;"></div>
             <div id="authLogout" style="display: none;">
                 <button id="authBtn" class="btn btn-secondary btn-sm" style="width: 100%;" onclick="Auth.signOut()">
                     <span data-i18n="auth.signOut">${typeof I18n !== 'undefined' ? I18n.t('auth.signOut') : 'התנתק'}</span>
@@ -463,8 +459,9 @@ const Auth = {
                 userInfo.style.display = 'flex';
             }
         } else {
-            // User is signed out - show email login, hide logout
-            if (authButtons) authButtons.style.display = 'flex';
+            // Signed out — auth happens via WizeLife SSO, so don't show internal sign-in.
+            // The WizeBar at top has a sign-in pill that redirects to wizelife.ai/auth.html.
+            if (authButtons) authButtons.style.display = 'none';
             if (authLogout) authLogout.style.display = 'none';
 
             if (userInfo) {
