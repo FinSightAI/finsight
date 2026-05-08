@@ -492,11 +492,13 @@
         if (!el) return;
         const stored = localStorage.getItem('wl_nickname');
         const cu = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser : null;
-        // prefer real display name; fall back to local-part of email (never show full email)
         let nick = stored || (cu && cu.displayName) || null;
         if (!nick && cu && cu.email) {
             nick = cu.email.includes('@') ? cu.email.split('@')[0] : cu.email;
         }
+        // First name only \u2014 Google sign-in often returns "John Doe"; nicer to greet "John".
+        // Heuristic: take everything before the first whitespace.
+        if (nick && /\s/.test(nick)) nick = nick.split(/\s+/)[0];
         if (nick) {
             const short = nick.length > 20 ? nick.substring(0, 18) + '\u2026' : nick;
             el.textContent = '\u25cf ' + short;

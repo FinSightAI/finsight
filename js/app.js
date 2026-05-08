@@ -42,32 +42,66 @@ const App = {
      * Register service worker for PWA
      */
     async registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            try {
-                // Detect base path for GitHub Pages compatibility
-                const basePath = window.location.pathname.includes('/pages/')
-                    ? window.location.pathname.split('/pages/')[0]
-                    : window.location.pathname.replace(/\/[^/]*$/, '');
-                const swPath = basePath + '/sw.js';
-                const registration = await navigator.serviceWorker.register(swPath, { scope: basePath + '/' });
+        if (!('serviceWorker' in navigator)) return;
+        try {
+            const basePath = window.location.pathname.includes('/pages/')
+                ? window.location.pathname.split('/pages/')[0]
+                : window.location.pathname.replace(/\/[^/]*$/, '');
+            const swPath = basePath + '/sw.js';
+            const registration = await navigator.serviceWorker.register(swPath, { scope: basePath + '/' });
 
+            // Show a non-blocking banner when a new version is ready, instead
+            // of silently force-reloading mid-task.
+            const showBanner = (newSW) => {
+                if (document.getElementById('wl-sw-update-banner')) return;
+                const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
+                const txt = ({
+                    he: { msg: 'גרסה חדשה זמינה ✨', btn: 'עדכן' },
+                    en: { msg: 'New version available ✨', btn: 'Update' },
+                    pt: { msg: 'Nova versão disponível ✨', btn: 'Atualizar' },
+                    es: { msg: 'Nueva versión disponible ✨', btn: 'Actualizar' },
+                })[lang] || { msg: 'New version available', btn: 'Update' };
+                const bar = document.createElement('div');
+                bar.id = 'wl-sw-update-banner';
+                bar.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:99999;padding:10px 16px;border-radius:99px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font:600 13px Inter,-apple-system,sans-serif;box-shadow:0 8px 24px rgba(99,102,241,.4);display:flex;align-items:center;gap:10px;animation:wl-sw-pop .35s ease';
+                bar.innerHTML = `<span>${txt.msg}</span>
+                    <button style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:4px 12px;border-radius:99px;font:700 12px inherit;cursor:pointer">${txt.btn}</button>
+                    <button aria-label="dismiss" style="background:transparent;border:0;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;padding:0 4px;line-height:1">×</button>`;
+                if (!document.getElementById('wl-sw-anim')) {
+                    const s = document.createElement('style');
+                    s.id = 'wl-sw-anim';
+                    s.textContent = '@keyframes wl-sw-pop{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}';
+                    document.head.appendChild(s);
+                }
+                document.body.appendChild(bar);
+                const [updateBtn, dismissBtn] = bar.querySelectorAll('button');
+                updateBtn.addEventListener('click', () => newSW.postMessage({ type: 'SKIP_WAITING' }));
+                dismissBtn.addEventListener('click', () => bar.remove());
+            };
 
-                // Auto-reload when a new SW takes control — ensures users always
-                // get the latest version without manual cache clearing
-                let refreshing = false;
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    if (!refreshing) {
-                        refreshing = true;
-                        window.location.reload();
+            registration.addEventListener('updatefound', () => {
+                const newSW = registration.installing;
+                if (!newSW) return;
+                newSW.addEventListener('statechange', () => {
+                    if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                        showBanner(newSW);
                     }
                 });
+            });
 
-                // Force update check every time the page loads
-                registration.update();
-            } catch (error) {
+            // Reload when the new SW activates (after user clicks Update)
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (refreshing) return;
+                refreshing = true;
+                window.location.reload();
+            });
 
-            }
-        }
+            // Periodic update check while page is open
+            setInterval(() => { try { registration.update(); } catch {} }, 5 * 60 * 1000);
+            window.addEventListener('focus', () => { try { registration.update(); } catch {} });
+            registration.update();  // initial check
+        } catch (error) { /* silent */ }
     },
 
     /**

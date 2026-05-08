@@ -1,4 +1,9 @@
-const CACHE_NAME = 'finsight-v233';
+const CACHE_NAME = 'finsight-v234';
+
+// Listen for "user clicked Update" message — activate immediately
+self.addEventListener('message', e => {
+    if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
