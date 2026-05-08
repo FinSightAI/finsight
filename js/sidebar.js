@@ -327,7 +327,8 @@
             '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
             '<div style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
-            '<span id="wl-bar-plan" style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
+            '<a id="wl-bar-signin" href="https://wizelife.ai/auth.html" style="display:none;font-size:11px;font-weight:700;color:#fbbf24;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);padding:4px 12px;border-radius:99px;text-decoration:none;white-space:nowrap;">Sign in</a>' +
+            '<span id="wl-bar-plan" style="display:none;font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
             '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
             '</div>';
@@ -366,8 +367,33 @@
     
     function updateWizeBarPlan() {
         const el = document.getElementById('wl-bar-plan');
+        const signin = document.getElementById('wl-bar-signin');
         if (!el) return;
-        // Prefer Plan.get() if available (it's source-of-truth from Firestore)
+
+        // Resolve auth state. We are "logged in" if either firebase.auth has
+        // a user OR an SSO token exists in localStorage.
+        let isAuthed = false;
+        try {
+            if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) isAuthed = true;
+        } catch(e) {}
+        try {
+            const sso = JSON.parse(localStorage.getItem('wl_sso') || '{}');
+            if (sso.token || sso.email) isAuthed = true;
+        } catch(e) {}
+
+        if (!isAuthed) {
+            // Not logged in: show prominent Sign in pill, hide plan badge + nick
+            if (signin) signin.style.display = 'inline-flex';
+            el.style.display = 'none';
+            const nick = document.getElementById('wl-bar-nick');
+            if (nick) nick.style.display = 'none';
+            return;
+        }
+
+        // Logged in: hide sign-in pill, show plan
+        if (signin) signin.style.display = 'none';
+        el.style.display = 'inline-flex';
+
         let plan = 'free';
         try {
             if (typeof Plan !== 'undefined' && Plan.get) {
@@ -375,7 +401,6 @@
                 if (p) plan = p;
             }
         } catch(e) {}
-        // Fallback to localStorage
         if (plan === 'free' || !plan) plan = localStorage.getItem('wl_plan') || 'free';
         const labels = { yolo: '⚡ YOLO', pro: '✦ PRO', free: 'FREE', pro_trial: '✦ PRO' };
         el.textContent = labels[plan] || 'FREE';

@@ -424,7 +424,14 @@ const Auth = {
     async signOut() {
         try {
             await firebaseAuth.signOut();
+            // Also clear all WizeLife SSO state — otherwise the WizeBar pill
+            // keeps showing the previous YOLO/PRO plan + nickname.
+            try {
+                ['wl_sso', 'wl_token', 'wl_plan', 'wl_nickname', 'wl_access_code'].forEach(k => localStorage.removeItem(k));
+            } catch {}
             App.notify(I18n.t('auth.signedOut'), 'success');
+            // Refresh so the WizeBar re-renders with the signed-out state
+            setTimeout(() => location.reload(), 500);
         } catch (error) {
             console.error('Sign out error:', error);
             App.notify(I18n.t('auth.signOutError'), 'error');
