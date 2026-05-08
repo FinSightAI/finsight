@@ -4,6 +4,17 @@
  * Determines root vs pages/ prefix from window.location, marks the active item.
  */
 (function () {
+    // ── Microsoft Clarity (loads once on every page via this shared script) ──
+    try {
+        if (!window.clarity) {
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "wnvlwv7gu0");
+        }
+    } catch(e) {}
+
     // ── WL SSO bridge: read wl_token + wl_nick from URL, save to wl_sso ──
     try {
         var _p = new URLSearchParams(window.location.search);
