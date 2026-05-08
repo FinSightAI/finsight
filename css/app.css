@@ -6,8 +6,8 @@ body { transition: background 200ms ease; }
 
 /* ===== CSS Variables ===== */
 :root {
-    --color-bg-primary: #030508;
-    --color-bg-secondary: #060810;
+    --color-bg-primary: #050507;
+    --color-bg-secondary: #0a0a0c;
     --color-bg-card: rgba(255, 255, 255, 0.05);
     --color-border: rgba(255, 255, 255, 0.1);
     --color-text-primary: #ffffff;
