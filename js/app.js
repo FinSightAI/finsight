@@ -50,7 +50,7 @@ const App = {
                     : window.location.pathname.replace(/\/[^/]*$/, '');
                 const swPath = basePath + '/sw.js';
                 const registration = await navigator.serviceWorker.register(swPath, { scope: basePath + '/' });
-                console.log('ServiceWorker registered:', registration.scope);
+
 
                 // Auto-reload when a new SW takes control — ensures users always
                 // get the latest version without manual cache clearing
@@ -65,7 +65,7 @@ const App = {
                 // Force update check every time the page loads
                 registration.update();
             } catch (error) {
-                console.log('ServiceWorker registration failed:', error);
+
             }
         }
     },

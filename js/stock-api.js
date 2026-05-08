@@ -163,7 +163,7 @@ const StockAPI = {
                 const data = await r.json();
                 const parsed = this._parseMayaPrice(data);
                 if (parsed) {
-                    console.log(`[TASE Worker] ${id}: ₪${parsed.currentPrice}`);
+
                     return parsed;
                 }
             } catch (e) {

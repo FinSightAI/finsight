@@ -514,7 +514,7 @@ const Auth = {
                     sensitiveData.stocks.transactions = txs
                         .sort((a, b) => new Date(b.date) - new Date(a.date))
                         .slice(0, 200);
-                    console.log(`Cloud sync: trimmed transactions from ${txs.length} to 200`);
+
                 }
             }
 
@@ -634,7 +634,7 @@ const Auth = {
                 // Count data items in cloud vs local
                 const stockData = data.stocks;
                 console.log('Cloud sync: decrypted data keys:', Object.keys(data).join(', '));
-                console.log('Cloud sync: stocks holdings:', stockData?.holdings?.length || 0, 'transactions:', stockData?.transactions?.length || 0);
+
                 const cloudItemCount = this._countDataItems(data);
                 const localItemCount = this._countDataItems({
                     bankAccounts: Storage.getBankAccounts(),
@@ -647,7 +647,7 @@ const Auth = {
                 });
 
                 // Check if cloud data is newer or if this is first sync
-                console.log(`Cloud sync: cloud=${cloudItemCount} items, local=${localItemCount} items, cloudTime=${cloudLastUpdate}, localTime=${localTime}`);
+
 
                 if (cloudLastUpdate > localTime || !localLastUpdate) {
                     // If cloud is empty but local has data, don't overwrite — upload local instead
@@ -670,7 +670,7 @@ const Auth = {
                     }
 
                     // Cloud is newer, update local
-                    console.log('Cloud sync: restoring cloud data to local storage...');
+
                     if (data.bankAccounts) Storage.saveBankAccounts(data.bankAccounts);
                     if (data.creditCards) Storage.saveCreditCards(data.creditCards);
                     if (data.stocks) { Storage.saveStocks(data.stocks); console.log('Cloud sync: stocks restored -', data.stocks.holdings?.length, 'holdings,', data.stocks.transactions?.length, 'transactions'); }
@@ -726,7 +726,7 @@ const Auth = {
                     }
                 }
             } else {
-                console.log('Cloud sync: no document found in cloud');
+
                 // No cloud data — only save if local has actual data
                 const localCount = this._countDataItems({
                     bankAccounts: Storage.getBankAccounts(),

@@ -82,7 +82,7 @@ const Notifications = {
      */
     async show(title, options = {}) {
         if (!this.isSupported() || Notification.permission !== 'granted') {
-            console.log('Notifications not available');
+
             return false;
         }
 

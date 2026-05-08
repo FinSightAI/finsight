@@ -62,7 +62,7 @@ const ImageImport = {
                 return;
             }
 
-            console.log('OCR raw text:', text);
+
 
             // Try smart extraction for card-layout financial screenshots
             const smartData = this.extractFinancialCard(text, dataType);
@@ -90,7 +90,7 @@ const ImageImport = {
      * (e.g. Menora, Harel, Migdal pension/fund summary pages)
      */
     extractFinancialCard(text, dataType) {
-        console.log('Trying smart extraction on:', text);
+
 
         // Check if this looks like a financial card (not a table)
         // Look for known Israeli financial keywords
@@ -132,7 +132,7 @@ const ImageImport = {
             if (!isNaN(val) && val > 50 && !amounts.includes(val)) amounts.push(val);
         });
 
-        console.log('Extracted amounts:', amounts);
+
 
         if (amounts.length === 0) return null;
 
@@ -219,7 +219,7 @@ const ImageImport = {
             }
         }
 
-        console.log('Smart extraction result:', { fundName, company, type, balance, fundNumber, track, expectedPension });
+
 
         return {
             name: fundName,
@@ -847,7 +847,7 @@ const ImageImport = {
                 return;
             }
 
-            console.log('Payslip OCR raw text:', text);
+
 
             const data = this.extractPayslip(text);
             if (!data) {
@@ -915,7 +915,7 @@ const ImageImport = {
                 return;
             }
 
-            console.log('Payslip PDF OCR raw text:', combinedText);
+
 
             const data = this.extractPayslip(combinedText);
             if (!data) {
@@ -944,7 +944,7 @@ const ImageImport = {
         if (!isPayslip) return null;
 
         const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        console.log('Payslip OCR lines:', lines);
+
 
         /**
          * Extract a number near a keyword.

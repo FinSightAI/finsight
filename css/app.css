@@ -319,7 +319,10 @@ body.ltr .nav-submenu {
 }
 
 /* ===== Logo Hero ===== */
+/* Hidden — internal pages already show branding via WizeBar (top) + sidebar.
+   Kept the rules for reversibility; toggle 'display: block' to restore. */
 .logo-hero {
+    display: none;
     text-align: center;
     margin-bottom: var(--spacing-sm);
 }
