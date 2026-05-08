@@ -146,10 +146,24 @@ const TX = {
             bonds:  ['אג"ח ממשלתי ארה"ב — האם כדאי עכשיו?','Treasury 10Y yield — מה המשמעות?','אג"ח קונצרני vs ממשלתי — הבדלים','Duration Risk — הסבר פשוט','אג"ח ישראלי vs גלי — מה לקנות?'],
             realestate: ['נדל"ן ישראל vs מניות — מה עדיף?','REITs — איך משקיעים בנדל"ן דרך הבורסה?','מגמות נדל"ן עולמי 2025','REIT ETF — אילו מומלצים?','נדל"ן vs אג"ח בסביבת ריבית גבוהה?'],
         },
-        systemBase: `אתה יועץ השקעות מומחה עם ידע עמוק בשוקי המניות הגלובליים ובכל מכשירי ההשקעה.
-התמחויות: NYSE, NASDAQ, S&P 500, ת"א 35, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | אג"ח | קריפטו | נדל"ן/REITs | סחורות | ניתוח טכני ופונדמנטלי
-הנחיות: ענה תמיד בעברית | תן ניתוח ספציפי ומעמיק | כלול תזה bullish ו-bearish | ציין "אין בזה ייעוץ מורשה" בהמלצות | פרמט עם כותרות ורשימות | היה ישיר
-נתוני מחיר חי מסומנים ב-[מחיר] — אלה המחירים האחרונים מדף המניות של המשתמש.`,
+        systemBase: `אתה יועץ השקעות אישי עם ידע עמוק בשוקי המניות הגלובליים, ETFs, אג"ח, קרנות, נדל"ן/REITs וקריפטו.
+
+הנחיות מחייבות:
+1. תקרא את הסיכום של תיק המשתמש בסוף הפרומפט — שווי נטו, חלוקת נכסים, תשואה היסטורית, כסף פנוי.
+2. כשהמשתמש שואל "איך להשקיע?" או נכנס בלי שאלה — תן **3 המלצות קונקרטיות** בפורמט:
+   ### המלצה 1: [שם המכשיר/קטגוריה]
+   - **הקצאה מומלצת**: ₪X (Y% מהכסף הפנוי)
+   - **למה**: [הסבר מבוסס על תיק המשתמש — למה זה מתאים *לו* ספציפית]
+   - **רמת סיכון**: נמוך/בינוני/גבוה
+   - **תשואה צפויה**: X-Y% שנתי
+   - **דוגמת ETF/מניה**: [טיקר ספציפי]
+3. תשווה את ההמלצות לחלוקת הנכסים *הקיימת* של המשתמש — אם הוא כבר עם 80% במניות, אל תמליץ עוד מניות.
+4. אם יש תשואה שלילית בתיק — תפנה את הזרקור על זה ותציע פעולה.
+5. תמיד הסתיים ב: "⚠️ אין בזה ייעוץ פיננסי מורשה. החלטות השקעה הן באחריותך."
+6. ענה תמיד בעברית | היה ישיר וקונקרטי | פורמט markdown עם כותרות
+
+התמחויות: NYSE, NASDAQ, S&P 500, ת"א 35, TASE, DAX, FTSE, Nikkei | ETFs | אג"ח | קריפטו | נדל"ן/REITs | סחורות
+נתוני מחיר חי מסומנים ב-[מחיר] — אלה המחירים האחרונים מהדף.`,
         portfolioHeader: '=== תיק ההשקעות הנוכחי של המשתמש ===',
         portfolioLabel: 'אחזקות, שווי כולל:',
         fundsHeader: '=== קרנות / מכשירי השקעה ===',
@@ -430,16 +444,32 @@ function getLivePrice(symbol) {
     return null;
 }
 
+// Aggregates ALL of the user's financial data into a structured prompt block
+// the AI can reason from. Includes free cash, per-holding returns, total
+// portfolio return, asset allocation %, and goals. The advisor uses these
+// numbers to generate concrete recommendations.
 function getPortfolioContext() {
     const tx = t();
     const lines = [];
+    let totalStocks = 0, totalFunds = 0, totalCash = 0;
+    let totalCostBasis = 0, totalCurrentValue = 0;
+
     try {
         const stockData = Storage.getStocks?.() || { holdings: [] };
         const stocks = stockData.holdings || stockData || [];
         if (stocks.length) {
-            const total = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
+            stocks.forEach(x => {
+                const live = getLivePrice(x.symbol);
+                const currentP = live?.currentPrice || x.currentPrice || x.avgPrice;
+                const qty = x.quantity || 1;
+                const val = currentP ? currentP * qty : (parseFloat(x.currentValue) || parseFloat(x.value) || 0);
+                const cost = (x.avgPrice || 0) * qty || val;
+                totalStocks += val;
+                totalCostBasis += cost;
+                totalCurrentValue += val;
+            });
             lines.push('\n' + tx.portfolioHeader);
-            lines.push(`${stocks.length} ${tx.portfolioLabel} ₪${Math.round(total).toLocaleString()}`);
+            lines.push(`${stocks.length} ${tx.portfolioLabel} ₪${Math.round(totalStocks).toLocaleString()}`);
             stocks.forEach(x => {
                 const live = getLivePrice(x.symbol);
                 const currentP = live?.currentPrice || x.currentPrice || x.avgPrice;
@@ -453,13 +483,16 @@ function getPortfolioContext() {
         }
         const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
         if (funds.length) {
-            const total = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
+            totalFunds = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
             lines.push('\n' + tx.fundsHeader);
             funds.forEach(f => {
                 const val = parseFloat(f.currentValue) || parseFloat(f.balance) || 0;
-                lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%`);
+                const initial = parseFloat(f.initialValue) || parseFloat(f.deposits) || 0;
+                const ret = (initial > 0 && val > 0) ? (((val - initial) / initial) * 100).toFixed(1) : null;
+                const retStr = ret ? `, תשואה: ${ret >= 0 ? '+' : ''}${ret}%` : '';
+                lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%${retStr}`);
             });
-            lines.push(`${tx.totalLabel} ₪${Math.round(total).toLocaleString()}`);
+            lines.push(`${tx.totalLabel} ₪${Math.round(totalFunds).toLocaleString()}`);
         }
         const goals = Storage.get('finance_goals') || [];
         if (goals.length) {
@@ -471,8 +504,29 @@ function getPortfolioContext() {
         }
         const bank = Storage.getBankAccounts?.() || [];
         if (bank.length) {
-            const total = bank.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
-            lines.push('\n' + tx.bankHeader + ` ₪${Math.round(total).toLocaleString()}`);
+            totalCash = bank.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+            lines.push('\n' + tx.bankHeader + ` ₪${Math.round(totalCash).toLocaleString()}`);
+        }
+
+        // ── Roll-up summary so the AI doesn't have to compute aggregates ──
+        const totalNetWorth = totalStocks + totalFunds + totalCash;
+        if (totalNetWorth > 0) {
+            const totalReturn = totalCostBasis > 0
+                ? (((totalCurrentValue - totalCostBasis) / totalCostBasis) * 100).toFixed(1)
+                : null;
+            const allocStocks = ((totalStocks / totalNetWorth) * 100).toFixed(0);
+            const allocFunds = ((totalFunds / totalNetWorth) * 100).toFixed(0);
+            const allocCash = ((totalCash / totalNetWorth) * 100).toFixed(0);
+            lines.push(`\n=== סיכום (אגרגציה) ===`);
+            lines.push(`שווי נטו כולל: ₪${Math.round(totalNetWorth).toLocaleString()}`);
+            lines.push(`חלוקת נכסים: מניות ${allocStocks}% | קרנות ${allocFunds}% | מזומן ${allocCash}%`);
+            if (totalReturn != null) lines.push(`תשואה כוללת על תיק המניות: ${totalReturn >= 0 ? '+' : ''}${totalReturn}%`);
+            // Available cash to deploy: assume 3-month emergency fund stays put.
+            // Heuristic: if user has goals, subtract sum of upcoming targets within 12mo.
+            const liquidExcess = Math.max(0, totalCash - 30000); // tunable: leave 30k as emergency
+            if (liquidExcess > 1000) {
+                lines.push(`כסף פנוי להשקעה (אחרי שמירה על קרן חירום ~₪30K): כ-₪${Math.round(liquidExcess).toLocaleString()}`);
+            }
         }
     } catch(e) {}
     return lines.join('\n');
@@ -624,6 +678,37 @@ firebase.auth().onAuthStateChanged(async user => {
     updateApiStatus(user);
 });
 
+// Auto-recommendation: as soon as the user lands on the page, the advisor
+// looks at their portfolio + free cash + goals + holding returns and gives
+// 3 concrete recommendations without the user typing anything.
+async function autoAnalyze() {
+    if (!currentUser) return;                         // need to be logged in
+    if (conversationHistory.length > 0) return;       // already mid-chat
+    const portfolio = getPortfolioContext();
+    if (!portfolio.trim()) {
+        renderMessage('assistant',
+            '👋 שלום! אני היועץ ההשקעות שלך.\n\n' +
+            'כדי שאוכל להמליץ לך **באמת** איך להשקיע, אני צריך נתונים על המצב הפיננסי שלך:\n\n' +
+            '1. **חשבונות בנק** — עבור לכרטיסיית "🏦 בנק" והוסף את היתרות\n' +
+            '2. **השקעות קיימות** — בכרטיסייה "📊 קרנות שלי" + "📈 מניות"\n' +
+            '3. **יעדים** — בכרטיסייה "🎯 יעדים"\n\n' +
+            'ברגע שיש נתונים — חזור לכאן ואקבל המלצות מותאמות אישית עבורך.');
+        return;
+    }
+    // Auto-trigger: programmatically run sendMessage with the standard
+    // "what should I invest in?" question.
+    const lang = getLang();
+    const auto = ({
+        he: 'נתח את התיק שלי והמלץ לי איך להשקיע את הכסף הפנוי. תן 3 המלצות ספציפיות בהתאם לחלוקה הקיימת והתשואות.',
+        en: 'Analyse my portfolio and recommend how to deploy my free cash. Give 3 specific recommendations based on my existing allocation and returns.',
+        pt: 'Analise minha carteira e recomende como aplicar meu dinheiro livre. Dê 3 recomendações específicas baseadas na minha alocação atual e retornos.',
+        es: 'Analiza mi cartera y recomienda cómo desplegar mi efectivo libre. Da 3 recomendaciones específicas según mi asignación actual y rendimientos.',
+    })[lang] || 'Analyse my portfolio and recommend how to deploy my free cash.';
+    document.getElementById('chatInput').value = auto;
+    // give the UI a tick to settle, then fire
+    setTimeout(() => { sendMessage(); }, 150);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof I18n !== 'undefined') {
         I18n.init();
@@ -632,6 +717,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     applyLang();
     loadHistory();
+    // Wait for auth + storage to settle, then run auto-analysis
+    setTimeout(() => autoAnalyze(), 800);
 });
 </script>
 </body>
