@@ -53,6 +53,19 @@
         <div id="disclaimer" style="margin:12px 20px 0;padding:10px 14px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.78rem;color:#d97706;line-height:1.5;flex-shrink:0;" id="disclaimer">
         </div>
 
+        <!-- Investment amount: auto-calculated, shown compact, editable on click -->
+        <div id="investAmountBox" style="margin:10px 20px 0;padding:9px 14px;background:var(--color-bg-hover);border:1px solid var(--color-border);border-radius:10px;flex-shrink:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:0.82rem;">
+            <span style="color:var(--color-text-secondary);">💰</span>
+            <span id="investAmountSummary" style="color:var(--color-text-primary);">חישוב סכום…</span>
+            <button id="editInvestBtn" style="padding:3px 8px;border-radius:6px;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;font-family:inherit;" title="שנה סכום">✏️</button>
+            <div id="investAmountEditor" style="display:none;align-items:center;gap:6px;">
+                <span style="color:var(--color-text-secondary);">₪</span>
+                <input type="number" id="investAmount" min="0" step="1000" style="width:120px;padding:5px 9px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:6px;color:var(--color-text-primary);font-size:0.85rem;font-weight:700;font-family:inherit;text-align:end;" />
+                <button id="confirmInvestBtn" style="padding:5px 10px;border-radius:6px;background:var(--color-stocks);border:0;color:white;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;">✓</button>
+            </div>
+            <button onclick="autoAnalyze(true)" style="padding:5px 12px;border-radius:6px;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;font-family:inherit;margin-inline-start:auto;" id="reanalyzeBtn">🔄 נתח מחדש</button>
+        </div>
+
 
         <div style="padding:12px 20px 0;flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <span id="marketLabel" style="font-size:0.78rem;color:var(--color-text-secondary);margin-left:4px;"></span>
@@ -146,24 +159,70 @@ const TX = {
             bonds:  ['אג"ח ממשלתי ארה"ב — האם כדאי עכשיו?','Treasury 10Y yield — מה המשמעות?','אג"ח קונצרני vs ממשלתי — הבדלים','Duration Risk — הסבר פשוט','אג"ח ישראלי vs גלי — מה לקנות?'],
             realestate: ['נדל"ן ישראל vs מניות — מה עדיף?','REITs — איך משקיעים בנדל"ן דרך הבורסה?','מגמות נדל"ן עולמי 2025','REIT ETF — אילו מומלצים?','נדל"ן vs אג"ח בסביבת ריבית גבוהה?'],
         },
-        systemBase: `אתה יועץ השקעות אישי עם ידע עמוק בשוקי המניות הגלובליים, ETFs, אג"ח, קרנות, נדל"ן/REITs וקריפטו.
+        systemBase: `אתה יועץ השקעות אישי **רב-שוקי**, עם ידע מעמיק ב-3 שווקים שונים:
 
-הנחיות מחייבות:
-1. תקרא את הסיכום של תיק המשתמש בסוף הפרומפט — שווי נטו, חלוקת נכסים, תשואה היסטורית, כסף פנוי.
-2. כשהמשתמש שואל "איך להשקיע?" או נכנס בלי שאלה — תן **3 המלצות קונקרטיות** בפורמט:
-   ### המלצה 1: [שם המכשיר/קטגוריה]
-   - **הקצאה מומלצת**: ₪X (Y% מהכסף הפנוי)
-   - **למה**: [הסבר מבוסס על תיק המשתמש — למה זה מתאים *לו* ספציפית]
-   - **רמת סיכון**: נמוך/בינוני/גבוה
-   - **תשואה צפויה**: X-Y% שנתי
-   - **דוגמת ETF/מניה**: [טיקר ספציפי]
-3. תשווה את ההמלצות לחלוקת הנכסים *הקיימת* של המשתמש — אם הוא כבר עם 80% במניות, אל תמליץ עוד מניות.
-4. אם יש תשואה שלילית בתיק — תפנה את הזרקור על זה ותציע פעולה.
-5. תמיד הסתיים ב: "⚠️ אין בזה ייעוץ פיננסי מורשה. החלטות השקעה הן באחריותך."
-6. ענה תמיד בעברית | היה ישיר וקונקרטי | פורמט markdown עם כותרות
+🇮🇱 **ישראל** — קרן השתלמות, קופת גמל, גמל להשקעה, פנסיה, פנסיוני, IRA, ת"א 35, ת"א 125, אג"ח ממשלתיות (גליל/שחר), פיקדון בנק
+🇺🇸 **ארה"ב/גלובלי** — NYSE, NASDAQ, S&P 500, ETFs (VTI, VOO, QQQ), Treasury bonds, REITs, קריפטו
+🇧🇷 **ברזיל** — B3 (Bovespa), Ibovespa (BOVA11, IVVB11), FIIs (Fundos Imobiliários — תחליף ברזילאי ל-REITs), Tesouro Direto (אג"ח ממשלתי), CDB/LCI/LCA (פיקדונות בנק עם הטבת מס), Renda Fixa
 
-התמחויות: NYSE, NASDAQ, S&P 500, ת"א 35, TASE, DAX, FTSE, Nikkei | ETFs | אג"ח | קריפטו | נדל"ן/REITs | סחורות
-נתוני מחיר חי מסומנים ב-[מחיר] — אלה המחירים האחרונים מהדף.`,
+⚠️ **תזהה את שוק העניין מתוך התיק של המשתמש**: אם רוב הקרנות שלו ישראליות → המלץ בעיקר ישראלי. אם יש BOVA11/FIIs → המשתמש בברזיל, התאם המלצות. אם יש VTI/QQQ → גלובלי.
+
+📊 **תקרות הפקדה ישראליות 2026** (₪):
+- קרן השתלמות (עצמאי): ₪19,920/שנה — הטבת מס מלאה, פטור מס רווחי הון אחרי 6 שנים
+- קרן השתלמות (שכיר): 7.5% משכר ברוטו (תקרה ~₪15,712/שנה) — עם השלמת מעסיק
+- קופת גמל להשקעה: ₪83,400/שנה — בלי הטבת מס, אבל גמיש
+- פנסיה (לזיכוי מס): עד 16% מהשכר, תקרה ~₪33,408/שנה
+- IRA / קופת גמל ניהול עצמי: ₪80,000/שנה
+- פיקדון בנק: בלי תקרה, ריבית 3-4%
+
+📊 **תקרות וכלים ברזיליאניים 2026**:
+- Tesouro Direto (Selic/IPCA/Prefixado): בלי תקרה. תשואה Selic ~10-12%/שנה
+- LCI/LCA: פטור מס הכנסה (לעומת CDB שחייב), ריבית ~85-95% מ-Selic
+- CDB: חייב מס (טבלה רגרסיבית 22.5%→15%), ריבית 100-110% מ-Selic
+- FIIs (REITs ברזיליאני): פטור מס דיבידנד לאדם פרטי. תשואה דיבידנד 6-10%/שנה
+- BOVA11/IVVB11 (ETFs): שוק מקומי או חשיפה לS&P 500
+- Previdência (PGBL/VGBL): פנסיה פרטית עם הטבות מס
+
+💼 דמי ניהול ממוצעים בשוק (תקני):
+- קרן השתלמות: 0.5-0.7% (גבוה מ-1% = להחליף!)
+- קופת גמל: 0.5-1.0%
+- ETFs ישראליים (ת"א 125): 0.05-0.30%
+- ETFs אמריקאיים (VTI, VOO): 0.03-0.07%
+- קרנות נאמנות אקטיביות: 1.0-2.5% (יקר!)
+
+📐 הנחיות מחייבות לכל המלצה:
+
+**שלב 1 — בדיקות חובה לפני המלצה כלשהי:**
+1. כמה הפקיד בקרן השתלמות השנה? (אם < ₪19,920 — **חייב למלא את התקרה לפני brokerage**, הטבת מס שאי-אפשר להחזיר)
+2. דמי ניהול בקרנות הקיימות > 1%? (להמליץ מעבר לקרן זולה יותר)
+3. תשואה 5-שנתית של הקרנות שלו < ממוצע השוק (~7-8%)? (להמליץ העברה)
+4. האם יש לו פנסיה אקטיבית? (חובה ל-50% מההפקדות)
+
+**שלב 2 — בנה 3 המלצות קונקרטיות. סדר עדיפויות:**
+1. **הראשונה**: מקסום מוצר מטיב-מס קיים (אם נשאר בתקרה)
+2. **השנייה**: פתיחת מוצר חדש מטיב-מס (אם המשתמש לא ניצל הזדמנות)
+3. **השלישית**: ETF/מניות ב-brokerage (רק אם 1-2 לא רלוונטיים)
+
+**פורמט כל המלצה (חובה):**
+### המלצה N: [שם המוצר/הכלי]
+- **קטגוריה**: [קרן השתלמות / קופת גמל / ETF / מניה / אג"ח / REIT / קריפטו / פיקדון]
+- **הקצאה מומלצת**: ₪X (Y% מהסכום שהמשתמש מקצה)
+- **למה דווקא זה לי**: [נימוק מפורש מהתיק שלו — לא הסבר כללי]
+- **רמת סיכון**: נמוך / בינוני / גבוה
+- **תשואה צפויה**: X-Y% שנתי (ריאליסטית — אין הבטחות)
+- **הוראות מעשיות**: [איפה לפתוח/לקנות, באיזה ברוקר, איזה טיקר]
+- **סיכון מס**: [אם רלוונטי — כמה תרוויח מס שנתי]
+
+**שלב 3 — אזהרות חובה:**
+- אם המשתמש כבר ב-80%+ במניות → אזהרה: "תיק לא מאוזן, מומלץ אג"ח/REITs לאיזון"
+- אם יש לו תשואה שלילית במכשיר ספציפי → להפנות לזה ולהציע פעולה
+- אם דמי הניהול גבוהים → להציע מעבר ספציפי (איזה גוף, אילו דמי ניהול)
+
+**הסתיים תמיד ב:**
+"⚠️ אין בזה ייעוץ פיננסי מורשה. החלטות השקעה הן באחריותך. מומלץ להתייעץ עם יועץ פנסיוני/מס מוסמך לפני ביצוע."
+
+ענה בעברית | פורמט markdown עם כותרות | היה קונקרטי וישיר | אם חסר נתון — תאמר זאת ולא תמציא.
+נתוני מחיר חי מסומנים ב-[מחיר] — מהדף.`,
         portfolioHeader: '=== תיק ההשקעות הנוכחי של המשתמש ===',
         portfolioLabel: 'אחזקות, שווי כולל:',
         fundsHeader: '=== קרנות / מכשירי השקעה ===',
@@ -484,13 +543,17 @@ function getPortfolioContext() {
         const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
         if (funds.length) {
             totalFunds = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
+            const monthsElapsed = new Date().getMonth() + 1;  // Jan=1 ... Dec=12
             lines.push('\n' + tx.fundsHeader);
             funds.forEach(f => {
                 const val = parseFloat(f.currentValue) || parseFloat(f.balance) || 0;
                 const initial = parseFloat(f.initialValue) || parseFloat(f.deposits) || 0;
                 const ret = (initial > 0 && val > 0) ? (((val - initial) / initial) * 100).toFixed(1) : null;
                 const retStr = ret ? `, תשואה: ${ret >= 0 ? '+' : ''}${ret}%` : '';
-                lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%${retStr}`);
+                const monthly = parseFloat(f.monthlyDeposit) || 0;
+                const ytd = monthly * monthsElapsed;
+                const monthlyStr = monthly > 0 ? `, הפקדה חודשית: ₪${Math.round(monthly).toLocaleString()}, הופקד YTD: ₪${Math.round(ytd).toLocaleString()}` : '';
+                lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%${retStr}${monthlyStr}`);
             });
             lines.push(`${tx.totalLabel} ₪${Math.round(totalFunds).toLocaleString()}`);
         }
@@ -532,10 +595,122 @@ function getPortfolioContext() {
     return lines.join('\n');
 }
 
+// State: how much the user wants to invest. Initialized from free cash but
+// editable by the user. Stored in localStorage so it persists across visits.
+const INVEST_AMOUNT_KEY = 'wl_invest_amount';
+function getInvestAmount() {
+    const stored = parseFloat(localStorage.getItem(INVEST_AMOUNT_KEY));
+    if (stored > 0) return stored;
+    // Default: free cash (bank - 30k emergency) if available, else 0.
+    try {
+        const bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+        return Math.max(0, bank - 30000);
+    } catch { return 0; }
+}
+function setInvestAmount(n) {
+    if (n > 0) localStorage.setItem(INVEST_AMOUNT_KEY, String(n));
+}
+
 function buildSystemPrompt() {
     const tx = t();
     const portfolioCtx = getPortfolioContext();
-    return tx.systemBase + (portfolioCtx ? '\n' + portfolioCtx : '');
+    const amount = getInvestAmount();
+    // Crystal-clear hard constraint at the TOP of the system prompt — not buried
+    // in the long context block. AI is told explicitly the budget cap.
+    const budgetBlock = amount > 0 ? `
+
+⚡ אילוץ קשיח (חובה): המשתמש מוכן להשקיע **בדיוק ₪${Math.round(amount).toLocaleString()}** עכשיו. סך כל ההמלצות שלך חייב להיות **שווה או פחות** מהסכום הזה. לא להציע סכום גבוה יותר. להפיץ את הסכום בין 3 המלצות.
+
+` : '';
+    return tx.systemBase + budgetBlock + (portfolioCtx ? '\n' + portfolioCtx : '');
+}
+
+// ── Recommendation validation: parse AI response and flag obvious issues ──
+// Runs on every assistant message. Returns array of {level, msg} warnings.
+function validateRecommendation(text) {
+    const warnings = [];
+    if (!text || typeof text !== 'string') return warnings;
+
+    // Extract ₪ amounts mentioned in the recommendation
+    const amounts = [...text.matchAll(/₪\s*([\d,]+(?:\.\d+)?)/g)]
+        .map(m => parseFloat(m[1].replace(/,/g, '')))
+        .filter(n => !isNaN(n) && n > 0);
+
+    // 1. Sum of recommendations vs free cash budget
+    const budget = getInvestAmount();
+    if (budget > 0 && amounts.length >= 2) {
+        // Heuristic: pick the 3 LARGEST distinct amounts as "recommendation amounts"
+        const sorted = [...amounts].sort((a, b) => b - a).slice(0, 3);
+        const total = sorted.reduce((s, n) => s + n, 0);
+        if (total > budget * 1.1) {
+            warnings.push({ level: 'error',
+                msg: `סך ההמלצות (₪${Math.round(total).toLocaleString()}) חורג מהתקציב שהקצבת (₪${Math.round(budget).toLocaleString()}). תפחית בהתאם לפני ביצוע.` });
+        }
+        // Single recommendation > budget
+        if (sorted[0] > budget * 1.05) {
+            warnings.push({ level: 'error',
+                msg: `המלצה בודדת בגובה ₪${Math.round(sorted[0]).toLocaleString()} גדולה מהתקציב הפנוי (₪${Math.round(budget).toLocaleString()}).` });
+        }
+    }
+
+    // 2. Tiny amounts (< ₪500) — likely AI miscount
+    const tiny = amounts.filter(n => n > 0 && n < 500).length;
+    if (tiny >= 2) {
+        warnings.push({ level: 'info',
+            msg: `כמה המלצות בסכומים זעירים (פחות מ-₪500). זה בדרך כלל לא יעיל בגלל עמלות. ETFs דורשים מינימום ~₪1,000-2,000.` });
+    }
+
+    // 3. Unrealistic returns — anything > 30% annual is a red flag
+    // Match patterns like "תשואה: 50%" or "expected return: 60%" or "X-Y% שנתי"
+    const returnMatches = [...text.matchAll(/(?:תשואה(?:[^%]{0,40})?|return[^%]{0,40}?)(\d{2,3})\s*%/gi)];
+    for (const m of returnMatches) {
+        const pct = parseInt(m[1], 10);
+        if (pct >= 30) {
+            warnings.push({ level: 'error',
+                msg: `המודל הציע תשואה צפויה של ${pct}% שנתי — זה לא ריאלי. ETFs רחבים: 7-10%/שנה היסטורית. מניה בודדת: 10-25% (לא מובטח).` });
+            break;
+        }
+    }
+
+    // 4. Allocation conflict — if user is already heavy in stocks, flag stock-heavy recs
+    try {
+        const stockData = Storage.getStocks?.() || { holdings: [] };
+        const stocks = stockData.holdings || stockData || [];
+        const totalStocks = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
+        const funds = Storage.getMyFunds?.() || [];
+        const totalFunds = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
+        const bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+        const total = totalStocks + totalFunds + bank;
+        if (total > 0) {
+            const stockPct = (totalStocks / total) * 100;
+            // Count stock/ETF mentions in the recommendation
+            const stockMentions = (text.match(/\b(ETF|מניה|מניות|VTI|VOO|QQQ|S&P|נאסד[ק"]?|stocks?|equities?)\b/gi) || []).length;
+            if (stockPct > 75 && stockMentions >= 3) {
+                warnings.push({ level: 'warn',
+                    msg: `התיק שלך כבר ${stockPct.toFixed(0)}% במניות. ההמלצה עם הרבה מניות תעמיק את חוסר האיזון. שקול אג"ח/REITs/קופת גמל לאיזון.` });
+            }
+        }
+    } catch {}
+
+    return warnings;
+}
+
+// Validate tickers mentioned in recommendation against Yahoo Finance
+async function validateTickers(text) {
+    const tickers = [...new Set(
+        (text.match(/\b[A-Z]{2,5}(?:\.TA)?\b/g) || [])
+            // exclude common false positives
+            .filter(t => !['ETF', 'AI', 'TA', 'IL', 'US', 'EU', 'YTD', 'EOF', 'API', 'JSON', 'IRA', 'NYSE', 'NASDAQ', 'SP500', 'CDB', 'LCI', 'LCA', 'FII', 'PGBL', 'VGBL'].includes(t))
+    )];
+    const results = {};
+    for (const sym of tickers.slice(0, 10)) {  // cap at 10 to avoid spam
+        try {
+            // Cheap probe: Yahoo summary API redirects on bad ticker
+            const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=5d&interval=1d`);
+            results[sym] = r.ok;
+        } catch { results[sym] = null; }
+    }
+    return results;
 }
 
 function renderMessage(role, text) {
@@ -544,6 +719,39 @@ function renderMessage(role, text) {
     row.className = `chat-row ${role}`;
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble chat-${role}`;
+
+    // For assistant messages — run validation and prepend warnings
+    if (role === 'assistant') {
+        const warnings = validateRecommendation(text);
+        if (warnings.length) {
+            const colors = {
+                error: { bg: 'rgba(239,68,68,0.1)',  border: 'rgba(239,68,68,0.35)',  text: '#fca5a5', icon: '🚨' },
+                warn:  { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.3)',  text: '#fcd34d', icon: '⚠️' },
+                info:  { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.3)',  text: '#93c5fd', icon: 'ℹ️' },
+            };
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'margin-bottom:10px;display:flex;flex-direction:column;gap:6px;';
+            warnings.forEach(w => {
+                const c = colors[w.level] || colors.info;
+                const div = document.createElement('div');
+                div.style.cssText = `padding:9px 13px;background:${c.bg};border:1px solid ${c.border};border-radius:9px;font-size:0.85rem;color:${c.text};line-height:1.4;`;
+                div.textContent = `${c.icon} ${w.msg}`;
+                wrapper.appendChild(div);
+            });
+            row.appendChild(wrapper);
+        }
+        // Async ticker validation — runs after render and updates badges
+        validateTickers(text).then(results => {
+            const invalid = Object.entries(results).filter(([k, v]) => v === false).map(([k]) => k);
+            if (invalid.length) {
+                const div = document.createElement('div');
+                div.style.cssText = 'margin-top:8px;padding:9px 13px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);border-radius:9px;font-size:0.85rem;color:#fca5a5;line-height:1.4;';
+                div.textContent = `🚨 הטיקרים הבאים לא נמצאו ב-Yahoo Finance — אמת לפני ביצוע: ${invalid.join(', ')}`;
+                row.appendChild(div);
+            }
+        }).catch(() => {});
+    }
+
     bubble.innerHTML = markdownToHtml(text);
     row.appendChild(bubble);
     container.appendChild(row);
@@ -681,9 +889,9 @@ firebase.auth().onAuthStateChanged(async user => {
 // Auto-recommendation: as soon as the user lands on the page, the advisor
 // looks at their portfolio + free cash + goals + holding returns and gives
 // 3 concrete recommendations without the user typing anything.
-async function autoAnalyze() {
+async function autoAnalyze(force = false) {
     if (!currentUser) return;                         // need to be logged in
-    if (conversationHistory.length > 0) return;       // already mid-chat
+    if (!force && conversationHistory.length > 0) return; // already mid-chat (unless forced via 🔄)
     const portfolio = getPortfolioContext();
     if (!portfolio.trim()) {
         renderMessage('assistant',
@@ -695,18 +903,74 @@ async function autoAnalyze() {
             'ברגע שיש נתונים — חזור לכאן ואקבל המלצות מותאמות אישית עבורך.');
         return;
     }
-    // Auto-trigger: programmatically run sendMessage with the standard
-    // "what should I invest in?" question.
+    if (force) {
+        // Re-analyze: clear previous chat first
+        conversationHistory = [];
+        document.getElementById('chatMessages').innerHTML = '';
+        saveHistory();
+    }
+    const amount = getInvestAmount();
     const lang = getLang();
     const auto = ({
-        he: 'נתח את התיק שלי והמלץ לי איך להשקיע את הכסף הפנוי. תן 3 המלצות ספציפיות בהתאם לחלוקה הקיימת והתשואות.',
-        en: 'Analyse my portfolio and recommend how to deploy my free cash. Give 3 specific recommendations based on my existing allocation and returns.',
-        pt: 'Analise minha carteira e recomende como aplicar meu dinheiro livre. Dê 3 recomendações específicas baseadas na minha alocação atual e retornos.',
-        es: 'Analiza mi cartera y recomienda cómo desplegar mi efectivo libre. Da 3 recomendaciones específicas según mi asignación actual y rendimientos.',
-    })[lang] || 'Analyse my portfolio and recommend how to deploy my free cash.';
+        he: amount > 0
+            ? `אני רוצה להשקיע ₪${Math.round(amount).toLocaleString()}. נתח את התיק שלי והמלץ לי איך להשקיע את הסכום הזה — 3 המלצות ספציפיות שמסתכמות בדיוק לסכום הזה, בהתאם לחלוקה הקיימת והתשואות.`
+            : 'נתח את התיק שלי והמלץ איך להשקיע — 3 המלצות ספציפיות לפי החלוקה הקיימת.',
+        en: amount > 0
+            ? `I want to invest ₪${Math.round(amount).toLocaleString()}. Analyse my portfolio and give 3 specific recommendations summing to exactly this amount, based on my existing allocation and returns.`
+            : 'Analyse my portfolio and recommend 3 specific allocations based on my existing mix and returns.',
+        pt: amount > 0 ? `Quero investir ₪${Math.round(amount).toLocaleString()}. Dê 3 recomendações somando exatamente este valor.` : 'Analise minha carteira e dê 3 recomendações.',
+        es: amount > 0 ? `Quiero invertir ₪${Math.round(amount).toLocaleString()}. Da 3 recomendaciones que sumen exactamente ese monto.` : 'Analiza mi cartera y da 3 recomendaciones.',
+    })[lang] || 'Recommend 3 allocations.';
     document.getElementById('chatInput').value = auto;
-    // give the UI a tick to settle, then fire
     setTimeout(() => { sendMessage(); }, 150);
+}
+
+// Compact amount display: "Investing ₪X (auto: bank ₪Y minus ₪30K emergency)"
+// with a pencil button that reveals the editable input. AI is given the
+// final amount as a hard constraint either way.
+function initInvestAmountInput() {
+    const summary = document.getElementById('investAmountSummary');
+    const editor = document.getElementById('investAmountEditor');
+    const editBtn = document.getElementById('editInvestBtn');
+    const confirmBtn = document.getElementById('confirmInvestBtn');
+    const el = document.getElementById('investAmount');
+    if (!summary || !el) return;
+
+    const refresh = () => {
+        const amount = getInvestAmount();
+        let bank = 0;
+        try { bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0); } catch {}
+        const overridden = parseFloat(localStorage.getItem(INVEST_AMOUNT_KEY)) > 0;
+        if (amount > 0) {
+            summary.textContent = `משקיע ₪${Math.round(amount).toLocaleString()}` +
+                (overridden ? ' (נקבע ידנית)' : (bank > 0 ? ` (אוטו׳: בנק ₪${Math.round(bank).toLocaleString()} פחות ₪30K קרן חירום)` : ''));
+        } else {
+            summary.textContent = bank > 0
+                ? `יש לך ₪${Math.round(bank).toLocaleString()} בבנק. אין כסף פנוי אחרי קרן חירום ₪30K — תוכל לערוך ידנית.`
+                : 'אין נתוני בנק. הוסף יתרות בכרטיסיית בנק או ערוך כאן ידנית.';
+        }
+        el.value = amount > 0 ? Math.round(amount) : '';
+    };
+
+    if (editBtn) editBtn.addEventListener('click', () => {
+        editor.style.display = 'inline-flex';
+        editBtn.style.display = 'none';
+        el.focus();
+        el.select();
+    });
+    const closeEditor = () => {
+        const v = parseFloat(el.value);
+        if (v > 0) setInvestAmount(v);
+        editor.style.display = 'none';
+        editBtn.style.display = '';
+        refresh();
+    };
+    if (confirmBtn) confirmBtn.addEventListener('click', closeEditor);
+    if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); closeEditor(); } });
+
+    refresh();
+    // Re-render summary if Storage updates (account balance changes)
+    setInterval(refresh, 5000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -717,6 +981,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     applyLang();
     loadHistory();
+    initInvestAmountInput();
     // Wait for auth + storage to settle, then run auto-analysis
     setTimeout(() => autoAnalyze(), 800);
 });
