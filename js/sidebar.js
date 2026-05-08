@@ -208,7 +208,11 @@
         }
         const active = isActive(item) ? ' active' : '';
         const lockAttr = item.pro ? ` data-pro="${item.proKey}"` : '';
-        const lockBadge = item.pro ? ' <span class="pro-lock">Pro</span>' : '';
+        // Hide "Pro" badges while paywall is off — they confuse users when
+        // the features are actually accessible. Plan logic still tracks
+        // item.pro for when PAYWALL_ACTIVE flips on.
+        const _showProBadge = (typeof Plan !== 'undefined' && Plan.isPaywallActive && Plan.isPaywallActive());
+        const lockBadge = (item.pro && _showProBadge) ? ' <span class="pro-lock">Pro</span>' : '';
         const i18nAttr = item.i18n ? ` data-i18n="${item.i18n}"` : '';
         return `<li class="nav-item">
             <a href="${item.file}" class="nav-link${active}"${lockAttr} data-category="${item.category || ''}">
@@ -237,8 +241,11 @@
             ${(function(){const lang=localStorage.getItem('wl_lang')||'he';const labels={he:'שוק ברזיל',en:'Brazilian Market',pt:'Mercado Brasileiro',es:'Mercado Brasileño'};const l=labels[lang]||labels.en;return mkt==='br'?'🇧🇷 '+l+' ✓':'🇧🇷 '+l;}())}
         </button>
     </div>`;
-    const wizeAILink = '<a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-right:auto;">יועץ cross-app</span></a>';
-    const footer = wizeAILink + footerBtns + mktToggle + '<div id="sidebarPlanPill" style="margin-top:6px;"></div>';
+    const _wizeAILang = localStorage.getItem('wl_lang') || 'he';
+    const _wizeAITagline = ({ he: 'יועץ חוצה-אפליקציות', en: 'Cross-app advisor', pt: 'Consultor multi-app', es: 'Asesor entre apps' })[_wizeAILang] || 'Cross-app advisor';
+    const wizeAILink = `<a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-inline-start:auto;">${_wizeAITagline}</span></a>`;
+    // Plan pill at bottom removed — top WizeBar already shows plan/nick.
+    const footer = wizeAILink + footerBtns + mktToggle;
 
     const html = `
         <div class="sidebar-header">
@@ -338,7 +345,6 @@
             '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
             '<div style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
-            '<a id="wl-bar-signin" href="https://wizelife.ai/auth.html" style="display:none;font-size:11px;font-weight:700;color:#fbbf24;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);padding:4px 12px;border-radius:99px;text-decoration:none;white-space:nowrap;">Sign in</a>' +
             '<span id="wl-bar-plan" style="display:none;font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
             '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +

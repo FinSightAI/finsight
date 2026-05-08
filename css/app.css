@@ -254,6 +254,17 @@ body.ltr .sidebar-header {
     margin-bottom: var(--spacing-xs);
 }
 
+/* RTL: ensure sidebar text reads right-to-left and aligns to the start (right). */
+html[dir="rtl"] .sidebar,
+body:not(.ltr) .sidebar {
+    text-align: right;
+    direction: rtl;
+}
+html[dir="rtl"] .nav-link span:not(.icon),
+body:not(.ltr) .nav-link span:not(.icon) {
+    text-align: right;
+}
+
 .nav-link {
     display: flex;
     align-items: center;
