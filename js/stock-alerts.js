@@ -299,7 +299,40 @@ const StockAlerts = {
         });
 
         this.saveConfig(config);
+        // Fire browser notifications for newly triggered alerts (if user opted in)
+        if (newlyTriggered.length && config.settings?.notifyOnTrigger !== false) {
+            newlyTriggered.forEach(a => this._fireNotification(a));
+        }
         return newlyTriggered;
+    },
+
+    _fireNotification(alert) {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
+        const labels = ({
+            he: { title: '📈 התראת מניה — WizeMoney', above: 'עלה מעל', below: 'ירד מתחת', pct: 'תזוזה של', goldcross: 'חצה את MA150 כלפי מעלה', deathcross: 'חצה את MA150 כלפי מטה' },
+            en: { title: '📈 Stock Alert — WizeMoney', above: 'rose above', below: 'fell below', pct: 'moved by', goldcross: 'crossed above MA150', deathcross: 'crossed below MA150' },
+            pt: { title: '📈 Alerta — WizeMoney', above: 'subiu acima de', below: 'caiu abaixo de', pct: 'variou', goldcross: 'cruzou acima MA150', deathcross: 'cruzou abaixo MA150' },
+            es: { title: '📈 Alerta — WizeMoney', above: 'subió arriba de', below: 'cayó debajo de', pct: 'se movió', goldcross: 'cruzó arriba MA150', deathcross: 'cruzó abajo MA150' },
+        })[lang] || { title: 'Stock Alert', above: 'above', below: 'below', pct: 'moved', goldcross: 'above MA150', deathcross: 'below MA150' };
+        let body;
+        switch (alert.type) {
+            case this.ALERT_TYPES.PRICE_ABOVE:        body = `${alert.symbol} ${labels.above} ${alert.value} (current: ${alert.lastPrice})`; break;
+            case this.ALERT_TYPES.PRICE_BELOW:        body = `${alert.symbol} ${labels.below} ${alert.value} (current: ${alert.lastPrice})`; break;
+            case this.ALERT_TYPES.PERCENT_CHANGE:     body = `${alert.symbol} ${labels.pct} ${alert.value}%`; break;
+            case this.ALERT_TYPES.MA150_CROSS_ABOVE:  body = `${alert.symbol} ${labels.goldcross}`; break;
+            case this.ALERT_TYPES.MA150_CROSS_BELOW:  body = `${alert.symbol} ${labels.deathcross}`; break;
+            default: body = alert.symbol;
+        }
+        try {
+            new Notification(labels.title, { body, icon: '/finsight/img/logo.svg', tag: `wize-alert-${alert.id || alert.symbol}` });
+        } catch {}
+    },
+
+    // Request browser permission for notifications. Call once from a UI button.
+    async requestNotificationPermission() {
+        if (!('Notification' in window)) return 'unsupported';
+        return await Notification.requestPermission();
     },
 
     /**
