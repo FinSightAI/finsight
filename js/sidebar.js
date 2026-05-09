@@ -344,7 +344,7 @@
             '<span style="font-size:13px;font-weight:800;color:#eef2ff;letter-spacing:-0.3px;font-family:Plus Jakarta Sans,sans-serif;">WizeLife</span>' +
             '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
-            '<div style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
+            '<div class="wl-bar-lang" style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
             '<span id="wl-bar-plan" style="display:none;font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
             '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
@@ -360,7 +360,13 @@
         }
     } catch(e) {}
         const s = document.createElement('style');
-        s.textContent = 'body{padding-top:36px!important}.sidebar{top:36px!important;height:calc(100vh - 36px)!important}';
+        s.textContent =
+            'body{padding-top:36px!important}.sidebar{top:36px!important;height:calc(100vh - 36px)!important}'
+            /* Hide WizeBar lang pills + floating lang switcher on mobile —
+               they live inside the sidebar (hamburger drawer) instead. */
+            + '@media (max-width: 768px){'
+            + '  .wl-bar-lang,#globalLangSwitcher{display:none !important;}'
+            + '}';
         document.head.appendChild(s);
     }
 
@@ -617,6 +623,38 @@
         const aside = document.querySelector('aside.sidebar');
         if (aside) {
             aside.innerHTML = html;
+            // Append a compact lang switcher inside the sidebar so mobile users
+            // can change language from the hamburger drawer.
+            try {
+                if (!aside.querySelector('.sidebar-lang-pills')) {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'sidebar-lang-pills';
+                    wrap.style.cssText = 'display:flex;gap:4px;margin:14px 12px 6px;padding:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;';
+                    ['he','en','pt','es'].forEach(function(l){
+                        const b = document.createElement('button');
+                        b.textContent = l.toUpperCase();
+                        b.style.cssText = 'flex:1;background:none;border:none;color:#94a3b8;padding:6px 4px;border-radius:6px;font:700 11px Inter,sans-serif;cursor:pointer;letter-spacing:.4px;';
+                        b.onclick = function(){
+                            try { localStorage.setItem('wl_lang', l); } catch(e){}
+                            if (typeof I18n !== 'undefined' && I18n.setLanguage) I18n.setLanguage(l);
+                            wrap.querySelectorAll('button').forEach(function(x){
+                                x.style.color = x.textContent.toLowerCase() === l ? '#10b981' : '#94a3b8';
+                                x.style.background = x.textContent.toLowerCase() === l ? 'rgba(16,185,129,0.18)' : 'none';
+                            });
+                        };
+                        wrap.appendChild(b);
+                    });
+                    aside.appendChild(wrap);
+                    // initial active state
+                    var cur = (localStorage.getItem('wl_lang') || 'he').toLowerCase();
+                    wrap.querySelectorAll('button').forEach(function(x){
+                        if (x.textContent.toLowerCase() === cur) {
+                            x.style.color = '#10b981';
+                            x.style.background = 'rgba(16,185,129,0.18)';
+                        }
+                    });
+                }
+            } catch(e) {}
             attachProGates(aside);
         }
         injectThemeToggle();
