@@ -683,16 +683,20 @@
         waitForPlan();
     }
 
-    // Cross-app bottom navigation (mobile only)
+    // Cross-app bottom navigation + first-visit onboarding (mobile only)
     try {
-        if (!window.__wizeBottomNavLoaded && !document.querySelector('script[data-wbn]')) {
+        var inPages = /\/pages\//i.test(location.pathname);
+        var prefix  = inPages ? '../js/' : 'js/';
+        function loadOnce(name, marker) {
+            if (document.querySelector('script[data-' + marker + ']')) return;
+            if (window['__' + marker + 'Loaded']) return;
             var s = document.createElement('script');
-            // path is relative-from-root because sidebar.js itself is loaded as ../js/sidebar.js
-            // From /pages/foo.html → ../js/wize-bottom-nav.js. From /index.html → js/wize-bottom-nav.js.
-            var inPages = /\/pages\//i.test(location.pathname);
-            s.src = (inPages ? '../js/' : 'js/') + 'wize-bottom-nav.js';
-            s.async = true; s.defer = true; s.setAttribute('data-wbn','1');
+            s.src = prefix + name;
+            s.async = true; s.defer = true;
+            s.setAttribute('data-' + marker, '1');
             document.head.appendChild(s);
         }
+        loadOnce('wize-bottom-nav.js', 'wbn');
+        loadOnce('wize-onboarding.js', 'wob');
     } catch(e) {}
 })();
