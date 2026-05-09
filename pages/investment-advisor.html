@@ -815,8 +815,15 @@ async function aiProxy({ messages, system, maxTokens = 2048, search = false, sea
     if ([502, 503, 504].includes(res.status)) {
         const typingEl = document.getElementById('typingIndicator');
         if (typingEl) {
+            const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
+            const msg = ({
+                he: '⏳ רגע אחד, מכין את התשובה…',
+                en: '⏳ One moment, getting your answer…',
+                pt: '⏳ Um momento, preparando a resposta…',
+                es: '⏳ Un momento, preparando la respuesta…',
+            })[lang] || '⏳ One moment…';
             typingEl.querySelector('.chat-bubble').innerHTML =
-                '<span style="font-size:0.8rem;color:var(--color-text-secondary)">⏳ מעיר את השרת… (~15 שניות)</span>';
+                `<span style="font-size:0.8rem;color:var(--color-text-secondary)">${msg}</span>`;
         }
         try { await fetch(AI_HEALTH_URL, { cache: 'no-store' }); } catch {}
         await new Promise(r => setTimeout(r, 8000));
