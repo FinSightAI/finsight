@@ -250,7 +250,6 @@
     const html = `
         <div class="sidebar-header">
             <div class="brand">
-                <img src="${imgPrefix}img/logo.png" class="brand-icon" alt="WizeMoney">
                 <span class="brand-name">Wize<span class="brand-highlight">Money</span></span>
             </div>
         </div>
@@ -344,12 +343,26 @@
             '<span style="font-size:13px;font-weight:800;color:#eef2ff;letter-spacing:-0.3px;font-family:Plus Jakarta Sans,sans-serif;">WizeLife</span>' +
             '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
-            '<div class="wl-bar-lang" style="display:flex;gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
+            /* Hidden on mobile (lang lives in the hamburger drawer there).
+               Inline display is set via JS below to dodge any CSS specificity surprises. */
+            '<div class="wl-bar-lang" style="gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
             '<span id="wl-bar-plan" style="display:none;font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
             '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
             '</div>';
         document.body.prepend(bar);
+
+    /* Hide WizeBar lang pills + floating lang switcher on mobile (inline JS so
+       no CSS specificity surprise). On mobile both live in the hamburger drawer. */
+    function applyMobileVisibility(){
+      var mobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+      var lang = bar.querySelector('.wl-bar-lang');
+      if (lang) lang.style.display = mobile ? 'none' : 'flex';
+      var floating = document.getElementById('globalLangSwitcher');
+      if (floating) floating.style.display = mobile ? 'none' : '';
+    }
+    applyMobileVisibility();
+    window.addEventListener('resize', applyMobileVisibility);
 
     // Hook Firebase auth state to refresh link status
     try {
