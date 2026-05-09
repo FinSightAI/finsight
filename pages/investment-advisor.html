@@ -795,14 +795,38 @@ function showTyping() {
 function removeTyping() { document.getElementById('typingIndicator')?.remove(); }
 
 const AI_PROXY_URL = 'https://master-backend-79jx.onrender.com/api/ai-proxy';
-async function aiProxy({ messages, system, maxTokens = 2048, search = false, searchTopic = 'finance' }) {
-    const body = { messages, system, maxTokens };
-    if (search) { body.search = true; body.searchTopic = searchTopic; }
-    const res = await fetch(AI_PROXY_URL, {
+const AI_HEALTH_URL = 'https://master-backend-79jx.onrender.com/health';
+
+async function _postAI(body) {
+    return fetch(AI_PROXY_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
     });
+}
+
+async function aiProxy({ messages, system, maxTokens = 2048, search = false, searchTopic = 'finance' }) {
+    const body = { messages, system, maxTokens };
+    if (search) { body.search = true; body.searchTopic = searchTopic; }
+    let res = await _postAI(body);
+
+    // Render free tier sleeps after 15 min — auto-retry on 502/503/504 with
+    // a /health warm-up so the user doesn't see a cold-start error.
+    if ([502, 503, 504].includes(res.status)) {
+        const typingEl = document.getElementById('typingIndicator');
+        if (typingEl) {
+            typingEl.querySelector('.chat-bubble').innerHTML =
+                '<span style="font-size:0.8rem;color:var(--color-text-secondary)">⏳ מעיר את השרת… (~15 שניות)</span>';
+        }
+        try { await fetch(AI_HEALTH_URL, { cache: 'no-store' }); } catch {}
+        await new Promise(r => setTimeout(r, 8000));
+        res = await _postAI(body);
+        if ([502, 503, 504].includes(res.status)) {
+            await new Promise(r => setTimeout(r, 12000));
+            res = await _postAI(body);
+        }
+    }
+
     if (!res.ok) {
         if (res.status === 429) { const e = new Error('rate'); e.code = 'functions/resource-exhausted'; throw e; }
         throw new Error('AI error: ' + res.status);
