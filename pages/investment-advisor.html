@@ -32,6 +32,7 @@
     <meta name="theme-color" content="#8b5cf6">
     <title data-i18n-title="invest.pageTitle">Investment Advisor – WizeMoney</title>
     <link rel="stylesheet" href="../css/app.css">
+    <script src="https://wizelife.ai/js/wize-disclaimer.js"></script>
 </head>
 <body>
 <div class="app-container">
@@ -1038,8 +1039,14 @@ document.addEventListener('DOMContentLoaded', () => {
     applyLang();
     loadHistory();
     initInvestAmountInput();
-    // Wait for auth + storage to settle, then run auto-analysis
-    setTimeout(() => autoAnalyze(), 800);
+    // First-use disclaimer for the investment advisor — gates auto-analysis until accepted
+    if (window.WizeDisclaimer) {
+        WizeDisclaimer.gate({ app: 'money' })
+            .then(() => setTimeout(() => autoAnalyze(), 800))
+            .catch(() => {});
+    } else {
+        setTimeout(() => autoAnalyze(), 800);
+    }
 });
 </script>
 </body>
