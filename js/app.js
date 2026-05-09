@@ -50,51 +50,36 @@ const App = {
             const swPath = basePath + '/sw.js';
             const registration = await navigator.serviceWorker.register(swPath, { scope: basePath + '/' });
 
-            // Show a non-blocking banner when a new version is ready, instead
-            // of silently force-reloading mid-task.
-            const showBanner = (newSW) => {
-                if (document.getElementById('wl-sw-update-banner')) return;
-                const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
-                const txt = ({
-                    he: { msg: 'גרסה חדשה זמינה ✨', btn: 'עדכן' },
-                    en: { msg: 'New version available ✨', btn: 'Update' },
-                    pt: { msg: 'Nova versão disponível ✨', btn: 'Atualizar' },
-                    es: { msg: 'Nueva versión disponible ✨', btn: 'Actualizar' },
-                })[lang] || { msg: 'New version available', btn: 'Update' };
-                const bar = document.createElement('div');
-                bar.id = 'wl-sw-update-banner';
-                bar.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:99999;padding:10px 16px;border-radius:99px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font:600 13px Inter,-apple-system,sans-serif;box-shadow:0 8px 24px rgba(99,102,241,.4);display:flex;align-items:center;gap:10px;animation:wl-sw-pop .35s ease';
-                bar.innerHTML = `<span>${txt.msg}</span>
-                    <button style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:4px 12px;border-radius:99px;font:700 12px inherit;cursor:pointer">${txt.btn}</button>
-                    <button aria-label="dismiss" style="background:transparent;border:0;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;padding:0 4px;line-height:1">×</button>`;
-                if (!document.getElementById('wl-sw-anim')) {
-                    const s = document.createElement('style');
-                    s.id = 'wl-sw-anim';
-                    s.textContent = '@keyframes wl-sw-pop{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}';
-                    document.head.appendChild(s);
-                }
-                document.body.appendChild(bar);
-                const [updateBtn, dismissBtn] = bar.querySelectorAll('button');
-                updateBtn.addEventListener('click', () => newSW.postMessage({ type: 'SKIP_WAITING' }));
-                dismissBtn.addEventListener('click', () => bar.remove());
-            };
-
+            // SILENT auto-update: every push reaches users with zero clicks.
+            // - new SW installed → SKIP_WAITING immediately
+            // - controllerchange → reload, but only when the user isn't actively
+            //   typing (to avoid eating mid-form data) or when the tab hides.
             registration.addEventListener('updatefound', () => {
                 const newSW = registration.installing;
                 if (!newSW) return;
                 newSW.addEventListener('statechange', () => {
                     if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
-                        showBanner(newSW);
+                        try { newSW.postMessage({ type: 'SKIP_WAITING' }); } catch (e) {}
                     }
                 });
             });
 
-            // Reload when the new SW activates (after user clicks Update)
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
                 refreshing = true;
-                window.location.reload();
+                const safeReload = () => {
+                    const a = document.activeElement;
+                    const typing = a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable);
+                    if (typing) return;
+                    window.location.reload();
+                };
+                if (document.visibilityState === 'hidden') return window.location.reload();
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') window.location.reload();
+                    else safeReload();
+                });
+                setTimeout(safeReload, 30 * 60 * 1000);
             });
 
             // Periodic update check while page is open
