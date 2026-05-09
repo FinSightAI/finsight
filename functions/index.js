@@ -180,6 +180,68 @@ exports.awardReferral = functions.https.onCall(async (data, context) => {
     return result || { rewarded: null, reason: "no_referrer_or_already_sent" };
 });
 
+// ─── Feedback email — fires on every new feedback submission ─────────────────
+// Triggered when a doc is created in the `feedback` collection (written by
+// wizelife/feedback.html). Sends a formatted email to wizelife.ai@gmail.com.
+exports.onFeedbackSubmitted = functions
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .firestore.document('feedback/{id}')
+    .onCreate(async (snap) => {
+        const FEEDBACK_INBOX = 'wizelife.ai@gmail.com';
+        const data = snap.data() || {};
+        const gmailUser = GMAIL_EMAIL.value();
+        const gmailPass = GMAIL_PASSWORD.value();
+        if (!gmailUser || !gmailPass) {
+            console.log('Feedback email skipped — GMAIL_EMAIL / GMAIL_APP_PASSWORD not set');
+            return null;
+        }
+
+        const safe = (v) => (v === null || v === undefined ? '—' : String(v));
+        const star = (n) => n ? '★'.repeat(Math.max(0, Math.min(5, Number(n)))) + '☆'.repeat(5 - Math.max(0, Math.min(5, Number(n)))) : '—';
+
+        const subject = `🗣️ Feedback — ${safe(data.app)} — ${star(data.rating)}`;
+        const html = `
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><style>
+  body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0;padding:0;color:#1e293b}
+  .wrap{max-width:560px;margin:24px auto;background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  h1{font-size:1.3rem;margin:0 0 6px}
+  .row{padding:8px 0;border-bottom:1px solid #e2e8f0}
+  .row:last-child{border-bottom:0}
+  .label{color:#64748b;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .value{font-size:.95rem;line-height:1.55;white-space:pre-wrap}
+  .stars{color:#f59e0b;font-size:1.1rem}
+</style></head><body><div class="wrap">
+  <h1>🗣️ New WizeLife feedback</h1>
+  <div class="row"><div class="label">App</div><div class="value">${safe(data.app)}</div></div>
+  <div class="row"><div class="label">Rating</div><div class="value stars">${star(data.rating)}</div></div>
+  <div class="row"><div class="label">Would pay</div><div class="value">${safe(data.pay)}</div></div>
+  <div class="row"><div class="label">Loved</div><div class="value">${safe(data.loved)}</div></div>
+  <div class="row"><div class="label">Missing / confusing</div><div class="value">${safe(data.missing)}</div></div>
+  <div class="row"><div class="label">From</div><div class="value">${safe(data.email)} ${data.uid ? '(' + safe(data.uid) + ')' : ''}</div></div>
+  <div class="row"><div class="label">Plan / Lang</div><div class="value">${safe(data.plan)} · ${safe(data.lang)}</div></div>
+  <div class="row"><div class="label">Referrer</div><div class="value">${safe(data.referrer)}</div></div>
+  <div class="row"><div class="label">User-Agent</div><div class="value" style="font-size:.78rem;color:#64748b">${safe(data.ua)}</div></div>
+</div></body></html>`;
+
+        try {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: { user: gmailUser, pass: gmailPass },
+            });
+            await transporter.sendMail({
+                from: `"WizeLife Feedback" <${gmailUser}>`,
+                to: FEEDBACK_INBOX,
+                replyTo: data.email || undefined,
+                subject,
+                html,
+            });
+            console.log(`📨 feedback emailed → ${FEEDBACK_INBOX}: ${subject}`);
+        } catch (e) {
+            console.warn('feedback email failed', e);
+        }
+        return null;
+    });
+
 // Daily cron — converts queued rewards into actual plan extensions.
 // Schedule: 03:00 UTC every day (light, off-peak).
 exports.applyReferralRewards = functions.pubsub
