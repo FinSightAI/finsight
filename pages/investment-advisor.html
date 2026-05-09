@@ -713,7 +713,7 @@ async function validateTickers(text) {
     return results;
 }
 
-function renderMessage(role, text) {
+function renderMessage(role, text, sources = null) {
     const container = document.getElementById('chatMessages');
     const row = document.createElement('div');
     row.className = `chat-row ${role}`;
@@ -754,6 +754,21 @@ function renderMessage(role, text) {
 
     bubble.innerHTML = markdownToHtml(text);
     row.appendChild(bubble);
+
+    // Render web search citations (Tavily) under the assistant bubble
+    if (role === 'assistant' && sources && sources.length) {
+        const citations = document.createElement('div');
+        citations.style.cssText = 'margin-top:8px;padding:10px 12px;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:8px;font-size:11.5px;line-height:1.55';
+        citations.innerHTML = '<div style="color:var(--color-text-secondary);font-weight:600;margin-bottom:6px">📚 מקורות עדכניים (web):</div>' +
+            sources.map((s, i) => {
+                const safeUrl = (s.url || '').replace(/"/g, '&quot;');
+                const safeTitle = (s.title || s.url || '').replace(/[<>]/g, '');
+                const dateStr = s.published ? ` · ${s.published.slice(0,10)}` : '';
+                return `<div style="margin:3px 0"><a href="${safeUrl}" target="_blank" rel="noopener" style="color:#a5b4fc;text-decoration:none">${i+1}. ${safeTitle}</a><span style="color:var(--color-text-secondary);font-size:10.5px">${dateStr}</span></div>`;
+            }).join('');
+        row.appendChild(citations);
+    }
+
     container.appendChild(row);
     container.scrollTop = container.scrollHeight;
 }
@@ -780,11 +795,13 @@ function showTyping() {
 function removeTyping() { document.getElementById('typingIndicator')?.remove(); }
 
 const AI_PROXY_URL = 'https://master-backend-79jx.onrender.com/api/ai-proxy';
-async function aiProxy({ messages, system, maxTokens = 2048 }) {
+async function aiProxy({ messages, system, maxTokens = 2048, search = false, searchTopic = 'finance' }) {
+    const body = { messages, system, maxTokens };
+    if (search) { body.search = true; body.searchTopic = searchTopic; }
     const res = await fetch(AI_PROXY_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages, system, maxTokens }),
+        body: JSON.stringify(body),
     });
     if (!res.ok) {
         if (res.status === 429) { const e = new Error('rate'); e.code = 'functions/resource-exhausted'; throw e; }
@@ -792,7 +809,7 @@ async function aiProxy({ messages, system, maxTokens = 2048 }) {
     }
     const json = await res.json();
     if (json.error) throw new Error(json.error);
-    return { data: { text: json.text } };
+    return { data: { text: json.text, sources: json.sources || [], searchUsed: !!json.searchUsed } };
 }
 
 async function sendMessage() {
@@ -827,11 +844,19 @@ async function sendMessage() {
         }
         const system = buildSystemPrompt() + marketCtx;
 
-        const result = await aiProxy({ messages: conversationHistory, system });
+        // Use Tavily web search for the auto-analysis (first message) — gets
+        // real-time fund returns, interest rates, current market state. After
+        // that, follow-up chat uses cheaper Gemini-only.
+        const isFirstAnalysis = conversationHistory.filter(m => m.role === 'user').length <= 1;
+        const result = await aiProxy({
+            messages: conversationHistory, system,
+            search: isFirstAnalysis,
+            searchTopic: 'finance',
+        });
         removeTyping();
         const reply = result.data.text;
         conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
-        renderMessage('assistant', reply);
+        renderMessage('assistant', reply, result.data.sources);
         saveHistory();
     } catch(e) {
         removeTyping();
