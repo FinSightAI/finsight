@@ -18,6 +18,95 @@ const nodemailer       = require("nodemailer");
 admin.initializeApp();
 const db = admin.firestore();
 
+// ─── Referral reward helpers ──────────────────────────────────────────────────
+// Tier rank — higher number = bigger benefit. Used so a YOLO reward isn't
+// downgraded to PRO if the referrer is already on a higher plan.
+const TIER_RANK = { free: 0, pro: 1, yolo: 2 };
+const REWARD_DAYS = 30;
+
+/**
+ * Award the referrer a 30-day bonus when `upgradedUid` first hits Pro/YOLO.
+ * Idempotent — sets `referralRewardSent: true` on the upgraded user so it
+ * never fires twice for the same upgrade. Safe to call from any code path
+ * (validateCode, PayPal webhook, callable, etc).
+ */
+async function _grantReferrerReward(upgradedUid, newTier) {
+    if (!upgradedUid || !["pro", "yolo"].includes(newTier)) return null;
+    try {
+        const upRef  = db.collection("users").doc(upgradedUid);
+        const upSnap = await upRef.get();
+        if (!upSnap.exists) return null;
+        const u = upSnap.data();
+        if (!u.referredBy) return null;
+        if (u.referralRewardSent)  return null; // already credited
+
+        const referrerRef = db.collection("users").doc(u.referredBy);
+        await referrerRef.set({
+            referralRewards: admin.firestore.FieldValue.arrayUnion({
+                tier: newTier,
+                days: REWARD_DAYS,
+                from: upgradedUid,
+                ts: Date.now(),
+                applied: false,
+            }),
+            referralCount: admin.firestore.FieldValue.increment(1),
+        }, { merge: true });
+
+        await upRef.set({ referralRewardSent: true }, { merge: true });
+
+        console.log(`🎁 referral reward queued: ${u.referredBy} +${REWARD_DAYS}d ${newTier} (from ${upgradedUid})`);
+        return { rewarded: u.referredBy, tier: newTier, days: REWARD_DAYS };
+    } catch (e) {
+        console.warn("_grantReferrerReward failed", e);
+        return null;
+    }
+}
+
+/**
+ * Apply queued (unapplied) referral rewards onto the referrer's plan —
+ * extends `planExpiresAt` by N days at the awarded tier. Marks each reward
+ * `applied: true`. Run from a daily scheduled function.
+ */
+async function _applyOneUserRewards(userRef) {
+    const snap = await userRef.get();
+    if (!snap.exists) return 0;
+    const u = snap.data();
+    const rewards = Array.isArray(u.referralRewards) ? u.referralRewards : [];
+    const pending = rewards.filter(r => r && !r.applied);
+    if (!pending.length) return 0;
+
+    let plan = u.plan || "free";
+    let expiresAtMs = (u.planExpiresAt && u.planExpiresAt.toMillis) ? u.planExpiresAt.toMillis() : (u.planExpiresAt || 0);
+    let now = Date.now();
+    let applied = 0;
+
+    for (const r of pending) {
+        const tier = r.tier;
+        if (!["pro", "yolo"].includes(tier)) continue;
+        // Only upgrade plan if the bonus tier is >= current plan
+        if (TIER_RANK[tier] >= TIER_RANK[plan] || expiresAtMs < now) {
+            plan = TIER_RANK[tier] > TIER_RANK[plan] ? tier : plan;
+        }
+        const baseMs = Math.max(now, expiresAtMs || 0);
+        expiresAtMs = baseMs + (r.days || REWARD_DAYS) * 24 * 60 * 60 * 1000;
+        applied++;
+    }
+
+    if (!applied) return 0;
+
+    // Mark all pending as applied — preserve any that were already applied
+    const newRewards = rewards.map(r => (r && !r.applied) ? { ...r, applied: true, appliedAt: Date.now() } : r);
+
+    await userRef.set({
+        plan,
+        planExpiresAt: admin.firestore.Timestamp.fromMillis(expiresAtMs),
+        referralRewards: newRewards,
+    }, { merge: true });
+
+    console.log(`✅ applied ${applied} reward(s) for ${userRef.id} → ${plan} until ${new Date(expiresAtMs).toISOString()}`);
+    return applied;
+}
+
 const GMAIL_EMAIL    = defineSecret("GMAIL_EMAIL");
 const GMAIL_PASSWORD = defineSecret("GMAIL_APP_PASSWORD");
 
@@ -64,7 +153,49 @@ exports.validateCode = functions
             { merge: true }
         );
 
+        // Reward the referrer (if any) — best-effort, never blocks success.
+        try { await _grantReferrerReward(context.auth.uid, grantedPlan); } catch (e) { console.warn("referral grant failed", e); }
+
         return { valid: true, plan: grantedPlan };
+    });
+
+// Server-side fallback callable — clients call this after a PayPal upgrade
+// returns them to the dashboard. Idempotent on the server side.
+exports.awardReferral = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        throw new functions.https.HttpsError("unauthenticated", "Sign in first");
+    }
+    const tier = (data && data.tier) || null;
+    if (!["pro", "yolo"].includes(tier)) {
+        throw new functions.https.HttpsError("invalid-argument", "tier must be pro or yolo");
+    }
+    // Verify the caller actually has that plan in Firestore — defends against
+    // a malicious caller trying to forge upgrades.
+    const snap = await db.collection("users").doc(context.auth.uid).get();
+    const userPlan = snap.exists ? (snap.data().plan || "free") : "free";
+    if (TIER_RANK[userPlan] < TIER_RANK[tier]) {
+        return { rewarded: null, reason: "plan_not_upgraded" };
+    }
+    const result = await _grantReferrerReward(context.auth.uid, tier);
+    return result || { rewarded: null, reason: "no_referrer_or_already_sent" };
+});
+
+// Daily cron — converts queued rewards into actual plan extensions.
+// Schedule: 03:00 UTC every day (light, off-peak).
+exports.applyReferralRewards = functions.pubsub
+    .schedule("0 3 * * *")
+    .timeZone("UTC")
+    .onRun(async () => {
+        const snap = await db.collection("users")
+            .where("referralCount", ">", 0)
+            .get();
+        let total = 0;
+        for (const doc of snap.docs) {
+            try { total += await _applyOneUserRewards(doc.ref); }
+            catch (e) { console.warn("apply failed for", doc.id, e); }
+        }
+        console.log(`applyReferralRewards: applied ${total} reward(s) across ${snap.size} candidate(s)`);
+        return null;
     });
 
 // ─── Welcome Email — on new user registration ─────────────────────────────────
@@ -388,15 +519,22 @@ exports.paypalWebhook = functions
                         break;
                     }
 
+                    // Detect tier from the PayPal plan_id when available
+                    const planId = sub.plan_id || "";
+                    const tier   = (process.env.PAYPAL_YOLO_PLAN_ID && planId === process.env.PAYPAL_YOLO_PLAN_ID) ? "yolo" : "pro";
+
                     await db.collection("users").doc(uid).set(
                         {
-                            plan: "pro",
+                            plan: tier,
                             paypalSubscriptionId: subId || null,
                             planActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
                         },
                         { merge: true }
                     );
-                    console.log(`✅ Pro activated for uid=${uid}, sub=${subId}`);
+                    console.log(`✅ ${tier.toUpperCase()} activated for uid=${uid}, sub=${subId}`);
+
+                    // Award the referrer (best-effort, idempotent)
+                    try { await _grantReferrerReward(uid, tier); } catch (e) { console.warn("referral grant failed", e); }
                     break;
                 }
 
