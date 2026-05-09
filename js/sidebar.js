@@ -698,5 +698,6 @@
         }
         loadOnce('wize-bottom-nav.js', 'wbn');
         loadOnce('wize-onboarding.js', 'wob');
+        loadOnce('wize-hamburger.js', 'wha');
     } catch(e) {}
 })();
