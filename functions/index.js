@@ -355,6 +355,35 @@ exports.onFeedbackSubmitted = functions
         const FN_BASE = `https://us-central1-${process.env.GCLOUD_PROJECT || 'finzilla-7f1f9'}.cloudfunctions.net/approveBugReport`;
         const approveLink = (sev) =>
             `${FN_BASE}?id=${encodeURIComponent(docId)}&severity=${sev}&token=${encodeURIComponent(adminTok || '')}`;
+        // Resolve THIS reporter's current plan + name + email so the admin
+        // sees exactly who they're crediting and what that user will get.
+        let userCtx = { plan: 'free', currentPlanName: 'FREE', expiresAtMs: 0, displayName: '', email: data.email || '' };
+        if (data.uid) {
+            try {
+                const u = (await db.collection('users').doc(data.uid).get()).data() || {};
+                const planRaw = (u.plan || 'free').toLowerCase();
+                const expMs = u.planExpiresAt && u.planExpiresAt.toMillis ? u.planExpiresAt.toMillis() : (u.planExpiresAt || 0);
+                userCtx = {
+                    plan: planRaw,
+                    currentPlanName: planRaw.toUpperCase(),
+                    expiresAtMs: expMs,
+                    displayName: u.displayName || u.nick || u.name || (u.email ? u.email.split('@')[0] : ''),
+                    email: u.email || data.email || '',
+                };
+            } catch (e) {}
+        }
+        const fmtDate = (ms) => ms ? new Date(ms).toISOString().slice(0, 10) : '';
+        // Predict the outcome for each severity option (the same math the
+        // _applyOneUserRewards helper does — base = max(now, current expiry)).
+        const predictOutcome = (sev) => {
+            const cfg = BUG_BOUNTY[sev];
+            if (!cfg.tier) return 'Reporter gets a thank-you email — no plan change.';
+            const baseMs = Math.max(Date.now(), userCtx.expiresAtMs || 0);
+            const newExpMs = baseMs + cfg.days * 24 * 60 * 60 * 1000;
+            const tier = TIER_RANK[cfg.tier] > TIER_RANK[userCtx.plan] ? cfg.tier.toUpperCase() : userCtx.currentPlanName;
+            return `Reporter (${userCtx.displayName || 'user'}, currently <b>${userCtx.currentPlanName}</b>${userCtx.expiresAtMs ? ' until ' + fmtDate(userCtx.expiresAtMs) : ''}) will be on <b>${tier}</b> until <b>${fmtDate(newExpMs)}</b> (+${cfg.days}d).`;
+        };
+
         // Build the AI hint pill — highlights the suggested button.
         const hintMap = {
             critical: { color: '#dc2626', label: '🔴 Critical', bg: '#fee2e2' },
@@ -396,11 +425,19 @@ exports.onFeedbackSubmitted = functions
       <a href="${approveLink('major')}"    style="${btnStyle('major','#f59e0b')}">🟡 Major → 14d Pro</a>
       <a href="${approveLink('minor')}"    style="${btnStyle('minor','#64748b')}">⚪ Minor → thank-you only</a>
     </div>
+
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:11px 14px;margin-top:12px;font-size:.78rem;line-height:1.6;color:#1e293b">
+      <b style="color:#475569">📋 What this exact user gets if you click:</b><br>
+      <span style="color:#dc2626;font-weight:700">🔴 Critical:</span> ${predictOutcome('critical')}<br>
+      <span style="color:#f59e0b;font-weight:700">🟡 Major:</span> ${predictOutcome('major')}<br>
+      <span style="color:#64748b;font-weight:700">⚪ Minor:</span> ${predictOutcome('minor')}
+    </div>
+
     <div style="margin-top:10px;font-size:.78rem;color:#475569">
-      💬 To <b>reply directly to the reporter</b>, just hit Reply in Gmail — replyTo is set to ${safe(data.email) || 'the reporter\'s email'}.
+      💬 To <b>reply directly to the reporter</b>, just hit Reply in Gmail — replyTo is set to ${safe(userCtx.email) || 'the reporter\'s email'}.
     </div>
     <div style="margin-top:6px;font-size:.74rem;color:#94a3b8">
-      Doc id: <code>${docId}</code>
+      Doc id: <code>${docId}</code> · UID: <code>${safe(data.uid)}</code>
     </div>
   </div>` : '';
 
