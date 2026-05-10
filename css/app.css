@@ -1784,3 +1784,47 @@ body.light .ob-step {
     gap: 9px !important;
     user-select: none;
 }
+
+/* ─── LTR layout normalization ────────────────────────────────────────────
+   When language is English/Portuguese/Spanish, document.documentElement.dir
+   becomes 'ltr'. Most layout reads top-to-bottom-left-to-right; we override
+   the few rules that hard-code text-align:right (RTL-default) so body
+   content aligns to the LEFT, but page titles (h1/h2) stay CENTERED for
+   visual hierarchy.
+   ─────────────────────────────────────────────────────────────────────── */
+html[dir="ltr"] body,
+html[dir="ltr"] .main-content,
+html[dir="ltr"] .main-content p,
+html[dir="ltr"] .main-content div:not(.text-center):not([class*="text-center"]),
+html[dir="ltr"] .main-content section,
+html[dir="ltr"] .main-content label,
+html[dir="ltr"] .main-content li,
+html[dir="ltr"] .card,
+html[dir="ltr"] .info-row,
+html[dir="ltr"] .modal-body,
+html[dir="ltr"] .modal-content,
+html[dir="ltr"] table,
+html[dir="ltr"] td,
+html[dir="ltr"] th {
+    text-align: left;
+}
+
+/* Page titles stay centered in LTR */
+html[dir="ltr"] .main-content > h1,
+html[dir="ltr"] .main-content > h2,
+html[dir="ltr"] .page-title,
+html[dir="ltr"] h1.page-title,
+html[dir="ltr"] h2.page-title,
+html[dir="ltr"] .page-header h1,
+html[dir="ltr"] .page-header h2,
+html[dir="ltr"] .section-header,
+html[dir="ltr"] .modal-title {
+    text-align: center;
+}
+
+/* Sidebar should also read left-to-right in LTR (override the RTL block above) */
+html[dir="ltr"] .sidebar,
+html[dir="ltr"] .nav-link span:not(.icon) {
+    text-align: left;
+    direction: ltr;
+}
