@@ -294,13 +294,26 @@ exports.onFeedbackSubmitted = functions
         const FN_BASE = `https://us-central1-${process.env.GCLOUD_PROJECT || 'finzilla-7f1f9'}.cloudfunctions.net/approveBugReport`;
         const approveLink = (sev) =>
             `${FN_BASE}?id=${encodeURIComponent(docId)}&severity=${sev}&token=${encodeURIComponent(adminTok || '')}`;
+        // Severity guide so the admin (Ofir) doesn't need to remember the
+        // matrix — included inline in every feedback email.
         const bountyBlock = (data.uid && adminTok) ? `
   <div class="row" style="margin-top:14px;padding:14px 0 0;border-top:2px solid #f59e0b">
-    <div class="label" style="color:#f59e0b">🐛 Approve as bug (one-click — credits the user)</div>
+    <div class="label" style="color:#f59e0b">🐛 Approve as bug (one-click — credits the user + emails them a thank-you)</div>
+
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:.78rem;line-height:1.55;color:#1e293b">
+      <b style="color:#9a3412">Severity guide:</b><br>
+      <span style="color:#dc2626;font-weight:700">🔴 Critical (30d YOLO):</span> security flaw · data loss · wrong charge · payment broken · user data exposed · app totally unusable<br>
+      <span style="color:#f59e0b;font-weight:700">🟡 Major (14d Pro):</span> a feature is broken · wrong numbers / calculations · UI breaks on a real device · login fails · API errors users see<br>
+      <span style="color:#64748b;font-weight:700">⚪ Minor (thank-you only):</span> typo · cosmetic glitch · feature request · suggestion · 'wouldn't it be nice if'... · low rating but no concrete bug
+    </div>
+
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
-      <a href="${approveLink('critical')}" style="background:#dc2626;color:#fff;text-decoration:none;padding:9px 14px;border-radius:8px;font-weight:700;font-size:.85rem">Critical → 30d YOLO</a>
-      <a href="${approveLink('major')}"    style="background:#f59e0b;color:#fff;text-decoration:none;padding:9px 14px;border-radius:8px;font-weight:700;font-size:.85rem">Major → 14d Pro</a>
-      <a href="${approveLink('minor')}"    style="background:#64748b;color:#fff;text-decoration:none;padding:9px 14px;border-radius:8px;font-weight:700;font-size:.85rem">Minor → thank-you only</a>
+      <a href="${approveLink('critical')}" style="background:#dc2626;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem">🔴 Critical → 30d YOLO</a>
+      <a href="${approveLink('major')}"    style="background:#f59e0b;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem">🟡 Major → 14d Pro</a>
+      <a href="${approveLink('minor')}"    style="background:#64748b;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem">⚪ Minor → thank-you only</a>
+    </div>
+    <div style="margin-top:8px;font-size:.74rem;color:#94a3b8">
+      Doc id: <code>${docId}</code> · ignore this section if it's a feature request, not a bug.
     </div>
   </div>` : '';
 
