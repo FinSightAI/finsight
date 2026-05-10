@@ -257,6 +257,65 @@ exports.awardReferral = functions
     return result || { rewarded: null, reason: "no_referrer_or_already_sent" };
 });
 
+// ─── Gemini severity classifier (best-effort) ────────────────────────────────
+// Reads loved/missing/rating + app and returns one of {critical, major, minor,
+// not_a_bug} along with a short reasoning string. Used purely as a HINT in the
+// admin email — Ofir always has the final click. Never blocks the email.
+async function _classifySeverityWithAI(fb) {
+    let key;
+    try { key = GEMINI_API_KEY.value(); } catch (e) { return null; }
+    if (!key) return null;
+    const prompt = [
+        'You are triaging a WizeLife user-feedback submission. Classify into ONE of:',
+        '- critical: security flaw, data loss, wrong charge, payment broken, app totally unusable',
+        '- major: a feature is broken, wrong calculations, UI breaks on a real device, login fails, API errors visible to users',
+        '- minor: cosmetic glitch, typo, low-impact UX issue',
+        '- not_a_bug: feature request, opinion, low rating with no concrete issue, "would be nice if…"',
+        '',
+        'Return STRICT JSON: {"severity":"critical|major|minor|not_a_bug","reason":"one short sentence"}.',
+        '',
+        '— Submission —',
+        'App: ' + (fb.app || '—'),
+        'Rating: ' + (fb.rating || '—') + '/5',
+        'Loved: ' + (fb.loved || '—'),
+        'Missing/confusing: ' + (fb.missing || '—'),
+        'Plan: ' + (fb.plan || '—'),
+        'Lang: ' + (fb.lang || '—'),
+    ].join('\n');
+    try {
+        const body = JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.1, maxOutputTokens: 200, responseMimeType: 'application/json' },
+        });
+        const resp = await new Promise((resolve, reject) => {
+            const req = https.request({
+                hostname: 'generativelanguage.googleapis.com',
+                path: '/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' + encodeURIComponent(key),
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+            }, (r) => {
+                let chunks = '';
+                r.on('data', d => chunks += d);
+                r.on('end', () => resolve(chunks));
+                r.on('error', reject);
+            });
+            req.on('error', reject);
+            req.write(body);
+            req.end();
+        });
+        const j = JSON.parse(resp);
+        const text = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts
+                   && j.candidates[0].content.parts[0] && j.candidates[0].content.parts[0].text;
+        if (!text) return null;
+        const parsed = JSON.parse(text);
+        if (!['critical','major','minor','not_a_bug'].includes(parsed.severity)) return null;
+        return { severity: parsed.severity, reason: String(parsed.reason || '').slice(0, 200) };
+    } catch (e) {
+        console.warn('Gemini classification failed', e.message);
+        return null;
+    }
+}
+
 // ─── Bug bounty config ───────────────────────────────────────────────────────
 // Severity levels granted by approveBugReport. Tier auto-determined: critical→
 // yolo, major→pro. Minor reports get a thank-you email but no plan reward.
@@ -270,12 +329,14 @@ const BUG_BOUNTY = {
 // Triggered when a doc is created in the `feedback` collection (written by
 // wizelife/feedback.html). Sends a formatted email to wizelife.ai@gmail.com.
 exports.onFeedbackSubmitted = functions
-    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD, ADMIN_TOKEN] })
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD, ADMIN_TOKEN, GEMINI_API_KEY] })
     .firestore.document('feedback/{id}')
     .onCreate(async (snap) => {
         const FEEDBACK_INBOX = 'wizelife.ai@gmail.com';
         const data = snap.data() || {};
         const docId = snap.id;
+        // AI suggestion — never blocks the email
+        const aiHint = await _classifySeverityWithAI(data).catch(() => null);
         const gmailUser = GMAIL_EMAIL.value();
         const gmailPass = GMAIL_PASSWORD.value();
         if (!gmailUser || !gmailPass) {
@@ -294,11 +355,34 @@ exports.onFeedbackSubmitted = functions
         const FN_BASE = `https://us-central1-${process.env.GCLOUD_PROJECT || 'finzilla-7f1f9'}.cloudfunctions.net/approveBugReport`;
         const approveLink = (sev) =>
             `${FN_BASE}?id=${encodeURIComponent(docId)}&severity=${sev}&token=${encodeURIComponent(adminTok || '')}`;
+        // Build the AI hint pill — highlights the suggested button.
+        const hintMap = {
+            critical: { color: '#dc2626', label: '🔴 Critical', bg: '#fee2e2' },
+            major:    { color: '#f59e0b', label: '🟡 Major',    bg: '#fef3c7' },
+            minor:    { color: '#64748b', label: '⚪ Minor',    bg: '#e2e8f0' },
+            not_a_bug:{ color: '#6366f1', label: '💡 Not a bug (feature/opinion)', bg: '#e0e7ff' },
+        };
+        const hint = aiHint && hintMap[aiHint.severity];
+        const hintBox = hint ? `
+    <div style="background:${hint.bg};border:1.5px solid ${hint.color}55;border-radius:10px;padding:11px 14px;margin:10px 0;font-size:.85rem;line-height:1.5;color:#1e293b">
+      <b style="color:${hint.color}">🤖 AI suggests: ${hint.label}</b><br>
+      <span style="font-size:.78rem;color:#475569">${aiHint.reason}</span>
+    </div>` : '';
+
+        // Highlight the AI-suggested button with a thicker border / scale
+        const btnStyle = (sev, bg) => {
+            const isHinted = aiHint && aiHint.severity === sev;
+            const ring = isHinted ? 'box-shadow:0 0 0 3px ' + bg + '88;transform:scale(1.04);' : '';
+            return `background:${bg};color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem;${ring}`;
+        };
+
         // Severity guide so the admin (Ofir) doesn't need to remember the
         // matrix — included inline in every feedback email.
         const bountyBlock = (data.uid && adminTok) ? `
   <div class="row" style="margin-top:14px;padding:14px 0 0;border-top:2px solid #f59e0b">
     <div class="label" style="color:#f59e0b">🐛 Approve as bug (one-click — credits the user + emails them a thank-you)</div>
+
+    ${hintBox}
 
     <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:.78rem;line-height:1.55;color:#1e293b">
       <b style="color:#9a3412">Severity guide:</b><br>
@@ -307,13 +391,16 @@ exports.onFeedbackSubmitted = functions
       <span style="color:#64748b;font-weight:700">⚪ Minor (thank-you only):</span> typo · cosmetic glitch · feature request · suggestion · 'wouldn't it be nice if'... · low rating but no concrete bug
     </div>
 
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
-      <a href="${approveLink('critical')}" style="background:#dc2626;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem">🔴 Critical → 30d YOLO</a>
-      <a href="${approveLink('major')}"    style="background:#f59e0b;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem">🟡 Major → 14d Pro</a>
-      <a href="${approveLink('minor')}"    style="background:#64748b;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem">⚪ Minor → thank-you only</a>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px">
+      <a href="${approveLink('critical')}" style="${btnStyle('critical','#dc2626')}">🔴 Critical → 30d YOLO</a>
+      <a href="${approveLink('major')}"    style="${btnStyle('major','#f59e0b')}">🟡 Major → 14d Pro</a>
+      <a href="${approveLink('minor')}"    style="${btnStyle('minor','#64748b')}">⚪ Minor → thank-you only</a>
     </div>
-    <div style="margin-top:8px;font-size:.74rem;color:#94a3b8">
-      Doc id: <code>${docId}</code> · ignore this section if it's a feature request, not a bug.
+    <div style="margin-top:10px;font-size:.78rem;color:#475569">
+      💬 To <b>reply directly to the reporter</b>, just hit Reply in Gmail — replyTo is set to ${safe(data.email) || 'the reporter\'s email'}.
+    </div>
+    <div style="margin-top:6px;font-size:.74rem;color:#94a3b8">
+      Doc id: <code>${docId}</code>
     </div>
   </div>` : '';
 
