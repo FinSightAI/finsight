@@ -700,15 +700,17 @@
         waitForPlan();
     }
 
-    // Cross-app bottom navigation + first-visit onboarding (mobile only)
+    // Cross-app bottom navigation + first-visit onboarding (mobile only).
+    // (Reuses the `inPages`/`prefix` consts declared at the top of this IIFE
+    // — earlier we had a duplicate `var inPages` here which broke the whole
+    // file with a SyntaxError, so neither sidebar nor the bottom-nav rendered.)
     try {
-        var inPages = /\/pages\//i.test(location.pathname);
-        var prefix  = inPages ? '../js/' : 'js/';
+        var _navPrefix = inPages ? '../js/' : 'js/';
         function loadOnce(name, marker) {
             if (document.querySelector('script[data-' + marker + ']')) return;
             if (window['__' + marker + 'Loaded']) return;
             var s = document.createElement('script');
-            s.src = prefix + name;
+            s.src = _navPrefix + name;
             s.async = true; s.defer = true;
             s.setAttribute('data-' + marker, '1');
             document.head.appendChild(s);
@@ -716,5 +718,5 @@
         loadOnce('wize-bottom-nav.js', 'wbn');
         loadOnce('wize-onboarding.js', 'wob');
         loadOnce('wize-hamburger.js', 'wha');
-    } catch(e) {}
+    } catch(e) { console.warn('shared nav scripts failed to load', e); }
 })();
