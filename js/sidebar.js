@@ -379,6 +379,10 @@
                they live inside the sidebar (hamburger drawer) instead. */
             + '@media (max-width: 768px){'
             + '  .wl-bar-lang,#globalLangSwitcher{display:none !important;}'
+            /* Defensive: kill the legacy .mobile-tab-bar in case any old
+               cached app.js still creates it. The shared #wize-bottom-nav
+               replaces it. */
+            + '  .mobile-tab-bar{display:none !important;}'
             + '}';
         document.head.appendChild(s);
     }

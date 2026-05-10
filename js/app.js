@@ -111,8 +111,11 @@ const App = {
         // Mobile header + sidebar
         this.setupMobileHeader();
 
-        // Bottom tab bar (iOS-style)
-        this.setupBottomTabBar();
+        // Bottom tab bar — DEPRECATED: replaced by the WizeLife shared
+        // wize-bottom-nav.js (same 56px bar, used across all 5 sub-apps).
+        // Keeping the method definition for reference but no longer calling
+        // it so we don't render two stacked bottom bars.
+        // this.setupBottomTabBar();
 
         // Pull-to-refresh
         this.setupPullToRefresh();
