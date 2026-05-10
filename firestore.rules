@@ -1,25 +1,81 @@
 rules_version = '2';
 
+// WizeLife Firestore security model — last reviewed 2026-05-10.
+//
+// Principles:
+// - Default-deny on every collection except those explicitly allowed below.
+// - Users can only read/write their own /users/{uid} document and subtrees.
+// - Cloud Functions (admin SDK) bypass these rules — they are the only
+//   writer for sensitive subtrees (cross_app, plan_overrides, audit logs).
+// - Public client writes are restricted to one collection — `feedback` —
+//   and only `create` is allowed, with size + shape validation, so spam
+//   and prompt-injection of stored fields is bounded.
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ─────────────────────────────────────────────────────────────────────
+    // Users — owner-only
+    // ─────────────────────────────────────────────────────────────────────
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read:   if isOwner(userId);
+      allow create, update, delete: if isOwner(userId);
 
-      // WizeAI context — each app writes its own aggregated summary
+      // Per-app aggregated summaries — owner read/write
       match /context/{appId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        allow read, write: if isOwner(userId);
       }
 
-      // Cross-app data written only by Firebase Functions (admin)
+      // Cross-app derived data — Cloud Functions (admin) only
       match /cross_app/{appId} {
-        allow read: if request.auth != null && request.auth.uid == userId;
+        allow read:  if isOwner(userId);
+        allow write: if false;
+      }
+
+      // Audit trail (disclaimers, deletion events) — admin-only writes
+      match /disclaimers/{key} {
+        allow read:  if isOwner(userId);
         allow write: if false;
       }
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // Feedback — public can CREATE only. No read/update/delete from client.
+    // Strict shape + size validation to bound spam and abuse.
+    // ─────────────────────────────────────────────────────────────────────
+    match /feedback/{id} {
+      allow read:   if false; // never readable client-side
+      allow update: if false; // immutable once created
+      allow delete: if false;
+      allow create: if validateFeedback();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Catch-all — everything else is denied.
+    // ─────────────────────────────────────────────────────────────────────
     match /{document=**} {
       allow read, write: if false;
     }
   }
+}
+
+// ─── helpers ─────────────────────────────────────────────────────────────
+function isOwner(uid)   { return request.auth != null && request.auth.uid == uid; }
+function validateFeedback() {
+  return request.resource.data.keys().hasOnly([
+           'app','rating','pay','loved','missing','email','uid','plan',
+           'lang','ua','ts','referrer'
+         ])
+      && request.resource.data.app is string
+      && request.resource.data.app.size() <= 32
+      && (!('rating'   in request.resource.data) || (request.resource.data.rating is number  && request.resource.data.rating >= 0 && request.resource.data.rating <= 5))
+      && (!('pay'      in request.resource.data) || (request.resource.data.pay      is string && request.resource.data.pay.size()      <= 32))
+      && (!('loved'    in request.resource.data) || (request.resource.data.loved    is string && request.resource.data.loved.size()    <= 4000))
+      && (!('missing'  in request.resource.data) || (request.resource.data.missing  is string && request.resource.data.missing.size()  <= 4000))
+      && (!('email'    in request.resource.data) || (request.resource.data.email    is string && request.resource.data.email.size()    <= 200))
+      && (!('uid'      in request.resource.data) || (request.resource.data.uid      is string && request.resource.data.uid.size()      <= 128))
+      && (!('plan'     in request.resource.data) || (request.resource.data.plan     is string && request.resource.data.plan.size()     <= 16))
+      && (!('lang'     in request.resource.data) || (request.resource.data.lang     is string && request.resource.data.lang.size()     <= 8))
+      && (!('ua'       in request.resource.data) || (request.resource.data.ua       is string && request.resource.data.ua.size()       <= 400))
+      && (!('referrer' in request.resource.data) || (request.resource.data.referrer is string && request.resource.data.referrer.size() <= 300));
 }

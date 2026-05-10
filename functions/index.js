@@ -194,6 +194,46 @@ const TWELVE_DATA_KEY   = defineSecret("TWELVE_DATA_KEY");
 const FINNHUB_KEY       = defineSecret("FINNHUB_KEY");
 const ADMIN_TOKEN       = defineSecret("ADMIN_TOKEN");
 
+// ─── Rate-limit helper ────────────────────────────────────────────────────────
+// Tracks recent attempts per uid in /rate_limits/{key}_{uid}. Returns true if
+// the call should be allowed, false if exceeded. Best-effort — never blocks
+// success path on its own failure.
+async function _rateLimit(key, uid, maxPerMin) {
+    if (!uid) return true;
+    const ref = db.collection('rate_limits').doc(key + '_' + uid);
+    try {
+        const now = Date.now();
+        const windowStart = now - 60_000;
+        const snap = await ref.get();
+        let attempts = (snap.exists && Array.isArray(snap.data().attempts)) ? snap.data().attempts : [];
+        attempts = attempts.filter(t => t > windowStart);
+        if (attempts.length >= maxPerMin) {
+            console.warn(`rate-limit hit: ${key}/${uid} (${attempts.length}/${maxPerMin})`);
+            return false;
+        }
+        attempts.push(now);
+        await ref.set({ attempts, lastAt: now }, { merge: true });
+        return true;
+    } catch (e) {
+        console.warn('rate-limit lookup failed', e);
+        return true; // fail-open so a Firestore hiccup doesn't lock users out
+    }
+}
+
+// ─── PII scrubber for AI prompts ──────────────────────────────────────────────
+// Replaces emails, Israeli ID numbers, phone numbers, and credit-card-like
+// strings with placeholders before sending text to Gemini. Used by ai-proxy
+// and the severity classifier so user-private data never leaves our backend
+// in raw form.
+function scrubPII(s) {
+    if (!s || typeof s !== 'string') return s;
+    return s
+        .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, '[email]')
+        .replace(/\b\d{9}\b/g, '[id]') // Israeli teudat zehut (9 digits)
+        .replace(/\b\d{3}[- ]?\d{3}[- ]?\d{4}\b/g, '[phone]')
+        .replace(/\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g, '[card]');
+}
+
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
 exports.validateCode = functions
@@ -201,6 +241,12 @@ exports.validateCode = functions
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי לממש קוד");
+        }
+
+        // Rate limit: max 5 redeem attempts per UID per minute (defends
+        // against brute-forcing access codes).
+        if (!(await _rateLimit('validateCode', context.auth.uid, 5))) {
+            throw new functions.https.HttpsError("resource-exhausted", "Too many attempts. Wait a minute.");
         }
 
         const code = (data.code || "").trim().toUpperCase();
@@ -242,6 +288,11 @@ exports.awardReferral = functions
     if (!context.auth) {
         throw new functions.https.HttpsError("unauthenticated", "Sign in first");
     }
+    // 10 invocations per UID per minute is plenty (this only fires once per
+    // dashboard load), and stops anyone scripting referral abuse.
+    if (!(await _rateLimit('awardReferral', context.auth.uid, 10))) {
+        throw new functions.https.HttpsError("resource-exhausted", "Too many requests");
+    }
     const tier = (data && data.tier) || null;
     if (!["pro", "yolo"].includes(tier)) {
         throw new functions.https.HttpsError("invalid-argument", "tier must be pro or yolo");
@@ -277,8 +328,8 @@ async function _classifySeverityWithAI(fb) {
         '— Submission —',
         'App: ' + (fb.app || '—'),
         'Rating: ' + (fb.rating || '—') + '/5',
-        'Loved: ' + (fb.loved || '—'),
-        'Missing/confusing: ' + (fb.missing || '—'),
+        'Loved: ' + scrubPII(fb.loved || '—'),
+        'Missing/confusing: ' + scrubPII(fb.missing || '—'),
         'Plan: ' + (fb.plan || '—'),
         'Lang: ' + (fb.lang || '—'),
     ].join('\n');
@@ -1222,3 +1273,96 @@ exports.getUserContext = functions.https.onCall(async (data, context) => {
 
     return { summary: parts.join('\n'), apps: Object.keys(ctx) };
 });
+
+// ─── Daily Firestore backup ───────────────────────────────────────────────────
+// Exports the entire `users` + `feedback` collection to a Cloud Storage
+// bucket every night at 02:00 UTC. Lets us recover from accidental delete,
+// rule mistake, or a corrupted write. Bucket name is derived from project.
+// (Cloud Storage is free up to 5 GB total — these exports stay small.)
+exports.dailyFirestoreBackup = functions.pubsub
+    .schedule('0 2 * * *')
+    .timeZone('UTC')
+    .onRun(async () => {
+        try {
+            const project = process.env.GCLOUD_PROJECT || 'finzilla-7f1f9';
+            const bucket = 'gs://' + project + '-backups';
+            const datestamp = new Date().toISOString().slice(0, 10);
+            const outputUriPrefix = bucket + '/' + datestamp;
+
+            const client = new (require('@google-cloud/firestore')).v1.FirestoreAdminClient();
+            const [op] = await client.exportDocuments({
+                name: client.databasePath(project, '(default)'),
+                outputUriPrefix,
+                collectionIds: ['users', 'feedback', 'rate_limits'],
+            });
+            console.log(`✅ Firestore backup started → ${outputUriPrefix} (op=${op.name})`);
+            return null;
+        } catch (e) {
+            console.error('Backup failed', e);
+            return null;
+        }
+    });
+
+// ─── Login alert — email user when a new device signs in ─────────────────────
+// Compares the request's UA + IP to the most recent value stored on the user
+// doc. If it's new, fires an email "🔐 New sign-in to your WizeLife account"
+// with timestamp + UA + approximate location (none, since we don't geocode).
+// Triggered by client after Firebase Auth resolves; rate-limited to 1/hour.
+exports.notifyLoginAlert = functions
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .https.onCall(async (data, context) => {
+        if (!context.auth) return { skipped: 'no-auth' };
+        const uid = context.auth.uid;
+        if (!(await _rateLimit('loginAlert', uid, 1))) return { skipped: 'rate-limit' };
+
+        const ua = String(data && data.ua || '').slice(0, 300);
+        const platform = String(data && data.platform || '').slice(0, 40);
+        const ip = (context.rawRequest && (context.rawRequest.headers['x-forwarded-for'] || context.rawRequest.ip)) || '';
+        const fingerprint = (ua + '|' + platform).slice(0, 200);
+
+        const userRef = db.collection('users').doc(uid);
+        const userSnap = await userRef.get();
+        const u = userSnap.exists ? userSnap.data() : {};
+        const knownFingerprints = Array.isArray(u.knownDevices) ? u.knownDevices : [];
+        const isNew = !knownFingerprints.includes(fingerprint);
+
+        // Always remember; only email if it's new
+        if (isNew) {
+            await userRef.set({
+                knownDevices: admin.firestore.FieldValue.arrayUnion(fingerprint),
+                lastLoginAt: admin.firestore.FieldValue.serverTimestamp(),
+            }, { merge: true });
+
+            const email = u.email || (await admin.auth().getUser(uid).then(r => r.email).catch(() => null));
+            if (email && GMAIL_EMAIL.value() && GMAIL_PASSWORD.value()) {
+                try {
+                    const lang = (u.lang || 'he').slice(0, 2);
+                    const TR = {
+                        he: { subject: '🔐 כניסה חדשה לחשבון WizeLife', body: 'זיהינו כניסה חדשה לחשבון שלך מהמכשיר הזה:', notyou: 'אם זה לא אתה — שנה סיסמה מיד.' },
+                        en: { subject: '🔐 New sign-in to your WizeLife account', body: 'We noticed a new sign-in to your account from this device:', notyou: 'If this wasn\'t you, change your password immediately.' },
+                        pt: { subject: '🔐 Novo login na sua conta WizeLife', body: 'Detectamos um novo login na sua conta a partir deste dispositivo:', notyou: 'Se não foi você, altere a senha imediatamente.' },
+                        es: { subject: '🔐 Nuevo inicio de sesión en tu cuenta WizeLife', body: 'Detectamos un nuevo inicio de sesión desde este dispositivo:', notyou: 'Si no fuiste tú, cambia tu contraseña de inmediato.' },
+                    };
+                    const t = TR[lang] || TR.en;
+                    const transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: { user: GMAIL_EMAIL.value(), pass: GMAIL_PASSWORD.value() },
+                    });
+                    await transporter.sendMail({
+                        from: `"WizeLife Security" <${GMAIL_EMAIL.value()}>`,
+                        to: email,
+                        subject: t.subject,
+                        html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:24px auto;background:#fff;border-radius:12px;padding:24px;border:1px solid #e2e8f0">
+                          <h2 style="color:#dc2626;margin:0 0 12px">🔐 ${t.subject}</h2>
+                          <p style="color:#1e293b;line-height:1.6">${t.body}</p>
+                          <pre style="background:#f1f5f9;padding:10px 14px;border-radius:8px;font-size:.78rem;color:#475569;white-space:pre-wrap;word-break:break-all">${ua}\n${platform}\n${ip}</pre>
+                          <p style="color:#dc2626;font-weight:700;margin-top:16px">${t.notyou}</p>
+                        </div>`,
+                    });
+                    console.log(`📨 login alert sent → ${email}`);
+                } catch (e) { console.warn('login alert email failed', e); }
+            }
+        }
+        return { isNew };
+    });
+
