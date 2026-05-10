@@ -55,11 +55,85 @@ async function _grantReferrerReward(upgradedUid, newTier) {
         await upRef.set({ referralRewardSent: true }, { merge: true });
 
         console.log(`🎁 referral reward queued: ${u.referredBy} +${REWARD_DAYS}d ${newTier} (from ${upgradedUid})`);
+
+        // Apply the reward immediately (don't make the referrer wait until 03:00 UTC)
+        try { await _applyOneUserRewards(referrerRef); } catch (e) { console.warn("immediate apply failed", e); }
+
+        // Email the referrer with a thank-you + the gift they just got
+        try { await _emailReferralBonus(u.referredBy, newTier, REWARD_DAYS); }
+        catch (e) { console.warn("referral email failed", e); }
+
         return { rewarded: u.referredBy, tier: newTier, days: REWARD_DAYS };
     } catch (e) {
         console.warn("_grantReferrerReward failed", e);
         return null;
     }
+}
+
+/**
+ * Email the referrer "your friend joined — you got X days of TIER".
+ * Best-effort: reads GMAIL_EMAIL + GMAIL_APP_PASSWORD secrets directly. If
+ * the caller didn't declare them in runWith, .value() returns '' and we
+ * silently skip — Firestore record still has the bonus.
+ */
+async function _emailReferralBonus(referrerUid, tier, days) {
+    let gmailUser, gmailPass;
+    try { gmailUser = GMAIL_EMAIL.value(); }    catch (e) { gmailUser = ''; }
+    try { gmailPass = GMAIL_PASSWORD.value(); } catch (e) { gmailPass = ''; }
+    if (!gmailUser || !gmailPass) {
+        console.log('referral email skipped — gmail secrets not bound');
+        return;
+    }
+    const userSnap = await db.collection('users').doc(referrerUid).get();
+    if (!userSnap.exists) return;
+    const u = userSnap.data() || {};
+    const email = u.email
+        || (u.profile && u.profile.email)
+        || (await admin.auth().getUser(referrerUid).then(r => r.email).catch(() => null));
+    if (!email) return;
+
+    const lang = (u.lang || u.preferredLang || 'he').slice(0, 2);
+    const TR = {
+        he: { subject: '🎁 חבר שלך הצטרף — קיבלת ' + days + ' ימי ' + tier.toUpperCase() + ' חינם!', greet: 'יששש 🎉', body: 'חבר שהזמנת ל-WizeLife שדרג עכשיו, ובזכות זה — הוסף לך:', got: days + ' ימים של ' + tier.toUpperCase(), already: 'כבר נטען לחשבון שלך — אין צורך בקוד.', cta: 'לאפליקציות שלי', sign: 'תודה על השיתוף,\nאופיר · WizeLife' },
+        en: { subject: '🎁 Your friend joined — you got ' + days + ' free days of ' + tier.toUpperCase() + '!', greet: 'Yesss 🎉', body: 'A friend you invited to WizeLife just upgraded — that earned you:', got: days + ' days of ' + tier.toUpperCase(), already: 'Already loaded onto your account — no code needed.', cta: 'Open my apps', sign: 'Thanks for sharing,\nOfir · WizeLife' },
+        pt: { subject: '🎁 Seu amigo entrou — você ganhou ' + days + ' dias grátis de ' + tier.toUpperCase() + '!', greet: 'Boa 🎉', body: 'Um amigo que você convidou para o WizeLife fez upgrade — você ganhou:', got: days + ' dias de ' + tier.toUpperCase(), already: 'Já está na sua conta — sem código.', cta: 'Abrir meus apps', sign: 'Obrigado por compartilhar,\nOfir · WizeLife' },
+        es: { subject: '🎁 Tu amigo se unió — ¡ganaste ' + days + ' días gratis de ' + tier.toUpperCase() + '!', greet: '¡Genial! 🎉', body: 'Un amigo que invitaste a WizeLife actualizó — ganaste:', got: days + ' días de ' + tier.toUpperCase(), already: 'Ya está en tu cuenta — sin código.', cta: 'Abrir mis apps', sign: 'Gracias por compartir,\nOfir · WizeLife' },
+    };
+    const t = TR[lang] || TR.en;
+    const accent = tier === 'yolo' ? '#f59e0b' : '#10b981';
+    const html = `
+<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8"><style>
+body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0;color:#1e293b}
+.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+h1{font-size:1.4rem;margin:0 0 12px;color:${accent}}
+p{line-height:1.7;font-size:1rem}
+.gift{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;border-radius:10px;padding:16px 18px;margin:20px 0;text-align:center}
+.gift-amount{font-size:1.4rem;font-weight:800;color:${accent};margin:6px 0}
+.gift-note{font-size:.85rem;color:#64748b}
+.cta{display:inline-block;margin-top:14px;background:#6366f1;color:#fff;padding:11px 22px;border-radius:99px;text-decoration:none;font-weight:700}
+.foot{margin-top:24px;font-size:.85rem;color:#64748b;white-space:pre-line}
+</style></head><body><div class="wrap">
+  <h1>${t.greet}</h1>
+  <p>${t.body}</p>
+  <div class="gift">
+    <div style="font-size:2rem;line-height:1">🎁</div>
+    <div class="gift-amount">${t.got}</div>
+    <div class="gift-note">${t.already}</div>
+  </div>
+  <a class="cta" href="https://wizelife.ai/dashboard.html">${t.cta} →</a>
+  <div class="foot">${t.sign}</div>
+</div></body></html>`;
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: gmailUser, pass: gmailPass },
+    });
+    await transporter.sendMail({
+        from: `"WizeLife" <${gmailUser}>`,
+        to: email,
+        subject: t.subject,
+        html,
+    });
+    console.log(`📨 referral bonus emailed → ${email}: +${days}d ${tier}`);
 }
 
 /**
@@ -123,7 +197,7 @@ const ADMIN_TOKEN       = defineSecret("ADMIN_TOKEN");
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
 exports.validateCode = functions
-    .runWith({ secrets: [ACCESS_CODES_SEC, YOLO_CODES_SEC] })
+    .runWith({ secrets: [ACCESS_CODES_SEC, YOLO_CODES_SEC, GMAIL_EMAIL, GMAIL_PASSWORD] })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי לממש קוד");
@@ -162,7 +236,9 @@ exports.validateCode = functions
 
 // Server-side fallback callable — clients call this after a PayPal upgrade
 // returns them to the dashboard. Idempotent on the server side.
-exports.awardReferral = functions.https.onCall(async (data, context) => {
+exports.awardReferral = functions
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .https.onCall(async (data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError("unauthenticated", "Sign in first");
     }
@@ -677,7 +753,7 @@ function verifyWebhook(token, webhookId, headers, body) {
 // ─── Webhook handler ──────────────────────────────────────────────────────────
 
 exports.paypalWebhook = functions
-    .runWith({ secrets: [PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_WEBHOOK_ID] })
+    .runWith({ secrets: [PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_WEBHOOK_ID, GMAIL_EMAIL, GMAIL_PASSWORD] })
     .https.onRequest(async (req, res) => {
         if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
