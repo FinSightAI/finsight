@@ -118,6 +118,7 @@ const ACCESS_CODES_SEC  = defineSecret("ACCESS_CODES");
 const YOLO_CODES_SEC    = defineSecret("YOLO_ACCESS_CODES");
 const TWELVE_DATA_KEY   = defineSecret("TWELVE_DATA_KEY");
 const FINNHUB_KEY       = defineSecret("FINNHUB_KEY");
+const ADMIN_TOKEN       = defineSecret("ADMIN_TOKEN");
 
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
@@ -180,15 +181,25 @@ exports.awardReferral = functions.https.onCall(async (data, context) => {
     return result || { rewarded: null, reason: "no_referrer_or_already_sent" };
 });
 
+// ─── Bug bounty config ───────────────────────────────────────────────────────
+// Severity levels granted by approveBugReport. Tier auto-determined: critical→
+// yolo, major→pro. Minor reports get a thank-you email but no plan reward.
+const BUG_BOUNTY = {
+    critical: { tier: 'yolo', days: 30, label: 'Critical' },
+    major:    { tier: 'pro',  days: 14, label: 'Major'    },
+    minor:    { tier: null,   days: 0,  label: 'Minor'    },
+};
+
 // ─── Feedback email — fires on every new feedback submission ─────────────────
 // Triggered when a doc is created in the `feedback` collection (written by
 // wizelife/feedback.html). Sends a formatted email to wizelife.ai@gmail.com.
 exports.onFeedbackSubmitted = functions
-    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD, ADMIN_TOKEN] })
     .firestore.document('feedback/{id}')
     .onCreate(async (snap) => {
         const FEEDBACK_INBOX = 'wizelife.ai@gmail.com';
         const data = snap.data() || {};
+        const docId = snap.id;
         const gmailUser = GMAIL_EMAIL.value();
         const gmailPass = GMAIL_PASSWORD.value();
         if (!gmailUser || !gmailPass) {
@@ -200,6 +211,23 @@ exports.onFeedbackSubmitted = functions
         const star = (n) => n ? '★'.repeat(Math.max(0, Math.min(5, Number(n)))) + '☆'.repeat(5 - Math.max(0, Math.min(5, Number(n)))) : '—';
 
         const subject = `🗣️ Feedback — ${safe(data.app)} — ${star(data.rating)}`;
+
+        // One-click "approve as bug" links — only render if we have a uid (so
+        // we know whom to credit) and an admin token configured.
+        const adminTok = ADMIN_TOKEN.value();
+        const FN_BASE = `https://us-central1-${process.env.GCLOUD_PROJECT || 'finzilla-7f1f9'}.cloudfunctions.net/approveBugReport`;
+        const approveLink = (sev) =>
+            `${FN_BASE}?id=${encodeURIComponent(docId)}&severity=${sev}&token=${encodeURIComponent(adminTok || '')}`;
+        const bountyBlock = (data.uid && adminTok) ? `
+  <div class="row" style="margin-top:14px;padding:14px 0 0;border-top:2px solid #f59e0b">
+    <div class="label" style="color:#f59e0b">🐛 Approve as bug (one-click — credits the user)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+      <a href="${approveLink('critical')}" style="background:#dc2626;color:#fff;text-decoration:none;padding:9px 14px;border-radius:8px;font-weight:700;font-size:.85rem">Critical → 30d YOLO</a>
+      <a href="${approveLink('major')}"    style="background:#f59e0b;color:#fff;text-decoration:none;padding:9px 14px;border-radius:8px;font-weight:700;font-size:.85rem">Major → 14d Pro</a>
+      <a href="${approveLink('minor')}"    style="background:#64748b;color:#fff;text-decoration:none;padding:9px 14px;border-radius:8px;font-weight:700;font-size:.85rem">Minor → thank-you only</a>
+    </div>
+  </div>` : '';
+
         const html = `
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><style>
   body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0;padding:0;color:#1e293b}
@@ -221,6 +249,7 @@ exports.onFeedbackSubmitted = functions
   <div class="row"><div class="label">Plan / Lang</div><div class="value">${safe(data.plan)} · ${safe(data.lang)}</div></div>
   <div class="row"><div class="label">Referrer</div><div class="value">${safe(data.referrer)}</div></div>
   <div class="row"><div class="label">User-Agent</div><div class="value" style="font-size:.78rem;color:#64748b">${safe(data.ua)}</div></div>
+  ${bountyBlock}
 </div></body></html>`;
 
         try {
@@ -240,6 +269,116 @@ exports.onFeedbackSubmitted = functions
             console.warn('feedback email failed', e);
         }
         return null;
+    });
+
+// ─── Approve a feedback report as a bug + credit the reporter ────────────────
+// One-click HTTP endpoint hit from the admin email. Adds a reward entry to
+// the user's referralRewards array (re-using the same machinery), and emails
+// the user a Hebrew/English thank-you with the bonus they got.
+//
+// URL: GET /approveBugReport?id=<docId>&severity=critical|major|minor&token=<ADMIN_TOKEN>
+exports.approveBugReport = functions
+    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD, ADMIN_TOKEN] })
+    .https.onRequest(async (req, res) => {
+        try {
+            const tok = req.query.token || '';
+            const want = ADMIN_TOKEN.value();
+            if (!want || String(tok) !== String(want)) {
+                return res.status(401).send('unauthorized');
+            }
+            const docId = String(req.query.id || '');
+            const severity = String(req.query.severity || '').toLowerCase();
+            if (!docId || !BUG_BOUNTY[severity]) {
+                return res.status(400).send('bad request');
+            }
+            const ref = db.collection('feedback').doc(docId);
+            const snap = await ref.get();
+            if (!snap.exists) return res.status(404).send('feedback not found');
+            const fb = snap.data() || {};
+            if (fb.bugApprovedAt) {
+                return res.status(200).send(`Already approved as ${fb.bugSeverity}.`);
+            }
+            const uid = fb.uid;
+            if (!uid) return res.status(400).send('feedback has no uid — cannot credit');
+
+            const cfg = BUG_BOUNTY[severity];
+            // Mark the feedback as approved so we don't double-credit
+            await ref.set({
+                bugApprovedAt: admin.firestore.FieldValue.serverTimestamp(),
+                bugSeverity: severity,
+            }, { merge: true });
+
+            // Credit the user (only for major/critical — minor is thank-you only)
+            if (cfg.tier && cfg.days > 0) {
+                const userRef = db.collection('users').doc(uid);
+                await userRef.set({
+                    referralRewards: admin.firestore.FieldValue.arrayUnion({
+                        tier: cfg.tier,
+                        days: cfg.days,
+                        from: 'bug_bounty:' + docId,
+                        ts: Date.now(),
+                        applied: false,
+                    }),
+                }, { merge: true });
+                // Apply immediately — the daily cron also handles it, but the
+                // user shouldn't have to wait until 03:00 UTC.
+                try { await _applyOneUserRewards(userRef); } catch (e) { console.warn('apply on approve failed', e); }
+            }
+
+            // Thank-you email to the reporter
+            try {
+                const gmailUser = GMAIL_EMAIL.value();
+                const gmailPass = GMAIL_PASSWORD.value();
+                if (gmailUser && gmailPass && fb.email) {
+                    const lang = (fb.lang || 'he').slice(0, 2);
+                    const TR = {
+                        he: { subject: '🎁 תודה על הדיווח!', greet: 'תודה ענקית', sub: 'הדיווח שלך עזר לנו לתקן בעיה — בזכותך WizeLife טובה יותר.', got_yolo: 'מחזיק לך', got_pro: 'מחזיק לך', days: 'ימים', of: 'של', no_gift: 'אין מתנה הפעם, אבל המשוב שלך נקרא ומוערך — נמשיך לטפל.', open: 'לכלי שלי', sign: 'תודה,\nאופיר · WizeLife' },
+                        en: { subject: '🎁 Thanks for the bug report!', greet: 'Huge thanks', sub: 'Your report helped us fix something — WizeLife got better because of you.', got_yolo: 'Locking in', got_pro: 'Locking in', days: 'days', of: 'of', no_gift: 'No gift this round, but your feedback was read and matters — we’re on it.', open: 'Open my tools', sign: 'Thanks,\nOfir · WizeLife' },
+                        pt: { subject: '🎁 Obrigado pelo bug report!', greet: 'Muito obrigado', sub: 'Seu relato nos ajudou a consertar — o WizeLife melhorou graças a você.', got_yolo: 'Liberei', got_pro: 'Liberei', days: 'dias', of: 'de', no_gift: 'Sem brinde desta vez, mas seu feedback foi lido — estamos cuidando disso.', open: 'Abrir minhas ferramentas', sign: 'Obrigado,\nOfir · WizeLife' },
+                        es: { subject: '🎁 ¡Gracias por reportar el bug!', greet: 'Muchas gracias', sub: 'Tu reporte nos ayudó a arreglar algo — WizeLife mejoró gracias a ti.', got_yolo: 'Activé', got_pro: 'Activé', days: 'días', of: 'de', no_gift: 'Sin regalo esta vez, pero tu feedback se leyó y importa — estamos en ello.', open: 'Abrir mis herramientas', sign: 'Gracias,\nOfir · WizeLife' },
+                    };
+                    const t = TR[lang] || TR.en;
+                    const giftLine = cfg.tier
+                        ? `🎁 <b>${cfg.tier === 'yolo' ? t.got_yolo : t.got_pro} ${cfg.days} ${t.days} ${t.of} ${cfg.tier.toUpperCase()}</b> — already on your account.`
+                        : t.no_gift;
+                    const html = `
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0;color:#1e293b}
+.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+h1{font-size:1.4rem;margin:0 0 12px;color:#10b981}
+p{line-height:1.7;font-size:1rem}
+.gift{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;border-radius:10px;padding:14px 16px;margin:18px 0;font-size:1rem;line-height:1.55}
+.cta{display:inline-block;margin-top:14px;background:#6366f1;color:#fff;padding:11px 22px;border-radius:99px;text-decoration:none;font-weight:700}
+.foot{margin-top:24px;font-size:.85rem;color:#64748b;white-space:pre-line}
+</style></head><body><div class="wrap">
+  <h1>${t.greet} 🙏</h1>
+  <p>${t.sub}</p>
+  <div class="gift">${giftLine}</div>
+  <a class="cta" href="https://wizelife.ai/dashboard.html">${t.open} →</a>
+  <div class="foot">${t.sign}</div>
+</div></body></html>`;
+                    const transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: { user: gmailUser, pass: gmailPass },
+                    });
+                    await transporter.sendMail({
+                        from: `"WizeLife" <${gmailUser}>`,
+                        to: fb.email,
+                        subject: t.subject,
+                        html,
+                    });
+                    console.log(`📨 thank-you sent to ${fb.email} for ${severity} bug`);
+                }
+            } catch (e) {
+                console.warn('thank-you email failed', e);
+            }
+
+            const human = `Approved as ${cfg.label}.${cfg.tier ? ` Reporter credited with ${cfg.days}d ${cfg.tier}.` : ' Thank-you email sent.'}`;
+            return res.status(200).send(`<!DOCTYPE html><html><body style="font-family:sans-serif;padding:40px;text-align:center"><h2>✅ ${human}</h2><p style="color:#64748b">You can close this tab.</p></body></html>`);
+        } catch (e) {
+            console.error('approveBugReport failed', e);
+            return res.status(500).send('error: ' + e.message);
+        }
     });
 
 // Daily cron — converts queued rewards into actual plan extensions.
