@@ -155,17 +155,13 @@ const App = {
         // Inject mobile header
         const header = document.createElement('header');
         header.className = 'mobile-header';
+        /* No lang pills here — they live inside the sidebar drawer + the
+           WizeLife hamburger menu, so the top bar stays clean. */
         header.innerHTML =
             '<button class="mobile-header-toggle" aria-label="תפריט">☰</button>' +
             '<a href="' + homeHref + '" class="mobile-header-brand">' +
-                (logoSrc ? '<img src="' + logoSrc + '" class="mobile-header-logo" alt="WizeMoney">' : '') +
                 '<span class="mobile-header-name">Wize<span class="brand-highlight">Money</span></span>' +
-            '</a>' +
-            '<div class="mobile-header-lang">' +
-                '<button class="lang-btn" data-lang="he" onclick="I18n.setLanguage(\'he\')">HE</button>' +
-                '<button class="lang-btn" data-lang="en" onclick="I18n.setLanguage(\'en\')">EN</button>' +
-                '<button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage(\'pt\')">PT</button>' +
-            '</div>';
+            '</a>';
 
         // Inject overlay
         const overlay = document.createElement('div');
