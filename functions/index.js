@@ -243,6 +243,16 @@ exports.validateCode = functions
             throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי לממש קוד");
         }
 
+        // Require a verified email address before granting Pro/YOLO.
+        // Stops attackers from creating throwaway accounts with fake email,
+        // redeeming a leaked code, then never paying / verifying.
+        if (!context.auth.token || !context.auth.token.email_verified) {
+            throw new functions.https.HttpsError(
+                "failed-precondition",
+                "Please verify your email address first (check your inbox)."
+            );
+        }
+
         // Rate limit: max 5 redeem attempts per UID per minute (defends
         // against brute-forcing access codes).
         if (!(await _rateLimit('validateCode', context.auth.uid, 5))) {
