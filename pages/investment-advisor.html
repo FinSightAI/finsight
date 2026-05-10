@@ -112,6 +112,20 @@
     .mfilter{padding:4px 11px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;transition:all 0.15s;}
     .mfilter.active{background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.5);color:#818cf8;font-weight:700;}
     .mfilter:hover:not(.active){border-color:#6366f1;color:#818cf8;}
+
+    /* Mobile fix — the inline style on <main> sets height:100vh + padding:0
+       which ignores the WizeBar (36px) + mobile-header (~56px+safe-area).
+       This override reserves space for them and the bottom-nav. */
+    @media (max-width: 1024px) {
+      main.main-content {
+        height: auto !important;
+        min-height: calc(100vh - 36px - 56px - env(safe-area-inset-top));
+        padding-top: calc(36px + 56px + env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+        overflow: visible !important;
+      }
+      .chat-bubble { max-width: 90%; font-size: 0.88rem; }
+    }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
