@@ -540,26 +540,29 @@
     // ── WizeMoney right panel injector ──
     function injectRightPanel() {
         if (document.getElementById('wl-money-rpanel')) return;
-        // Don't inject on small screens
         if (window.innerWidth < 1280) return;
+
+        const isLtr = document.documentElement.dir === 'ltr' || document.body.classList.contains('ltr');
+        const panelSide = isLtr ? 'right:0;left:auto;' : 'left:0;right:auto;';
+        const padProp   = isLtr ? 'padding-right' : 'padding-left';
 
         const panel = document.createElement('aside');
         panel.id = 'wl-money-rpanel';
-        panel.style.cssText = 'position:fixed;top:36px;left:0;width:240px;height:calc(100vh - 36px);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:ltr;';
+        panel.style.cssText = `position:fixed;top:36px;${panelSide}width:240px;height:calc(100vh - 36px);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:ltr;`;
         panel.classList.add('wl-rpanel-themed');
         panel.innerHTML = `
             <button id="wl-rp-collapse" aria-label="Collapse panel" style="position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0">×</button>
             <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px;padding-right:30px">AI Insights</div>
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
-                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">Net Worth</div>
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px" id="wl-rp-net-label">Net Worth</div>
                 <div id="wl-rp-networth" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:900;color:#10b981;letter-spacing:-0.5px">—</div>
-                <div style="font-size:10px;color:#6b7280;margin-top:4px">Connect bank for live data</div>
+                <div id="wl-rp-net-sub" style="font-size:10px;color:#6b7280;margin-top:4px">Connect bank for live data</div>
             </div>
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
-                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">Quick Tips</div>
-                <div class="wl-rp-tip-row" data-tip-key="tip1" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Track all accounts in Bank tab</div>
-                <div class="wl-rp-tip-row" data-tip-key="tip2" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)">Set goals to see progress charts</div>
-                <div class="wl-rp-tip-row" data-tip-key="tip3" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0">Pro unlocks AI advisor & sims</div>
+                <div id="wl-rp-tips-label" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">Quick Tips</div>
+                <div id="wl-rp-tip-a" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:opacity 0.4s"></div>
+                <div id="wl-rp-tip-b" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:opacity 0.4s"></div>
+                <div id="wl-rp-tip-c" style="font-size:11.5px;color:#94a3b8;line-height:1.55;padding:6px 0;transition:opacity 0.4s"></div>
             </div>
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
                 <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">WizeAI</div>
@@ -568,57 +571,77 @@
         `;
         document.body.appendChild(panel);
 
-        // Translate right panel tips
-        function wlMoneyRpTranslate() {
-            const TR = {
-                he: { tip1: 'עקוב אחרי כל החשבונות בלשונית בנק', tip2: 'הגדר יעדים כדי לראות גרפי התקדמות', tip3: 'Pro פותח יועץ AI וסימולטורים', tipsLabel: 'טיפים מהירים', netLabel: 'שווי נטו', netSub: 'חבר בנק לנתונים חיים' },
-                en: { tip1: 'Track all accounts in Bank tab', tip2: 'Set goals to see progress charts', tip3: 'Pro unlocks AI advisor & sims', tipsLabel: 'Quick Tips', netLabel: 'Net Worth', netSub: 'Connect bank for live data' },
-                pt: { tip1: 'Acompanhe contas na aba Banco', tip2: 'Defina metas para ver progresso', tip3: 'Pro libera consultor IA', tipsLabel: 'Dicas', netLabel: 'Patrimônio', netSub: 'Conecte banco para dados ao vivo' },
-                es: { tip1: 'Sigue cuentas en la pestaña Banco', tip2: 'Define metas para ver progreso', tip3: 'Pro desbloquea asesor IA', tipsLabel: 'Consejos', netLabel: 'Patrimonio', netSub: 'Conecta banco para datos en vivo' },
-            };
+        // Tips pool with rotation
+        const ALL_TIPS = {
+            he: ['עקוב אחרי כל החשבונות בלשונית בנק','הגדר יעדים כדי לראות גרפי התקדמות','Pro פותח יועץ AI וסימולטורים','השתמש במייעל המס לחיסכון שנתי','מעקב הכנסות עוזר לבנות תקציב מדויק'],
+            en: ['Track all accounts in Bank tab','Set goals to see progress charts','Pro unlocks AI advisor & sims','Use Tax Optimizer to save more each year','Income tracking helps build an accurate budget'],
+            pt: ['Acompanhe contas na aba Banco','Defina metas para ver progresso','Pro libera consultor IA e simulações','Use o Otimizador Fiscal para economizar','Controle de receitas ajuda no orçamento'],
+            es: ['Sigue cuentas en la pestaña Banco','Define metas para ver progreso','Pro desbloquea asesor IA y simulaciones','Usa el Optimizador Fiscal para ahorrar','El seguimiento de ingresos mejora tu presupuesto'],
+        };
+        const LABELS = {
+            he: {tips:'טיפים מהירים', net:'שווי נטו', sub:'חבר בנק לנתונים חיים'},
+            en: {tips:'Quick Tips',   net:'Net Worth', sub:'Connect bank for live data'},
+            pt: {tips:'Dicas',        net:'Patrimônio',sub:'Conecte banco para dados ao vivo'},
+            es: {tips:'Consejos',     net:'Patrimonio', sub:'Conecta banco para datos en vivo'},
+        };
+
+        let tipOffset = 0;
+        function rotateTips() {
             const lang = localStorage.getItem('wl_lang') || 'he';
-            const t = TR[lang] || TR.en;
-            document.querySelectorAll('[data-tip-key]').forEach(el => {
-                const k = el.dataset.tipKey;
-                if (t[k]) el.textContent = t[k];
+            const tips = ALL_TIPS[lang] || ALL_TIPS.en;
+            const lbl  = LABELS[lang] || LABELS.en;
+            const tipsEl = document.getElementById('wl-rp-tips-label');
+            const netEl  = document.getElementById('wl-rp-net-label');
+            const subEl  = document.getElementById('wl-rp-net-sub');
+            if (tipsEl) tipsEl.textContent = lbl.tips;
+            if (netEl)  netEl.textContent  = lbl.net;
+            if (subEl)  subEl.textContent  = lbl.sub;
+            ['wl-rp-tip-a','wl-rp-tip-b','wl-rp-tip-c'].forEach((id, i) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.textContent = tips[(tipOffset + i) % tips.length];
+                    el.style.opacity = '1';
+                }, 400);
             });
+            tipOffset = (tipOffset + 1) % 5;
         }
-        wlMoneyRpTranslate();
+        rotateTips();
+        setInterval(rotateTips, 12000);
 
-
-        // Reopen tab (visible when collapsed)
+        // Reopen tab
         const reopenTab = document.createElement('button');
         reopenTab.id = 'wl-rp-reopen';
         reopenTab.setAttribute('aria-label', 'Open AI panel');
-        reopenTab.style.cssText = 'position:fixed;top:50%;left:0;transform:translateY(-50%);width:24px;height:60px;border-radius:0 8px 8px 0;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);border-left:none;color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:51;display:none';
-        reopenTab.innerHTML = '›';
+        const rSide = isLtr ? 'right:0;left:auto;border-right:none;border-radius:8px 0 0 8px;' : 'left:0;right:auto;border-left:none;border-radius:0 8px 8px 0;';
+        reopenTab.style.cssText = `position:fixed;top:50%;${rSide}transform:translateY(-50%);width:24px;height:60px;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:51;display:none`;
+        reopenTab.innerHTML = isLtr ? '‹' : '›';
         document.body.appendChild(reopenTab);
 
-        // Wire up collapse/reopen
+        // Wire collapse/reopen
         const collapseBtn = panel.querySelector('#wl-rp-collapse');
         const KEY = 'wl_rp_collapsed';
+        const s = document.createElement('style');
+        s.id = 'wl-rp-padding-style';
+        s.textContent = `@media (min-width: 1280px) { body { ${padProp}: 240px !important; box-sizing: border-box; } #wl-bar { ${padProp}: 256px !important; } }`;
+        document.head.appendChild(s);
+
         const setState = (collapsed) => {
             panel.style.display = collapsed ? 'none' : 'flex';
             reopenTab.style.display = collapsed ? 'block' : 'none';
-            const styleTag = document.getElementById('wl-rp-padding-style');
-            if (styleTag) styleTag.disabled = collapsed;
+            s.disabled = collapsed;
             localStorage.setItem(KEY, collapsed ? '1' : '0');
         };
-        collapseBtn.onclick = () => setState(true);
-        reopenTab.onclick = () => setState(false);
-        if (localStorage.getItem(KEY) === '1') setState(true);
+        collapseBtn.addEventListener('click', () => setState(true));
+        reopenTab.addEventListener('click', () => setState(false));
+        setState(localStorage.getItem(KEY) === '1');
 
-        // Add main padding-left to account for panel
-        const s = document.createElement('style');
-        s.id = 'wl-rp-padding-style';
-        s.textContent = '@media (min-width: 1280px) { body { padding-left: 240px !important; box-sizing: border-box; } #wl-bar { padding-left: 256px !important; } }';
-        document.head.appendChild(s);
-
-        // Try to populate net worth if Plan/data is available
+        // Load net worth
         setTimeout(() => {
             try {
-                const nw = window.NetWorthCalculator?.getCurrent?.() || window.netWorth;
-                if (typeof nw === 'number') {
+                const nw = parseFloat(localStorage.getItem('wl_net_worth') || 'NaN');
+                if (typeof nw === 'number' && !isNaN(nw)) {
                     document.getElementById('wl-rp-networth').textContent = '₪' + nw.toLocaleString();
                 }
             } catch(e) {}
