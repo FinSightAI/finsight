@@ -1828,3 +1828,18 @@ html[dir="ltr"] .nav-link span:not(.icon) {
     text-align: left;
     direction: ltr;
 }
+
+/* LTR: fix form elements that may have hardcoded direction:rtl in page styles */
+html[dir="ltr"] input,
+html[dir="ltr"] select,
+html[dir="ltr"] textarea {
+    direction: ltr;
+    text-align: left;
+}
+
+/* LTR: fix spans and inline content that inherit RTL */
+html[dir="ltr"] .main-content span:not(.icon):not(.emoji),
+html[dir="ltr"] .main-content strong,
+html[dir="ltr"] .main-content small {
+    text-align: left;
+}
