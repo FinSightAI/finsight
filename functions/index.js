@@ -13,7 +13,7 @@ const functions        = require("firebase-functions");
 const { defineSecret } = require("firebase-functions/params");
 const admin            = require("firebase-admin");
 const https            = require("https");
-const nodemailer       = require("nodemailer");
+const { Resend }       = require("resend");
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -72,16 +72,14 @@ async function _grantReferrerReward(upgradedUid, newTier) {
 
 /**
  * Email the referrer "your friend joined — you got X days of TIER".
- * Best-effort: reads GMAIL_EMAIL + GMAIL_APP_PASSWORD secrets directly. If
- * the caller didn't declare them in runWith, .value() returns '' and we
- * silently skip — Firestore record still has the bonus.
+ * Best-effort: reads RESEND_API_KEY secret. If not bound in runWith,
+ * .value() throws and we silently skip — Firestore record still has the bonus.
  */
 async function _emailReferralBonus(referrerUid, tier, days) {
-    let gmailUser, gmailPass;
-    try { gmailUser = GMAIL_EMAIL.value(); }    catch (e) { gmailUser = ''; }
-    try { gmailPass = GMAIL_PASSWORD.value(); } catch (e) { gmailPass = ''; }
-    if (!gmailUser || !gmailPass) {
-        console.log('referral email skipped — gmail secrets not bound');
+    let resendKey;
+    try { resendKey = RESEND_API_KEY.value(); } catch (e) { resendKey = ''; }
+    if (!resendKey) {
+        console.log('referral email skipped — RESEND_API_KEY not bound');
         return;
     }
     const userSnap = await db.collection('users').doc(referrerUid).get();
@@ -94,10 +92,10 @@ async function _emailReferralBonus(referrerUid, tier, days) {
 
     const lang = (u.lang || u.preferredLang || 'he').slice(0, 2);
     const TR = {
-        he: { subject: '🎁 חבר שלך הצטרף — קיבלת ' + days + ' ימי ' + tier.toUpperCase() + ' חינם!', greet: 'יששש 🎉', body: 'חבר שהזמנת ל-WizeLife שדרג עכשיו, ובזכות זה — הוסף לך:', got: days + ' ימים של ' + tier.toUpperCase(), already: 'כבר נטען לחשבון שלך — אין צורך בקוד.', cta: 'לאפליקציות שלי', sign: 'תודה על השיתוף,\nאופיר · WizeLife' },
-        en: { subject: '🎁 Your friend joined — you got ' + days + ' free days of ' + tier.toUpperCase() + '!', greet: 'Yesss 🎉', body: 'A friend you invited to WizeLife just upgraded — that earned you:', got: days + ' days of ' + tier.toUpperCase(), already: 'Already loaded onto your account — no code needed.', cta: 'Open my apps', sign: 'Thanks for sharing,\nOfir · WizeLife' },
-        pt: { subject: '🎁 Seu amigo entrou — você ganhou ' + days + ' dias grátis de ' + tier.toUpperCase() + '!', greet: 'Boa 🎉', body: 'Um amigo que você convidou para o WizeLife fez upgrade — você ganhou:', got: days + ' dias de ' + tier.toUpperCase(), already: 'Já está na sua conta — sem código.', cta: 'Abrir meus apps', sign: 'Obrigado por compartilhar,\nOfir · WizeLife' },
-        es: { subject: '🎁 Tu amigo se unió — ¡ganaste ' + days + ' días gratis de ' + tier.toUpperCase() + '!', greet: '¡Genial! 🎉', body: 'Un amigo que invitaste a WizeLife actualizó — ganaste:', got: days + ' días de ' + tier.toUpperCase(), already: 'Ya está en tu cuenta — sin código.', cta: 'Abrir mis apps', sign: 'Gracias por compartir,\nOfir · WizeLife' },
+        he: { subject: '🎁 חבר שלך הצטרף — קיבלת ' + days + ' ימי ' + tier.toUpperCase() + ' חינם!', greet: 'יששש 🎉', body: 'חבר שהזמנת ל-WizeLife שדרג עכשיו, ובזכות זה — הוסף לך:', got: days + ' ימים של ' + tier.toUpperCase(), already: 'כבר נטען לחשבון שלך — אין צורך בקוד.', cta: 'לאפליקציות שלי', sign: 'תודה על השיתוף,\nצוות WizeLife' },
+        en: { subject: '🎁 Your friend joined — you got ' + days + ' free days of ' + tier.toUpperCase() + '!', greet: 'Yesss 🎉', body: 'A friend you invited to WizeLife just upgraded — that earned you:', got: days + ' days of ' + tier.toUpperCase(), already: 'Already loaded onto your account — no code needed.', cta: 'Open my apps', sign: 'Thanks for sharing,\nThe WizeLife Team' },
+        pt: { subject: '🎁 Seu amigo entrou — você ganhou ' + days + ' dias grátis de ' + tier.toUpperCase() + '!', greet: 'Boa 🎉', body: 'Um amigo que você convidou para o WizeLife fez upgrade — você ganhou:', got: days + ' dias de ' + tier.toUpperCase(), already: 'Já está na sua conta — sem código.', cta: 'Abrir meus apps', sign: 'Obrigado por compartilhar,\nEquipe WizeLife' },
+        es: { subject: '🎁 Tu amigo se unió — ¡ganaste ' + days + ' días gratis de ' + tier.toUpperCase() + '!', greet: '¡Genial! 🎉', body: 'Un amigo que invitaste a WizeLife actualizó — ganaste:', got: days + ' días de ' + tier.toUpperCase(), already: 'Ya está en tu cuenta — sin código.', cta: 'Abrir mis apps', sign: 'Gracias por compartir,\nEquipo WizeLife' },
     };
     const t = TR[lang] || TR.en;
     const accent = tier === 'yolo' ? '#f59e0b' : '#10b981';
@@ -123,12 +121,9 @@ p{line-height:1.7;font-size:1rem}
   <a class="cta" href="https://wizelife.ai/dashboard.html">${t.cta} →</a>
   <div class="foot">${t.sign}</div>
 </div></body></html>`;
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user: gmailUser, pass: gmailPass },
-    });
-    await transporter.sendMail({
-        from: `"WizeLife" <${gmailUser}>`,
+    const resend = new Resend(resendKey);
+    await resend.emails.send({
+        from: 'WizeLife <noreply@wizelife.ai>',
         to: email,
         subject: t.subject,
         html,
@@ -181,8 +176,9 @@ async function _applyOneUserRewards(userRef) {
     return applied;
 }
 
-const GMAIL_EMAIL    = defineSecret("GMAIL_EMAIL");
-const GMAIL_PASSWORD = defineSecret("GMAIL_APP_PASSWORD");
+const GMAIL_EMAIL    = defineSecret("GMAIL_EMAIL");   // kept for legacy; not used for sending
+const GMAIL_PASSWORD = defineSecret("GMAIL_APP_PASSWORD"); // kept for legacy
+const RESEND_API_KEY  = defineSecret("RESEND_API_KEY");
 
 const PAYPAL_CLIENT_ID  = defineSecret("PAYPAL_CLIENT_ID");
 const PAYPAL_SECRET     = defineSecret("PAYPAL_SECRET");
@@ -237,7 +233,7 @@ function scrubPII(s) {
 // ─── Access Code Validation ───────────────────────────────────────────────────
 
 exports.validateCode = functions
-    .runWith({ secrets: [ACCESS_CODES_SEC, YOLO_CODES_SEC, GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .runWith({ secrets: [ACCESS_CODES_SEC, YOLO_CODES_SEC, RESEND_API_KEY] })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי לממש קוד");
@@ -293,7 +289,7 @@ exports.validateCode = functions
 // Server-side fallback callable — clients call this after a PayPal upgrade
 // returns them to the dashboard. Idempotent on the server side.
 exports.awardReferral = functions
-    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .runWith({ secrets: [RESEND_API_KEY] })
     .https.onCall(async (data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError("unauthenticated", "Sign in first");
@@ -321,7 +317,7 @@ exports.awardReferral = functions
 // ─── Gemini severity classifier (best-effort) ────────────────────────────────
 // Reads loved/missing/rating + app and returns one of {critical, major, minor,
 // not_a_bug} along with a short reasoning string. Used purely as a HINT in the
-// admin email — Ofir always has the final click. Never blocks the email.
+// admin email — always requires admin approval. Never blocks the email.
 async function _classifySeverityWithAI(fb) {
     let key;
     try { key = GEMINI_API_KEY.value(); } catch (e) { return null; }
@@ -390,7 +386,7 @@ const BUG_BOUNTY = {
 // Triggered when a doc is created in the `feedback` collection (written by
 // wizelife/feedback.html). Sends a formatted email to wizelife.ai@gmail.com.
 exports.onFeedbackSubmitted = functions
-    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD, ADMIN_TOKEN, GEMINI_API_KEY] })
+    .runWith({ secrets: [ADMIN_TOKEN, GEMINI_API_KEY, RESEND_API_KEY] })
     .firestore.document('feedback/{id}')
     .onCreate(async (snap) => {
         const FEEDBACK_INBOX = 'wizelife.ai@gmail.com';
@@ -398,13 +394,6 @@ exports.onFeedbackSubmitted = functions
         const docId = snap.id;
         // AI suggestion — never blocks the email
         const aiHint = await _classifySeverityWithAI(data).catch(() => null);
-        const gmailUser = GMAIL_EMAIL.value();
-        const gmailPass = GMAIL_PASSWORD.value();
-        if (!gmailUser || !gmailPass) {
-            console.log('Feedback email skipped — GMAIL_EMAIL / GMAIL_APP_PASSWORD not set');
-            return null;
-        }
-
         const safe = (v) => (v === null || v === undefined ? '—' : String(v));
         const star = (n) => n ? '★'.repeat(Math.max(0, Math.min(5, Number(n)))) + '☆'.repeat(5 - Math.max(0, Math.min(5, Number(n)))) : '—';
 
@@ -466,7 +455,7 @@ exports.onFeedbackSubmitted = functions
             return `background:${bg};color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;font-size:.88rem;${ring}`;
         };
 
-        // Severity guide so the admin (Ofir) doesn't need to remember the
+        // Severity guide so the admin doesn't need to remember the
         // matrix — included inline in every feedback email.
         const bountyBlock = (data.uid && adminTok) ? `
   <div class="row" style="margin-top:14px;padding:14px 0 0;border-top:2px solid #f59e0b">
@@ -527,12 +516,9 @@ exports.onFeedbackSubmitted = functions
 </div></body></html>`;
 
         try {
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: { user: gmailUser, pass: gmailPass },
-            });
-            await transporter.sendMail({
-                from: `"WizeLife Feedback" <${gmailUser}>`,
+            const resend = new Resend(RESEND_API_KEY.value());
+            await resend.emails.send({
+                from: 'WizeLife <noreply@wizelife.ai>',
                 to: FEEDBACK_INBOX,
                 replyTo: data.email || undefined,
                 subject,
@@ -552,7 +538,7 @@ exports.onFeedbackSubmitted = functions
 //
 // URL: GET /approveBugReport?id=<docId>&severity=critical|major|minor&token=<ADMIN_TOKEN>
 exports.approveBugReport = functions
-    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD, ADMIN_TOKEN] })
+    .runWith({ secrets: [ADMIN_TOKEN, RESEND_API_KEY] })
     .https.onRequest(async (req, res) => {
         try {
             const tok = req.query.token || '';
@@ -601,15 +587,13 @@ exports.approveBugReport = functions
 
             // Thank-you email to the reporter
             try {
-                const gmailUser = GMAIL_EMAIL.value();
-                const gmailPass = GMAIL_PASSWORD.value();
-                if (gmailUser && gmailPass && fb.email) {
+                if (fb.email) {
                     const lang = (fb.lang || 'he').slice(0, 2);
                     const TR = {
-                        he: { subject: '🎁 תודה על הדיווח!', greet: 'תודה ענקית', sub: 'הדיווח שלך עזר לנו לתקן בעיה — בזכותך WizeLife טובה יותר.', got_yolo: 'מחזיק לך', got_pro: 'מחזיק לך', days: 'ימים', of: 'של', no_gift: 'אין מתנה הפעם, אבל המשוב שלך נקרא ומוערך — נמשיך לטפל.', open: 'לכלי שלי', sign: 'תודה,\nאופיר · WizeLife' },
-                        en: { subject: '🎁 Thanks for the bug report!', greet: 'Huge thanks', sub: 'Your report helped us fix something — WizeLife got better because of you.', got_yolo: 'Locking in', got_pro: 'Locking in', days: 'days', of: 'of', no_gift: 'No gift this round, but your feedback was read and matters — we’re on it.', open: 'Open my tools', sign: 'Thanks,\nOfir · WizeLife' },
-                        pt: { subject: '🎁 Obrigado pelo bug report!', greet: 'Muito obrigado', sub: 'Seu relato nos ajudou a consertar — o WizeLife melhorou graças a você.', got_yolo: 'Liberei', got_pro: 'Liberei', days: 'dias', of: 'de', no_gift: 'Sem brinde desta vez, mas seu feedback foi lido — estamos cuidando disso.', open: 'Abrir minhas ferramentas', sign: 'Obrigado,\nOfir · WizeLife' },
-                        es: { subject: '🎁 ¡Gracias por reportar el bug!', greet: 'Muchas gracias', sub: 'Tu reporte nos ayudó a arreglar algo — WizeLife mejoró gracias a ti.', got_yolo: 'Activé', got_pro: 'Activé', days: 'días', of: 'de', no_gift: 'Sin regalo esta vez, pero tu feedback se leyó y importa — estamos en ello.', open: 'Abrir mis herramientas', sign: 'Gracias,\nOfir · WizeLife' },
+                        he: { subject: '🎁 תודה על הדיווח!', greet: 'תודה ענקית', sub: 'הדיווח שלך עזר לנו לתקן בעיה — בזכותך WizeLife טובה יותר.', got_yolo: 'מחזיק לך', got_pro: 'מחזיק לך', days: 'ימים', of: 'של', no_gift: 'אין מתנה הפעם, אבל המשוב שלך נקרא ומוערך — נמשיך לטפל.', open: 'לכלי שלי', sign: 'תודה,\nצוות WizeLife' },
+                        en: { subject: '🎁 Thanks for the bug report!', greet: 'Huge thanks', sub: 'Your report helped us fix something — WizeLife got better because of you.', got_yolo: 'Locking in', got_pro: 'Locking in', days: 'days', of: 'of', no_gift: 'No gift this round, but your feedback was read and matters — we’re on it.', open: 'Open my tools', sign: 'Thanks,\nThe WizeLife Team' },
+                        pt: { subject: '🎁 Obrigado pelo bug report!', greet: 'Muito obrigado', sub: 'Seu relato nos ajudou a consertar — o WizeLife melhorou graças a você.', got_yolo: 'Liberei', got_pro: 'Liberei', days: 'dias', of: 'de', no_gift: 'Sem brinde desta vez, mas seu feedback foi lido — estamos cuidando disso.', open: 'Abrir minhas ferramentas', sign: 'Obrigado,\nEquipe WizeLife' },
+                        es: { subject: '🎁 ¡Gracias por reportar el bug!', greet: 'Muchas gracias', sub: 'Tu reporte nos ayudó a arreglar algo — WizeLife mejoró gracias a ti.', got_yolo: 'Activé', got_pro: 'Activé', days: 'días', of: 'de', no_gift: 'Sin regalo esta vez, pero tu feedback se leyó y importa — estamos en ello.', open: 'Abrir mis herramientas', sign: 'Gracias,\nEquipo WizeLife' },
                     };
                     const t = TR[lang] || TR.en;
                     const giftLine = cfg.tier
@@ -631,12 +615,9 @@ p{line-height:1.7;font-size:1rem}
   <a class="cta" href="https://wizelife.ai/dashboard.html">${t.open} →</a>
   <div class="foot">${t.sign}</div>
 </div></body></html>`;
-                    const transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        auth: { user: gmailUser, pass: gmailPass },
-                    });
-                    await transporter.sendMail({
-                        from: `"WizeLife" <${gmailUser}>`,
+                    const resend = new Resend(RESEND_API_KEY.value());
+                    await resend.emails.send({
+                        from: 'WizeLife <noreply@wizelife.ai>',
                         to: fb.email,
                         subject: t.subject,
                         html,
@@ -676,22 +657,12 @@ exports.applyReferralRewards = functions.pubsub
 // ─── Welcome Email — on new user registration ─────────────────────────────────
 
 exports.sendWelcomeEmail = functions
-    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .runWith({ secrets: [RESEND_API_KEY] })
     .auth.user().onCreate(async (user) => {
         const email = user.email;
         if (!email) return;
 
-        const gmailUser = GMAIL_EMAIL.value();
-        const gmailPass = GMAIL_PASSWORD.value();
-        if (!gmailUser || !gmailPass) {
-            console.log("Welcome email: GMAIL_EMAIL / GMAIL_APP_PASSWORD not configured — skipping");
-            return;
-        }
-
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: { user: gmailUser, pass: gmailPass },
-        });
+        const resendClient = new Resend(RESEND_API_KEY.value());
 
         const name = user.displayName || email.split("@")[0];
 
@@ -729,8 +700,8 @@ exports.sendWelcomeEmail = functions
 </html>`;
 
         try {
-            await transporter.sendMail({
-                from: `"WizeMoney" <${gmailUser}>`,
+            await resendClient.emails.send({
+                from: 'WizeMoney <noreply@wizelife.ai>',
                 to:   email,
                 subject: "ברוכים הבאים ל-WizeMoney — 3 ימי Pro חינם 🎉",
                 html,
@@ -792,7 +763,7 @@ async function checkAiRateLimit(uid) {
 }
 
 exports.aiProxy = functions
-    .runWith({ secrets: [GEMINI_API_KEY] })
+    .runWith({ secrets: [GEMINI_API_KEY, RESEND_API_KEY] })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי להשתמש ביועץ ה-AI");
@@ -951,7 +922,7 @@ function verifyWebhook(token, webhookId, headers, body) {
 // ─── Webhook handler ──────────────────────────────────────────────────────────
 
 exports.paypalWebhook = functions
-    .runWith({ secrets: [PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_WEBHOOK_ID, GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .runWith({ secrets: [PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_WEBHOOK_ID, RESEND_API_KEY] })
     .https.onRequest(async (req, res) => {
         if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
@@ -1086,7 +1057,7 @@ exports.paypalWebhook = functions
 // ─── Market Data (Twelve Data + Finnhub, server-side cached) ─────────────────
 
 exports.marketData = functions
-    .runWith({ secrets: [TWELVE_DATA_KEY, FINNHUB_KEY] })
+    .runWith({ secrets: [TWELVE_DATA_KEY, FINNHUB_KEY, RESEND_API_KEY] })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError("unauthenticated", "Login required");
@@ -1319,7 +1290,7 @@ exports.dailyFirestoreBackup = functions.pubsub
 // with timestamp + UA + approximate location (none, since we don't geocode).
 // Triggered by client after Firebase Auth resolves; rate-limited to 1/hour.
 exports.notifyLoginAlert = functions
-    .runWith({ secrets: [GMAIL_EMAIL, GMAIL_PASSWORD] })
+    .runWith({ secrets: [RESEND_API_KEY] })
     .https.onCall(async (data, context) => {
         if (!context.auth) return { skipped: 'no-auth' };
         const uid = context.auth.uid;
@@ -1344,7 +1315,7 @@ exports.notifyLoginAlert = functions
             }, { merge: true });
 
             const email = u.email || (await admin.auth().getUser(uid).then(r => r.email).catch(() => null));
-            if (email && GMAIL_EMAIL.value() && GMAIL_PASSWORD.value()) {
+            if (email) {
                 try {
                     const lang = (u.lang || 'he').slice(0, 2);
                     const TR = {
@@ -1354,12 +1325,9 @@ exports.notifyLoginAlert = functions
                         es: { subject: '🔐 Nuevo inicio de sesión en tu cuenta WizeLife', body: 'Detectamos un nuevo inicio de sesión desde este dispositivo:', notyou: 'Si no fuiste tú, cambia tu contraseña de inmediato.' },
                     };
                     const t = TR[lang] || TR.en;
-                    const transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        auth: { user: GMAIL_EMAIL.value(), pass: GMAIL_PASSWORD.value() },
-                    });
-                    await transporter.sendMail({
-                        from: `"WizeLife Security" <${GMAIL_EMAIL.value()}>`,
+                    const resend = new Resend(RESEND_API_KEY.value());
+                    await resend.emails.send({
+                        from: 'WizeLife Security <noreply@wizelife.ai>',
                         to: email,
                         subject: t.subject,
                         html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:24px auto;background:#fff;border-radius:12px;padding:24px;border:1px solid #e2e8f0">
