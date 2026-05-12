@@ -229,15 +229,9 @@ const Auth = {
                     <button class="modal-close" onclick="Auth.closeEmailModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <!-- Tabs -->
-                    <div style="display: flex; margin-bottom: 20px; border-bottom: 2px solid var(--color-border);">
-                        <button id="authTabLogin" class="auth-tab active" onclick="Auth.switchAuthTab('login')" style="flex: 1; padding: 10px; background: none; border: none; cursor: pointer; color: var(--color-text); font-size: 1rem; font-weight: 600; border-bottom: 2px solid var(--color-training); margin-bottom: -2px;">
-                            ${I18n.t('auth.signIn')}
-                        </button>
-                        <button id="authTabRegister" class="auth-tab" onclick="Auth.switchAuthTab('register')" style="flex: 1; padding: 10px; background: none; border: none; cursor: pointer; color: var(--color-text-secondary); font-size: 1rem; border-bottom: 2px solid transparent; margin-bottom: -2px;">
-                            ${I18n.t('auth.register')}
-                        </button>
-                    </div>
+                    <!-- Sign-in only — signup is handled on wizelife.ai -->
+                    <div id="authTabLogin" style="display:none;"></div>
+                    <div id="authTabRegister" style="display:none;"></div>
 
                     <div class="form-group">
                         <label>${I18n.t('auth.email')}</label>
@@ -261,6 +255,9 @@ const Auth = {
                     <!-- Forgot password (login only) -->
                     <div id="forgotPasswordLink" style="text-align: center; margin-top: 5px;">
                         <a href="#" onclick="Auth.resetPassword(); return false;" style="color: var(--color-training); font-size: 0.85rem; text-decoration: none;">${I18n.t('auth.forgotPassword')}</a>
+                        <div style="margin-top:10px; font-size:0.8rem; color:var(--color-text-secondary);">
+                          New here? <a href="https://wizelife.ai/auth.html" target="_blank" style="color: var(--color-training); text-decoration: none; font-weight: 600;">Create an account at WizeLife</a>
+                        </div>
                     </div>
 
                     <div style="margin-top: 15px;">
@@ -284,8 +281,10 @@ const Auth = {
     /**
      * Switch between login and register tabs
      */
-    switchAuthTab(mode) {
-        this._authMode = mode;
+    switchAuthTab(_mode) {
+        // Signup is disabled on WizeMoney — handled on wizelife.ai only.
+        this._authMode = 'login';
+        _mode = 'login';
         const loginTab = document.getElementById('authTabLogin');
         const registerTab = document.getElementById('authTabRegister');
         const confirmGroup = document.getElementById('confirmPasswordGroup');
@@ -332,8 +331,20 @@ const Auth = {
                 App.notify(I18n.t('auth.passwordTooShort8'), 'error');
                 return;
             }
-            if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
-                App.notify(I18n.t('auth.passwordRequirements'), 'error');
+            if (!/[A-Z]/.test(password)) {
+                App.notify('Password must contain at least one uppercase letter (A-Z).', 'error');
+                return;
+            }
+            if (!/[a-z]/.test(password)) {
+                App.notify('Password must contain at least one lowercase letter (a-z).', 'error');
+                return;
+            }
+            if (!/[0-9]/.test(password)) {
+                App.notify('Password must contain at least one digit (0-9).', 'error');
+                return;
+            }
+            if (!/[^A-Za-z0-9]/.test(password)) {
+                App.notify('Password must contain at least one special character (!@#$% etc.).', 'error');
                 return;
             }
             this.registerWithEmail(email, password);
@@ -358,13 +369,20 @@ const Auth = {
             el.innerHTML = `<span style="color: var(--color-negative);">⚠️ ${I18n.t('auth.passwordTooShort8')}</span>`;
             return;
         }
-        const hasLetter = /[a-zA-Z]/.test(password);
-        const hasNumber = /[0-9]/.test(password);
-        if (!hasLetter || !hasNumber) {
-            el.innerHTML = `<span style="color: var(--color-negative);">⚠️ ${I18n.t('auth.passwordRequirements')}</span>`;
+        const hasUpper   = /[A-Z]/.test(password);
+        const hasLower   = /[a-z]/.test(password);
+        const hasNumber  = /[0-9]/.test(password);
+        const hasSpecial = /[^A-Za-z0-9]/.test(password);
+        const missing = [];
+        if (!hasUpper)   missing.push('uppercase');
+        if (!hasLower)   missing.push('lowercase');
+        if (!hasNumber)  missing.push('digit');
+        if (!hasSpecial) missing.push('special');
+        if (missing.length) {
+            el.innerHTML = `<span style="color: var(--color-negative);">⚠️ Missing: ${missing.join(', ')}</span>`;
             return;
         }
-        if (password.length >= 10 && /[A-Z]/.test(password)) {
+        if (password.length >= 12) {
             el.innerHTML = `<span style="color: var(--color-positive);">✅ ${I18n.t('auth.passwordStrong')}</span>`;
         } else {
             el.innerHTML = `<span style="color: #f59e0b;">👍 ${I18n.t('auth.passwordOk')}</span>`;
