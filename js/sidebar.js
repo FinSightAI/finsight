@@ -330,8 +330,6 @@
         bar.id = 'wl-bar';
         bar.style.cssText = 'position:fixed;top:0;left:0;right:0;height:36px;z-index:99999;background:rgba(5,6,15,0.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:Inter,-apple-system,sans-serif;box-sizing:border-box;direction:ltr;';
         const l = localStorage.getItem('wl_lang') || 'he';
-        const arrowMap = {he:'← WizeLife',en:'← WizeLife',pt:'← WizeLife',es:'← WizeLife'};
-        const arrow = arrowMap[l] || '← WizeLife';
         const LANGS = ['he','en','pt','es'];
         const pillCSS = (active) => `background:${active?'rgba(16,185,129,0.18)':'none'};border:none;color:${active?'#10b981':'#6b7280'};padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.4px;`;
         const langPills = LANGS.map(lng =>
@@ -348,7 +346,6 @@
             '<div class="wl-bar-lang" style="gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
             '<span id="wl-bar-plan" style="display:none;font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
             '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
-            '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="font-size:12px;color:#7b88ad;text-decoration:none;font-weight:500;white-space:nowrap;">' + arrow + '</a>' +
             '</div>';
         document.body.prepend(bar);
 
