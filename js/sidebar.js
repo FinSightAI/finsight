@@ -330,8 +330,8 @@
         bar.id = 'wl-bar';
         bar.style.cssText = 'position:fixed;top:0;left:0;right:0;height:36px;z-index:99999;background:rgba(5,6,15,0.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:Inter,-apple-system,sans-serif;box-sizing:border-box;direction:ltr;';
         const l = localStorage.getItem('wl_lang') || 'he';
-        const arrowMap = {he:'← כל הכלים',en:'← All Tools',pt:'← Todas as ferramentas',es:'← Todas las herramientas'};
-        const arrow = arrowMap[l] || '← All Tools';
+        const arrowMap = {he:'← WizeLife',en:'← WizeLife',pt:'← WizeLife',es:'← WizeLife'};
+        const arrow = arrowMap[l] || '← WizeLife';
         const LANGS = ['he','en','pt','es'];
         const pillCSS = (active) => `background:${active?'rgba(16,185,129,0.18)':'none'};border:none;color:${active?'#10b981':'#6b7280'};padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.4px;`;
         const langPills = LANGS.map(lng =>
