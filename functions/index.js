@@ -691,6 +691,9 @@ exports.sendWelcomeEmail = functions
     <p>במשך 3 ימים הבאים תוכל לגשת לכל התכונות המתקדמות:<br>
     AI פיננסי אישי, ניתוח תיק השקעות, אופטימיזציית מס ועוד.</p>
     <a class="cta" href="https://finsightai.github.io/finsight/">פתח את הדאשבורד →</a>
+    <div style="margin-top:24px; padding:12px 16px; background:#fef3c7; border-radius:8px; color:#78350f; font-size:0.88rem; text-align:right;">
+      📥 הגיע לתיקיית ספאם? לחץ <strong>"Not Spam"</strong> וגרור ל-Inbox — זה עוזר לחברים שלך לקבל את שלהם ב-Inbox 🙏
+    </div>
     <div class="footer">
       WizeLife · נשלח אוטומטית בעת ההרשמה<br>
       לביטול קבלת אימיילים — <a href="https://finsightai.github.io/finsight/">כניסה להגדרות</a>
