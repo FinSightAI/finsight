@@ -539,7 +539,11 @@
         if (document.getElementById('wl-money-rpanel')) return;
         if (window.innerWidth < 1280) return;
 
-        const isLtr = document.documentElement.dir === 'ltr' || document.body.classList.contains('ltr');
+        // Reading dir from <html> is unreliable here — sidebar.js fires from
+        // DOMContentLoaded, sometimes BEFORE i18n.js sets document.documentElement.dir.
+        // Source of truth is localStorage.wl_lang (set the moment the user clicks a pill).
+        const _wlLang = (function(){ try { return (localStorage.getItem('wl_lang') || 'he').slice(0,2); } catch(e) { return 'he'; } })();
+        const isLtr = _wlLang !== 'he';
         const panelSide = isLtr ? 'right:0;left:auto;' : 'left:0;right:auto;';
         const padProp   = isLtr ? 'padding-right' : 'padding-left';
 
