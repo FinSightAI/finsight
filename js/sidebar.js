@@ -537,7 +537,10 @@
     // ── WizeMoney right panel injector ──
     function injectRightPanel() {
         if (document.getElementById('wl-money-rpanel')) return;
-        if (window.innerWidth < 1280) return;
+        // Lowered from 1280 to 1024 — many MacBook 13" users have effective
+        // viewport ~1100-1200 after Chrome bookmarks bar / DevTools / zoom,
+        // and they reported the panel disappearing in EN/PT/ES.
+        if (window.innerWidth < 1024) return;
 
         // Reading dir from <html> is unreliable here — sidebar.js fires from
         // DOMContentLoaded, sometimes BEFORE i18n.js sets document.documentElement.dir.
