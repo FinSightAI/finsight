@@ -337,7 +337,7 @@
         ).join('');
         bar.innerHTML =
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
-            '<svg width="20" height="20" viewBox="0 0 100 100" style="flex-shrink:0"><defs><linearGradient id="wlbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#wlbg)"/><text x="50" y="72" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="58" fill="white">W</text></svg>' +
+            '<img src="https://wizelife.ai/assets/wizelife-icon.png?v=2026-05-14" width="20" height="20" alt="" style="flex-shrink:0;display:block">' +
             '<span style="font-size:13px;font-weight:800;color:#eef2ff;letter-spacing:-0.3px;font-family:Plus Jakarta Sans,sans-serif;">WizeLife</span>' +
             '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
