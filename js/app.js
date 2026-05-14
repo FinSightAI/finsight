@@ -48,7 +48,9 @@ const App = {
                 ? window.location.pathname.split('/pages/')[0]
                 : window.location.pathname.replace(/\/[^/]*$/, '');
             const swPath = basePath + '/sw.js';
-            const registration = await navigator.serviceWorker.register(swPath, { scope: basePath + '/' });
+            // updateViaCache:'none' bypasses Cloudflare's 4-hour edge cache on sw.js,
+            // so end users get updates within ~60 s of GH Pages publishing.
+            const registration = await navigator.serviceWorker.register(swPath, { scope: basePath + '/', updateViaCache: 'none' });
 
             // SILENT auto-update: every push reaches users with zero clicks.
             // - new SW installed → SKIP_WAITING immediately
