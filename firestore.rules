@@ -32,10 +32,31 @@ service cloud.firestore {
         allow write: if false;
       }
 
-      // Audit trail (disclaimers, deletion events) — admin-only writes
+      // Disclaimer audit log — owner can CREATE their own acceptance record
+      // (legal-evidence trail written by wize-disclaimer.js). Update/delete
+      // blocked so the record is immutable once created.
       match /disclaimers/{key} {
-        allow read:  if isOwner(userId);
-        allow write: if false;
+        allow read:   if isOwner(userId);
+        allow create: if isOwner(userId)
+                      && request.resource.data.keys().hasOnly([
+                           'accepted','version','at','ua','lang','pageUrl',
+                           'text_hash','text_length','viewport','screen','tz'
+                         ])
+                      && (request.resource.data.ua is string && request.resource.data.ua.size() <= 240)
+                      && (!('pageUrl' in request.resource.data) || request.resource.data.pageUrl.size() <= 400);
+        allow update, delete: if false;
+      }
+
+      // Cookie / analytics consent — same pattern as disclaimers.
+      match /consent/{key} {
+        allow read:   if isOwner(userId);
+        allow create: if isOwner(userId)
+                      && request.resource.data.keys().hasOnly([
+                           'version','analytics','at','ua','lang','app','pageUrl','tz'
+                         ])
+                      && request.resource.data.analytics is bool
+                      && (request.resource.data.ua is string && request.resource.data.ua.size() <= 240);
+        allow update, delete: if false;
       }
     }
 
