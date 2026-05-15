@@ -25,14 +25,16 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#f59e0b">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
  <link rel="icon" type="image/png" href="../img/logo.svg">
  <title>נכסים - WizeMoney</title>
  <link rel="stylesheet" href="../css/app.css">
- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
  <style>
  .nav-link.active { background: var(--color-assets) !important; }
  .page-header h1 { color: var(--color-assets); }
@@ -78,9 +80,9 @@
  color: var(--color-negative);
  }
  </style>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
 </head>
 <body>
  <div class="app-container">
@@ -267,11 +269,11 @@
  <div class="asset-card">
  <div class="asset-icon">${typeIcons[asset.type] || '📦'}</div>
  <div class="info">
- <div class="name">${name}</div>
+ <div class="name">${sanitize(name)}</div>
  <div class="meta">
- ${I18n.t('assets.types.' + asset.type)}
+ ${sanitize(I18n.t('assets.types.' + asset.type) || asset.type)}
  ${asset.purchaseDate ? ' • ' + I18n.formatDate(asset.purchaseDate) : ''}
- ${isProperty && asset.area ? ' • ' + asset.area + ' ' + I18n.t('assets.sqm') : ''}
+ ${isProperty && asset.area ? ' • ' + (Number(asset.area) || 0) + ' ' + I18n.t('assets.sqm') : ''}
  </div>
  ${pricePerSqm > 0 ? `<div class="meta" style="margin-top:4px;">${I18n.t('assets.pricePerSqm')}: ${I18n.formatCurrency(pricePerSqm)}</div>` : ''}
  ${madlanUrl ? `<a href="${madlanUrl}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="margin-top:6px;display:inline-block;font-size:0.8rem;">🔍 ${I18n.t('assets.areaTransactions')}</a>` : ''}
@@ -281,8 +283,8 @@
  ${depreciation > 0 ? `<div class="depreciation">${I18n.t('assets.depreciation')}: -${I18n.formatCurrency(depreciation)}</div>` : ''}
  </div>
  <div class="action-buttons">
- <button class="btn btn-secondary btn-sm" onclick="editAsset('${asset.id}')" title="${I18n.t('common.edit')}">✏️</button>
- <button class="btn btn-danger btn-sm" onclick="deleteAsset('${asset.id}')" title="${I18n.t('common.delete')}">🗑️</button>
+ <button class="btn btn-secondary btn-sm" onclick="editAsset('${sanitize(asset.id)}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteAsset('${sanitize(asset.id)}')" title="${I18n.t('common.delete')}">🗑️</button>
  </div>
  </div>
  `;

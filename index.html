@@ -27,18 +27,20 @@
  <link rel="apple-touch-icon" href="./img/logo.svg?v=2026-05-15">
  <meta name="description" content="אפליקציית ניהול פיננסי אישי - Personal Finance Manager PWA">
  <meta name="theme-color" content="#10b981">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com ; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://cdn.jsdelivr.net https://www.gstatic.com https://api.callmebot.com https://master-backend-79jx.onrender.com ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com ; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://cdn.jsdelivr.net https://www.gstatic.com https://api.callmebot.com https://master-backend-79jx.onrender.com ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="manifest.json">
  <title>WizeMoney - ניהול פיננסי חכם</title>
  <link rel="stylesheet" href="css/app.css">
- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
  <!-- Firebase SDK -->
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js" integrity="sha384-lONBStWloxmdvtJe8gp4aEOmE9dluTdSdGA5pUHFYPBMJRUDDPSdbq32bb0Spi3v" crossorigin="anonymous"></script>
 </head>
 <body>
  <div class="app-container">
@@ -330,7 +332,7 @@
  /* Onboarding Overlay */
  #onboardingOverlay {
  display: none;
- position: fixed; inset: 0; z-index: 1100;
+ position: fixed; inset: 0; z-index: 100050;
  background: rgba(0,0,0,0.75);
  align-items: center; justify-content: center;
  padding: 20px;
@@ -374,7 +376,7 @@
  /* Summary Preview Modal */
  #summaryPreviewModal {
  display: none;
- position: fixed; inset: 0; z-index: 1000;
+ position: fixed; inset: 0; z-index: 100050;
  background: rgba(0,0,0,0.7);
  align-items: center; justify-content: center;
  padding: 20px;
@@ -907,7 +909,7 @@
  </script>
 
  <!-- ===== Onboarding ===== -->
- <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;z-index:10500;background:#0d1117;overflow:hidden;">
+ <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;z-index:100050;background:#0d1117;overflow:hidden;">
 
  <!-- Progress bar -->
  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.08);z-index:3;">

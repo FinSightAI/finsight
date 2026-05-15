@@ -338,6 +338,8 @@ const ExportManager = {
         const lang = I18n?.currentLanguage || 'he';
         const isHebrew = lang === 'he';
         const fmt = v => I18n?.formatCurrency(v) ?? Number(v).toLocaleString('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 });
+        // XSS-safe HTML escape for user-supplied strings (bank names, symbols, etc.)
+        const esc = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
 
         // ── Gather all data ──
         const bankAccounts  = Storage.getBankAccounts();
@@ -413,8 +415,8 @@ const ExportManager = {
         if (bankAccounts.length > 0) {
             const rows = bankAccounts.map(acc => `
                 <tr>
-                    <td>${acc.nameHe || acc.nameEn || acc.bank || '-'}</td>
-                    <td>${acc.accountNumber || '-'}</td>
+                    <td>${esc(acc.nameHe || acc.nameEn || acc.bank || '-')}</td>
+                    <td>${esc(acc.accountNumber || '-')}</td>
                     <td>${fmt(acc.balance || 0)}</td>
                 </tr>`).join('');
             content += section('🏦',
@@ -443,11 +445,11 @@ const ExportManager = {
                 const pct  = cost > 0 ? ((pl / cost) * 100).toFixed(1) : '0.0';
                 return `
                 <tr>
-                    <td><strong>${h.symbol}</strong></td>
-                    <td>${h.name || '-'}</td>
-                    <td>${h.quantity}</td>
-                    <td>${h.avgPrice.toFixed(2)}</td>
-                    <td>${cur.toFixed(2)}</td>
+                    <td><strong>${esc(h.symbol)}</strong></td>
+                    <td>${esc(h.name || '-')}</td>
+                    <td>${Number(h.quantity) || 0}</td>
+                    <td>${Number(h.avgPrice || 0).toFixed(2)}</td>
+                    <td>${Number(cur || 0).toFixed(2)}</td>
                     <td>${fmt(val)}</td>
                     <td class="${pl >= 0 ? 'positive' : 'negative'}">${pl >= 0 ? '+' : ''}${fmt(pl)} (${pct}%)</td>
                 </tr>`;
@@ -476,8 +478,8 @@ const ExportManager = {
         if (fundsData.length > 0) {
             const rows = fundsData.map(f => `
                 <tr>
-                    <td>${f.name || '-'}</td>
-                    <td>${f.type || '-'}</td>
+                    <td>${esc(f.name || '-')}</td>
+                    <td>${esc(f.type || '-')}</td>
                     <td>${fmt(f.currentValue || 0)}</td>
                     <td>${fmt(f.monthlyDeposit || 0)}</td>
                 </tr>`).join('');
@@ -503,8 +505,8 @@ const ExportManager = {
         if (assetsData.length > 0) {
             const rows = assetsData.map(a => `
                 <tr>
-                    <td>${a.name || '-'}</td>
-                    <td>${a.type || '-'}</td>
+                    <td>${esc(a.name || '-')}</td>
+                    <td>${esc(a.type || '-')}</td>
                     <td>${fmt(a.estimatedValue || 0)}</td>
                 </tr>`).join('');
             content += section('🏠',
@@ -527,10 +529,10 @@ const ExportManager = {
         if (loansData.length > 0) {
             const rows = loansData.map(l => `
                 <tr>
-                    <td>${l.name || l.lender || '-'}</td>
+                    <td>${esc(l.name || l.lender || '-')}</td>
                     <td class="negative">${fmt(l.remainingBalance || l.balance || 0)}</td>
                     <td>${fmt(l.monthlyPayment || 0)}</td>
-                    <td>${l.interestRate != null ? l.interestRate + '%' : '-'}</td>
+                    <td>${l.interestRate != null ? (Number(l.interestRate) || 0) + '%' : '-'}</td>
                 </tr>`).join('');
             content += section('🏦',
                 'הלוואות', 'Loans',
@@ -554,9 +556,9 @@ const ExportManager = {
         if (subscriptions.length > 0) {
             const rows = subscriptions.map(s => `
                 <tr>
-                    <td>${s.name || '-'}</td>
+                    <td>${esc(s.name || '-')}</td>
                     <td>${fmt(s.amount || s.monthlyAmount || 0)}</td>
-                    <td>${s.category || '-'}</td>
+                    <td>${esc(s.category || '-')}</td>
                 </tr>`).join('');
             content += section('🔄',
                 'מנויים קבועים', 'Recurring Subscriptions',

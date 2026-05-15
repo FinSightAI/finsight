@@ -25,7 +25,9 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#8b5cf6">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
@@ -407,7 +409,7 @@
  <script src="../js/storage.js"></script>
  <script src="../js/wizeai-sync.js"></script>
  <script src="../js/i18n.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
  <script>
  // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -525,25 +527,26 @@
 
  return `<tr>
  <td><strong>${escapeHtml(e.name)}</strong>${e.notes ? `<br><small style="color:#94a3b8;font-size:0.75rem">${escapeHtml(e.notes)}</small>` : ''}</td>
- <td><span class="type-badge">${typeLabels[e.type] || e.type}</span></td>
+ <td><span class="type-badge">${escapeHtml(typeLabels[e.type] || e.type)}</span></td>
  <td class="${amountClass}">${amountDisplay}${equivNote}</td>
- <td><span class="freq-badge">${freqLabels[e.frequency] || e.frequency}</span></td>
- <td style="white-space:nowrap">${formatDate(e.date)}</td>
+ <td><span class="freq-badge">${escapeHtml(freqLabels[e.frequency] || e.frequency)}</span></td>
+ <td style="white-space:nowrap">${escapeHtml(formatDate(e.date))}</td>
  <td style="white-space:nowrap">
- <button class="action-btn" onclick="openEditModal('${e.id}')" title="עריכה">✏️</button>
- <button class="action-btn delete" onclick="deleteEntry('${e.id}')" title="מחיקה">🗑️</button>
+ <button class="action-btn" onclick="openEditModal('${escapeHtml(e.id).replace(/'/g, '&#39;')}')" title="עריכה">✏️</button>
+ <button class="action-btn delete" onclick="deleteEntry('${escapeHtml(e.id).replace(/'/g, '&#39;')}')" title="מחיקה">🗑️</button>
  </td>
  </tr>`;
  }).join('');
  }
 
  function escapeHtml(str) {
- if (!str) return '';
+ if (str == null) return '';
  return String(str)
  .replace(/&/g, '&amp;')
  .replace(/</g, '&lt;')
  .replace(/>/g, '&gt;')
- .replace(/"/g, '&quot;');
+ .replace(/"/g, '&quot;')
+ .replace(/'/g, '&#39;');
  }
 
  // ── Chart ─────────────────────────────────────────────────────────────────

@@ -146,6 +146,8 @@ const ProfileManager = {
         const active   = this.getActiveMember();
         const isPages  = window.location.pathname.includes('/pages/');
         const base     = isPages ? '../' : '';
+        // XSS-safe HTML escape for member names/emojis/ids (user-controlled)
+        const esc = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
 
         // Inject CSS
         if (!document.getElementById('ps-style')) {
@@ -217,17 +219,17 @@ const ProfileManager = {
         const html = `
             <div class="ps-wrap" id="psSwitcherWrap">
                 <button class="ps-btn" onclick="ProfileManager.toggleDropdown()">
-                    <span class="ps-emoji">${active.emoji}</span>
-                    <span class="ps-name">${active.name}</span>
+                    <span class="ps-emoji">${esc(active.emoji)}</span>
+                    <span class="ps-name">${esc(active.name)}</span>
                     <span class="ps-arrow" id="psArrow">▾</span>
                 </button>
                 <div class="ps-dropdown" id="psDropdown">
                     ${members.map(m => `
                         <div class="ps-item ${m.id === activeId ? 'active' : ''}"
-                             onclick="ProfileManager.switchTo('${m.id}')">
-                            <span style="font-size:1.1rem">${m.emoji}</span>
+                             onclick="ProfileManager.switchTo('${esc(m.id)}')">
+                            <span style="font-size:1.1rem">${esc(m.emoji)}</span>
                             <div style="flex:1">
-                                <div class="ps-item-name">${m.name}</div>
+                                <div class="ps-item-name">${esc(m.name)}</div>
                                 <div class="ps-item-type">${typeLabel(m.type)}</div>
                             </div>
                             ${m.id === activeId ? '<span class="ps-check">✓</span>' : ''}

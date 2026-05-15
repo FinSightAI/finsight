@@ -237,12 +237,13 @@ const ImageImport = {
      * Show preview modal for smart-extracted card data
      */
     showSmartPreviewModal(data, dataType) {
+        const _esc = (s) => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
         const typeNames = { pension: 'פנסיה', training: 'קרן השתלמות', gemel: 'קופת גמל', savings: 'פוליסת חיסכון' };
 
         let fieldsHTML = `
             <div class="form-group">
                 <label>שם הקרן</label>
-                <input type="text" class="form-control" id="smartName" value="${data.name}">
+                <input type="text" class="form-control" id="smartName" value="${_esc(data.name)}">
             </div>
             <div class="form-group">
                 <label>סוג</label>
@@ -272,18 +273,18 @@ const ImageImport = {
             </div>
             <div class="form-group">
                 <label>שווי צבירה (₪)</label>
-                <input type="number" class="form-control" id="smartValue" value="${data.value}" step="0.01">
+                <input type="number" class="form-control" id="smartValue" value="${Number(data.value) || 0}" step="0.01">
             </div>
             <div class="form-group">
                 <label>מספר קופה</label>
-                <input type="text" class="form-control" id="smartFundNumber" value="${data.fundNumber}">
+                <input type="text" class="form-control" id="smartFundNumber" value="${_esc(data.fundNumber)}">
             </div>`;
 
         if (data.track) {
             fieldsHTML += `
             <div class="form-group">
                 <label>מסלול השקעה</label>
-                <input type="text" class="form-control" id="smartTrack" value="${data.track}" readonly style="opacity: 0.7;">
+                <input type="text" class="form-control" id="smartTrack" value="${_esc(data.track)}" readonly style="opacity: 0.7;">
             </div>`;
         }
 
@@ -291,7 +292,7 @@ const ImageImport = {
             fieldsHTML += `
             <div class="form-group">
                 <label>קצבה צפויה (₪)</label>
-                <input type="number" class="form-control" id="smartPension" value="${data.expectedPension}" step="0.01">
+                <input type="number" class="form-control" id="smartPension" value="${Number(data.expectedPension) || 0}" step="0.01">
             </div>`;
         }
 
@@ -312,7 +313,7 @@ const ImageImport = {
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" onclick="document.getElementById('ocrPreviewModal').remove()">ביטול</button>
-                    <button class="btn btn-primary" onclick="ImageImport.confirmSmartImport('${dataType}')">ייבא</button>
+                    <button class="btn btn-primary" onclick="ImageImport.confirmSmartImport('${_esc(dataType).replace(/'/g, '&#39;')}')">ייבא</button>
                 </div>
             </div>
         `;
@@ -437,6 +438,8 @@ const ImageImport = {
      * Show preview modal with extracted data for user to confirm/edit
      */
     showPreviewModal(rows, dataType) {
+        // XSS-safe HTML escape for OCR-extracted strings (user-controlled)
+        const _esc = (s) => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
         // Determine max columns
         const maxCols = Math.max(...rows.map(r => r.length));
 
@@ -454,7 +457,7 @@ const ImageImport = {
             for (let c = 0; c < maxCols; c++) {
                 const val = row[c] || '';
                 tableHTML += `<td style="padding: 4px; border: 1px solid var(--color-border);">
-                    <input type="text" value="${val.replace(/"/g, '&quot;')}"
+                    <input type="text" value="${_esc(val)}"
                            data-row="${rowIdx}" data-col="${c}"
                            style="width: 100%; background: transparent; border: none; color: inherit; padding: 4px; font-size: 0.85rem;">
                 </td>`;
@@ -487,7 +490,7 @@ const ImageImport = {
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" onclick="document.getElementById('ocrPreviewModal').remove()">ביטול</button>
-                    <button class="btn btn-primary" onclick="ImageImport.confirmImport('${dataType}')">ייבא</button>
+                    <button class="btn btn-primary" onclick="ImageImport.confirmImport('${_esc(dataType)}')">ייבא</button>
                 </div>
             </div>
         `;

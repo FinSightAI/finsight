@@ -203,12 +203,13 @@ const Alerts = {
             return;
         }
 
+        const _esc = (s) => (window.sanitize ? window.sanitize(s) : String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
         container.innerHTML = alerts.map(alert => `
-            <div class="alert alert-${alert.type}">
-                <span class="alert-icon">${alert.icon}</span>
+            <div class="alert alert-${_esc(alert.type)}">
+                <span class="alert-icon">${_esc(alert.icon)}</span>
                 <div class="alert-content">
-                    <strong>${alert.title}</strong>
-                    <p>${alert.message}</p>
+                    <strong>${_esc(alert.title)}</strong>
+                    <p>${_esc(alert.message)}</p>
                 </div>
             </div>
         `).join('');

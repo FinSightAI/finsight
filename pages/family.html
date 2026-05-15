@@ -221,7 +221,10 @@
  const nwCls = nw >= 0 ? 'net-worth-positive' : 'net-worth-negative';
  const isChild = member.type === 'child';
  const typeTag = isChild ? I18n.t('family.typeChild') : I18n.t('family.typeAdult');
- const color = member.color || '#8b5cf6';
+ // Only allow hex/rgb/named CSS colors — strip anything else to defeat style/JS injection
+ const rawColor = member.color || '#8b5cf6';
+ const color = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+|rgba?\([0-9.,\s%]+\))$/.test(rawColor) ? rawColor : '#8b5cf6';
+ const esc = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
 
  const statsHtml = isChild ? `
  <div class="member-stat-row">
@@ -261,13 +264,13 @@
 
  const isDefault = member.id === '';
  const switchBtnHtml = !isDefault ? `
- <button onclick="ProfileManager.switchTo('${member.id}')" class="member-btn primary">${I18n.t('family.switchProfileBtn')}</button>
+ <button onclick="ProfileManager.switchTo('${esc(member.id)}')" class="member-btn primary">${I18n.t('family.switchProfileBtn')}</button>
  ` : `
  <a href="../index.html" class="member-btn primary">${I18n.t('family.switchProfileBtn')}</a>
  `;
 
  const deleteBtnHtml = !isDefault ? `
- <button onclick="deleteMember('${member.id}')" class="member-btn" style="color:#ef4444;border-color:#ef4444;">${I18n.t('family.deleteBtn')}</button>
+ <button onclick="deleteMember('${esc(member.id)}')" class="member-btn" style="color:#ef4444;border-color:#ef4444;">${I18n.t('family.deleteBtn')}</button>
  ` : '';
 
  return `
@@ -275,10 +278,10 @@
  <div class="member-card-accent" style="background:${color};"></div>
  <div class="member-header">
  <div class="member-avatar" style="background:${color}22;">
- <span>${member.emoji || '👤'}</span>
+ <span>${esc(member.emoji || '👤')}</span>
  </div>
  <div style="flex:1;">
- <div style="font-weight:700;font-size:1rem;">${member.name}</div>
+ <div style="font-weight:700;font-size:1rem;">${esc(member.name)}</div>
  <div style="font-size:0.75rem;color:var(--color-text-secondary);">${typeTag}</div>
  </div>
  <div class="${nwCls}" style="font-weight:800;font-size:1.05rem;">${fmt(nw)}</div>
@@ -293,7 +296,9 @@
  }
 
  function buildChildSavingsCard(member, data) {
- const color = member.color || '#8b5cf6';
+ const rawColor = member.color || '#8b5cf6';
+ const color = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+|rgba?\([0-9.,\s%]+\))$/.test(rawColor) ? rawColor : '#8b5cf6';
+ const esc = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  const savings = data.fundsTotal + data.bankTotal;
 
  const goalsHtml = data.goals.length === 0
@@ -305,7 +310,7 @@
  return `
  <div style="margin-bottom:10px;">
  <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:2px;">
- <span>${g.name || 'יעד'}</span>
+ <span>${esc(g.name || 'יעד')}</span>
  <span style="color:var(--color-text-secondary);">${fmt(current)} / ${fmt(target)}</span>
  </div>
  <div class="goal-bar-wrap">
@@ -319,15 +324,15 @@
  return `
  <div class="child-card">
  <div class="child-header">
- <div style="width:40px;height:40px;border-radius:50%;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">${member.emoji}</div>
+ <div style="width:40px;height:40px;border-radius:50%;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">${esc(member.emoji)}</div>
  <div>
- <div style="font-weight:700;">${member.name}</div>
+ <div style="font-weight:700;">${esc(member.name)}</div>
  <div style="font-size:0.75rem;color:var(--color-text-secondary);">${I18n.t('family.savings')}: <strong style="color:${color};">${fmt(savings)}</strong></div>
  </div>
  </div>
  <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:8px;font-weight:500;">${I18n.t('family.savingsGoals')}</div>
  ${goalsHtml}
- <button onclick="ProfileManager.switchTo('${member.id}')"
+ <button onclick="ProfileManager.switchTo('${esc(member.id)}')"
  style="width:100%;margin-top:10px;padding:8px;background:${color};border:none;border-radius:8px;color:white;font-weight:600;font-size:0.82rem;cursor:pointer;">
  ${I18n.t('family.manageSavingsBtn')}
  </button>

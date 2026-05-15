@@ -25,7 +25,9 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#6b7280">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
@@ -173,9 +175,9 @@
  .notification-denied { color: var(--color-negative); }
  .notification-default { color: var(--color-text-secondary); }
  </style>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
 </head>
 <body>
  <div class="app-container">
@@ -869,16 +871,17 @@
 
  // Render category budgets
  const categories = Tags.getCategories();
+ const _esc = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  document.getElementById('categoryBudgets').innerHTML = categories.map(cat => {
  const budget = budgets.categories[cat.id] || '';
  return `
  <div class="category-budget">
- <span class="category-icon">${cat.icon}</span>
- <span class="category-name">${I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn}</span>
+ <span class="category-icon">${_esc(cat.icon)}</span>
+ <span class="category-name">${_esc(I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn)}</span>
  <div class="budget-input">
  <span>₪</span>
- <input type="number" value="${budget}" step="100"
- onchange="saveCategoryBudget('${cat.id}', this.value)"
+ <input type="number" value="${Number(budget) || ''}" step="100"
+ onchange="saveCategoryBudget('${_esc(cat.id)}', this.value)"
  placeholder="${I18n.t('settings.noLimit')}">
  </div>
  </div>
@@ -892,14 +895,19 @@
  if (customData.categories.length === 0) {
  customContainer.innerHTML = `<p style="color: var(--color-text-secondary);">${I18n.t('settings.noCustomCategories')}</p>`;
  } else {
- customContainer.innerHTML = customData.categories.map(cat => `
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+ customContainer.innerHTML = customData.categories.map(cat => {
+ const rawColor = cat.color || '#666';
+ const safeColor = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+|rgba?\([0-9.,\s%]+\))$/.test(rawColor) ? rawColor : '#666';
+ return `
  <div class="custom-category-item">
- <span style="font-size: 1.5rem;">${cat.icon}</span>
- <div class="color-preview" style="background: ${cat.color};"></div>
- <span style="flex: 1;">${I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn}</span>
- <button class="btn btn-danger btn-sm" onclick="deleteCustomCategory('${cat.id}')">🗑️</button>
+ <span style="font-size: 1.5rem;">${_s(cat.icon)}</span>
+ <div class="color-preview" style="background: ${safeColor};"></div>
+ <span style="flex: 1;">${_s(I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn)}</span>
+ <button class="btn btn-danger btn-sm" onclick="deleteCustomCategory('${_s(cat.id)}')">🗑️</button>
  </div>
- `).join('');
+ `;
+ }).join('');
  }
  }
 

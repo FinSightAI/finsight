@@ -899,7 +899,7 @@ select.form-control {
 /* ===== Pull-to-Refresh Indicator ===== */
 .pull-refresh-indicator {
     position: fixed;
-    top: calc(56px + env(safe-area-inset-top, 0px));
+    top: calc(36px + 56px + env(safe-area-inset-top));
     left: 50%;
     transform: translateX(-50%) translateY(-60px);
     width: 40px;
@@ -985,14 +985,14 @@ select.form-control {
 
     .mobile-header {
         display: flex;
-        top: 36px;
+        top: calc(36px + env(safe-area-inset-top));
     }
 
     .main-content {
         margin-right: 0;
         margin-left: 0;
         padding: var(--spacing-md);
-        padding-top: calc(36px + 56px + env(safe-area-inset-top, 0px) + var(--spacing-md));
+        padding-top: calc(36px + 56px + 2*env(safe-area-inset-top, 0px) + var(--spacing-md));
         padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + var(--spacing-md));
     }
 
@@ -1067,7 +1067,7 @@ select.form-control {
 .offline-banner {
     display: none;
     position: fixed;
-    top: calc(56px + env(safe-area-inset-top, 0px));
+    top: calc(36px + 56px + env(safe-area-inset-top));
     left: 0;
     right: 0;
     z-index: 145;
@@ -1671,6 +1671,13 @@ body.light #wl-rp-reopen {
 #wlThemeToggle:hover {
   transform: translateY(-2px) scale(1.05) !important;
   border-color: rgba(255,255,255,0.25) !important;
+}
+@media (max-width: 820px) {
+  .wl-theme-btn,
+  #wl-theme-toggle,
+  #wlThemeToggle {
+    bottom: calc(56px + env(safe-area-inset-bottom) + 12px) !important;
+  }
 }
 [data-theme="light"] .wl-theme-btn,
 [data-theme="light"] #wl-theme-toggle,

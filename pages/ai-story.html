@@ -293,9 +293,9 @@
  </main>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
+<script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+<script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+<script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js" integrity="sha384-lONBStWloxmdvtJe8gp4aEOmE9dluTdSdGA5pUHFYPBMJRUDDPSdbq32bb0Spi3v" crossorigin="anonymous"></script>
 <script src="../js/firebase-config.js"></script>
 <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
@@ -523,19 +523,20 @@ function renderStory(result, data, days, ts) {
  ? as('budgetRemaining').replace('{left}', `₪${Math.round(data.budgetLeft).toLocaleString('he-IL')}`).replace('{total}', `₪${data.budgetTotal.toLocaleString('he-IL')}`).replace('{days}', data.daysLeft)
  : as('budgetOver').replace('{amount}', `₪${Math.round(Math.abs(data.budgetLeft)).toLocaleString('he-IL')}`))
  : '';
+ const _esc = (s) => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  sections.innerHTML = `
  <div class="story-section">
  <div class="section-icon">💡</div>
  <div class="section-content">
  <div class="section-label">${as('sectionInsight')}</div>
- <div class="section-text">${result.highlight || ''}</div>
+ <div class="section-text">${_esc(result.highlight || '')}</div>
  </div>
  </div>
  <div class="story-section">
  <div class="section-icon">🎯</div>
  <div class="section-content">
  <div class="section-label">${as('sectionTip')}</div>
- <div class="section-text">${result.tip || ''}</div>
+ <div class="section-text">${_esc(result.tip || '')}</div>
  </div>
  </div>
  ${data.budgetLeft !== null ? `

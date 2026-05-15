@@ -25,15 +25,17 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#8b5cf6">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
  <link rel="icon" type="image/png" href="../img/logo.svg">
  <title>הקופות שלי - WizeMoney</title>
  <link rel="stylesheet" href="../css/app.css">
- <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script  src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
  <style>
  .nav-link.active { background: #8b5cf6 !important; }
  .page-header h1 { color: #8b5cf6; }
@@ -149,9 +151,9 @@
 /* Brazilian items — visible only when wl_market === 'br' */
 body:not(.market-br) .br-only { display: none !important; }
 </style>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
 </head>
 <body>
  <div class="app-container">
@@ -688,14 +690,16 @@ body:not(.market-br) .br-only { display: none !important; }
  const formatReturn = (val) => {
  if (val == null) return '<span style="color: var(--color-text-secondary);">-</span>';
  const num = parseFloat(val);
+ if (isNaN(num)) return '<span style="color: var(--color-text-secondary);">-</span>';
  const color = num >= 0 ? '#10b981' : '#ef4444';
- return `<span style="color: ${color}; font-weight: 600;">${num >= 0 ? '+' : ''}${val}%</span>`;
+ return `<span style="color: ${color}; font-weight: 600;">${num >= 0 ? '+' : ''}${num}%</span>`;
  };
  const fundTypeNames = getFundTypeNames();
  const actuarialInfo = fund.type === 'pension' && fund.actuarialBalance
  ? `<br><small style="color: var(--color-text-secondary);">${I18n.t('myFunds.balance')}: ${I18n.formatCurrency(fund.actuarialBalance)}</small>` : '';
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  const trackBadges = fund.tracks && fund.tracks.length > 0
- ? `<div class="track-badges">${fund.tracks.map(t => `<span class="track-badge">${t.name} ${t.percentage}%</span>`).join('')}</div>`
+ ? `<div class="track-badges">${fund.tracks.map(t => `<span class="track-badge">${_s(t.name)} ${Number(t.percentage) || 0}%</span>`).join('')}</div>`
  : '';
  const srcLabel = fund.returns
  ? (fund.returnsSource === 'market'
@@ -705,12 +709,12 @@ body:not(.market-br) .br-only { display: none !important; }
  return `
  <tr>
  <td>
- <strong>${fund.name}</strong>
- <br><small style="color: var(--color-text-secondary);">${getCompanyNames()[fund.company] || fund.company || ''}</small>
+ <strong>${_s(fund.name)}</strong>
+ <br><small style="color: var(--color-text-secondary);">${_s(getCompanyNames()[fund.company] || fund.company || '')}</small>
  ${trackBadges}
  ${srcLabel ? `<div class="track-badges">${srcLabel}</div>` : ''}
  </td>
- <td>${fundTypeNames[fund.type] || fund.type}</td>
+ <td>${_s(fundTypeNames[fund.type] || fund.type)}</td>
  <td>${I18n.formatCurrency(fund.value)}${actuarialInfo}</td>
  <td>${formatReturn(returns.month)}</td>
  <td>${formatReturn(returns.year1)}</td>
@@ -718,9 +722,9 @@ body:not(.market-br) .br-only { display: none !important; }
  <td>${formatReturn(returns.year5)}</td>
  <td>
  <div class="action-buttons">
- <button class="btn btn-secondary btn-sm" onclick="openUpdateValueModal('${fund.id}', ${fund.value})" title="${I18n.t('myFunds.updateValue')}">💰</button>
- <button class="btn btn-secondary btn-sm" onclick="editFund('${fund.id}')" title="${I18n.t('common.edit')}">✏️</button>
- <button class="btn btn-danger btn-sm" onclick="deleteFund('${fund.id}')" title="${I18n.t('common.delete')}">🗑️</button>
+ <button class="btn btn-secondary btn-sm" onclick="openUpdateValueModal('${_s(fund.id)}', ${Number(fund.value) || 0})" title="${I18n.t('myFunds.updateValue')}">💰</button>
+ <button class="btn btn-secondary btn-sm" onclick="editFund('${_s(fund.id)}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteFund('${_s(fund.id)}')" title="${I18n.t('common.delete')}">🗑️</button>
  </div>
  </td>
  </tr>

@@ -25,18 +25,20 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#8b5cf6">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://*.tradingview.com https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.tradingview.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://*.tradingview.com ; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.tradingview.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://*.tradingview.com https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.tradingview.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://*.tradingview.com ; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.tradingview.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
  <link rel="icon" type="image/png" href="../img/logo.svg">
  <title>תיק מניות - WizeMoney</title>
  <link rel="stylesheet" href="../css/app.css">
- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
  <!-- Firebase SDK -->
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
  <style>
  .nav-link.active { background: var(--color-stocks) !important; }
  .page-header h1 { color: var(--color-stocks); }
@@ -130,6 +132,7 @@
  .table-container {
  max-height: 600px;
  overflow-y: auto;
+ overflow-x: auto;
  }
  .table-container.sticky-header table thead {
  position: sticky;
@@ -210,6 +213,11 @@
  }
  body.sidebar-collapsed .sidebar-toggle .toggle-icon {
  transform: rotate(180deg);
+ }
+ @media (max-width: 768px) {
+ .sidebar-toggle {
+ display: none !important;
+ }
  }
  </style>
 </head>
@@ -828,7 +836,7 @@
  </div>
  </div>
 
- <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+ <script  src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
  <script src="../js/sidebar.js"></script>
  <script src="../js/profiles.js"></script>
  <script src="../js/storage.js"></script>
@@ -1106,12 +1114,13 @@
  profitCurrencyDisplay = `<span class="${isProfitCurrency ? 'profit' : 'loss'}">${isProfitCurrency ? '+' : ''}${currencySymbol}${profitInCurrency.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}</span>`;
  }
 
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  return `
  <tr>
- <td class="col-static stock-symbol" title="${h.symbol}">${h.symbol}</td>
- <td class="col-static stock-name" title="${h.name || ''}">${h.name || '-'}</td>
- <td class="col-static">${h.quantity.toLocaleString()}</td>
- <td class="col-static">${currencySymbol}${h.avgPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+ <td class="col-static stock-symbol" title="${_s(h.symbol)}">${_s(h.symbol)}</td>
+ <td class="col-static stock-name" title="${_s(h.name || '')}">${_s(h.name || '-')}</td>
+ <td class="col-static">${(Number(h.quantity) || 0).toLocaleString()}</td>
+ <td class="col-static">${currencySymbol}${(Number(h.avgPrice) || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
  <td class="col-static">₪${costILS.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
  <td class="col-dynamic">${cached.currentPrice ? `${currencySymbol}${cached.currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : h.valueILS > 0 ? `<span style="color:var(--color-text-secondary);font-size:0.85rem;">מתעדכן...</span>` : `${currencySymbol}${currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}</td>
  <td class="col-dynamic">${dailyChangeDisplay}</td>
@@ -1126,10 +1135,10 @@
  <td class="col-dynamic">${portfolioPercent.toFixed(1)}%</td>
  <td class="col-dynamic">
  <div class="action-buttons">
- <button class="btn btn-secondary btn-sm" onclick="openAlertModal('${h.symbol}', ${currentPrice})" title="${I18n.t('stocks.addAlertTooltip')}">🔔</button>
- <button class="btn btn-secondary btn-sm" onclick="openUpdatePriceModal('${h.symbol}', ${currentPrice})" title="${I18n.t('stocks.updatePriceTooltip')}">💰</button>
- <button class="btn btn-secondary btn-sm" onclick="openSellModal('${h.symbol}', ${h.quantity}, ${currentPrice})" title="${I18n.t('stocks.sellTooltip')}">📤</button>
- <button class="btn btn-danger btn-sm" onclick="deleteStock('${h.symbol}')" title="${I18n.t('stocks.deleteTooltip')}">🗑️</button>
+ <button class="btn btn-secondary btn-sm" onclick="openAlertModal('${_s(h.symbol)}', ${Number(currentPrice) || 0})" title="${I18n.t('stocks.addAlertTooltip')}">🔔</button>
+ <button class="btn btn-secondary btn-sm" onclick="openUpdatePriceModal('${_s(h.symbol)}', ${Number(currentPrice) || 0})" title="${I18n.t('stocks.updatePriceTooltip')}">💰</button>
+ <button class="btn btn-secondary btn-sm" onclick="openSellModal('${_s(h.symbol)}', ${Number(h.quantity) || 0}, ${Number(currentPrice) || 0})" title="${I18n.t('stocks.sellTooltip')}">📤</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteStock('${_s(h.symbol)}')" title="${I18n.t('stocks.deleteTooltip')}">🗑️</button>
  </div>
  </td>
  </tr>
@@ -1197,6 +1206,7 @@
  .sort((a, b) => new Date(b.date) - new Date(a.date))
  .slice(0, 20)
  .map(tx => {
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  const isSell = tx.type === 'sell';
  const hasSnapshot = isSell && tx.avgPrice != null;
  const profitLoss = hasSnapshot ? (tx.price - tx.avgPrice) * tx.quantity : null;
@@ -1206,7 +1216,8 @@
  let trendDisplay = '-';
  if (isSell && tx.trend) {
  const trendColors = { Bullish: '#4caf50', Bearish: '#f44336', Caution: '#ff9800', Recovery: '#2196f3' };
- trendDisplay = `<span style="color: ${trendColors[tx.trend] || 'inherit'}">${tx.trend}</span>`;
+ // tx.trend is one of {Bullish,Bearish,Caution,Recovery} — but treat as user-untrusted just in case
+ trendDisplay = `<span style="color: ${trendColors[tx.trend] || 'inherit'}">${_s(tx.trend)}</span>`;
  }
 
  // Daily change display
@@ -1229,19 +1240,19 @@
  <tr>
  <td>${I18n.formatDate(tx.date)}</td>
  <td class="${tx.type === 'buy' ? 'positive' : 'negative'}">${tx.type === 'buy' ? I18n.t('stocks.buy') : I18n.t('stocks.sell')}</td>
- <td class="stock-symbol">${tx.symbol}</td>
- <td>${isSell && tx.name ? tx.name : '-'}</td>
- <td>${tx.quantity}</td>
- <td>₪${tx.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
- <td>₪${(tx.quantity * tx.price).toLocaleString(undefined, {minimumFractionDigits: 0})}</td>
- <td>${hasSnapshot ? '₪' + tx.avgPrice.toLocaleString(undefined, {minimumFractionDigits: 2}) : '-'}</td>
+ <td class="stock-symbol">${_s(tx.symbol)}</td>
+ <td>${isSell && tx.name ? _s(tx.name) : '-'}</td>
+ <td>${Number(tx.quantity) || 0}</td>
+ <td>₪${(Number(tx.price) || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+ <td>₪${((Number(tx.quantity) || 0) * (Number(tx.price) || 0)).toLocaleString(undefined, {minimumFractionDigits: 0})}</td>
+ <td>${hasSnapshot ? '₪' + (Number(tx.avgPrice) || 0).toLocaleString(undefined, {minimumFractionDigits: 2}) : '-'}</td>
  <td class="${profitClass}">${profitLoss != null ? (profitLoss >= 0 ? '+' : '') + '₪' + profitLoss.toLocaleString(undefined, {minimumFractionDigits: 0}) : '-'}</td>
  <td>${dailyDisplay}</td>
  <td>${ma150Display}</td>
  <td>${trendDisplay}</td>
  <td style="white-space: nowrap;">
- <button class="btn btn-sm btn-secondary" onclick="openEditTxModal('${tx.id}')" title="${I18n.t('stocks.editTransaction')}">✏️</button>
- <button class="btn btn-sm btn-secondary" onclick="deleteTransaction('${tx.id}')" title="${I18n.t('stocks.deleteTransaction')}" style="color: var(--color-negative);">🗑️</button>
+ <button class="btn btn-sm btn-secondary" onclick="openEditTxModal('${_s(tx.id)}')" title="${I18n.t('stocks.editTransaction')}">✏️</button>
+ <button class="btn btn-sm btn-secondary" onclick="deleteTransaction('${_s(tx.id)}')" title="${I18n.t('stocks.deleteTransaction')}" style="color: var(--color-negative);">🗑️</button>
  </td>
  </tr>`;
  }).join('');
@@ -1297,11 +1308,12 @@
 
  const marketDisplay = item.market === 'IL' ? '🇮🇱' : '🇺🇸';
 
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  return `
  <tr>
- <td class="stock-symbol">${item.symbol}</td>
- <td>${item.name || '-'}</td>
- <td>${marketDisplay} ${item.market}</td>
+ <td class="stock-symbol">${_s(item.symbol)}</td>
+ <td>${_s(item.name || '-')}</td>
+ <td>${marketDisplay} ${_s(item.market)}</td>
  <td>${priceDisplay}</td>
  <td>${changeDisplay}</td>
  <td>${ma150Display}</td>
@@ -1311,9 +1323,9 @@
  </td>
  <td>
  <div class="action-buttons">
- <button class="btn btn-secondary btn-sm" onclick="openAlertModal('${item.symbol}', ${currentPrice || 0})" title="${I18n.t('stocks.watchlistAddAlertTooltip')}">🔔</button>
- <button class="btn btn-secondary btn-sm" onclick="viewAlerts('${item.symbol}')" title="${I18n.t('stocks.watchlistViewTooltip')}">👁️</button>
- <button class="btn btn-danger btn-sm" onclick="removeFromWatchlist('${item.symbol}')" title="${I18n.t('stocks.watchlistRemoveTooltip')}">🗑️</button>
+ <button class="btn btn-secondary btn-sm" onclick="openAlertModal('${_s(item.symbol)}', ${Number(currentPrice) || 0})" title="${I18n.t('stocks.watchlistAddAlertTooltip')}">🔔</button>
+ <button class="btn btn-secondary btn-sm" onclick="viewAlerts('${_s(item.symbol)}')" title="${I18n.t('stocks.watchlistViewTooltip')}">👁️</button>
+ <button class="btn btn-danger btn-sm" onclick="removeFromWatchlist('${_s(item.symbol)}')" title="${I18n.t('stocks.watchlistRemoveTooltip')}">🗑️</button>
  </div>
  </td>
  </tr>
@@ -1599,17 +1611,18 @@
  if (alerts.length === 0) {
  document.getElementById('alertsList').innerHTML = `<p style="color: var(--color-text-secondary);">${I18n.t('stocks.noStocks')}</p>`;
  } else {
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  document.getElementById('alertsList').innerHTML = alerts.map(alert => `
  <div class="alert-row ${alert.triggered ? 'triggered' : ''} ${!alert.enabled ? 'disabled' : ''}">
  <div class="alert-info">
- <span class="alert-type">${StockAlerts.getAlertTypeName(alert.type)}</span>
- ${!alert.type.includes('ma150') ? `<span class="alert-value">${alert.value}</span>` : ''}
+ <span class="alert-type">${_s(StockAlerts.getAlertTypeName(alert.type))}</span>
+ ${!alert.type.includes('ma150') ? `<span class="alert-value">${_s(alert.value)}</span>` : ''}
  ${alert.triggered ? '<span class="badge badge-success">התקיים</span>' : ''}
  ${!alert.enabled ? '<span class="badge badge-danger">מושבת</span>' : ''}
  </div>
  <div class="alert-actions">
- <button class="btn btn-sm btn-secondary" onclick="toggleAlertEnabled('${alert.id}')">${alert.enabled ? '⏸️' : '▶️'}</button>
- <button class="btn btn-sm btn-danger" onclick="deleteAlert('${alert.id}')">🗑️</button>
+ <button class="btn btn-sm btn-secondary" onclick="toggleAlertEnabled('${_s(alert.id)}')">${alert.enabled ? '⏸️' : '▶️'}</button>
+ <button class="btn btn-sm btn-danger" onclick="deleteAlert('${_s(alert.id)}')">🗑️</button>
  </div>
  </div>
  `).join('');

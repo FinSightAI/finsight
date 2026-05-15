@@ -25,16 +25,18 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#06b6d4">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
  <link rel="icon" type="image/png" href="../img/logo.svg">
  <title>תשלומים קבועים - WizeMoney</title>
  <link rel="stylesheet" href="../css/app.css">
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
  <style>
  .nav-link.active { background: var(--color-subscriptions) !important; }
  .page-header h1 { color: var(--color-subscriptions); }
@@ -578,13 +580,13 @@
  <div class="sug-info">
  <div class="sug-name">${sanitize(c.name)}</div>
  <div class="sug-meta">
- ${freqLabels[c.frequency] || c.frequency} · הופיע ${c.occurrences} פעמים · אחרון: ${c.lastDate}
+ ${freqLabels[c.frequency] || sanitize(c.frequency)} · הופיע ${c.occurrences} פעמים · אחרון: ${sanitize(c.lastDate)}
  </div>
  </div>
  <div class="sug-amount">${I18n.formatCurrency(c.amount)}</div>
  <div class="sug-actions">
  <button class="btn-add" onclick="addSuggestion(${i})">הוסף ✓</button>
- <button class="btn-ignore" onclick="ignoreSuggestion(${i}, '${c.key}')">התעלם</button>
+ <button class="btn-ignore" onclick="ignoreSuggestion(${i}, '${sanitize(c.key).replace(/'/g, '&#39;')}')">התעלם</button>
  </div>
  </div>
  `).join('');
@@ -705,11 +707,11 @@
  </div>
  <div class="sub-card-actions">
  <label class="toggle-switch" title="${isActive ? I18n.t('subscriptions.active') : I18n.t('subscriptions.inactive')}">
- <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleActive('${sub.id}', this.checked)">
+ <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleActive('${sanitize(sub.id)}', this.checked)">
  <span class="toggle-slider"></span>
  </label>
- <button class="btn btn-sm btn-secondary" onclick="editSub('${sub.id}')" title="${I18n.t('common.edit')}">✏️</button>
- <button class="btn btn-sm btn-secondary" onclick="deleteSub('${sub.id}')" title="${I18n.t('common.delete')}" style="color: var(--color-negative);">🗑️</button>
+ <button class="btn btn-sm btn-secondary" onclick="editSub('${sanitize(sub.id)}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-sm btn-secondary" onclick="deleteSub('${sanitize(sub.id)}')" title="${I18n.t('common.delete')}" style="color: var(--color-negative);">🗑️</button>
  </div>
  </div>
  <div class="sub-details">
@@ -728,7 +730,7 @@
  ${sub.renewalDate ? `
  <div class="sub-detail">
  <div class="label">${I18n.t('subscriptions.renewalDate')}</div>
- <div class="value">${sub.renewalDate}</div>
+ <div class="value">${sanitize(sub.renewalDate)}</div>
  </div>` : ''}
  </div>
  ${sub.notes ? `<div class="sub-notes">${sanitize(sub.notes)}</div>` : ''}

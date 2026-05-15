@@ -25,14 +25,17 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#06b6d4">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
  <link rel="icon" type="image/png" href="../img/logo.svg">
  <title>לוח שנה פיננסי - WizeMoney</title>
  <link rel="stylesheet" href="../css/app.css">
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
  <style>
  :root { --cal: #06b6d4; }
  .nav-link.active { background: var(--cal) !important; color: #0f172a !important; }
@@ -713,6 +716,7 @@
 
  const colorMap = { subscription:'#06b6d4', loan:'#ef4444', goal:'#10b981', salary:'#f59e0b', custom:'#8b5cf6' };
 
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  list.innerHTML = shown.map(ev => {
  const dateStr = ev.diff === 0 ? I18n.t('cal.today') : ev.diff === 1 ? I18n.t('cal.tomorrow') : `${I18n.t('cal.inDays1')}${ev.diff}${I18n.t('cal.inDays2')}`;
  const isUrgent = ev.diff <= 3;
@@ -721,12 +725,12 @@
  return `<div class="upcoming-item">
  <div class="upcoming-dot" style="background:${colorMap[ev.type] || '#8b5cf6'}"></div>
  <div class="upcoming-info">
- <div class="upcoming-name">${ev.icon} ${ev.name}</div>
+ <div class="upcoming-name">${_s(ev.icon)} ${_s(ev.name)}</div>
  <div class="upcoming-date">${day} ${mon} ${ev.date.getFullYear()}</div>
  </div>
  <div style="text-align:left;">
  ${isUrgent ? `<div class="upcoming-soon">⚡ ${dateStr}</div>` : `<div style="font-size:0.7rem;color:var(--color-text-secondary);">${dateStr}</div>`}
- ${ev.amount ? `<div class="upcoming-amount" style="color:${colorMap[ev.type]}">₪${Math.round(ev.amount).toLocaleString('he-IL')}</div>` : ''}
+ ${ev.amount ? `<div class="upcoming-amount" style="color:${colorMap[ev.type]}">₪${Math.round(Number(ev.amount) || 0).toLocaleString('he-IL')}</div>` : ''}
  </div>
  </div>`;
  }).join('');
@@ -742,14 +746,15 @@
 
  const colorMap = { subscription:'#06b6d4', loan:'#ef4444', goal:'#10b981', salary:'#f59e0b', custom:'#8b5cf6' };
 
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  document.getElementById('dayModalEvents').innerHTML = dayEvs.map(ev => `
  <div class="day-event-item">
- <div class="day-event-icon">${ev.icon}</div>
+ <div class="day-event-icon">${_s(ev.icon)}</div>
  <div style="flex:1">
- <div class="day-event-name">${ev.name}</div>
- ${ev.detail ? `<div class="day-event-detail">${ev.detail}</div>` : ''}
+ <div class="day-event-name">${_s(ev.name)}</div>
+ ${ev.detail ? `<div class="day-event-detail">${_s(ev.detail)}</div>` : ''}
  </div>
- ${ev.amount ? `<div class="day-event-amount" style="color:${colorMap[ev.type]}">₪${Math.round(ev.amount).toLocaleString('he-IL')}</div>` : ''}
+ ${ev.amount ? `<div class="day-event-amount" style="color:${colorMap[ev.type]}">₪${Math.round(Number(ev.amount) || 0).toLocaleString('he-IL')}</div>` : ''}
  </div>
  `).join('');
 

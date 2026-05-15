@@ -25,14 +25,16 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#f59e0b">
- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https://www.gstatic.com https://lh3.googleusercontent.com https://wizelife.ai data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'none';">
+ <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+ <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()">
  <meta name="referrer" content="strict-origin-when-cross-origin">
  <meta http-equiv="X-Content-Type-Options" content="nosniff">
  <link rel="manifest" href="../manifest.json">
  <link rel="icon" type="image/png" href="../img/logo.svg">
  <title>השוואת מוצרים - WizeMoney</title>
  <link rel="stylesheet" href="../css/app.css">
- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
  <style>
  :root { --accent: #f59e0b; --accent2: #8b5cf6; }
 
@@ -621,14 +623,15 @@
  }
 
  orDivider.style.display = 'block';
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  container.innerHTML = '<div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:8px;">הקרנות שלך:</div>' +
  filtered.map(f => `
- <div class="my-fund-item" onclick="selectMyFund('${f.id}')" id="mfi-${f.id}">
+ <div class="my-fund-item" onclick="selectMyFund('${_s(f.id)}')" id="mfi-${_s(f.id)}">
  <div>
- <div class="mfi-name">${f.name}</div>
- <div class="mfi-type">${f.company || ''}</div>
+ <div class="mfi-name">${_s(f.name)}</div>
+ <div class="mfi-type">${_s(f.company || '')}</div>
  </div>
- <div class="mfi-val">₪${(f.value||0).toLocaleString('he-IL')}</div>
+ <div class="mfi-val">₪${(Number(f.value) || 0).toLocaleString('he-IL')}</div>
  </div>
  `).join('');
  }
@@ -714,15 +717,16 @@
  return;
  }
 
+ const _esc = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  dropdown.innerHTML = matches.map((f,i) => {
  const ar = annualizedReturn(f);
  const retClass = ar >= 10 ? 'ms-green' : ar >= 5 ? 'ms-blue' : 'ms-yellow';
  return `<div class="fund-dropdown-item" onclick="selectAltFund(${i}, ${JSON.stringify(matches).length > 0 ? 'matchesArr' : '[]'}, event)" data-idx="${i}">
- <div class="fname">${f.nameHe}</div>
+ <div class="fname">${_esc(f.nameHe)}</div>
  <div class="fmeta">
- <span>${f.companyHe}</span>
- <span class="${retClass}">תשואה שנה: ${f.year1 != null ? f.year1.toFixed(1)+'%' : '—'}</span>
- <span>דמי ניהול: ${f.fee != null ? f.fee+'%' : '—'}</span>
+ <span>${_esc(f.companyHe)}</span>
+ <span class="${retClass}">תשואה שנה: ${f.year1 != null ? (Number(f.year1) || 0).toFixed(1)+'%' : '—'}</span>
+ <span>דמי ניהול: ${f.fee != null ? (Number(f.fee) || 0)+'%' : '—'}</span>
  </div>
  </div>`;
  }).join('');

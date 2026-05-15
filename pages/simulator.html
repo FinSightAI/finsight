@@ -322,7 +322,7 @@
 <script src="../js/storage.js"></script>
  <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
 <script>
 // ── Utilities ──────────────────────────────────────────────
 const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
@@ -426,13 +426,14 @@ function initSubs() {
  if (!subs.length) {
  listEl.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;">${I18n.t('sim.noActiveSubs')}</div>`;
  } else {
+ const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  listEl.innerHTML = subs.map((s, i) => {
  let amt = s.amount || 0;
  if (s.billingCycle === 'yearly') amt /= 12;
  if (s.billingCycle === 'quarterly') amt /= 3;
  return `<div class="sub-row">
  <input type="checkbox" id="sub${i}" data-amt="${amt.toFixed(2)}" onchange="updateSubs()">
- <label for="sub${i}">${s.name || 'מנוי'}</label>
+ <label for="sub${i}">${_s(s.name || 'מנוי')}</label>
  <span class="sub-amt">${fmt(amt)}/${I18n.t('sim.month')}</span>
  </div>`;
  }).join('');

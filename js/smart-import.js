@@ -469,6 +469,8 @@ const SmartImport = {
             { key: 'notes', label: 'הערות', required: false }
         ];
 
+        // XSS-safe HTML escape for CSV-derived headers (user-controlled)
+        var _esc = function (s) { return (s == null ? '' : String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; })); };
         var modalHtml = '<div class="modal-overlay active" id="mappingModal">';
         modalHtml += '<div class="modal" style="max-width: 600px;">';
         modalHtml += '<div class="modal-header"><h2>🔧 מיפוי עמודות</h2>';
@@ -482,12 +484,12 @@ const SmartImport = {
         fields.forEach(function(field) {
             var selectedIdx = detected[field.key];
             modalHtml += '<tr style="border-bottom: 1px solid var(--color-border);">';
-            modalHtml += '<td style="padding: 10px;">' + field.label + (field.required ? ' *' : '') + '</td>';
-            modalHtml += '<td style="padding: 10px;"><select id="map_' + field.key + '" class="form-control">';
+            modalHtml += '<td style="padding: 10px;">' + _esc(field.label) + (field.required ? ' *' : '') + '</td>';
+            modalHtml += '<td style="padding: 10px;"><select id="map_' + _esc(field.key) + '" class="form-control">';
             modalHtml += '<option value="">-- בחר עמודה --</option>';
             headers.forEach(function(header, idx) {
                 var selected = selectedIdx === idx ? ' selected' : '';
-                modalHtml += '<option value="' + idx + '"' + selected + '>' + header + '</option>';
+                modalHtml += '<option value="' + idx + '"' + selected + '>' + _esc(header) + '</option>';
             });
             modalHtml += '</select></td></tr>';
         });

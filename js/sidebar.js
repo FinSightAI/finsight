@@ -5,9 +5,14 @@
  */
 (function () {
  // ── WL SSO bridge: read wl_token + wl_nick from URL, save to wl_sso ──
+ // wl_token moved from ?query to #fragment so it never reaches server logs /
+ // Cloudflare logs / Referer headers. We still accept ?wl_token= for ~30 days
+ // backward-compat (bookmarked links, in-flight emails).
  try {
- var _p = new URLSearchParams(window.location.search);
- var _t = _p.get('wl_token'), _n = _p.get('wl_nick');
+ var _p  = new URLSearchParams(window.location.search);
+ var _hp = new URLSearchParams((window.location.hash || '').replace(/^#/, ''));
+ var _t = _hp.get('wl_token') || _p.get('wl_token');
+ var _n = _hp.get('wl_nick')  || _p.get('wl_nick');
  if (_t || _n) {
  var _st = JSON.parse(localStorage.getItem('wl_sso') || '{}');
  if (_t) {
@@ -20,7 +25,7 @@
  }
  if (_n) _st.nick = decodeURIComponent(_n);
  // Read wl_plan from URL too
- var _plan = _p.get('wl_plan');
+ var _plan = _hp.get('wl_plan') || _p.get('wl_plan');
  if (_plan && ['pro', 'yolo', 'free'].includes(_plan)) {
  _st.plan = _plan;
  localStorage.setItem('wl_plan', _plan);
@@ -29,12 +34,22 @@
  }
  localStorage.setItem('wl_sso', JSON.stringify(_st));
  if (_n) localStorage.setItem('wl_nickname', decodeURIComponent(_n));
- // Clean URL
+ // Clean URL: strip both query params AND the hash so the token never
+ // appears in browser history / Referer / window.location.href.
  var _url = new URL(window.location.href);
  _url.searchParams.delete('wl_token');
  _url.searchParams.delete('wl_nick');
  _url.searchParams.delete('wl_plan');
- window.history.replaceState({}, '', _url.toString());
+ // Strip wl_* from hash; keep any other fragment content intact.
+ var _newHash = '';
+ if (window.location.hash) {
+ var _hs = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+ _hs.delete('wl_token'); _hs.delete('wl_nick'); _hs.delete('wl_plan');
+ var _hstr = _hs.toString();
+ if (_hstr) _newHash = '#' + _hstr;
+ }
+ var _clean = _url.pathname + (_url.search || '') + _newHash;
+ window.history.replaceState({}, '', _clean);
  }
  } catch(e) {}
 
@@ -312,7 +327,7 @@
  if (document.getElementById('wl-bar')) return;
  const bar = document.createElement('div');
  bar.id = 'wl-bar';
- bar.style.cssText = 'position:fixed;top:0;left:0;right:0;height:36px;z-index:99999;background:rgba(5,6,15,0.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:Inter,-apple-system,sans-serif;box-sizing:border-box;direction:ltr;';
+ bar.style.cssText = 'position:fixed;top:0;left:0;right:0;height:calc(36px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);z-index:99999;background:rgba(5,6,15,0.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;padding-left:16px;padding-right:16px;font-family:Inter,-apple-system,sans-serif;box-sizing:border-box;direction:ltr;';
  const l = localStorage.getItem('wl_lang') || 'he';
  const LANGS = ['he','en','pt','es'];
  const pillCSS = (active) => `background:${active?'rgba(16,185,129,0.18)':'none'};border:none;color:${active?'#10b981':'#6b7280'};padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.4px;`;

@@ -674,7 +674,7 @@ window.sanitize = sanitize;
         const toast = document.createElement('div');
         toast.id = 'pwaInstallToast';
         toast.style.cssText = [
-            'position:fixed', 'bottom:80px', 'left:50%', 'transform:translateX(-50%)',
+            'position:fixed', 'bottom:calc(80px + env(safe-area-inset-bottom))', 'left:50%', 'transform:translateX(-50%)',
             'background:#1e293b', 'border:1px solid #334155', 'border-radius:14px',
             'padding:14px 18px', 'display:flex', 'align-items:center', 'gap:12px',
             'box-shadow:0 8px 32px rgba(0,0,0,0.4)', 'z-index:9999',
