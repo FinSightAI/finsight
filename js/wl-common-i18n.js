@@ -291,5 +291,25 @@
     tr('נתוני TheMarker עודכנו לדצמבר 2025', 'TheMarker data updated to December 2025', 'Dados do TheMarker atualizados para dezembro de 2025', 'Datos de TheMarker actualizados a diciembre de 2025');
     tr('נתוני iGemel-Net עודכנו לדצמבר 2025', 'iGemel-Net data updated to December 2025', 'Dados iGemel-Net atualizados para dezembro de 2025', 'Datos iGemel-Net actualizados a diciembre de 2025');
 
+
+    // ── Family / WizeMoney landing leaks (2026-05-15) ───────────────────────
+    tr('אני', 'Me', 'Eu', 'Yo');
+    tr('מבוגר', 'Adult', 'Adulto', 'Adulto');
+    tr('הוסף', 'Add', 'Adicionar', 'Añadir');
+    tr('בן', 'Son', 'Filho', 'Hijo');
+    tr('בת', 'Daughter', 'Filha', 'Hija');
+    tr('משפחה', 'Family', 'Família', 'Familia');
+    tr('דשבורד משפחתי', 'Family Dashboard', 'Painel Familiar', 'Panel Familiar');
+    tr('👨‍👩‍👧‍👦 דשבורד משפחתי', '👨‍👩‍👧‍👦 Family Dashboard', '👨‍👩‍👧‍👦 Painel Familiar', '👨‍👩‍👧‍👦 Panel Familiar');
+    tr('הגיע הזמן לשלוח את הסיכום הפיננסי שלך', 'Time to send your financial summary', 'Hora de enviar seu resumo financeiro', 'Hora de enviar tu resumen financiero');
+    tr('💬 שתף בוואטסאפ', '💬 Share on WhatsApp', '💬 Compartilhar no WhatsApp', '💬 Compartir en WhatsApp');
+    tr('שתף בוואטסאפ', 'Share on WhatsApp', 'Compartilhar no WhatsApp', 'Compartir en WhatsApp');
+    tr('תצוגה מקדימה', 'Preview', 'Pré-visualização', 'Vista previa');
+    tr('👁️ תצוגה מקדימה', '👁️ Preview', '👁️ Pré-visualização', '👁️ Vista previa');
+    tr('אחר כך', 'Later', 'Mais tarde', 'Más tarde');
+    tr('אולי אחר כך', 'Maybe later', 'Talvez mais tarde', 'Tal vez después');
+    tr('ילד/ה', 'Child', 'Criança', 'Niño/a');
+    tr('👤 מבוגר', '👤 Adult', '👤 Adulto', '👤 Adulto');
+
     window.WL_TR = existing;
 })();
