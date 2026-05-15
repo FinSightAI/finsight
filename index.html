@@ -3,1193 +3,1193 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="icon" href="./img/logo.svg?v=2026-05-15" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="./img/logo.svg?v=2026-05-15">
-    <meta name="description" content="אפליקציית ניהול פיננסי אישי - Personal Finance Manager PWA">
-    <meta name="theme-color" content="#10b981">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://www.clarity.ms https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://cdn.jsdelivr.net https://www.gstatic.com https://api.callmebot.com https://www.google-analytics.com https://master-backend-79jx.onrender.com https://*.clarity.ms https://www.clarity.ms; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="manifest.json">
-    <title>WizeMoney - ניהול פיננסי חכם</title>
-    <link rel="stylesheet" href="css/app.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <!-- Google tag (gtag.js) -->
+ <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
+ <script>
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+ gtag('config', 'G-DB63NWYGX5');
+ </script>
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="icon" href="./img/logo.svg?v=2026-05-15" type="image/svg+xml">
+ <link rel="apple-touch-icon" href="./img/logo.svg?v=2026-05-15">
+ <meta name="description" content="אפליקציית ניהול פיננסי אישי - Personal Finance Manager PWA">
+ <meta name="theme-color" content="#10b981">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com ; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://cdn.jsdelivr.net https://www.gstatic.com https://api.callmebot.com https://www.google-analytics.com https://master-backend-79jx.onrender.com ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="manifest.json">
+ <title>WizeMoney - ניהול פיננסי חכם</title>
+ <link rel="stylesheet" href="css/app.css">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <!-- Firebase SDK -->
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
+ <!-- Main Content -->
+ <main class="main-content">
 
-            <!-- Onboarding Overlay — shown to new users with no data -->
-            <div id="onboardingOverlay">
-                <div id="onboardingBox">
-                    <h2>ברוכים הבאים ל-WizeMoney 👋</h2>
-                    <p class="ob-subtitle">רגע אחד להתחיל — בחר מה להוסיף ראשון:</p>
-                    <div class="ob-steps">
-                        <a href="pages/bank.html" class="ob-step" onclick="Onboarding.dismiss()">
-                            <span class="ob-icon">🏦</span>
-                            <div>
-                                <div class="ob-label">הוסף חשבון בנק</div>
-                                <div class="ob-desc">רשום את יתרות החשבונות שלך</div>
-                            </div>
-                        </a>
-                        <a href="pages/credit.html" class="ob-step" onclick="Onboarding.dismiss()">
-                            <span class="ob-icon">💳</span>
-                            <div>
-                                <div class="ob-label">הוסף כרטיס אשראי</div>
-                                <div class="ob-desc">עקוב אחרי ההוצאות החודשיות</div>
-                            </div>
-                        </a>
-                        <a href="pages/my-funds.html" class="ob-step" onclick="Onboarding.dismiss()">
-                            <span class="ob-icon">📊</span>
-                            <div>
-                                <div class="ob-label">הוסף קרן / חיסכון</div>
-                                <div class="ob-desc">קרן השתלמות, פנסיה, גמל</div>
-                            </div>
-                        </a>
-                        <a href="pages/goals.html" class="ob-step" onclick="Onboarding.dismiss()">
-                            <span class="ob-icon">🎯</span>
-                            <div>
-                                <div class="ob-label">הגדר יעד חיסכון</div>
-                                <div class="ob-desc">רכב, נסיעה, דירה — כל מה שחולמים</div>
-                            </div>
-                        </a>
-                    </div>
-                    <button class="ob-dismiss" onclick="Onboarding.dismiss()">אחר כך</button>
-                </div>
-            </div>
+ <!-- Onboarding Overlay — shown to new users with no data -->
+ <div id="onboardingOverlay">
+ <div id="onboardingBox">
+ <h2>ברוכים הבאים ל-WizeMoney 👋</h2>
+ <p class="ob-subtitle">רגע אחד להתחיל — בחר מה להוסיף ראשון:</p>
+ <div class="ob-steps">
+ <a href="pages/bank.html" class="ob-step" onclick="Onboarding.dismiss()">
+ <span class="ob-icon">🏦</span>
+ <div>
+ <div class="ob-label">הוסף חשבון בנק</div>
+ <div class="ob-desc">רשום את יתרות החשבונות שלך</div>
+ </div>
+ </a>
+ <a href="pages/credit.html" class="ob-step" onclick="Onboarding.dismiss()">
+ <span class="ob-icon">💳</span>
+ <div>
+ <div class="ob-label">הוסף כרטיס אשראי</div>
+ <div class="ob-desc">עקוב אחרי ההוצאות החודשיות</div>
+ </div>
+ </a>
+ <a href="pages/my-funds.html" class="ob-step" onclick="Onboarding.dismiss()">
+ <span class="ob-icon">📊</span>
+ <div>
+ <div class="ob-label">הוסף קרן / חיסכון</div>
+ <div class="ob-desc">קרן השתלמות, פנסיה, גמל</div>
+ </div>
+ </a>
+ <a href="pages/goals.html" class="ob-step" onclick="Onboarding.dismiss()">
+ <span class="ob-icon">🎯</span>
+ <div>
+ <div class="ob-label">הגדר יעד חיסכון</div>
+ <div class="ob-desc">רכב, נסיעה, דירה — כל מה שחולמים</div>
+ </div>
+ </a>
+ </div>
+ <button class="ob-dismiss" onclick="Onboarding.dismiss()">אחר כך</button>
+ </div>
+ </div>
 
-            <!-- Summary Sender Banner -->
-            <div id="summarySenderBanner">
-                <span class="banner-icon">📤</span>
-                <span class="banner-text">הגיע הזמן לשלוח את הסיכום הפיננסי שלך</span>
-                <div class="banner-actions">
-                    <button class="btn btn-sm" style="background:white;color:#059669;font-weight:600;" onclick="SummarySender.shareWhatsApp()">💬 שתף בוואטסאפ</button>
-                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;" onclick="SummarySender.showPreviewModal()">👁 תצוגה מקדימה</button>
-                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);" onclick="SummarySender.dismissBanner()">אחר כך</button>
-                </div>
-            </div>
+ <!-- Summary Sender Banner -->
+ <div id="summarySenderBanner">
+ <span class="banner-icon">📤</span>
+ <span class="banner-text">הגיע הזמן לשלוח את הסיכום הפיננסי שלך</span>
+ <div class="banner-actions">
+ <button class="btn btn-sm" style="background:white;color:#059669;font-weight:600;" onclick="SummarySender.shareWhatsApp()">💬 שתף בוואטסאפ</button>
+ <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;" onclick="SummarySender.showPreviewModal()">👁 תצוגה מקדימה</button>
+ <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);" onclick="SummarySender.dismissBanner()">אחר כך</button>
+ </div>
+ </div>
 
-            <!-- Summary Preview Modal -->
-            <div id="summaryPreviewModal">
-                <div class="modal">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-                        <h3>📊 סיכום פיננסי</h3>
-                        <button class="modal-close" onclick="SummarySender.closeModal()" style="background:none;border:none;color:var(--color-text-secondary);font-size:1.5rem;cursor:pointer;">&times;</button>
-                    </div>
-                    <pre id="summaryPreviewText"></pre>
-                    <div class="summary-share-btns">
-                        <button id="summaryShareWhatsApp" class="btn btn-primary">💬 WhatsApp</button>
-                        <button id="summaryShareEmail" class="btn btn-secondary">📧 מייל</button>
-                        <button id="summaryShareNative" class="btn btn-secondary" style="display:none;">↑ שתף</button>
-                        <button id="summaryCopyBtn" class="btn btn-secondary">📋 העתק</button>
-                    </div>
-                </div>
-            </div>
+ <!-- Summary Preview Modal -->
+ <div id="summaryPreviewModal">
+ <div class="modal">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+ <h3>📊 סיכום פיננסי</h3>
+ <button class="modal-close" onclick="SummarySender.closeModal()" style="background:none;border:none;color:var(--color-text-secondary);font-size:1.5rem;cursor:pointer;">&times;</button>
+ </div>
+ <pre id="summaryPreviewText"></pre>
+ <div class="summary-share-btns">
+ <button id="summaryShareWhatsApp" class="btn btn-primary">💬 WhatsApp</button>
+ <button id="summaryShareEmail" class="btn btn-secondary">📧 מייל</button>
+ <button id="summaryShareNative" class="btn btn-secondary" style="display:none;">↑ שתף</button>
+ <button id="summaryCopyBtn" class="btn btn-secondary">📋 העתק</button>
+ </div>
+ </div>
+ </div>
 
-            <header class="page-header">
-                <div style="text-align:center;position:relative;">
-                    <h1 class="brand-wordmark" dir="ltr" lang="en" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:2.6rem;letter-spacing:-1px;margin:8px auto 4px;line-height:1.05;unicode-bidi:isolate;">Wize<span style="background:linear-gradient(135deg,#10b981,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#10b981;">Money</span></h1>
-                    <p data-i18n="dashboard.subtitle" style="color:var(--color-text-muted);font-size:0.95rem;margin-top:6px;">סקירה כללית של הנכסים שלך</p>
-                    <button class="btn btn-secondary btn-sm" onclick="WidgetManager.showCustomizeModal()" style="white-space:nowrap;position:absolute;top:8px;inset-inline-end:0;">
-                        <span>⚙️</span>
-                        <span data-i18n="dashboard.customize">התאמה אישית</span>
-                    </button>
-                </div>
-            </header>
+ <header class="page-header">
+ <div style="text-align:center;position:relative;">
+ <h1 class="brand-wordmark" dir="ltr" lang="en" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:2.6rem;letter-spacing:-1px;margin:8px auto 4px;line-height:1.05;unicode-bidi:isolate;">Wize<span style="background:linear-gradient(135deg,#10b981,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#10b981;">Money</span></h1>
+ <p data-i18n="dashboard.subtitle" style="color:var(--color-text-muted);font-size:0.95rem;margin-top:6px;">סקירה כללית של הנכסים שלך</p>
+ <button class="btn btn-secondary btn-sm" onclick="WidgetManager.showCustomizeModal()" style="white-space:nowrap;position:absolute;top:8px;inset-inline-end:0;">
+ <span>⚙️</span>
+ <span data-i18n="dashboard.customize">התאמה אישית</span>
+ </button>
+ </div>
+ </header>
 
-            <!-- Budget Alerts -->
-            <div id="dashboardBudgetAlerts"></div>
+ <!-- Budget Alerts -->
+ <div id="dashboardBudgetAlerts"></div>
 
-            <!-- Net Worth Banner -->
-            <div class="net-worth-banner" data-widget="netWorth">
-                <div class="label" data-i18n="dashboard.netWorth">שווי נקי</div>
-                <div class="value" id="netWorthTotal">₪0</div>
-            </div>
+ <!-- Net Worth Banner -->
+ <div class="net-worth-banner" data-widget="netWorth">
+ <div class="label" data-i18n="dashboard.netWorth">שווי נקי</div>
+ <div class="value" id="netWorthTotal">₪0</div>
+ </div>
 
-            <!-- Summary Cards -->
-            <div class="summary-grid" data-widget="summaryCards">
-                <a href="pages/bank.html" class="summary-card bank">
-                    <div class="icon">🏦</div>
-                    <div class="label" data-i18n="dashboard.bankBalance">יתרת בנק</div>
-                    <div class="value skeleton" id="bankTotal">₪0</div>
-                </a>
+ <!-- Summary Cards -->
+ <div class="summary-grid" data-widget="summaryCards">
+ <a href="pages/bank.html" class="summary-card bank">
+ <div class="icon">🏦</div>
+ <div class="label" data-i18n="dashboard.bankBalance">יתרת בנק</div>
+ <div class="value skeleton" id="bankTotal">₪0</div>
+ </a>
 
-                <a href="pages/credit.html" class="summary-card credit">
-                    <div class="icon">💳</div>
-                    <div class="label" data-i18n="dashboard.creditExpenses">הוצאות אשראי</div>
-                    <div class="value skeleton" id="creditTotal">₪0</div>
-                </a>
+ <a href="pages/credit.html" class="summary-card credit">
+ <div class="icon">💳</div>
+ <div class="label" data-i18n="dashboard.creditExpenses">הוצאות אשראי</div>
+ <div class="value skeleton" id="creditTotal">₪0</div>
+ </a>
 
-                <a href="pages/stocks.html" class="summary-card stocks">
-                    <div class="icon">📈</div>
-                    <div class="label" data-i18n="dashboard.stocksValue">שווי מניות</div>
-                    <div class="value skeleton" id="stocksTotal">₪0</div>
-                </a>
+ <a href="pages/stocks.html" class="summary-card stocks">
+ <div class="icon">📈</div>
+ <div class="label" data-i18n="dashboard.stocksValue">שווי מניות</div>
+ <div class="value skeleton" id="stocksTotal">₪0</div>
+ </a>
 
-                <div class="summary-card funds" onclick="location.href='pages/my-funds.html'">
-                    <div class="icon">📊</div>
-                    <div class="label" data-i18n="dashboard.fundsValue">שווי חסכונות</div>
-                    <div class="value skeleton" id="fundsTotal">₪0</div>
-                </div>
+ <div class="summary-card funds" onclick="location.href='pages/my-funds.html'">
+ <div class="icon">📊</div>
+ <div class="label" data-i18n="dashboard.fundsValue">שווי חסכונות</div>
+ <div class="value skeleton" id="fundsTotal">₪0</div>
+ </div>
 
-                <a href="pages/assets.html" class="summary-card assets">
-                    <div class="icon">🏠</div>
-                    <div class="label" data-i18n="dashboard.assetsValue">שווי נכסים</div>
-                    <div class="value skeleton" id="assetsTotal">₪0</div>
-                </a>
+ <a href="pages/assets.html" class="summary-card assets">
+ <div class="icon">🏠</div>
+ <div class="label" data-i18n="dashboard.assetsValue">שווי נכסים</div>
+ <div class="value skeleton" id="assetsTotal">₪0</div>
+ </a>
 
-                <a href="pages/loans.html" class="summary-card" style="border-color: var(--color-loans);">
-                    <div class="icon">🏦</div>
-                    <div class="label" data-i18n="dashboard.loansBalance">יתרת הלוואות</div>
-                    <div class="value skeleton" id="loansTotal" style="color: var(--color-loans);">₪0</div>
-                </a>
-            </div>
+ <a href="pages/loans.html" class="summary-card" style="border-color: var(--color-loans);">
+ <div class="icon">🏦</div>
+ <div class="label" data-i18n="dashboard.loansBalance">יתרת הלוואות</div>
+ <div class="value skeleton" id="loansTotal" style="color: var(--color-loans);">₪0</div>
+ </a>
+ </div>
 
-            <!-- Full Financial Picture Widget -->
-            <div class="card" data-widget="fullPicture">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">🗺️</span>
-                        <span data-i18n="dashboard.fullPicture">תמונה פיננסית מלאה</span>
-                    </h2>
-                </div>
-                <div class="card-body" id="fullPictureWidget" style="padding:0;"></div>
-            </div>
+ <!-- Full Financial Picture Widget -->
+ <div class="card" data-widget="fullPicture">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">🗺️</span>
+ <span data-i18n="dashboard.fullPicture">תמונה פיננסית מלאה</span>
+ </h2>
+ </div>
+ <div class="card-body" id="fullPictureWidget" style="padding:0;"></div>
+ </div>
 
-            <!-- Charts Section -->
-            <div class="charts-grid">
-                <div class="card" data-widget="assetDistribution">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span class="icon">📊</span>
-                            <span data-i18n="dashboard.assetDistribution">חלוקת נכסים</span>
-                        </h2>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="assetDistributionChart"></canvas>
-                    </div>
-                </div>
+ <!-- Charts Section -->
+ <div class="charts-grid">
+ <div class="card" data-widget="assetDistribution">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📊</span>
+ <span data-i18n="dashboard.assetDistribution">חלוקת נכסים</span>
+ </h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="assetDistributionChart"></canvas>
+ </div>
+ </div>
 
-                <div class="card" data-widget="monthlyExpenses">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span class="icon">💳</span>
-                            <span data-i18n="dashboard.monthlyExpenses">הוצאות חודשיות</span>
-                        </h2>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="monthlyExpensesChart"></canvas>
-                    </div>
-                </div>
-            </div>
+ <div class="card" data-widget="monthlyExpenses">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">💳</span>
+ <span data-i18n="dashboard.monthlyExpenses">הוצאות חודשיות</span>
+ </h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="monthlyExpensesChart"></canvas>
+ </div>
+ </div>
+ </div>
 
-            <!-- Goals Progress Widget (hidden by default) -->
-            <div class="card" data-widget="goalsProgress" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">🎯</span>
-                        <span data-i18n="dashboard.goalsProgress">התקדמות יעדים</span>
-                    </h2>
-                </div>
-                <div class="card-body" id="goalsProgressWidget">
-                    <div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">
-                        <a href="pages/goals.html" style="color: var(--color-primary);" data-i18n="dashboard.addSavingsGoals">הוסף יעדי חיסכון</a>
-                    </div>
-                </div>
-            </div>
+ <!-- Goals Progress Widget (hidden by default) -->
+ <div class="card" data-widget="goalsProgress" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">🎯</span>
+ <span data-i18n="dashboard.goalsProgress">התקדמות יעדים</span>
+ </h2>
+ </div>
+ <div class="card-body" id="goalsProgressWidget">
+ <div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">
+ <a href="pages/goals.html" style="color: var(--color-primary);" data-i18n="dashboard.addSavingsGoals">הוסף יעדי חיסכון</a>
+ </div>
+ </div>
+ </div>
 
-            <!-- Currency Rates Widget (hidden by default) -->
-            <div class="card" data-widget="currencyRates" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">💱</span>
-                        <span data-i18n="dashboard.currencyRates">שערי מטבע</span>
-                    </h2>
-                    <button class="btn btn-sm btn-secondary" onclick="loadCurrencyWidget()">🔄</button>
-                </div>
-                <div class="card-body" id="currencyRatesWidget" style="padding: 20px;">
-                    <div style="text-align: center; color: var(--color-text-secondary);"><span data-i18n="stocks.loading">טוען...</span></div>
-                </div>
-            </div>
+ <!-- Currency Rates Widget (hidden by default) -->
+ <div class="card" data-widget="currencyRates" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">💱</span>
+ <span data-i18n="dashboard.currencyRates">שערי מטבע</span>
+ </h2>
+ <button class="btn btn-sm btn-secondary" onclick="loadCurrencyWidget()">🔄</button>
+ </div>
+ <div class="card-body" id="currencyRatesWidget" style="padding: 20px;">
+ <div style="text-align: center; color: var(--color-text-secondary);"><span data-i18n="stocks.loading">טוען...</span></div>
+ </div>
+ </div>
 
-            <!-- Smart Tips Widget (hidden by default) -->
-            <div class="card" data-widget="smartTips" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">💡</span>
-                        <span data-i18n="dashboard.smartTips">טיפים חכמים</span>
-                    </h2>
-                    <a href="pages/profile.html" class="btn btn-sm btn-secondary" data-i18n="profile.showAllTips">הצג הכל</a>
-                </div>
-                <div class="card-body" id="smartTipsWidget">
-                </div>
-            </div>
+ <!-- Smart Tips Widget (hidden by default) -->
+ <div class="card" data-widget="smartTips" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">💡</span>
+ <span data-i18n="dashboard.smartTips">טיפים חכמים</span>
+ </h2>
+ <a href="pages/profile.html" class="btn btn-sm btn-secondary" data-i18n="profile.showAllTips">הצג הכל</a>
+ </div>
+ <div class="card-body" id="smartTipsWidget">
+ </div>
+ </div>
 
-            <!-- Quick Stats Widget (hidden by default) -->
-            <div class="card" data-widget="quickStats" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📈</span>
-                        <span data-i18n="dashboard.quickStats">סטטיסטיקות מהירות</span>
-                    </h2>
-                </div>
-                <div class="card-body">
-                    <div class="quick-stats-grid" id="quickStatsWidget">
-                        <!-- Will be populated by JS -->
-                    </div>
-                </div>
-            </div>
+ <!-- Quick Stats Widget (hidden by default) -->
+ <div class="card" data-widget="quickStats" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📈</span>
+ <span data-i18n="dashboard.quickStats">סטטיסטיקות מהירות</span>
+ </h2>
+ </div>
+ <div class="card-body">
+ <div class="quick-stats-grid" id="quickStatsWidget">
+ <!-- Will be populated by JS -->
+ </div>
+ </div>
+ </div>
 
-            <!-- Recent Activity -->
-            <div class="card" data-widget="recentTransactions">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📋</span>
-                        <span data-i18n="dashboard.recentTransactions">פעולות אחרונות</span>
-                    </h2>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="common.date">תאריך</th>
-                                <th data-i18n="common.type">סוג</th>
-                                <th data-i18n="common.name">תיאור</th>
-                                <th data-i18n="common.amount">סכום</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recentTransactions">
-                            <!-- Will be populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 WizeMoney. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
+ <!-- Recent Activity -->
+ <div class="card" data-widget="recentTransactions">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📋</span>
+ <span data-i18n="dashboard.recentTransactions">פעולות אחרונות</span>
+ </h2>
+ </div>
+ <div class="table-container">
+ <table>
+ <thead>
+ <tr>
+ <th data-i18n="common.date">תאריך</th>
+ <th data-i18n="common.type">סוג</th>
+ <th data-i18n="common.name">תיאור</th>
+ <th data-i18n="common.amount">סכום</th>
+ </tr>
+ </thead>
+ <tbody id="recentTransactions">
+ <!-- Will be populated by JS -->
+ </tbody>
+ </table>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 WizeMoney. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
 
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle">☰</button>
+ <!-- Mobile Menu Toggle -->
+ <button class="mobile-menu-toggle">☰</button>
 
-        <!-- Mobile Language Toggle (always visible) -->
-        <div class="mobile-lang-switcher">
-            <button class="lang-btn" data-lang="he" onclick="I18n.setLanguage('he')">HE</button>
-            <button class="lang-btn" data-lang="en" onclick="I18n.setLanguage('en')">EN</button>
-            <button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage('pt')">PT</button>
-        </div>
-    </div>
+ <!-- Mobile Language Toggle (always visible) -->
+ <div class="mobile-lang-switcher">
+ <button class="lang-btn" data-lang="he" onclick="I18n.setLanguage('he')">HE</button>
+ <button class="lang-btn" data-lang="en" onclick="I18n.setLanguage('en')">EN</button>
+ <button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage('pt')">PT</button>
+ </div>
+ </div>
 
-    <style>
-        /* Summary Sender Banner */
-        #summarySenderBanner {
-            display: none;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 14px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-        #summarySenderBanner .banner-icon { font-size: 1.5rem; }
-        #summarySenderBanner .banner-text { flex: 1; }
-        #summarySenderBanner .banner-actions { display: flex; gap: 8px; }
+ <style>
+ /* Summary Sender Banner */
+ #summarySenderBanner {
+ display: none;
+ align-items: center;
+ gap: 12px;
+ background: linear-gradient(135deg, #10b981, #059669);
+ color: white;
+ padding: 14px 20px;
+ border-radius: 12px;
+ margin-bottom: 20px;
+ font-size: 0.95rem;
+ }
+ #summarySenderBanner .banner-icon { font-size: 1.5rem; }
+ #summarySenderBanner .banner-text { flex: 1; }
+ #summarySenderBanner .banner-actions { display: flex; gap: 8px; }
 
-        /* Onboarding Overlay */
-        #onboardingOverlay {
-            display: none;
-            position: fixed; inset: 0; z-index: 1100;
-            background: rgba(0,0,0,0.75);
-            align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        #onboardingOverlay.active { display: flex; }
-        #onboardingBox {
-            background: var(--color-bg-secondary);
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            padding: 32px 28px;
-            max-width: 480px;
-            width: 100%;
-            animation: slideUp 0.35s ease;
-        }
-        @keyframes slideUp {
-            from { opacity:0; transform: translateY(24px); }
-            to   { opacity:1; transform: translateY(0); }
-        }
-        #onboardingBox h2 { font-size: 1.5rem; margin-bottom: 8px; }
-        #onboardingBox .ob-subtitle { color: var(--color-text-secondary); margin-bottom: 24px; font-size: 0.95rem; }
-        .ob-steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
-        .ob-step {
-            display: flex; align-items: center; gap: 14px;
-            padding: 14px 16px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
-            text-decoration: none; color: inherit;
-        }
-        .ob-step:hover { border-color: var(--color-primary); background: rgba(16,185,129,0.07); }
-        .ob-step .ob-icon { font-size: 1.6rem; flex-shrink: 0; }
-        .ob-step .ob-label { font-weight: 600; font-size: 0.95rem; }
-        .ob-step .ob-desc  { font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 2px; }
-        .ob-dismiss { width: 100%; padding: 11px; border: none; border-radius: 10px;
-            background: transparent; color: var(--color-text-secondary);
-            cursor: pointer; font-size: 0.9rem; transition: color 0.2s; }
-        .ob-dismiss:hover { color: var(--color-text-primary); }
+ /* Onboarding Overlay */
+ #onboardingOverlay {
+ display: none;
+ position: fixed; inset: 0; z-index: 1100;
+ background: rgba(0,0,0,0.75);
+ align-items: center; justify-content: center;
+ padding: 20px;
+ }
+ #onboardingOverlay.active { display: flex; }
+ #onboardingBox {
+ background: var(--color-bg-secondary);
+ border: 1px solid var(--color-border);
+ border-radius: 20px;
+ padding: 32px 28px;
+ max-width: 480px;
+ width: 100%;
+ animation: slideUp 0.35s ease;
+ }
+ @keyframes slideUp {
+ from { opacity:0; transform: translateY(24px); }
+ to { opacity:1; transform: translateY(0); }
+ }
+ #onboardingBox h2 { font-size: 1.5rem; margin-bottom: 8px; }
+ #onboardingBox .ob-subtitle { color: var(--color-text-secondary); margin-bottom: 24px; font-size: 0.95rem; }
+ .ob-steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+ .ob-step {
+ display: flex; align-items: center; gap: 14px;
+ padding: 14px 16px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ cursor: pointer;
+ transition: border-color 0.2s, background 0.2s;
+ text-decoration: none; color: inherit;
+ }
+ .ob-step:hover { border-color: var(--color-primary); background: rgba(16,185,129,0.07); }
+ .ob-step .ob-icon { font-size: 1.6rem; flex-shrink: 0; }
+ .ob-step .ob-label { font-weight: 600; font-size: 0.95rem; }
+ .ob-step .ob-desc { font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 2px; }
+ .ob-dismiss { width: 100%; padding: 11px; border: none; border-radius: 10px;
+ background: transparent; color: var(--color-text-secondary);
+ cursor: pointer; font-size: 0.9rem; transition: color 0.2s; }
+ .ob-dismiss:hover { color: var(--color-text-primary); }
 
-        /* Summary Preview Modal */
-        #summaryPreviewModal {
-            display: none;
-            position: fixed; inset: 0; z-index: 1000;
-            background: rgba(0,0,0,0.7);
-            align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        #summaryPreviewModal .modal {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 25px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        #summaryPreviewModal h3 { margin-bottom: 15px; }
-        #summaryPreviewText {
-            background: var(--color-bg-hover);
-            border-radius: 10px;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            white-space: pre-wrap;
-            direction: rtl;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            max-height: 40vh;
-            overflow-y: auto;
-        }
-        .summary-share-btns { display: flex; flex-wrap: wrap; gap: 10px; }
-    
-        body.light #onboardingOverlay,
-        body.light #onboardingOverlay.active {
-            background: rgba(248,250,252,0.98) !important;
-        }
-        body.light #onboardingOverlay h2,
-        body.light #onboardingOverlay p,
-        body.light #onboardingOverlay div {
-            color: #1e293b !important;
-        }
+ /* Summary Preview Modal */
+ #summaryPreviewModal {
+ display: none;
+ position: fixed; inset: 0; z-index: 1000;
+ background: rgba(0,0,0,0.7);
+ align-items: center; justify-content: center;
+ padding: 20px;
+ }
+ #summaryPreviewModal .modal {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 25px;
+ max-width: 480px;
+ width: 100%;
+ max-height: 85vh;
+ overflow-y: auto;
+ }
+ #summaryPreviewModal h3 { margin-bottom: 15px; }
+ #summaryPreviewText {
+ background: var(--color-bg-hover);
+ border-radius: 10px;
+ padding: 15px;
+ font-family: monospace;
+ font-size: 0.85rem;
+ white-space: pre-wrap;
+ direction: rtl;
+ line-height: 1.6;
+ margin-bottom: 15px;
+ max-height: 40vh;
+ overflow-y: auto;
+ }
+ .summary-share-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+ 
+ body.light #onboardingOverlay,
+ body.light #onboardingOverlay.active {
+ background: rgba(248,250,252,0.98) !important;
+ }
+ body.light #onboardingOverlay h2,
+ body.light #onboardingOverlay p,
+ body.light #onboardingOverlay div {
+ color: #1e293b !important;
+ }
 
-        /* Force onboarding overlay light mode — high specificity */
-        html.light #onboardingOverlay.active,
-        body.light #onboardingOverlay.active {
-            background: rgba(248,250,252,0.98) !important;
-        }
-        html.light #onboardingOverlay,
-        body.light #onboardingOverlay {
-            background: rgba(248,250,252,0.98) !important;
-        }
+ /* Force onboarding overlay light mode — high specificity */
+ html.light #onboardingOverlay.active,
+ body.light #onboardingOverlay.active {
+ background: rgba(248,250,252,0.98) !important;
+ }
+ html.light #onboardingOverlay,
+ body.light #onboardingOverlay {
+ background: rgba(248,250,252,0.98) !important;
+ }
 </style>
-    <script src="js/idb.js"></script>
-    <script src="js/sidebar.js"></script>
-    <script src="js/profiles.js"></script>
-    <script src="js/storage.js"></script>
-    <script src="js/pin-lock.js"></script>
-    <script src="js/i18n.js"></script>
-    <script src="js/charts.js"></script>
-    <script src="js/alerts.js"></script>
-    <script src="js/goals.js"></script>
-    <script src="js/tags.js"></script>
-    <script src="js/export.js"></script>
-    <script src="js/smart-tips.js"></script>
-    <script src="js/widgets.js"></script>
-    <script src="js/currency.js"></script>
-    <script src="js/data-updates.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script src="js/crypto.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/wizeai-sync.js"></script>
-    <script src="js/plan.js"></script>
-    <script src="js/paywall.js"></script>
-    <script src="js/summary-sender.js"></script>
-    <script src="data/sample-data.js"></script>
-    <script>
-        function escapeHtml(str) {
-            return String(str ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-        }
-
-        // Onboarding — show to new users with no data
-        const OB_TR = {
-            he: { title:'ברוכים הבאים ל-WizeMoney 👋', sub:'רגע אחד להתחיל — בחר מה להוסיף ראשון:', dismiss:'אחר כך',
-                  steps:[
-                    {icon:'🏦',label:'הוסף חשבון בנק',desc:'רשום את יתרות החשבונות שלך',href:'pages/bank.html'},
-                    {icon:'💳',label:'הוסף כרטיס אשראי',desc:'עקוב אחרי ההוצאות החודשיות',href:'pages/credit.html'},
-                    {icon:'📊',label:'הוסף קרן / חיסכון',desc:'קרן השתלמות, פנסיה, גמל',href:'pages/my-funds.html'},
-                    {icon:'🎯',label:'הגדר יעד חיסכון',desc:'רכב, נסיעה, דירה — כל מה שחולמים',href:'pages/goals.html'},
-                  ]},
-            en: { title:'Welcome to WizeMoney 👋', sub:'One moment to start — choose what to add first:', dismiss:'Later',
-                  steps:[
-                    {icon:'🏦',label:'Add bank account',desc:'Track your account balances',href:'pages/bank.html'},
-                    {icon:'💳',label:'Add credit card',desc:'Monitor your monthly spending',href:'pages/credit.html'},
-                    {icon:'📊',label:'Add fund / savings',desc:'Education fund, pension, provident',href:'pages/my-funds.html'},
-                    {icon:'🎯',label:'Set savings goal',desc:'Car, trip, home — whatever you dream of',href:'pages/goals.html'},
-                  ]},
-            pt: { title:'Bem-vindo ao WizeMoney 👋', sub:'Um momento para começar — escolha o que adicionar primeiro:', dismiss:'Depois',
-                  steps:[
-                    {icon:'🏦',label:'Adicionar conta bancária',desc:'Registre os saldos das suas contas',href:'pages/bank.html'},
-                    {icon:'💳',label:'Adicionar cartão de crédito',desc:'Monitore seus gastos mensais',href:'pages/credit.html'},
-                    {icon:'📊',label:'Adicionar fundo / poupança',desc:'Fundo de educação, previdência',href:'pages/my-funds.html'},
-                    {icon:'🎯',label:'Definir meta de poupança',desc:'Carro, viagem, casa — tudo que você sonha',href:'pages/goals.html'},
-                  ]},
-            es: { title:'Bienvenido a WizeMoney 👋', sub:'Un momento para empezar — elige qué agregar primero:', dismiss:'Después',
-                  steps:[
-                    {icon:'🏦',label:'Agregar cuenta bancaria',desc:'Registra los saldos de tus cuentas',href:'pages/bank.html'},
-                    {icon:'💳',label:'Agregar tarjeta de crédito',desc:'Controla tus gastos mensuales',href:'pages/credit.html'},
-                    {icon:'📊',label:'Agregar fondo / ahorro',desc:'Fondo de educación, pensión',href:'pages/my-funds.html'},
-                    {icon:'🎯',label:'Definir meta de ahorro',desc:'Auto, viaje, casa — todo lo que sueñas',href:'pages/goals.html'},
-                  ]},
-        };
-
-        // Dashboard specific initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'dashboard';
-            I18n.init();
-            WidgetManager.init();
-            App.updateDashboard();
-            Charts.updateMonthlyExpenses();
-            loadRecentTransactions();
-            SummarySender.checkAndShowBanner();
-            loadBudgetAlerts();
-            Onboarding.check();
-        });
-
-        function loadRecentTransactions() {
-            const transactions = [];
-
-            // Get recent bank balance updates
-            const bankAccounts = Storage.getBankAccounts();
-            bankAccounts.forEach(acc => {
-                if (acc.history && acc.history.length > 0) {
-                    const latest = acc.history[acc.history.length - 1];
-                    transactions.push({
-                        date: latest.date,
-                        type: I18n.t('nav.bankAccounts'),
-                        description: acc.nameHe || acc.nameEn || acc.bank,
-                        amount: latest.balance,
-                        isPositive: true
-                    });
-                }
-            });
-
-            // Get recent expenses
-            const creditData = Storage.getCreditCards();
-            creditData.expenses.slice(-5).forEach(exp => {
-                transactions.push({
-                    date: exp.date,
-                    type: I18n.t('nav.creditCards'),
-                    description: exp.description,
-                    amount: -exp.amount,
-                    isPositive: false
-                });
-            });
-
-            // Get recent stock transactions
-            const stockData = Storage.getStocks();
-            stockData.transactions.slice(-5).forEach(tx => {
-                transactions.push({
-                    date: tx.date,
-                    type: I18n.t('nav.stocks'),
-                    description: `${tx.type === 'buy' ? I18n.t('stocks.buy') : I18n.t('stocks.sell')} ${tx.symbol}`,
-                    amount: tx.type === 'buy' ? -tx.price * tx.quantity : tx.price * tx.quantity,
-                    isPositive: tx.type === 'sell'
-                });
-            });
-
-            // Sort by date and take last 10
-            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-            const recent = transactions.slice(0, 10);
-
-            // Render table
-            const tbody = document.getElementById('recentTransactions');
-            if (recent.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--color-text-secondary);">${I18n.t('common.noData')}</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = recent.map(tx => `
-                <tr>
-                    <td>${I18n.formatDate(tx.date)}</td>
-                    <td>${escapeHtml(tx.type)}</td>
-                    <td>${escapeHtml(tx.description)}</td>
-                    <td class="${tx.isPositive ? 'positive' : 'negative'}">${I18n.formatCurrency(Math.abs(tx.amount))}</td>
-                </tr>
-            `).join('');
-        }
-
-        function loadBudgetAlerts() {
-            const container = document.getElementById('dashboardBudgetAlerts');
-            if (!container) return;
-
-            const alerts = Alerts.checkBudgets();
-            if (alerts.length === 0) {
-                container.classList.remove('has-alerts');
-                return;
-            }
-
-            const sessionKey = 'budget_alerts_dismissed_' + new Date().toISOString().slice(0, 10);
-            if (sessionStorage.getItem(sessionKey)) return;
-
-            container.innerHTML = alerts.slice(0, 3).map(alert => `
-                <div class="dash-budget-alert ${alert.type}">
-                    <span>${alert.icon}</span>
-                    <span style="flex:1"><strong>${alert.title}</strong> · ${alert.message}</span>
-                    <a href="pages/credit.html" style="font-size:13px;color:var(--color-primary);text-decoration:none;white-space:nowrap;">כרטיסי אשראי ←</a>
-                    <button class="alert-dismiss" onclick="dismissBudgetAlerts()" title="סגור">✕</button>
-                </div>
-            `).join('');
-            container.classList.add('has-alerts');
-        }
-
-        function dismissBudgetAlerts() {
-            sessionStorage.setItem('budget_alerts_dismissed_' + new Date().toISOString().slice(0, 10), '1');
-            const container = document.getElementById('dashboardBudgetAlerts');
-            if (container) container.classList.remove('has-alerts');
-        }
-
-        // Load full financial picture widget
-        function loadFullPictureWidget() {
-            const widget = document.getElementById('fullPictureWidget');
-            if (!widget || !WidgetManager.isEnabled('fullPicture')) return;
-
-            const bank    = Storage.getTotalBankBalance();
-            const stocks  = Storage.getTotalStocksValue();
-            const funds   = Storage.getTotalFundsValue();
-            const assets  = Storage.getTotalAssetsValue();
-            const loans   = Storage.getTotalLoansBalance();
-            const credit  = Storage.getTotalCreditExpenses(
-                (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; })()
-            );
-
-            const totalAssets = bank + stocks + funds + assets;
-            const totalLiab   = loans + credit;
-            const netWorth    = totalAssets - totalLiab;
-            const fmt = v => I18n.formatCurrency(v);
-            const pct = (v, total) => total > 0 ? Math.round(v / total * 100) : 0;
-
-            const t = k => I18n.t('dashboard.' + k);
-            const assetRows = [
-                { icon: '🏦', label: t('bankLabel'),        value: bank,   color: '#3b82f6' },
-                { icon: '📈', label: t('stocksLabel'),      value: stocks, color: '#10b981' },
-                { icon: '💎', label: t('fundsLabel'),       value: funds,  color: '#8b5cf6' },
-                { icon: '🏠', label: t('realEstateLabel'),  value: assets, color: '#f59e0b' }
-            ].filter(r => r.value > 0);
-
-            const liabRows = [
-                { icon: '🔴', label: t('loansLabel'),        value: loans,  color: '#ef4444' },
-                { icon: '💳', label: t('creditMonthlyLabel'), value: credit, color: '#f97316' }
-            ].filter(r => r.value > 0);
-
-            const rowHtml = (rows, total) => rows.map(r => {
-                const p = pct(r.value, total);
-                return `
-                <div style="display:flex;align-items:center;gap:10px;padding:10px 20px;">
-                    <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0;">${r.icon}</span>
-                    <span style="flex:1;font-size:14px;color:var(--color-text-primary);">${r.label}</span>
-                    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);white-space:nowrap;">${fmt(r.value)}</span>
-                    <div style="width:80px;flex-shrink:0;">
-                        <div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;">
-                            <div style="height:100%;width:${p}%;background:${r.color};border-radius:3px;transition:width 0.6s ease;"></div>
-                        </div>
-                        <div style="font-size:11px;color:var(--color-text-secondary);text-align:left;margin-top:2px;">${p}%</div>
-                    </div>
-                </div>`;
-            }).join('');
-
-            const nwColor = netWorth >= 0 ? '#10b981' : '#ef4444';
-
-            widget.innerHTML = `
-                <!-- Net worth summary bar -->
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px 14px;border-bottom:1px solid var(--color-border);">
-                    <div>
-                        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">${t('netWorth')}</div>
-                        <div style="font-size:1.6rem;font-weight:700;color:${nwColor};">${fmt(netWorth)}</div>
-                    </div>
-                    <div style="display:flex;gap:20px;text-align:center;">
-                        <div>
-                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">${t('totalAssets')}</div>
-                            <div style="font-size:15px;font-weight:600;color:#10b981;">${fmt(totalAssets)}</div>
-                        </div>
-                        <div>
-                            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">${t('totalLiabilities')}</div>
-                            <div style="font-size:15px;font-weight:600;color:#ef4444;">${fmt(totalLiab)}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Assets -->
-                ${assetRows.length > 0 ? `
-                <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">${t('assetsSection')}</div>
-                ${rowHtml(assetRows, totalAssets)}
-                ` : ''}
-
-                <!-- Liabilities -->
-                ${liabRows.length > 0 ? `
-                <div style="padding:10px 20px 4px;border-top:1px solid var(--color-border);font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">${t('liabilitiesSection')}</div>
-                ${rowHtml(liabRows, totalLiab)}
-                ` : ''}
-
-                <!-- Empty state -->
-                ${assetRows.length === 0 && liabRows.length === 0 ? `
-                <div style="padding:32px;text-align:center;color:var(--color-text-secondary);">
-                    <div style="font-size:2rem;margin-bottom:12px;">📭</div>
-                    <div>${t('noDataFullPicture')} <a href="pages/bank.html" style="color:var(--color-primary);">${t('addBankCta')}</a> ${t('addBankCtaSuffix')}</div>
-                </div>
-                ` : ''}
-            `;
-        }
-
-        // Load goals progress widget
-        function loadGoalsProgressWidget() {
-            const widget = document.getElementById('goalsProgressWidget');
-            if (!widget || !WidgetManager.isEnabled('goalsProgress')) return;
-
-            try {
-                const goals = JSON.parse(localStorage.getItem('finance_goals') || '[]');
-                if (goals.length === 0) {
-                    widget.innerHTML = `
-                        <div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">
-                            <a href="pages/goals.html" style="color: var(--color-primary);">${I18n.t('dashboard.addSavingsGoals')}</a>
-                        </div>
-                    `;
-                    return;
-                }
-
-                widget.innerHTML = goals.slice(0, 3).map(goal => {
-                    const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
-                    return `
-                        <div style="margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span>${escapeHtml(goal.name)}</span>
-                                <span>${progress.toFixed(0)}%</span>
-                            </div>
-                            <div style="background: var(--color-bg-hover); border-radius: 4px; height: 8px; overflow: hidden;">
-                                <div style="width: ${progress}%; height: 100%; background: var(--color-primary); border-radius: 4px;"></div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } catch (e) {
-                console.error('Error loading goals widget:', e);
-            }
-        }
-
-        // Load quick stats widget
-        function loadQuickStatsWidget() {
-            const widget = document.getElementById('quickStatsWidget');
-            if (!widget || !WidgetManager.isEnabled('quickStats')) return;
-
-            const bankAccounts = Storage.getBankAccounts();
-            const creditData = Storage.getCreditCards();
-            const stockData = Storage.getStocks();
-            const fundsData = Storage.getMyFunds();
-
-            // Calculate stats
-            const thisMonth = new Date().getMonth();
-            const thisMonthExpenses = creditData.expenses
-                .filter(e => new Date(e.date).getMonth() === thisMonth)
-                .reduce((sum, e) => sum + e.amount, 0);
-
-            const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
-            const lastMonthExpenses = creditData.expenses
-                .filter(e => new Date(e.date).getMonth() === lastMonth)
-                .reduce((sum, e) => sum + e.amount, 0);
-
-            const expenseChange = lastMonthExpenses > 0
-                ? ((thisMonthExpenses - lastMonthExpenses) / lastMonthExpenses * 100).toFixed(0)
-                : 0;
-
-            const stocksTotal = stockData.holdings.reduce((sum, h) => sum + (h.quantity * (h.currentPrice || h.avgPrice)), 0);
-            const stocksCost = stockData.holdings.reduce((sum, h) => sum + (h.quantity * h.avgPrice), 0);
-            const stocksReturn = stocksCost > 0 ? ((stocksTotal - stocksCost) / stocksCost * 100).toFixed(1) : 0;
-
-            const fundsTotal = fundsData.reduce((sum, f) => sum + (f.value || f.currentValue || 0), 0);
-            const fundsMonthlyDeposit = fundsData.reduce((sum, f) => sum + (f.monthlyDeposit || 0), 0);
-
-            widget.innerHTML = `
-                <style>
-                    .quick-stats-grid {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                        gap: 15px;
-                        padding: 15px;
-                    }
-                    .quick-stat-item {
-                        text-align: center;
-                        padding: 15px;
-                        background: var(--color-bg-hover);
-                        border-radius: 10px;
-                    }
-                    .quick-stat-item .label {
-                        font-size: 0.8rem;
-                        color: var(--color-text-secondary);
-                        margin-bottom: 5px;
-                    }
-                    .quick-stat-item .value {
-                        font-size: 1.2rem;
-                        font-weight: 600;
-                    }
-                    .quick-stat-item .change {
-                        font-size: 0.75rem;
-                        margin-top: 3px;
-                    }
-                    .quick-stat-item .change.positive { color: var(--color-positive); }
-                    .quick-stat-item .change.negative { color: var(--color-negative); }
-                </style>
-                <div class="quick-stat-item">
-                    <div class="label">${I18n.t('dashboard.monthExpenses')}</div>
-                    <div class="value">${I18n.formatCurrency(thisMonthExpenses)}</div>
-                    <div class="change ${expenseChange > 0 ? 'negative' : 'positive'}">${expenseChange > 0 ? '▲' : '▼'} ${Math.abs(expenseChange)}% ${I18n.t('dashboard.fromLastMonth')}</div>
-                </div>
-                <div class="quick-stat-item">
-                    <div class="label">${I18n.t('dashboard.stockReturn')}</div>
-                    <div class="value ${stocksReturn >= 0 ? 'positive' : 'negative'}">${stocksReturn >= 0 ? '+' : ''}${stocksReturn}%</div>
-                </div>
-                <div class="quick-stat-item">
-                    <div class="label">${I18n.t('dashboard.bankAccountsCount')}</div>
-                    <div class="value">${bankAccounts.length}</div>
-                </div>
-                <div class="quick-stat-item">
-                    <div class="label">${I18n.t('dashboard.monthlyFundDeposit')}</div>
-                    <div class="value">${I18n.formatCurrency(fundsMonthlyDeposit)}</div>
-                </div>
-            `;
-        }
-
-        // Load currency rates widget
-        async function loadCurrencyWidget() {
-            const widget = document.getElementById('currencyRatesWidget');
-            if (!widget || !WidgetManager.isEnabled('currencyRates')) return;
-
-            widget.innerHTML = '<div style="text-align: center; color: var(--color-text-secondary);">' + I18n.t('stocks.loading') + '</div>';
-
-            try {
-                const rates = await CurrencyRates.getRates();
-
-                widget.innerHTML = `
-                    <style>
-                        .currency-rates-grid {
-                            display: grid;
-                            grid-template-columns: repeat(3, 1fr);
-                            gap: 15px;
-                        }
-                        .rate-card {
-                            text-align: center;
-                            padding: 15px;
-                            background: var(--color-bg-hover);
-                            border-radius: 10px;
-                        }
-                        .rate-card .flag {
-                            font-size: 2rem;
-                            margin-bottom: 5px;
-                        }
-                        .rate-card .code {
-                            font-size: 0.8rem;
-                            color: var(--color-text-secondary);
-                        }
-                        .rate-card .rate {
-                            font-size: 1.3rem;
-                            font-weight: 600;
-                            color: var(--color-primary);
-                        }
-                    </style>
-                    <div class="currency-rates-grid">
-                        <div class="rate-card">
-                            <div class="flag">🇺🇸</div>
-                            <div class="code">USD</div>
-                            <div class="rate">₪${rates.USD.toFixed(2)}</div>
-                        </div>
-                        <div class="rate-card">
-                            <div class="flag">🇪🇺</div>
-                            <div class="code">EUR</div>
-                            <div class="rate">₪${rates.EUR.toFixed(2)}</div>
-                        </div>
-                        <div class="rate-card">
-                            <div class="flag">🇬🇧</div>
-                            <div class="code">GBP</div>
-                            <div class="rate">₪${rates.GBP.toFixed(2)}</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: var(--color-text-secondary);">
-                        ${I18n.t('dashboard.updated')}: ${new Date().toLocaleTimeString('he-IL')}
-                    </div>
-                `;
-            } catch (e) {
-                widget.innerHTML = '<div style="text-align: center; color: var(--color-negative);">' + I18n.t('dashboard.rateLoadError') + '</div>';
-            }
-        }
-
-        // Load smart tips widget
-        function loadSmartTipsWidget() {
-            const widget = document.getElementById('smartTipsWidget');
-            if (!widget || !WidgetManager.isEnabled('smartTips')) return;
-
-            const tips = SmartTips.generateTips();
-            const lang = I18n?.currentLanguage || 'he';
-
-            if (tips.length === 0) {
-                widget.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">
-                    <a href="pages/profile.html" style="color: var(--color-primary);">${lang === 'he' ? 'מלא פרופיל לקבלת טיפים' : lang === 'pt' ? 'Preencha seu perfil para dicas' : lang === 'es' ? 'Completa tu perfil para consejos' : 'Fill your profile to get tips'}</a>
-                </div>`;
-                return;
-            }
-
-            tips.sort((a, b) => a.priority - b.priority);
-            widget.innerHTML = tips.slice(0, 3).map(tip => `
-                <div style="display: flex; gap: 12px; padding: 12px 15px; border-bottom: 1px solid var(--color-border);">
-                    <span style="font-size: 1.3rem;">${tip.icon}</span>
-                    <div>
-                        <div style="font-weight: 500; margin-bottom: 2px;">${tip.title[lang] || tip.title.en || tip.title.he}</div>
-                        <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${tip.description[lang] || tip.description.en || tip.description.he}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Update widget loading on dashboard load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadFullPictureWidget();
-            loadGoalsProgressWidget();
-            loadQuickStatsWidget();
-            loadCurrencyWidget();
-            loadSmartTipsWidget();
-            OnboardingTour.init();
-        });
-    </script>
-
-    <!-- ===== Onboarding ===== -->
-    <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;z-index:10500;background:#0d1117;overflow:hidden;">
-
-        <!-- Progress bar -->
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.08);z-index:3;">
-            <div id="obProgressBar" style="height:100%;background:linear-gradient(90deg,#10b981,#3b82f6);width:0%;transition:width 0.4s ease;"></div>
-        </div>
-
-        <!-- Top bar: skip + counter -->
-        <div style="position:absolute;top:3px;left:0;right:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;">
-            <button onclick="OnboardingTour.finish()" style="background:rgba(255,255,255,0.08);border:none;border-radius:20px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;padding:6px 14px;font-family:inherit;">דלג</button>
-            <span id="obCounter" style="color:rgba(255,255,255,0.3);font-size:13px;"></span>
-        </div>
-
-        <!-- Slides track (horizontal scroll) -->
-        <div style="position:absolute;inset:0;overflow:hidden;">
-            <div id="obTrack" style="display:flex;height:100%;transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);will-change:transform;"></div>
-        </div>
-
-        <!-- Bottom nav -->
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 36px;display:flex;gap:12px;align-items:center;z-index:3;">
-            <button id="obPrevBtn" onclick="OnboardingTour.prev()"
-                style="width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;font-size:22px;cursor:pointer;flex-shrink:0;display:none;font-family:inherit;">→</button>
-            <button id="obNextBtn" onclick="OnboardingTour.next()"
-                style="flex:1;height:52px;border-radius:14px;background:linear-gradient(135deg,#10b981,#3b82f6);border:none;color:white;font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;transition:transform 0.1s;"></button>
-        </div>
-    </div>
-
-    <style>
-        .ob-feature {
-            display: flex; align-items: center; gap: 10px;
-            background: rgba(255,255,255,0.06); border-radius: 10px;
-            padding: 10px 14px; font-size: 14px; color: rgba(255,255,255,0.85);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .ob-action-card {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 8px; border-radius: 16px; padding: 18px 12px; cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
-            text-decoration: none; transition: transform 0.15s, background 0.15s;
-            color: white;
-        }
-        .ob-action-card:active { transform: scale(0.96); background: rgba(255,255,255,0.1); }
-        #obNextBtn:active { transform: scale(0.97); }
-    </style>
-
-    <script>
-        const Onboarding = {
-            STORAGE_KEY: 'wl_onboarding_dismissed',
-            show() {
-                const lang = localStorage.getItem('wl_lang') || 'he';
-                const t = OB_TR[lang] || OB_TR.he;
-                const box = document.getElementById('onboardingBox');
-                if (box) {
-                    box.querySelector('h2').textContent = t.title;
-                    box.querySelector('.ob-subtitle').textContent = t.sub;
-                    box.querySelector('.ob-dismiss').textContent = t.dismiss;
-                    const steps = box.querySelectorAll('.ob-step');
-                    t.steps.forEach((s, i) => {
-                        if (!steps[i]) return;
-                        steps[i].href = s.href;
-                        steps[i].querySelector('.ob-icon').textContent = s.icon;
-                        steps[i].querySelector('.ob-label').textContent = s.label;
-                        steps[i].querySelector('.ob-desc').textContent = s.desc;
-                    });
-                }
-                const el = document.getElementById('onboardingOverlay');
-                if (el) el.classList.add('active');
-            },
-            dismiss() {
-                localStorage.setItem(this.STORAGE_KEY, '1');
-                localStorage.setItem('finance_onboarding_done', '1');  // also stop OnboardingTour
-                // Hide OnboardingTour overlay if open
-                var ovTour = document.getElementById('onboardingOverlay');
-                if (ovTour) ovTour.style.display = 'none';
-                const el = document.getElementById('onboardingOverlay');
-                if (el) el.classList.remove('active');
-            },
-            check() {
-                if (localStorage.getItem(this.STORAGE_KEY)) return;
-                const hasBank    = Storage.getBankAccounts().length > 0;
-                const hasCredit  = Storage.getCreditCards().length > 0;
-                const hasStocks  = Storage.getStocks().holdings?.length > 0;
-                const hasFunds   = (Storage.getMyFunds?.() || []).length > 0;
-                const hasAssets  = Storage.getAssets().length > 0;
-                const hasLoans   = Storage.getLoans().length > 0;
-                if (!hasBank && !hasCredit && !hasStocks && !hasFunds && !hasAssets && !hasLoans) {
-                    setTimeout(() => this.show(), 800);
-                }
-            }
-        };
-
-                const OnboardingTour = {
-            _step: 0,
-
-            _getSlides() {
-                const ob = (typeof I18n !== 'undefined') ? I18n.translations[I18n.currentLanguage]?.onboarding : null;
-                const t  = k => ob?.[k] || k;
-                const slides = {
-                    he: [
-                        { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'ברוכים הבאים ל-WizeMoney', sub:'הדרך החכמה לנהל את כל הכסף שלך במקום אחד', features:[{e:'📊',t:'תמונה מלאה של כל הנכסים וההתחייבויות'},{e:'🔔',t:'התראות חכמות על חריגות ויעדים'},{e:'🔒',t:'הנתונים שלך נשמרים אצלך בלבד'}] },
-                        { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'חשבון בנק ועסקאות', sub:'הוסף את יתרות החשבון ועקוב אחרי כל הכנסה והוצאה', features:[{e:'⚡',t:'ייבוא ישיר מאתר הבנק בסימניית bookmarklet'},{e:'📅',t:'היסטוריית עסקאות עם חיפוש וסינון'},{e:'📉',t:'גרף הוצאות חודשי אוטומטי'}] },
-                        { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'כרטיסי אשראי בשליטה', sub:'ייבא עסקאות מכאל, מקס וישראכרט בלחיצת כפתור', features:[{e:'🔖',t:'סימניית ייבוא חכם — הגדרה פעם אחת'},{e:'📂',t:'קטגוריות אוטומטיות לכל עסקה'},{e:'🔄',t:'זיהוי מנויים חוזרים אוטומטי'}] },
-                        { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'מניות, קרנות ופנסיה', sub:'כל ההשקעות שלך — מניות, קרנות נאמנות, גמל ופנסיה', features:[{e:'💹',t:'מחירים בזמן אמת מנתוני TASE ויאהו'},{e:'📊',t:'תשואה לעומת עלות ממוצעת'},{e:'🏆',t:'השוואת קרנות נאמנות וגמל'}] },
-                        { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'פרטיות מלאה ואבטחה', sub:'כל המידע נשמר במכשיר שלך בלבד — לא עובר לשום שרת', features:[{e:'🔑',t:'נעילת PIN ו-Face ID'},{e:'☁️',t:'גיבוי אופציונלי לענן דרך ההגדרות'},{e:'📤',t:'ייצוא לאקסל בכל עת'}] },
-                        { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'מוכן להתחיל?', sub:'בחר איפה להתחיל — תמיד אפשר לחזור ולהוסיף עוד', actions:[{e:'🏦',label:'חשבון בנק',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'כרטיס אשראי',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'מניות',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'קרנות',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'גמל ופנסיה',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'לדאשבורד',href:null,color:'#64748b'}] }
-                    ],
-                    en: [
-                        { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Welcome to WizeMoney', sub:'The smart way to manage all your money in one place', features:[{e:'📊',t:'Complete picture of all your assets & liabilities'},{e:'🔔',t:'Smart alerts for budget overruns and goals'},{e:'🔒',t:'Your data stays on your device only'}] },
-                        { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Bank Accounts & Transactions', sub:'Add your account balances and track every income and expense', features:[{e:'⚡',t:'Direct import from your bank via bookmarklet'},{e:'📅',t:'Transaction history with search and filters'},{e:'📉',t:'Automatic monthly expense chart'}] },
-                        { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Credit Cards Under Control', sub:'Import transactions from Cal, Max and Isracard in one click', features:[{e:'🔖',t:'Smart import bookmarklet — set up once'},{e:'📂',t:'Automatic categories for every transaction'},{e:'🔄',t:'Automatic recurring subscription detection'}] },
-                        { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Stocks, Funds & Pension', sub:'All your investments — stocks, mutual funds, gemel & pension', features:[{e:'💹',t:'Real-time prices from TASE & Yahoo'},{e:'📊',t:'Return vs average cost'},{e:'🏆',t:'Compare mutual funds and gemel'}] },
-                        { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Full Privacy & Security', sub:'All data stays on your device only — nothing sent to any server', features:[{e:'🔑',t:'PIN lock & Face ID'},{e:'☁️',t:'Optional cloud backup via Settings'},{e:'📤',t:'Export to Excel anytime'}] },
-                        { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Ready to Start?', sub:'Choose where to begin — you can always add more later', actions:[{e:'🏦',label:'Bank Account',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Credit Card',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Stocks',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Funds',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Pension & Gemel',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Dashboard',href:null,color:'#64748b'}] }
-                    ],
-                    pt: [
-                        { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Bem-vindo ao WizeMoney', sub:'A forma inteligente de gerenciar todo o seu dinheiro em um lugar', features:[{e:'📊',t:'Visão completa de todos os ativos e passivos'},{e:'🔔',t:'Alertas inteligentes para metas e orçamentos'},{e:'🔒',t:'Seus dados ficam apenas no seu dispositivo'}] },
-                        { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Contas Bancárias e Transações', sub:'Adicione saldos e acompanhe cada receita e despesa', features:[{e:'⚡',t:'Importação direta do banco via bookmarklet'},{e:'📅',t:'Histórico de transações com busca e filtros'},{e:'📉',t:'Gráfico de despesas mensais automático'}] },
-                        { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Cartões de Crédito Sob Controle', sub:'Importe transações com um clique', features:[{e:'🔖',t:'Bookmarklet de importação — configure uma vez'},{e:'📂',t:'Categorias automáticas para cada transação'},{e:'🔄',t:'Detecção automática de assinaturas recorrentes'}] },
-                        { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Ações, Fundos e Previdência', sub:'Todos os seus investimentos em um só lugar', features:[{e:'💹',t:'Preços em tempo real'},{e:'📊',t:'Retorno vs custo médio'},{e:'🏆',t:'Comparar fundos de investimento'}] },
-                        { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Privacidade e Segurança Total', sub:'Todos os dados ficam apenas no seu dispositivo', features:[{e:'🔑',t:'Bloqueio por PIN e Face ID'},{e:'☁️',t:'Backup opcional na nuvem'},{e:'📤',t:'Exportar para Excel a qualquer momento'}] },
-                        { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Pronto para Começar?', sub:'Escolha por onde começar — sempre dá para adicionar mais', actions:[{e:'🏦',label:'Conta Bancária',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Cartão de Crédito',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Ações',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Fundos',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Previdência',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Painel',href:null,color:'#64748b'}] }
-                    ]
-                };
-                const lang = (typeof I18n !== 'undefined') ? I18n.currentLanguage : 'he';
-                return slides[lang] || slides.en;
-            },
-
-            init() {
-                // Onboarding auto-show disabled — was too intrusive.
-                // Users can manually open via the help/info button if available.
-                return;
-                // Original logic preserved below for manual triggering:
-                // if (localStorage.getItem('wl_onboarding_dismissed') || localStorage.getItem('finance_onboarding_done')) return;
-                // this._buildSlides();
-                // this._initSwipe();
-                // document.getElementById('onboardingOverlay').style.display = 'block';
-                // this._render();
-            },
-
-            _buildSlides() {
-                const track = document.getElementById('obTrack');
-                track.innerHTML = '';
-                this._getSlides().forEach((s, i) => {
-                    const panel = document.createElement('div');
-                    panel.style.cssText = 'flex:0 0 100vw;width:100vw;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 28px 120px;box-sizing:border-box;position:relative;';
-
-                    // bg glow
-                    const glow = document.createElement('div');
-                    glow.style.cssText = `position:absolute;inset:0;background:${s.bg};pointer-events:none;`;
-                    panel.appendChild(glow);
-
-                    // icon circle
-                    const iconWrap = document.createElement('div');
-                    iconWrap.style.cssText = 'width:96px;height:96px;border-radius:28px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:28px;backdrop-filter:blur(4px);flex-shrink:0;';
-                    iconWrap.textContent = s.icon;
-                    panel.appendChild(iconWrap);
-
-                    // title
-                    const title = document.createElement('h2');
-                    title.style.cssText = 'color:#fff;font-size:1.5rem;font-weight:700;text-align:center;margin:0 0 12px;line-height:1.3;';
-                    title.textContent = s.title;
-                    panel.appendChild(title);
-
-                    // subtitle
-                    const sub = document.createElement('p');
-                    sub.style.cssText = 'color:rgba(255,255,255,0.55);font-size:1rem;text-align:center;line-height:1.7;margin:0 0 32px;max-width:340px;';
-                    sub.textContent = s.sub;
-                    panel.appendChild(sub);
-
-                    if (s.actions) {
-                        // Action grid (last slide)
-                        const grid = document.createElement('div');
-                        grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;max-width:360px;';
-                        s.actions.forEach(a => {
-                            const card = document.createElement('a');
-                            card.className = 'ob-action-card';
-                            card.href = a.href || '#';
-                            if (!a.href) card.addEventListener('click', e => { e.preventDefault(); OnboardingTour.finish(); });
-                            else card.addEventListener('click', () => OnboardingTour.finish());
-                            card.innerHTML = `<span style="font-size:1.6rem;line-height:1;">${a.e}</span><span style="font-size:12px;font-weight:600;text-align:center;line-height:1.3;">${a.label}</span>`;
-                            card.style.borderColor = a.color + '44';
-                            card.style.background = a.color + '18';
-                            grid.appendChild(card);
-                        });
-                        panel.appendChild(grid);
-                    } else {
-                        // Feature list
-                        const list = document.createElement('div');
-                        list.style.cssText = 'display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;';
-                        s.features.forEach(f => {
-                            const row = document.createElement('div');
-                            row.className = 'ob-feature';
-                            row.innerHTML = `<span style="font-size:1.2rem;flex-shrink:0;">${f.e}</span><span>${f.t}</span>`;
-                            list.appendChild(row);
-                        });
-                        panel.appendChild(list);
-                    }
-
-                    track.appendChild(panel);
-                });
-            },
-
-            _initSwipe() {
-                const overlay = document.getElementById('onboardingOverlay');
-                let startX = 0;
-                overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-                overlay.addEventListener('touchend', e => {
-                    const dx = e.changedTouches[0].clientX - startX;
-                    if (Math.abs(dx) > 50) { dx > 0 ? this.next() : this.prev(); }
-                }, { passive: true });
-            },
-
-            _render() {
-                const slides = this._getSlides();
-                const total  = slides.length;
-                const isLast = this._step === total - 1;
-                const ob = (typeof I18n !== 'undefined') ? I18n.translations[I18n.currentLanguage]?.onboarding : null;
-
-                // progress bar
-                document.getElementById('obProgressBar').style.width = ((this._step + 1) / total * 100) + '%';
-                // counter
-                document.getElementById('obCounter').textContent = `${this._step + 1} / ${total}`;
-                // track translate (RTL: positive = go right = prev slide)
-                document.getElementById('obTrack').style.transform = `translateX(${this._step * 100}vw)`;
-                // prev button
-                document.getElementById('obPrevBtn').style.display = this._step > 0 ? '' : 'none';
-                // next button
-                const btn = document.getElementById('obNextBtn');
-                btn.textContent = isLast ? (ob?.start || '✓ Let\'s Start') : (ob?.next || 'Next →');
-                btn.style.display = isLast ? 'none' : '';
-            },
-
-            next() {
-                if (this._step < this._getSlides().length - 1) { this._step++; this._render(); }
-                else this.finish();
-            },
-            prev() {
-                if (this._step > 0) { this._step--; this._render(); }
-            },
-            finish() {
-                localStorage.setItem('wl_onboarding_dismissed', '1'); localStorage.setItem('finance_onboarding_done', '1');
-                const el = document.getElementById('onboardingOverlay');
-                el.style.transition = 'opacity 0.3s';
-                el.style.opacity = '0';
-                setTimeout(() => { el.style.display = 'none'; el.style.opacity = ''; }, 300);
-            }
-        };
-    </script>
+ <script src="js/idb.js"></script>
+ <script src="js/sidebar.js"></script>
+ <script src="js/profiles.js"></script>
+ <script src="js/storage.js"></script>
+ <script src="js/pin-lock.js"></script>
+ <script src="js/i18n.js"></script>
+ <script src="js/charts.js"></script>
+ <script src="js/alerts.js"></script>
+ <script src="js/goals.js"></script>
+ <script src="js/tags.js"></script>
+ <script src="js/export.js"></script>
+ <script src="js/smart-tips.js"></script>
+ <script src="js/widgets.js"></script>
+ <script src="js/currency.js"></script>
+ <script src="js/data-updates.js"></script>
+ <script src="js/app.js"></script>
+ <script src="js/firebase-config.js"></script>
+ <script src="js/crypto.js"></script>
+ <script src="js/auth.js"></script>
+ <script src="js/wizeai-sync.js"></script>
+ <script src="js/plan.js"></script>
+ <script src="js/paywall.js"></script>
+ <script src="js/summary-sender.js"></script>
+ <script src="data/sample-data.js"></script>
+ <script>
+ function escapeHtml(str) {
+ return String(str ?? '')
+ .replace(/&/g, '&amp;')
+ .replace(/</g, '&lt;')
+ .replace(/>/g, '&gt;')
+ .replace(/"/g, '&quot;');
+ }
+
+ // Onboarding — show to new users with no data
+ const OB_TR = {
+ he: { title:'ברוכים הבאים ל-WizeMoney 👋', sub:'רגע אחד להתחיל — בחר מה להוסיף ראשון:', dismiss:'אחר כך',
+ steps:[
+ {icon:'🏦',label:'הוסף חשבון בנק',desc:'רשום את יתרות החשבונות שלך',href:'pages/bank.html'},
+ {icon:'💳',label:'הוסף כרטיס אשראי',desc:'עקוב אחרי ההוצאות החודשיות',href:'pages/credit.html'},
+ {icon:'📊',label:'הוסף קרן / חיסכון',desc:'קרן השתלמות, פנסיה, גמל',href:'pages/my-funds.html'},
+ {icon:'🎯',label:'הגדר יעד חיסכון',desc:'רכב, נסיעה, דירה — כל מה שחולמים',href:'pages/goals.html'},
+ ]},
+ en: { title:'Welcome to WizeMoney 👋', sub:'One moment to start — choose what to add first:', dismiss:'Later',
+ steps:[
+ {icon:'🏦',label:'Add bank account',desc:'Track your account balances',href:'pages/bank.html'},
+ {icon:'💳',label:'Add credit card',desc:'Monitor your monthly spending',href:'pages/credit.html'},
+ {icon:'📊',label:'Add fund / savings',desc:'Education fund, pension, provident',href:'pages/my-funds.html'},
+ {icon:'🎯',label:'Set savings goal',desc:'Car, trip, home — whatever you dream of',href:'pages/goals.html'},
+ ]},
+ pt: { title:'Bem-vindo ao WizeMoney 👋', sub:'Um momento para começar — escolha o que adicionar primeiro:', dismiss:'Depois',
+ steps:[
+ {icon:'🏦',label:'Adicionar conta bancária',desc:'Registre os saldos das suas contas',href:'pages/bank.html'},
+ {icon:'💳',label:'Adicionar cartão de crédito',desc:'Monitore seus gastos mensais',href:'pages/credit.html'},
+ {icon:'📊',label:'Adicionar fundo / poupança',desc:'Fundo de educação, previdência',href:'pages/my-funds.html'},
+ {icon:'🎯',label:'Definir meta de poupança',desc:'Carro, viagem, casa — tudo que você sonha',href:'pages/goals.html'},
+ ]},
+ es: { title:'Bienvenido a WizeMoney 👋', sub:'Un momento para empezar — elige qué agregar primero:', dismiss:'Después',
+ steps:[
+ {icon:'🏦',label:'Agregar cuenta bancaria',desc:'Registra los saldos de tus cuentas',href:'pages/bank.html'},
+ {icon:'💳',label:'Agregar tarjeta de crédito',desc:'Controla tus gastos mensuales',href:'pages/credit.html'},
+ {icon:'📊',label:'Agregar fondo / ahorro',desc:'Fondo de educación, pensión',href:'pages/my-funds.html'},
+ {icon:'🎯',label:'Definir meta de ahorro',desc:'Auto, viaje, casa — todo lo que sueñas',href:'pages/goals.html'},
+ ]},
+ };
+
+ // Dashboard specific initialization
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'dashboard';
+ I18n.init();
+ WidgetManager.init();
+ App.updateDashboard();
+ Charts.updateMonthlyExpenses();
+ loadRecentTransactions();
+ SummarySender.checkAndShowBanner();
+ loadBudgetAlerts();
+ Onboarding.check();
+ });
+
+ function loadRecentTransactions() {
+ const transactions = [];
+
+ // Get recent bank balance updates
+ const bankAccounts = Storage.getBankAccounts();
+ bankAccounts.forEach(acc => {
+ if (acc.history && acc.history.length > 0) {
+ const latest = acc.history[acc.history.length - 1];
+ transactions.push({
+ date: latest.date,
+ type: I18n.t('nav.bankAccounts'),
+ description: acc.nameHe || acc.nameEn || acc.bank,
+ amount: latest.balance,
+ isPositive: true
+ });
+ }
+ });
+
+ // Get recent expenses
+ const creditData = Storage.getCreditCards();
+ creditData.expenses.slice(-5).forEach(exp => {
+ transactions.push({
+ date: exp.date,
+ type: I18n.t('nav.creditCards'),
+ description: exp.description,
+ amount: -exp.amount,
+ isPositive: false
+ });
+ });
+
+ // Get recent stock transactions
+ const stockData = Storage.getStocks();
+ stockData.transactions.slice(-5).forEach(tx => {
+ transactions.push({
+ date: tx.date,
+ type: I18n.t('nav.stocks'),
+ description: `${tx.type === 'buy' ? I18n.t('stocks.buy') : I18n.t('stocks.sell')} ${tx.symbol}`,
+ amount: tx.type === 'buy' ? -tx.price * tx.quantity : tx.price * tx.quantity,
+ isPositive: tx.type === 'sell'
+ });
+ });
+
+ // Sort by date and take last 10
+ transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+ const recent = transactions.slice(0, 10);
+
+ // Render table
+ const tbody = document.getElementById('recentTransactions');
+ if (recent.length === 0) {
+ tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--color-text-secondary);">${I18n.t('common.noData')}</td></tr>`;
+ return;
+ }
+
+ tbody.innerHTML = recent.map(tx => `
+ <tr>
+ <td>${I18n.formatDate(tx.date)}</td>
+ <td>${escapeHtml(tx.type)}</td>
+ <td>${escapeHtml(tx.description)}</td>
+ <td class="${tx.isPositive ? 'positive' : 'negative'}">${I18n.formatCurrency(Math.abs(tx.amount))}</td>
+ </tr>
+ `).join('');
+ }
+
+ function loadBudgetAlerts() {
+ const container = document.getElementById('dashboardBudgetAlerts');
+ if (!container) return;
+
+ const alerts = Alerts.checkBudgets();
+ if (alerts.length === 0) {
+ container.classList.remove('has-alerts');
+ return;
+ }
+
+ const sessionKey = 'budget_alerts_dismissed_' + new Date().toISOString().slice(0, 10);
+ if (sessionStorage.getItem(sessionKey)) return;
+
+ container.innerHTML = alerts.slice(0, 3).map(alert => `
+ <div class="dash-budget-alert ${alert.type}">
+ <span>${alert.icon}</span>
+ <span style="flex:1"><strong>${alert.title}</strong> · ${alert.message}</span>
+ <a href="pages/credit.html" style="font-size:13px;color:var(--color-primary);text-decoration:none;white-space:nowrap;">כרטיסי אשראי ←</a>
+ <button class="alert-dismiss" onclick="dismissBudgetAlerts()" title="סגור">✕</button>
+ </div>
+ `).join('');
+ container.classList.add('has-alerts');
+ }
+
+ function dismissBudgetAlerts() {
+ sessionStorage.setItem('budget_alerts_dismissed_' + new Date().toISOString().slice(0, 10), '1');
+ const container = document.getElementById('dashboardBudgetAlerts');
+ if (container) container.classList.remove('has-alerts');
+ }
+
+ // Load full financial picture widget
+ function loadFullPictureWidget() {
+ const widget = document.getElementById('fullPictureWidget');
+ if (!widget || !WidgetManager.isEnabled('fullPicture')) return;
+
+ const bank = Storage.getTotalBankBalance();
+ const stocks = Storage.getTotalStocksValue();
+ const funds = Storage.getTotalFundsValue();
+ const assets = Storage.getTotalAssetsValue();
+ const loans = Storage.getTotalLoansBalance();
+ const credit = Storage.getTotalCreditExpenses(
+ (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; })()
+ );
+
+ const totalAssets = bank + stocks + funds + assets;
+ const totalLiab = loans + credit;
+ const netWorth = totalAssets - totalLiab;
+ const fmt = v => I18n.formatCurrency(v);
+ const pct = (v, total) => total > 0 ? Math.round(v / total * 100) : 0;
+
+ const t = k => I18n.t('dashboard.' + k);
+ const assetRows = [
+ { icon: '🏦', label: t('bankLabel'), value: bank, color: '#3b82f6' },
+ { icon: '📈', label: t('stocksLabel'), value: stocks, color: '#10b981' },
+ { icon: '💎', label: t('fundsLabel'), value: funds, color: '#8b5cf6' },
+ { icon: '🏠', label: t('realEstateLabel'), value: assets, color: '#f59e0b' }
+ ].filter(r => r.value > 0);
+
+ const liabRows = [
+ { icon: '🔴', label: t('loansLabel'), value: loans, color: '#ef4444' },
+ { icon: '💳', label: t('creditMonthlyLabel'), value: credit, color: '#f97316' }
+ ].filter(r => r.value > 0);
+
+ const rowHtml = (rows, total) => rows.map(r => {
+ const p = pct(r.value, total);
+ return `
+ <div style="display:flex;align-items:center;gap:10px;padding:10px 20px;">
+ <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0;">${r.icon}</span>
+ <span style="flex:1;font-size:14px;color:var(--color-text-primary);">${r.label}</span>
+ <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);white-space:nowrap;">${fmt(r.value)}</span>
+ <div style="width:80px;flex-shrink:0;">
+ <div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;">
+ <div style="height:100%;width:${p}%;background:${r.color};border-radius:3px;transition:width 0.6s ease;"></div>
+ </div>
+ <div style="font-size:11px;color:var(--color-text-secondary);text-align:left;margin-top:2px;">${p}%</div>
+ </div>
+ </div>`;
+ }).join('');
+
+ const nwColor = netWorth >= 0 ? '#10b981' : '#ef4444';
+
+ widget.innerHTML = `
+ <!-- Net worth summary bar -->
+ <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px 14px;border-bottom:1px solid var(--color-border);">
+ <div>
+ <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">${t('netWorth')}</div>
+ <div style="font-size:1.6rem;font-weight:700;color:${nwColor};">${fmt(netWorth)}</div>
+ </div>
+ <div style="display:flex;gap:20px;text-align:center;">
+ <div>
+ <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">${t('totalAssets')}</div>
+ <div style="font-size:15px;font-weight:600;color:#10b981;">${fmt(totalAssets)}</div>
+ </div>
+ <div>
+ <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">${t('totalLiabilities')}</div>
+ <div style="font-size:15px;font-weight:600;color:#ef4444;">${fmt(totalLiab)}</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Assets -->
+ ${assetRows.length > 0 ? `
+ <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">${t('assetsSection')}</div>
+ ${rowHtml(assetRows, totalAssets)}
+ ` : ''}
+
+ <!-- Liabilities -->
+ ${liabRows.length > 0 ? `
+ <div style="padding:10px 20px 4px;border-top:1px solid var(--color-border);font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;">${t('liabilitiesSection')}</div>
+ ${rowHtml(liabRows, totalLiab)}
+ ` : ''}
+
+ <!-- Empty state -->
+ ${assetRows.length === 0 && liabRows.length === 0 ? `
+ <div style="padding:32px;text-align:center;color:var(--color-text-secondary);">
+ <div style="font-size:2rem;margin-bottom:12px;">📭</div>
+ <div>${t('noDataFullPicture')} <a href="pages/bank.html" style="color:var(--color-primary);">${t('addBankCta')}</a> ${t('addBankCtaSuffix')}</div>
+ </div>
+ ` : ''}
+ `;
+ }
+
+ // Load goals progress widget
+ function loadGoalsProgressWidget() {
+ const widget = document.getElementById('goalsProgressWidget');
+ if (!widget || !WidgetManager.isEnabled('goalsProgress')) return;
+
+ try {
+ const goals = JSON.parse(localStorage.getItem('finance_goals') || '[]');
+ if (goals.length === 0) {
+ widget.innerHTML = `
+ <div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">
+ <a href="pages/goals.html" style="color: var(--color-primary);">${I18n.t('dashboard.addSavingsGoals')}</a>
+ </div>
+ `;
+ return;
+ }
+
+ widget.innerHTML = goals.slice(0, 3).map(goal => {
+ const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
+ return `
+ <div style="margin-bottom: 15px;">
+ <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+ <span>${escapeHtml(goal.name)}</span>
+ <span>${progress.toFixed(0)}%</span>
+ </div>
+ <div style="background: var(--color-bg-hover); border-radius: 4px; height: 8px; overflow: hidden;">
+ <div style="width: ${progress}%; height: 100%; background: var(--color-primary); border-radius: 4px;"></div>
+ </div>
+ </div>
+ `;
+ }).join('');
+ } catch (e) {
+ console.error('Error loading goals widget:', e);
+ }
+ }
+
+ // Load quick stats widget
+ function loadQuickStatsWidget() {
+ const widget = document.getElementById('quickStatsWidget');
+ if (!widget || !WidgetManager.isEnabled('quickStats')) return;
+
+ const bankAccounts = Storage.getBankAccounts();
+ const creditData = Storage.getCreditCards();
+ const stockData = Storage.getStocks();
+ const fundsData = Storage.getMyFunds();
+
+ // Calculate stats
+ const thisMonth = new Date().getMonth();
+ const thisMonthExpenses = creditData.expenses
+ .filter(e => new Date(e.date).getMonth() === thisMonth)
+ .reduce((sum, e) => sum + e.amount, 0);
+
+ const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+ const lastMonthExpenses = creditData.expenses
+ .filter(e => new Date(e.date).getMonth() === lastMonth)
+ .reduce((sum, e) => sum + e.amount, 0);
+
+ const expenseChange = lastMonthExpenses > 0
+ ? ((thisMonthExpenses - lastMonthExpenses) / lastMonthExpenses * 100).toFixed(0)
+ : 0;
+
+ const stocksTotal = stockData.holdings.reduce((sum, h) => sum + (h.quantity * (h.currentPrice || h.avgPrice)), 0);
+ const stocksCost = stockData.holdings.reduce((sum, h) => sum + (h.quantity * h.avgPrice), 0);
+ const stocksReturn = stocksCost > 0 ? ((stocksTotal - stocksCost) / stocksCost * 100).toFixed(1) : 0;
+
+ const fundsTotal = fundsData.reduce((sum, f) => sum + (f.value || f.currentValue || 0), 0);
+ const fundsMonthlyDeposit = fundsData.reduce((sum, f) => sum + (f.monthlyDeposit || 0), 0);
+
+ widget.innerHTML = `
+ <style>
+ .quick-stats-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+ gap: 15px;
+ padding: 15px;
+ }
+ .quick-stat-item {
+ text-align: center;
+ padding: 15px;
+ background: var(--color-bg-hover);
+ border-radius: 10px;
+ }
+ .quick-stat-item .label {
+ font-size: 0.8rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 5px;
+ }
+ .quick-stat-item .value {
+ font-size: 1.2rem;
+ font-weight: 600;
+ }
+ .quick-stat-item .change {
+ font-size: 0.75rem;
+ margin-top: 3px;
+ }
+ .quick-stat-item .change.positive { color: var(--color-positive); }
+ .quick-stat-item .change.negative { color: var(--color-negative); }
+ </style>
+ <div class="quick-stat-item">
+ <div class="label">${I18n.t('dashboard.monthExpenses')}</div>
+ <div class="value">${I18n.formatCurrency(thisMonthExpenses)}</div>
+ <div class="change ${expenseChange > 0 ? 'negative' : 'positive'}">${expenseChange > 0 ? '▲' : '▼'} ${Math.abs(expenseChange)}% ${I18n.t('dashboard.fromLastMonth')}</div>
+ </div>
+ <div class="quick-stat-item">
+ <div class="label">${I18n.t('dashboard.stockReturn')}</div>
+ <div class="value ${stocksReturn >= 0 ? 'positive' : 'negative'}">${stocksReturn >= 0 ? '+' : ''}${stocksReturn}%</div>
+ </div>
+ <div class="quick-stat-item">
+ <div class="label">${I18n.t('dashboard.bankAccountsCount')}</div>
+ <div class="value">${bankAccounts.length}</div>
+ </div>
+ <div class="quick-stat-item">
+ <div class="label">${I18n.t('dashboard.monthlyFundDeposit')}</div>
+ <div class="value">${I18n.formatCurrency(fundsMonthlyDeposit)}</div>
+ </div>
+ `;
+ }
+
+ // Load currency rates widget
+ async function loadCurrencyWidget() {
+ const widget = document.getElementById('currencyRatesWidget');
+ if (!widget || !WidgetManager.isEnabled('currencyRates')) return;
+
+ widget.innerHTML = '<div style="text-align: center; color: var(--color-text-secondary);">' + I18n.t('stocks.loading') + '</div>';
+
+ try {
+ const rates = await CurrencyRates.getRates();
+
+ widget.innerHTML = `
+ <style>
+ .currency-rates-grid {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 15px;
+ }
+ .rate-card {
+ text-align: center;
+ padding: 15px;
+ background: var(--color-bg-hover);
+ border-radius: 10px;
+ }
+ .rate-card .flag {
+ font-size: 2rem;
+ margin-bottom: 5px;
+ }
+ .rate-card .code {
+ font-size: 0.8rem;
+ color: var(--color-text-secondary);
+ }
+ .rate-card .rate {
+ font-size: 1.3rem;
+ font-weight: 600;
+ color: var(--color-primary);
+ }
+ </style>
+ <div class="currency-rates-grid">
+ <div class="rate-card">
+ <div class="flag">🇺🇸</div>
+ <div class="code">USD</div>
+ <div class="rate">₪${rates.USD.toFixed(2)}</div>
+ </div>
+ <div class="rate-card">
+ <div class="flag">🇪🇺</div>
+ <div class="code">EUR</div>
+ <div class="rate">₪${rates.EUR.toFixed(2)}</div>
+ </div>
+ <div class="rate-card">
+ <div class="flag">🇬🇧</div>
+ <div class="code">GBP</div>
+ <div class="rate">₪${rates.GBP.toFixed(2)}</div>
+ </div>
+ </div>
+ <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: var(--color-text-secondary);">
+ ${I18n.t('dashboard.updated')}: ${new Date().toLocaleTimeString('he-IL')}
+ </div>
+ `;
+ } catch (e) {
+ widget.innerHTML = '<div style="text-align: center; color: var(--color-negative);">' + I18n.t('dashboard.rateLoadError') + '</div>';
+ }
+ }
+
+ // Load smart tips widget
+ function loadSmartTipsWidget() {
+ const widget = document.getElementById('smartTipsWidget');
+ if (!widget || !WidgetManager.isEnabled('smartTips')) return;
+
+ const tips = SmartTips.generateTips();
+ const lang = I18n?.currentLanguage || 'he';
+
+ if (tips.length === 0) {
+ widget.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">
+ <a href="pages/profile.html" style="color: var(--color-primary);">${lang === 'he' ? 'מלא פרופיל לקבלת טיפים' : lang === 'pt' ? 'Preencha seu perfil para dicas' : lang === 'es' ? 'Completa tu perfil para consejos' : 'Fill your profile to get tips'}</a>
+ </div>`;
+ return;
+ }
+
+ tips.sort((a, b) => a.priority - b.priority);
+ widget.innerHTML = tips.slice(0, 3).map(tip => `
+ <div style="display: flex; gap: 12px; padding: 12px 15px; border-bottom: 1px solid var(--color-border);">
+ <span style="font-size: 1.3rem;">${tip.icon}</span>
+ <div>
+ <div style="font-weight: 500; margin-bottom: 2px;">${tip.title[lang] || tip.title.en || tip.title.he}</div>
+ <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${tip.description[lang] || tip.description.en || tip.description.he}</div>
+ </div>
+ </div>
+ `).join('');
+ }
+
+ // Update widget loading on dashboard load
+ document.addEventListener('DOMContentLoaded', () => {
+ loadFullPictureWidget();
+ loadGoalsProgressWidget();
+ loadQuickStatsWidget();
+ loadCurrencyWidget();
+ loadSmartTipsWidget();
+ OnboardingTour.init();
+ });
+ </script>
+
+ <!-- ===== Onboarding ===== -->
+ <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;z-index:10500;background:#0d1117;overflow:hidden;">
+
+ <!-- Progress bar -->
+ <div style="position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.08);z-index:3;">
+ <div id="obProgressBar" style="height:100%;background:linear-gradient(90deg,#10b981,#3b82f6);width:0%;transition:width 0.4s ease;"></div>
+ </div>
+
+ <!-- Top bar: skip + counter -->
+ <div style="position:absolute;top:3px;left:0;right:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;">
+ <button onclick="OnboardingTour.finish()" style="background:rgba(255,255,255,0.08);border:none;border-radius:20px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;padding:6px 14px;font-family:inherit;">דלג</button>
+ <span id="obCounter" style="color:rgba(255,255,255,0.3);font-size:13px;"></span>
+ </div>
+
+ <!-- Slides track (horizontal scroll) -->
+ <div style="position:absolute;inset:0;overflow:hidden;">
+ <div id="obTrack" style="display:flex;height:100%;transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);will-change:transform;"></div>
+ </div>
+
+ <!-- Bottom nav -->
+ <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 36px;display:flex;gap:12px;align-items:center;z-index:3;">
+ <button id="obPrevBtn" onclick="OnboardingTour.prev()"
+ style="width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;font-size:22px;cursor:pointer;flex-shrink:0;display:none;font-family:inherit;">→</button>
+ <button id="obNextBtn" onclick="OnboardingTour.next()"
+ style="flex:1;height:52px;border-radius:14px;background:linear-gradient(135deg,#10b981,#3b82f6);border:none;color:white;font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;transition:transform 0.1s;"></button>
+ </div>
+ </div>
+
+ <style>
+ .ob-feature {
+ display: flex; align-items: center; gap: 10px;
+ background: rgba(255,255,255,0.06); border-radius: 10px;
+ padding: 10px 14px; font-size: 14px; color: rgba(255,255,255,0.85);
+ border: 1px solid rgba(255,255,255,0.08);
+ }
+ .ob-action-card {
+ display: flex; flex-direction: column; align-items: center; justify-content: center;
+ gap: 8px; border-radius: 16px; padding: 18px 12px; cursor: pointer;
+ border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
+ text-decoration: none; transition: transform 0.15s, background 0.15s;
+ color: white;
+ }
+ .ob-action-card:active { transform: scale(0.96); background: rgba(255,255,255,0.1); }
+ #obNextBtn:active { transform: scale(0.97); }
+ </style>
+
+ <script>
+ const Onboarding = {
+ STORAGE_KEY: 'wl_onboarding_dismissed',
+ show() {
+ const lang = localStorage.getItem('wl_lang') || 'he';
+ const t = OB_TR[lang] || OB_TR.he;
+ const box = document.getElementById('onboardingBox');
+ if (box) {
+ box.querySelector('h2').textContent = t.title;
+ box.querySelector('.ob-subtitle').textContent = t.sub;
+ box.querySelector('.ob-dismiss').textContent = t.dismiss;
+ const steps = box.querySelectorAll('.ob-step');
+ t.steps.forEach((s, i) => {
+ if (!steps[i]) return;
+ steps[i].href = s.href;
+ steps[i].querySelector('.ob-icon').textContent = s.icon;
+ steps[i].querySelector('.ob-label').textContent = s.label;
+ steps[i].querySelector('.ob-desc').textContent = s.desc;
+ });
+ }
+ const el = document.getElementById('onboardingOverlay');
+ if (el) el.classList.add('active');
+ },
+ dismiss() {
+ localStorage.setItem(this.STORAGE_KEY, '1');
+ localStorage.setItem('finance_onboarding_done', '1'); // also stop OnboardingTour
+ // Hide OnboardingTour overlay if open
+ var ovTour = document.getElementById('onboardingOverlay');
+ if (ovTour) ovTour.style.display = 'none';
+ const el = document.getElementById('onboardingOverlay');
+ if (el) el.classList.remove('active');
+ },
+ check() {
+ if (localStorage.getItem(this.STORAGE_KEY)) return;
+ const hasBank = Storage.getBankAccounts().length > 0;
+ const hasCredit = Storage.getCreditCards().length > 0;
+ const hasStocks = Storage.getStocks().holdings?.length > 0;
+ const hasFunds = (Storage.getMyFunds?.() || []).length > 0;
+ const hasAssets = Storage.getAssets().length > 0;
+ const hasLoans = Storage.getLoans().length > 0;
+ if (!hasBank && !hasCredit && !hasStocks && !hasFunds && !hasAssets && !hasLoans) {
+ setTimeout(() => this.show(), 800);
+ }
+ }
+ };
+
+ const OnboardingTour = {
+ _step: 0,
+
+ _getSlides() {
+ const ob = (typeof I18n !== 'undefined') ? I18n.translations[I18n.currentLanguage]?.onboarding : null;
+ const t = k => ob?.[k] || k;
+ const slides = {
+ he: [
+ { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'ברוכים הבאים ל-WizeMoney', sub:'הדרך החכמה לנהל את כל הכסף שלך במקום אחד', features:[{e:'📊',t:'תמונה מלאה של כל הנכסים וההתחייבויות'},{e:'🔔',t:'התראות חכמות על חריגות ויעדים'},{e:'🔒',t:'הנתונים שלך נשמרים אצלך בלבד'}] },
+ { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'חשבון בנק ועסקאות', sub:'הוסף את יתרות החשבון ועקוב אחרי כל הכנסה והוצאה', features:[{e:'⚡',t:'ייבוא ישיר מאתר הבנק בסימניית bookmarklet'},{e:'📅',t:'היסטוריית עסקאות עם חיפוש וסינון'},{e:'📉',t:'גרף הוצאות חודשי אוטומטי'}] },
+ { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'כרטיסי אשראי בשליטה', sub:'ייבא עסקאות מכאל, מקס וישראכרט בלחיצת כפתור', features:[{e:'🔖',t:'סימניית ייבוא חכם — הגדרה פעם אחת'},{e:'📂',t:'קטגוריות אוטומטיות לכל עסקה'},{e:'🔄',t:'זיהוי מנויים חוזרים אוטומטי'}] },
+ { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'מניות, קרנות ופנסיה', sub:'כל ההשקעות שלך — מניות, קרנות נאמנות, גמל ופנסיה', features:[{e:'💹',t:'מחירים בזמן אמת מנתוני TASE ויאהו'},{e:'📊',t:'תשואה לעומת עלות ממוצעת'},{e:'🏆',t:'השוואת קרנות נאמנות וגמל'}] },
+ { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'פרטיות מלאה ואבטחה', sub:'כל המידע נשמר במכשיר שלך בלבד — לא עובר לשום שרת', features:[{e:'🔑',t:'נעילת PIN ו-Face ID'},{e:'☁️',t:'גיבוי אופציונלי לענן דרך ההגדרות'},{e:'📤',t:'ייצוא לאקסל בכל עת'}] },
+ { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'מוכן להתחיל?', sub:'בחר איפה להתחיל — תמיד אפשר לחזור ולהוסיף עוד', actions:[{e:'🏦',label:'חשבון בנק',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'כרטיס אשראי',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'מניות',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'קרנות',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'גמל ופנסיה',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'לדאשבורד',href:null,color:'#64748b'}] }
+ ],
+ en: [
+ { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Welcome to WizeMoney', sub:'The smart way to manage all your money in one place', features:[{e:'📊',t:'Complete picture of all your assets & liabilities'},{e:'🔔',t:'Smart alerts for budget overruns and goals'},{e:'🔒',t:'Your data stays on your device only'}] },
+ { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Bank Accounts & Transactions', sub:'Add your account balances and track every income and expense', features:[{e:'⚡',t:'Direct import from your bank via bookmarklet'},{e:'📅',t:'Transaction history with search and filters'},{e:'📉',t:'Automatic monthly expense chart'}] },
+ { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Credit Cards Under Control', sub:'Import transactions from Cal, Max and Isracard in one click', features:[{e:'🔖',t:'Smart import bookmarklet — set up once'},{e:'📂',t:'Automatic categories for every transaction'},{e:'🔄',t:'Automatic recurring subscription detection'}] },
+ { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Stocks, Funds & Pension', sub:'All your investments — stocks, mutual funds, gemel & pension', features:[{e:'💹',t:'Real-time prices from TASE & Yahoo'},{e:'📊',t:'Return vs average cost'},{e:'🏆',t:'Compare mutual funds and gemel'}] },
+ { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Full Privacy & Security', sub:'All data stays on your device only — nothing sent to any server', features:[{e:'🔑',t:'PIN lock & Face ID'},{e:'☁️',t:'Optional cloud backup via Settings'},{e:'📤',t:'Export to Excel anytime'}] },
+ { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Ready to Start?', sub:'Choose where to begin — you can always add more later', actions:[{e:'🏦',label:'Bank Account',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Credit Card',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Stocks',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Funds',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Pension & Gemel',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Dashboard',href:null,color:'#64748b'}] }
+ ],
+ pt: [
+ { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Bem-vindo ao WizeMoney', sub:'A forma inteligente de gerenciar todo o seu dinheiro em um lugar', features:[{e:'📊',t:'Visão completa de todos os ativos e passivos'},{e:'🔔',t:'Alertas inteligentes para metas e orçamentos'},{e:'🔒',t:'Seus dados ficam apenas no seu dispositivo'}] },
+ { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Contas Bancárias e Transações', sub:'Adicione saldos e acompanhe cada receita e despesa', features:[{e:'⚡',t:'Importação direta do banco via bookmarklet'},{e:'📅',t:'Histórico de transações com busca e filtros'},{e:'📉',t:'Gráfico de despesas mensais automático'}] },
+ { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Cartões de Crédito Sob Controle', sub:'Importe transações com um clique', features:[{e:'🔖',t:'Bookmarklet de importação — configure uma vez'},{e:'📂',t:'Categorias automáticas para cada transação'},{e:'🔄',t:'Detecção automática de assinaturas recorrentes'}] },
+ { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Ações, Fundos e Previdência', sub:'Todos os seus investimentos em um só lugar', features:[{e:'💹',t:'Preços em tempo real'},{e:'📊',t:'Retorno vs custo médio'},{e:'🏆',t:'Comparar fundos de investimento'}] },
+ { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Privacidade e Segurança Total', sub:'Todos os dados ficam apenas no seu dispositivo', features:[{e:'🔑',t:'Bloqueio por PIN e Face ID'},{e:'☁️',t:'Backup opcional na nuvem'},{e:'📤',t:'Exportar para Excel a qualquer momento'}] },
+ { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Pronto para Começar?', sub:'Escolha por onde começar — sempre dá para adicionar mais', actions:[{e:'🏦',label:'Conta Bancária',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Cartão de Crédito',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Ações',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Fundos',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Previdência',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Painel',href:null,color:'#64748b'}] }
+ ]
+ };
+ const lang = (typeof I18n !== 'undefined') ? I18n.currentLanguage : 'he';
+ return slides[lang] || slides.en;
+ },
+
+ init() {
+ // Onboarding auto-show disabled — was too intrusive.
+ // Users can manually open via the help/info button if available.
+ return;
+ // Original logic preserved below for manual triggering:
+ // if (localStorage.getItem('wl_onboarding_dismissed') || localStorage.getItem('finance_onboarding_done')) return;
+ // this._buildSlides();
+ // this._initSwipe();
+ // document.getElementById('onboardingOverlay').style.display = 'block';
+ // this._render();
+ },
+
+ _buildSlides() {
+ const track = document.getElementById('obTrack');
+ track.innerHTML = '';
+ this._getSlides().forEach((s, i) => {
+ const panel = document.createElement('div');
+ panel.style.cssText = 'flex:0 0 100vw;width:100vw;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 28px 120px;box-sizing:border-box;position:relative;';
+
+ // bg glow
+ const glow = document.createElement('div');
+ glow.style.cssText = `position:absolute;inset:0;background:${s.bg};pointer-events:none;`;
+ panel.appendChild(glow);
+
+ // icon circle
+ const iconWrap = document.createElement('div');
+ iconWrap.style.cssText = 'width:96px;height:96px;border-radius:28px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:28px;backdrop-filter:blur(4px);flex-shrink:0;';
+ iconWrap.textContent = s.icon;
+ panel.appendChild(iconWrap);
+
+ // title
+ const title = document.createElement('h2');
+ title.style.cssText = 'color:#fff;font-size:1.5rem;font-weight:700;text-align:center;margin:0 0 12px;line-height:1.3;';
+ title.textContent = s.title;
+ panel.appendChild(title);
+
+ // subtitle
+ const sub = document.createElement('p');
+ sub.style.cssText = 'color:rgba(255,255,255,0.55);font-size:1rem;text-align:center;line-height:1.7;margin:0 0 32px;max-width:340px;';
+ sub.textContent = s.sub;
+ panel.appendChild(sub);
+
+ if (s.actions) {
+ // Action grid (last slide)
+ const grid = document.createElement('div');
+ grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;max-width:360px;';
+ s.actions.forEach(a => {
+ const card = document.createElement('a');
+ card.className = 'ob-action-card';
+ card.href = a.href || '#';
+ if (!a.href) card.addEventListener('click', e => { e.preventDefault(); OnboardingTour.finish(); });
+ else card.addEventListener('click', () => OnboardingTour.finish());
+ card.innerHTML = `<span style="font-size:1.6rem;line-height:1;">${a.e}</span><span style="font-size:12px;font-weight:600;text-align:center;line-height:1.3;">${a.label}</span>`;
+ card.style.borderColor = a.color + '44';
+ card.style.background = a.color + '18';
+ grid.appendChild(card);
+ });
+ panel.appendChild(grid);
+ } else {
+ // Feature list
+ const list = document.createElement('div');
+ list.style.cssText = 'display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;';
+ s.features.forEach(f => {
+ const row = document.createElement('div');
+ row.className = 'ob-feature';
+ row.innerHTML = `<span style="font-size:1.2rem;flex-shrink:0;">${f.e}</span><span>${f.t}</span>`;
+ list.appendChild(row);
+ });
+ panel.appendChild(list);
+ }
+
+ track.appendChild(panel);
+ });
+ },
+
+ _initSwipe() {
+ const overlay = document.getElementById('onboardingOverlay');
+ let startX = 0;
+ overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+ overlay.addEventListener('touchend', e => {
+ const dx = e.changedTouches[0].clientX - startX;
+ if (Math.abs(dx) > 50) { dx > 0 ? this.next() : this.prev(); }
+ }, { passive: true });
+ },
+
+ _render() {
+ const slides = this._getSlides();
+ const total = slides.length;
+ const isLast = this._step === total - 1;
+ const ob = (typeof I18n !== 'undefined') ? I18n.translations[I18n.currentLanguage]?.onboarding : null;
+
+ // progress bar
+ document.getElementById('obProgressBar').style.width = ((this._step + 1) / total * 100) + '%';
+ // counter
+ document.getElementById('obCounter').textContent = `${this._step + 1} / ${total}`;
+ // track translate (RTL: positive = go right = prev slide)
+ document.getElementById('obTrack').style.transform = `translateX(${this._step * 100}vw)`;
+ // prev button
+ document.getElementById('obPrevBtn').style.display = this._step > 0 ? '' : 'none';
+ // next button
+ const btn = document.getElementById('obNextBtn');
+ btn.textContent = isLast ? (ob?.start || '✓ Let\'s Start') : (ob?.next || 'Next →');
+ btn.style.display = isLast ? 'none' : '';
+ },
+
+ next() {
+ if (this._step < this._getSlides().length - 1) { this._step++; this._render(); }
+ else this.finish();
+ },
+ prev() {
+ if (this._step > 0) { this._step--; this._render(); }
+ },
+ finish() {
+ localStorage.setItem('wl_onboarding_dismissed', '1'); localStorage.setItem('finance_onboarding_done', '1');
+ const el = document.getElementById('onboardingOverlay');
+ el.style.transition = 'opacity 0.3s';
+ el.style.opacity = '0';
+ setTimeout(() => { el.style.display = 'none'; el.style.opacity = ''; }, 300);
+ }
+ };
+ </script>
 
 
 <script>
 /* WL: onboarding overlay reactive style */
 (function() {
-    function syncOverlay() {
-        var ov = document.getElementById('onboardingOverlay');
-        if (!ov) return;
-        var isLight = document.body.classList.contains('light');
-        ov.style.setProperty('background', isLight ? 'rgba(248,250,252,0.98)' : 'rgba(0,0,0,0.75)', 'important');
-        // Also color the title and subtitle
-        var titles = ov.querySelectorAll('h2, p, .ob-subtitle');
-        titles.forEach(function(t) { t.style.color = isLight ? '#1e293b' : ''; });
-    }
-    // Initial run
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', syncOverlay);
-    } else { syncOverlay(); }
-    // Watch for body class changes (theme toggle)
-    var obs = new MutationObserver(syncOverlay);
-    obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    // Also poll every 2s — Onboarding.show() may set inline style
-    setInterval(syncOverlay, 2000);
+ function syncOverlay() {
+ var ov = document.getElementById('onboardingOverlay');
+ if (!ov) return;
+ var isLight = document.body.classList.contains('light');
+ ov.style.setProperty('background', isLight ? 'rgba(248,250,252,0.98)' : 'rgba(0,0,0,0.75)', 'important');
+ // Also color the title and subtitle
+ var titles = ov.querySelectorAll('h2, p, .ob-subtitle');
+ titles.forEach(function(t) { t.style.color = isLight ? '#1e293b' : ''; });
+ }
+ // Initial run
+ if (document.readyState === 'loading') {
+ document.addEventListener('DOMContentLoaded', syncOverlay);
+ } else { syncOverlay(); }
+ // Watch for body class changes (theme toggle)
+ var obs = new MutationObserver(syncOverlay);
+ obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+ // Also poll every 2s — Onboarding.show() may set inline style
+ setInterval(syncOverlay, 2000);
 })();
 </script>
 <script src="js/wl-common-i18n.js?v=1" defer></script>
 <script src="js/wl-text-i18n.js?v=1" defer></script>
 </body>
 </html>
-<!-- Mon Feb  2 18:38:29 -03 2026 -->
+<!-- Mon Feb 2 18:38:29 -03 2026 -->
