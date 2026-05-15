@@ -151,6 +151,7 @@
  <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
 <script src="../js/storage.js"></script>
+<script src="../js/wize-pii.js"></script>
  <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
 
@@ -468,10 +469,15 @@ ${rules}`;
  showTyping();
 
  try {
+ // PII scrubbed (wize-pii.js, contextual) — strips email/phone/ID/address values
+ // from the conversation; keeps financial labels (goal/fund/account names) intact.
+ const _strip = (window.WizePII?.stripIdentity) || (x => x);
+ const _scrub = (window.WizePII?.scrubString) || (x => x);
+ const _system = await buildSystemPrompt();
  // Keep history as Gemini format; last message already added above
  const result = await aiProxy({
- messages: conversationHistory,
- system: await buildSystemPrompt(),
+ messages: _strip(conversationHistory),
+ system: typeof _system === 'string' ? _scrub(_system) : _strip(_system),
  });
 
  removeTyping();

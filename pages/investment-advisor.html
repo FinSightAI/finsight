@@ -131,7 +131,9 @@
  <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
 <script src="../js/storage.js"></script>
+<script src="../js/wize-pii.js"></script>
  <script src="../js/wizeai-sync.js"></script>
+<script src="../js/wize-pii.js"></script>
 <script src="../js/i18n.js"></script>
 
 <script>
@@ -819,16 +821,42 @@ function removeTyping() { document.getElementById('typingIndicator')?.remove(); 
 const AI_PROXY_URL = 'https://master-backend-79jx.onrender.com/api/ai-proxy';
 const AI_HEALTH_URL = 'https://master-backend-79jx.onrender.com/health';
 
+// Belt-and-suspenders egress lockdown:
+//  1. Authorization: Bearer <firebase-id-token>  — backend can verify identity
+//     and reject anonymous traffic to this endpoint.
+//  2. WizePII.stripIdentity / scrubString — removes emails, ID numbers, phone
+//     numbers, and ambiguous person-name fields from the payload before it
+//     ever leaves the browser. Domain labels (fund/goal names) are KEPT so
+//     the AI answer keeps full accuracy.
 async function _postAI(body) {
+ const headers = { 'Content-Type': 'application/json' };
+ try {
+ const u = (typeof firebase !== 'undefined') ? firebase.auth().currentUser : null;
+ if (u) {
+ const token = await u.getIdToken();
+ if (token) headers['Authorization'] = 'Bearer ' + token;
+ }
+ } catch (e) { /* token fetch failed — let backend reject if it requires auth */ }
  return fetch(AI_PROXY_URL, {
  method: 'POST',
- headers: { 'Content-Type': 'application/json' },
+ headers,
  body: JSON.stringify(body),
  });
 }
 
 async function aiProxy({ messages, system, maxTokens = 2048, search = false, searchTopic = 'finance' }) {
- const body = { messages, system, maxTokens };
+ let safeMessages = messages;
+ let safeSystem = system;
+ try {
+ if (typeof WizePII !== 'undefined') {
+ // messages is an array of {role, parts:[{text}]} — recurse to scrub
+ // any free-text email/SSN/CPF patterns inside the user content.
+ safeMessages = WizePII.stripIdentity(messages);
+ // system is a plain string — apply regex value-pattern scrubbing.
+ safeSystem = typeof system === 'string' ? WizePII.scrubString(system) : WizePII.stripIdentity(system);
+ }
+ } catch (e) { /* fail open — never block the user because of PII helper bugs */ }
+ const body = { messages: safeMessages, system: safeSystem, maxTokens };
  if (search) { body.search = true; body.searchTopic = searchTopic; }
  let res = await _postAI(body);
 

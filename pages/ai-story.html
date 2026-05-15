@@ -300,6 +300,7 @@
 <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
 <script src="../js/storage.js"></script>
+<script src="../js/wize-pii.js"></script>
  <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
 <script>
@@ -454,8 +455,11 @@ async function generateStory() {
 
  try {
  const prompt = buildPrompt(data);
+ // PII scrubbed (wize-pii.js, contextual) — recursively strips identity values
+ // from the messages payload while keeping financial labels for answer accuracy.
+ const _strip = (window.WizePII?.stripIdentity) || (x => x);
  const res = await aiProxy({
- messages: [{ role: 'user', parts: [{ text: prompt }] }],
+ messages: _strip([{ role: 'user', parts: [{ text: prompt }] }]),
  maxTokens: 600,
  });
 
