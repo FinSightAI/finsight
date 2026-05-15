@@ -248,11 +248,6 @@
     const footer = wizeAILink + footerBtns + mktToggle;
 
     const html = `
-        <div class="sidebar-header">
-            <div class="brand">
-                <span class="brand-name">Wize<span class="brand-highlight">Money</span></span>
-            </div>
-        </div>
         <nav>
             <ul class="nav-menu">
                 ${NAV.filter(item => !item.market || localStorage.getItem('wl_market') === item.market).map(buildItem).join('\n')}
@@ -339,7 +334,7 @@
             '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
             '<img src="https://wizelife.ai/assets/wizelife-icon.png?v=2026-05-14" width="20" height="20" alt="" style="flex-shrink:0;display:block">' +
             '<span style="font-size:13px;font-weight:800;color:#eef2ff;letter-spacing:-0.3px;font-family:Plus Jakarta Sans,sans-serif;">WizeLife</span>' +
-            '<span style="font-size:11px;font-weight:600;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:99px;line-height:1.4;">WizeMoney</span></a>' +
+            '</a>' +
             '<div style="display:flex;align-items:center;gap:10px;">' +
             /* Hidden on mobile (lang lives in the hamburger drawer there).
                Inline display is set via JS below to dodge any CSS specificity surprises. */
@@ -372,10 +367,12 @@
         const s = document.createElement('style');
         s.textContent =
             'body{padding-top:36px!important}.sidebar{top:36px!important;height:calc(100vh - 36px)!important}'
-            /* Hide WizeBar lang pills + floating lang switcher on mobile —
-               they live inside the sidebar (hamburger drawer) instead. */
+            /* Floating globalLangSwitcher is a duplicate of the WizeBar lang
+               pills — hide it on desktop too. On mobile both already hide and
+               the langs live in the hamburger drawer. */
+            + '#globalLangSwitcher{display:none !important;}'
             + '@media (max-width: 768px){'
-            + '  .wl-bar-lang,#globalLangSwitcher{display:none !important;}'
+            + '  .wl-bar-lang{display:none !important;}'
             /* Defensive: kill the legacy .mobile-tab-bar in case any old
                cached app.js still creates it. The shared #wize-bottom-nav
                replaces it. */

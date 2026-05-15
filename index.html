@@ -124,13 +124,10 @@
             </div>
 
             <header class="page-header">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <img src="https://wizelife.ai/assets/wizelife-icon.png" alt="WizeLife" style="display:block;width:56px;height:56px;margin-bottom:10px;filter:drop-shadow(0 4px 12px rgba(99,102,241,0.25));">
-                        <h1 data-i18n="dashboard.title">ניהול פיננסי אישי</h1>
-                        <p data-i18n="dashboard.subtitle">סקירה כללית של הנכסים שלך</p>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" onclick="WidgetManager.showCustomizeModal()" style="white-space: nowrap;">
+                <div style="text-align:center;position:relative;">
+                    <h1 class="brand-wordmark" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:2.6rem;letter-spacing:-1px;margin:8px auto 4px;line-height:1.05;">Wize<span class="brand-highlight">Money</span></h1>
+                    <p data-i18n="dashboard.subtitle" style="color:var(--color-text-muted);font-size:0.95rem;margin-top:6px;">סקירה כללית של הנכסים שלך</p>
+                    <button class="btn btn-secondary btn-sm" onclick="WidgetManager.showCustomizeModal()" style="white-space:nowrap;position:absolute;top:8px;inset-inline-end:0;">
                         <span>⚙️</span>
                         <span data-i18n="dashboard.customize">התאמה אישית</span>
                     </button>
