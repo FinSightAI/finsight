@@ -3,1331 +3,1323 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#3b82f6">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>חשבונות בנק - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .nav-link.active { background: var(--color-bank) !important; }
-        .page-header h1 { color: var(--color-bank); }
-        .btn-primary { background: var(--color-bank); }
-        .btn-primary:hover { background: #2563eb; }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#3b82f6">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>חשבונות בנק - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <style>
+ .nav-link.active { background: var(--color-bank) !important; }
+ .page-header h1 { color: var(--color-bank); }
+ .btn-primary { background: var(--color-bank); }
+ .btn-primary:hover { background: #2563eb; }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>
-                    <span>🏦</span>
-                    <span data-i18n="bank.title">חשבונות בנק</span>
-                </h1>
-            </header>
-
-            <!-- Total Balance Card -->
-            <div class="net-worth-banner" style="border-color: var(--color-bank);">
-                <div class="label" data-i18n="bank.balance">יתרה כוללת</div>
-                <div class="value" id="totalBalance" style="background: linear-gradient(90deg, var(--color-bank), #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">₪0</div>
-            </div>
-
-            <!-- Add Account Button -->
-            <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="openAddModal()">
-                    <span>➕</span>
-                    <span data-i18n="bank.addAccount">הוסף חשבון</span>
-                </button>
-                <button class="btn btn-secondary" onclick="importSmartFile()">
-                    <span>📥</span>
-                    <span data-i18n="bank.smartImport">ייבוא נתונים</span>
-                </button>
-                <button class="btn btn-secondary" onclick="ImageImport.openImagePicker('bank')">
-                    <span>📷</span>
-                    <span data-i18n="bank.importImage">ייבוא מתמונה</span>
-                </button>
-                <button class="btn btn-secondary" onclick="importStatementFile()">
-                    <span>📄</span>
-                    <span>ייבוא דף חשבון</span>
-                </button>
-                <button class="btn btn-secondary" onclick="importFromBankBookmarklet()">
-                    <span>📋</span>
-                    <span>ייבוא מסימניה</span>
-                </button>
-                <span class="tooltip-btn" data-tooltip="לחץ על סימניית FinSight בנק באתר הבנק,&#10;חזור לכאן ולחץ כפתור זה.&#10;להגדרת הסימניה: הגדרות ← ייבוא מאתרי אשראי">?</span>
-            </div>
-
-            <!-- Accounts List -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📋</span>
-                        <span data-i18n="bank.title">חשבונות בנק</span>
-                    </h2>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="bank.accountName">שם החשבון</th>
-                                <th data-i18n="bank.bankName">בנק</th>
-                                <th data-i18n="bank.accountNumber">מספר חשבון</th>
-                                <th data-i18n="bank.balance">יתרה</th>
-                                <th data-i18n="common.actions">פעולות</th>
-                            </tr>
-                        </thead>
-                        <tbody id="accountsTable">
-                            <!-- Will be populated by JS -->
-                        </tbody>
-                        <tfoot id="accountsFooter" style="display: none;">
-                            <tr style="background: var(--color-bg-secondary); font-weight: bold;">
-                                <td colspan="3" style="text-align: right;" data-i18n="bank.totalBalanceLabel">סה"כ יתרות</td>
-                                <td id="totalBalanceFooter">₪0</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Balance History Chart -->
-            <div class="card" id="historyCard" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📈</span>
-                        <span data-i18n="bank.balanceHistory">היסטוריית יתרות</span>
-                    </h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="balanceHistoryChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Transactions History -->
-            <div class="card" id="transactionsCard" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="icon">📜</span> תנועות אחרונות</h2>
-                    <button class="btn btn-sm btn-secondary" id="showAllTxBtn" onclick="toggleAllTransactions()" style="display:none;">הצג הכל</button>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>תאריך</th>
-                                <th>תיאור</th>
-                                <th>סכום</th>
-                                <th>יתרה</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionsTable"></tbody>
-                    </table>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
-
-    <!-- Add/Edit Account Modal -->
-    <div class="modal-overlay" id="accountModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="modalTitle" data-i18n="bank.addAccount">הוסף חשבון</h2>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="accountForm">
-                    <input type="hidden" id="accountId">
-
-                    <div class="form-group">
-                        <label data-i18n="bank.accountName">שם החשבון</label>
-                        <input type="text" class="form-control" id="accountName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="bank.bankName">בנק</label>
-                        <select class="form-control" id="bankName" required>
-                            <option value="leumi" data-i18n="bank.banks.leumi">בנק לאומי</option>
-                            <option value="hapoalim" data-i18n="bank.banks.hapoalim">בנק הפועלים</option>
-                            <option value="discount" data-i18n="bank.banks.discount">בנק דיסקונט</option>
-                            <option value="mizrahi" data-i18n="bank.banks.mizrahi">בנק מזרחי טפחות</option>
-                            <option value="international" data-i18n="bank.banks.international">הבנק הבינלאומי</option>
-                            <option value="mercantile" data-i18n="bank.banks.mercantile">בנק מרכנתיל</option>
-                            <option value="otsar" data-i18n="bank.banks.otsar">אוצר החייל</option>
-                            <option value="yahav" data-i18n="bank.banks.yahav">בנק יהב</option>
-                            <option value="massad" data-i18n="bank.banks.massad">בנק מסד</option>
-                            <option value="nubank" data-i18n="bank.banks.nubank">Nubank</option>
-                            <option value="itau" data-i18n="bank.banks.itau">Itaú</option>
-                            <option value="bradesco" data-i18n="bank.banks.bradesco">Bradesco</option>
-                            <option value="caixa" data-i18n="bank.banks.caixa">Caixa Econômica</option>
-                            <option value="bb" data-i18n="bank.banks.bb">Banco do Brasil</option>
-                            <option value="other" data-i18n="bank.banks.other">אחר</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="bank.accountNumber">מספר חשבון</label>
-                        <input type="text" class="form-control" id="accountNumber" maxlength="10" pattern="[0-9]{1,10}">
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="bank.balance">יתרה</label>
-                        <input type="number" class="form-control" id="balance" step="0.01" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveAccount()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Update Balance Modal -->
-    <div class="modal-overlay" id="updateBalanceModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 data-i18n="bank.updateBalance">עדכן יתרה</h2>
-                <button class="modal-close" onclick="closeUpdateModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="updateBalanceForm">
-                    <input type="hidden" id="updateAccountId">
-                    <div class="form-group">
-                        <label data-i18n="bank.balance">יתרה חדשה</label>
-                        <input type="number" class="form-control" id="newBalance" step="0.01" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeUpdateModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="updateBalance()" data-i18n="common.update">עדכן</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/charts.js"></script>
-    <script src="../js/csv-import.js"></script>
-    <script src="../js/smart-import.js"></script>
-    <script src="../js/image-import.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        // Page specific code
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'bank';
-            loadAccounts();
-        });
-
-        function loadAccounts() {
-            const accounts = Storage.getBankAccounts();
-            const tbody = document.getElementById('accountsTable');
-            const totalEl = document.getElementById('totalBalance');
-
-            const footer = document.getElementById('accountsFooter');
-            const footerTotal = document.getElementById('totalBalanceFooter');
-
-            if (accounts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏦</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין חשבונות בנק</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף את החשבון הראשון שלך כדי לעקוב אחרי היתרות</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף חשבון</button></div></td></tr>`;
-                totalEl.textContent = I18n.formatCurrency(0);
-                footer.style.display = 'none';
-                document.getElementById('historyCard').style.display = 'none';
-                return;
-            }
-
-            const total = accounts.reduce((sum, acc) => sum + (acc.balance || 0), 0);
-            totalEl.textContent = I18n.formatCurrency(total);
-            footerTotal.textContent = I18n.formatCurrency(total);
-            footer.style.display = 'table-footer-group';
-
-            tbody.innerHTML = accounts.map(acc => {
-                // Mask account number - show last 4 digits only
-                const accNum = acc.accountNumber || '';
-                const maskedNum = accNum.length > 4 ? '****' + accNum.slice(-4) : accNum;
-                return `
-                <tr>
-                    <td>${I18n.currentLanguage === 'he' ? acc.nameHe || acc.nameEn : acc.nameEn || acc.nameHe}</td>
-                    <td>${I18n.t('bank.banks.' + acc.bank) || acc.bank}</td>
-                    <td>${maskedNum}</td>
-                    <td>${I18n.formatCurrency(acc.balance)}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-secondary btn-sm" onclick="openUpdateBalanceModal('${acc.id}', ${acc.balance})" title="${I18n.t('bank.updateBalance')}">💰</button>
-                            <button class="btn btn-secondary btn-sm" onclick="editAccount('${acc.id}')" title="${I18n.t('common.edit')}">✏️</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteAccount('${acc.id}')" title="${I18n.t('common.delete')}">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            }).join('');
-
-            // Show history chart with combined history
-            document.getElementById('historyCard').style.display = 'block';
-            const combinedHistory = [];
-            accounts.forEach(acc => {
-                if (acc.history) {
-                    acc.history.forEach(h => {
-                        const existing = combinedHistory.find(ch => ch.date === h.date);
-                        if (existing) {
-                            existing.balance += h.balance;
-                        } else {
-                            combinedHistory.push({ date: h.date, balance: h.balance });
-                        }
-                    });
-                }
-            });
-            if (combinedHistory.length > 0) {
-                Charts.createBalanceHistory('balanceHistoryChart', combinedHistory, I18n.t('bank.balance'), '#3b82f6');
-            }
-
-            renderTransactions(accounts);
-        }
-
-        function openAddModal() {
-            document.getElementById('modalTitle').textContent = I18n.t('bank.addAccount');
-            document.getElementById('accountForm').reset();
-            document.getElementById('accountId').value = '';
-            document.getElementById('accountModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('accountModal').classList.remove('active');
-        }
-
-        function editAccount(id) {
-            const accounts = Storage.getBankAccounts();
-            const account = accounts.find(a => a.id === id);
-            if (!account) return;
-
-            document.getElementById('modalTitle').textContent = I18n.t('common.edit');
-            document.getElementById('accountId').value = account.id;
-            document.getElementById('accountName').value = account.nameHe || account.nameEn || '';
-            document.getElementById('bankName').value = account.bank;
-            document.getElementById('accountNumber').value = account.accountNumber;
-            document.getElementById('balance').value = account.balance;
-            document.getElementById('accountModal').classList.add('active');
-        }
-
-        function saveAccount() {
-            const id = document.getElementById('accountId').value;
-            const nameHe = document.getElementById('accountName').value;
-            const bank = document.getElementById('bankName').value;
-            const accountNumber = document.getElementById('accountNumber').value;
-            const balance = parseFloat(document.getElementById('balance').value);
-
-            if (!nameHe || !balance) {
-                App.notify('Please fill all required fields', 'error');
-                return;
-            }
-
-            if (id) {
-                // Update existing
-                Storage.updateBankAccount(id, { nameHe, nameEn: nameHe, bank, accountNumber, balance });
-            } else {
-                // Add new
-                Storage.addBankAccount({ nameHe, nameEn: nameHe, bank, accountNumber, balance, currency: 'ILS' });
-            }
-
-            closeModal();
-            loadAccounts();
-            App.notify(I18n.t('common.save') + ' ✓', 'success');
-        }
-
-        function openUpdateBalanceModal(id, currentBalance) {
-            document.getElementById('updateAccountId').value = id;
-            document.getElementById('newBalance').value = currentBalance;
-            document.getElementById('updateBalanceModal').classList.add('active');
-        }
-
-        function closeUpdateModal() {
-            document.getElementById('updateBalanceModal').classList.remove('active');
-        }
-
-        function updateBalance() {
-            const id = document.getElementById('updateAccountId').value;
-            const newBalance = parseFloat(document.getElementById('newBalance').value);
-
-            Storage.updateBankAccount(id, { balance: newBalance });
-            closeUpdateModal();
-            loadAccounts();
-            App.notify(I18n.t('bank.updateBalance') + ' ✓', 'success');
-        }
-
-        function deleteAccount(id) {
-            if (confirm(I18n.t('common.confirmDelete'))) {
-                Storage.deleteBankAccount(id);
-                loadAccounts();
-                App.notify(I18n.t('common.delete') + ' ✓', 'success');
-            }
-        }
-
-        function parseHTMLTable(html) {
-            const rows = [];
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-
-            // Prefer dataTable class, fallback to any table
-            let tables = doc.querySelectorAll('table.dataTable');
-            if (tables.length === 0) {
-                tables = doc.querySelectorAll('table');
-            }
-
-            const seenRows = new Set();
-
-            for (const table of tables) {
-                const tableRows = table.querySelectorAll('tr');
-                for (const tr of tableRows) {
-                    const cells = tr.querySelectorAll('th, td');
-                    if (cells.length >= 2 && cells.length <= 10) {
-                        const rowData = [];
-                        cells.forEach(cell => {
-                            // Clean up text - remove extra spaces and special characters
-                            let text = cell.textContent.trim()
-                                .replace(/\s+/g, ' ')
-                                .replace(/[‎‏\u200e\u200f]/g, ''); // Remove RTL/LTR marks
-                            rowData.push(text);
-                        });
-
-                        // Skip empty or duplicate rows
-                        const rowKey = rowData.join('|');
-                        if (rowData.some(cell => cell.length > 0) && !seenRows.has(rowKey)) {
-                            seenRows.add(rowKey);
-                            rows.push(rowData);
-                        }
-                    }
-                }
-            }
-
-            return rows;
-        }
-
-        // Bank account column mappings (multi-language)
-        const bankColumnMappings = {
-            name: ['שם', 'שם חשבון', 'סוג פעילות', 'פעילות', 'תיאור', 'name', 'account name', 'description', 'nome', 'nome da conta', 'descrição', 'activity', 'tipo', 'type'],
-            bank: ['בנק', 'שם בנק', 'bank', 'bank name', 'banco', 'instituição'],
-            accountNumber: ['מספר חשבון', 'חשבון', 'account number', 'account', 'número', 'número da conta', 'conta'],
-            balance: ['יתרה', 'יתרה בש', 'יתרה בשח', 'סכום', 'סכום בש', 'balance', 'amount', 'total', 'value', 'saldo', 'valor', 'montante']
-        };
-
-        async function importSmartFile() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.xlsx,.xls,.csv,.html,.txt';
-
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                try {
-                    let rows = [];
-                    const content = await file.text();
-
-                    // Check if it's HTML (bank exports often use .xls for HTML)
-                    if (content.includes('<HTML') || content.includes('<html') || content.includes('<table')) {
-                        rows = parseHTMLTable(content);
-                    } else if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
-                        // Use SheetJS for real Excel files
-                        const data = await file.arrayBuffer();
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-                    } else {
-                        // CSV/TXT - use existing parser
-                        rows = SmartImport.parseFile(content, file.name);
-                    }
-
-                    if (rows.length < 2) {
-                        App.notify(I18n.t('bank.fileEmptyOrInvalid'), 'error');
-                        return;
-                    }
-
-                    // Find header row
-                    const headerIdx = findBankHeaderRow(rows);
-                    const headers = rows[headerIdx];
-
-                    // Compute fingerprint of headers (for template auto-load)
-                    const fingerprint = headers.map(h => String(h||'').trim().toLowerCase()).join('|');
-
-                    // Try to load saved template for this exact header signature
-                    let templates = {};
-                    try { templates = JSON.parse(localStorage.getItem('finsight_import_templates') || '{}'); } catch(e){}
-                    const savedTemplate = templates[fingerprint];
-
-                    // Auto-detect columns (or use saved template)
-                    let detected = savedTemplate?.mapping || detectBankColumns(headers);
-
-                    // If balance column not found, show manual mapping
-                    if (detected.balance === undefined) {
-                        showColumnMappingModal(headers, rows, headerIdx);
-                        return;
-                    }
-
-                    // Build preview: first 5 data rows showing key columns
-                    const dataRows = rows.slice(headerIdx + 1).filter(r => {
-                        const fc = String(r[0]||'').trim();
-                        return fc && !fc.includes('סה"כ') && !fc.includes('total');
-                    });
-                    const previewCount = Math.min(5, dataRows.length);
-                    const colKeys = Object.keys(detected);
-                    const previewHtml = `
-                        <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">
-                            ${I18n.t('bank.previewIntro') || 'נמצאו'} <b>${dataRows.length}</b> ${I18n.t('bank.rowsTotal') || 'שורות'}.
-                            ${savedTemplate ? `<span style="color:var(--color-success);font-size:11px;margin-inline-start:6px">✓ ${I18n.t('bank.templateLoaded') || 'תבנית טעונה'}</span>` : ''}
-                        </div>
-                        <div style="overflow-x:auto;border:1px solid var(--color-border);border-radius:8px;">
-                            <table style="width:100%;font-size:12px;border-collapse:collapse;">
-                                <thead>
-                                    <tr style="background:var(--color-bg-secondary)">
-                                        ${colKeys.map(k => `<th style="padding:6px 10px;text-align:start;font-weight:700;color:var(--color-primary)">${k}<br><span style="font-weight:400;color:var(--color-text-secondary);font-size:10px">${headers[detected[k]] || ''}</span></th>`).join('')}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${dataRows.slice(0, previewCount).map(row => `
-                                        <tr style="border-top:1px solid var(--color-border)">
-                                            ${colKeys.map(k => `<td style="padding:6px 10px;color:var(--color-text)">${String(row[detected[k]] || '').slice(0, 40)}</td>`).join('')}
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:10px">
-                            ${I18n.t('bank.previewShowing') || 'מציג'} ${previewCount} ${I18n.t('bank.outOf') || 'מתוך'} ${dataRows.length}
-                        </div>
-                    `;
-
-                    // Show preview modal with confirm/cancel
-                    const confirmed = await showPreviewModal(previewHtml, dataRows.length);
-                    if (!confirmed) return;
-
-                    // Import the data
-                    const imported = importBankData(rows, headerIdx, detected);
-
-                    if (imported > 0) {
-                        // Save template for future auto-import
-                        try {
-                            templates[fingerprint] = { mapping: detected, savedAt: new Date().toISOString() };
-                            localStorage.setItem('finsight_import_templates', JSON.stringify(templates));
-                        } catch(e){}
-                        App.notify(I18n.t('bank.importedAccounts') + ` (${imported})`, 'success');
-                        loadAccounts();
-                    } else {
-                        App.notify(I18n.t('bank.noAccountsToImport'), 'error');
-                    }
-                } catch (error) {
-                    console.error('Import error:', error);
-                    App.notify(I18n.t('bank.importError') + ': ' + error.message, 'error');
-                }
-            };
-
-            input.click();
-        }
-
-        // Preview modal — shows first 5 rows + Confirm/Cancel before final import
-        function showPreviewModal(innerHtml, totalCount) {
-            return new Promise(resolve => {
-                const overlay = document.createElement('div');
-                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
-                const modal = document.createElement('div');
-                modal.style.cssText = 'background:var(--color-bg);border:1px solid var(--color-border);border-radius:14px;padding:20px;max-width:760px;width:100%;max-height:80vh;overflow-y:auto;';
-                modal.innerHTML = `
-                    <h3 style="margin:0 0 14px;font-size:18px;font-weight:700">📋 ${I18n.t('bank.previewTitle') || 'תצוגה מקדימה'}</h3>
-                    ${innerHtml}
-                    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
-                        <button id="prev-cancel" class="btn btn-secondary">${I18n.t('common.cancel') || 'ביטול'}</button>
-                        <button id="prev-ok" class="btn btn-primary">${I18n.t('bank.confirmImport') || 'אשר וייבא'} (${totalCount})</button>
-                    </div>
-                `;
-                overlay.appendChild(modal);
-                document.body.appendChild(overlay);
-                modal.querySelector('#prev-cancel').onclick = () => { overlay.remove(); resolve(false); };
-                modal.querySelector('#prev-ok').onclick = () => { overlay.remove(); resolve(true); };
-                overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
-            });
-        }
-
-        function findBankHeaderRow(rows) {
-            for (let i = 0; i < Math.min(rows.length, 15); i++) {
-                const row = rows[i];
-                if (!row || row.length < 2) continue;
-
-                const rowText = row.map(c => String(c || '').toLowerCase()).join(' ');
-
-                // Check for balance-related words
-                const hasBalanceWord = bankColumnMappings.balance.some(w => rowText.includes(w.toLowerCase()));
-                const hasNameWord = bankColumnMappings.name.some(w => rowText.includes(w.toLowerCase()));
-
-                if (hasBalanceWord || hasNameWord) {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
-        function detectBankColumns(headers) {
-            const detected = {};
-            headers.forEach((header, index) => {
-                if (!header) return;
-                const headerLower = String(header).toLowerCase().trim();
-                Object.keys(bankColumnMappings).forEach(field => {
-                    if (detected[field] !== undefined) return;
-                    const matches = bankColumnMappings[field].some(kw =>
-                        headerLower.includes(kw.toLowerCase())
-                    );
-                    if (matches) detected[field] = index;
-                });
-            });
-            return detected;
-        }
-
-        function importBankData(rows, headerIdx, detected) {
-            let imported = 0;
-            const dataRows = rows.slice(headerIdx + 1);
-
-            for (const row of dataRows) {
-                // Skip empty rows and summary rows
-                const firstCell = String(row[0] || '').trim();
-                if (!firstCell || firstCell.includes('סה"כ') || firstCell.includes('סהכ') || firstCell.includes('total')) continue;
-
-                const balanceVal = row[detected.balance];
-                const balance = typeof balanceVal === 'number' ? balanceVal :
-                    parseFloat(String(balanceVal || '0').replace(/[^\d.-]/g, ''));
-                if (isNaN(balance)) continue;
-
-                const name = detected.name !== undefined ? String(row[detected.name] || I18n.t('bank.importedAccount')).trim() : I18n.t('bank.importedAccount');
-                const bank = detected.bank !== undefined ? String(row[detected.bank] || 'other') : 'other';
-                const accountNumber = detected.accountNumber !== undefined ?
-                    String(row[detected.accountNumber] || '').replace(/[^\d]/g, '').slice(-10) : '';
-
-                // Map bank name to internal key
-                const bankKey = mapBankName(bank);
-
-                // Detect account type from name
-                let accountType = 'checking';
-                if (name.includes('ניירות ערך') || name.includes('ני"ע')) {
-                    accountType = 'securities';
-                } else if (name.includes('מטבע חוץ') || name.includes('מט"ח')) {
-                    accountType = 'forex';
-                } else if (name.includes('כ.א. חוץ') || name.includes('כרטיס אשראי')) {
-                    accountType = 'creditcard';
-                }
-
-                Storage.addBankAccount({
-                    nameHe: name,
-                    nameEn: name,
-                    bank: bankKey,
-                    accountNumber: accountNumber,
-                    balance: balance,
-                    currency: 'ILS',
-                    type: accountType
-                });
-                imported++;
-            }
-            return imported;
-        }
-
-        function showColumnMappingModal(headers, rows, headerIdx) {
-            // Create modal for manual column mapping
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.id = 'mappingModal';
-            modal.innerHTML = `
-                <div class="modal" style="max-width: 500px;">
-                    <div class="modal-header">
-                        <h2>${I18n.t('bank.selectColumns')}</h2>
-                        <button class="modal-close" onclick="document.getElementById('mappingModal').remove()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>${I18n.t('bank.autoDetectFailed')}</p>
-                        <div class="form-group">
-                            <label>${I18n.t('bank.nameDescCol')}</label>
-                            <select id="mapName" class="form-control">
-                                <option value="-1">${I18n.t('bank.notSelected')}</option>
-                                ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>${I18n.t('bank.balanceCol')}</label>
-                            <select id="mapBalance" class="form-control" required>
-                                <option value="-1">${I18n.t('bank.selectBalanceCol')}</option>
-                                ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>${I18n.t('bank.bankCol')}</label>
-                            <select id="mapBank" class="form-control">
-                                <option value="-1">${I18n.t('bank.notSelected')}</option>
-                                ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>${I18n.t('bank.accountCol')}</label>
-                            <select id="mapAccount" class="form-control">
-                                <option value="-1">${I18n.t('bank.notSelected')}</option>
-                                ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="document.getElementById('mappingModal').remove()">${I18n.t('common.cancel')}</button>
-                        <button class="btn btn-primary" onclick="applyManualMapping()">${I18n.t('bank.smartImport')}</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            // Store data for later use
-            window._importData = { rows, headerIdx };
-        }
-
-        function applyManualMapping() {
-            const balanceIdx = parseInt(document.getElementById('mapBalance').value);
-            if (balanceIdx < 0) {
-                App.notify(I18n.t('bank.mustSelectBalance'), 'error');
-                return;
-            }
-
-            const detected = {
-                name: parseInt(document.getElementById('mapName').value),
-                balance: balanceIdx,
-                bank: parseInt(document.getElementById('mapBank').value),
-                accountNumber: parseInt(document.getElementById('mapAccount').value)
-            };
-
-            // Clean up -1 values
-            Object.keys(detected).forEach(k => {
-                if (detected[k] < 0) delete detected[k];
-            });
-
-            const { rows, headerIdx } = window._importData;
-            const imported = importBankData(rows, headerIdx, detected);
-
-            document.getElementById('mappingModal').remove();
-            delete window._importData;
-
-            if (imported > 0) {
-                App.notify(I18n.t('bank.importedAccounts') + ` (${imported})`, 'success');
-                loadAccounts();
-            } else {
-                App.notify(I18n.t('bank.noAccountsToImport'), 'error');
-            }
-        }
-
-        function mapBankName(bankText) {
-            if (!bankText) return 'other';
-            const bankLower = bankText.toLowerCase();
-
-            if (bankLower.includes('לאומי') || bankLower.includes('leumi')) return 'leumi';
-            if (bankLower.includes('פועלים') || bankLower.includes('hapoalim')) return 'hapoalim';
-            if (bankLower.includes('דיסקונט') || bankLower.includes('discount')) return 'discount';
-            if (bankLower.includes('מזרחי') || bankLower.includes('mizrahi')) return 'mizrahi';
-            if (bankLower.includes('בינלאומי') || bankLower.includes('international')) return 'international';
-            if (bankLower.includes('מרכנתיל') || bankLower.includes('mercantile')) return 'mercantile';
-            if (bankLower.includes('אוצר') || bankLower.includes('otsar')) return 'otsar';
-            if (bankLower.includes('יהב') || bankLower.includes('yahav')) return 'yahav';
-            if (bankLower.includes('מסד') || bankLower.includes('massad')) return 'massad';
-            if (bankLower.includes('nubank')) return 'nubank';
-            if (bankLower.includes('itaú') || bankLower.includes('itau')) return 'itau';
-            if (bankLower.includes('bradesco')) return 'bradesco';
-            if (bankLower.includes('caixa')) return 'caixa';
-            if (bankLower.includes('banco do brasil') || bankLower === 'bb') return 'bb';
-
-            return 'other';
-        }
-
-        // Parses both Israeli (1,234.56) and Brazilian (1.234,56) number formats
-        function parseBankAmount(str) {
-            if (!str) return NaN;
-            str = str.trim().replace(/\s/g, '').replace(/[₪$R$]/g, '');
-            if (!str) return NaN;
-            // Brazilian format: digits, then periods as thousands, then comma+2 decimals e.g. 1.234,56
-            if (/^\-?\d{1,3}(\.\d{3})*(,\d+)?$/.test(str)) {
-                return parseFloat(str.replace(/\./g, '').replace(',', '.'));
-            }
-            // Brazilian without thousands e.g. 234,56
-            if (/^\-?\d+(,\d+)$/.test(str)) {
-                return parseFloat(str.replace(',', '.'));
-            }
-            // Standard: remove commas (thousands) keep dot (decimal)
-            return parseFloat(str.replace(/,/g, ''));
-        }
-
-        // ============== STATEMENT IMPORT ==============
-
-        const statementColumnMappings = {
-            date:        ['תאריך', 'תאריך ערך', 'תאריך עסקה', 'date', 'data', 'data lançamento'],
-            description: ['תיאור', 'תיאור פעולה', 'פרטים', 'שם בית העסק', 'description', 'descrição', 'histórico', 'lançamento'],
-            debit:       ['חיוב', 'משיכות', 'משיכות/חיובים', 'debit', 'débito', 'valor débito', 'saídas'],
-            credit:      ['זכות', 'הפקדות', 'הפקדות/זיכויים', 'credit', 'crédito', 'valor crédito', 'entradas'],
-            balance:     ['יתרה', 'יתרה בשח', 'יתרה בש"ח', 'balance', 'saldo'],
-            reference:   ['אסמכתא', 'מסמך', 'reference', 'documento', 'nº documento']
-        };
-
-        // Brazilian payment method detection — PIX, TED, DOC
-        function isBrazilianTransfer(desc) {
-            const d = (desc || '').toLowerCase();
-            return d.includes('pix') || d.includes(' ted ') || d.includes(' doc ') ||
-                   d.startsWith('ted ') || d.startsWith('pix ') || d.startsWith('doc ');
-        }
-
-        function detectBankFormat(rows) {
-            const text = rows.slice(0, 10).map(r => (r || []).join(' ')).join(' ');
-            if (text.includes('לאומי')) return 'leumi';
-            if (text.includes('הפועלים')) return 'hapoalim';
-            if (text.includes('דיסקונט')) return 'discount';
-            if (text.includes('מזרחי')) return 'mizrahi';
-            if (text.toLowerCase().includes('nubank')) return 'nubank';
-            if (text.toLowerCase().includes('itaú') || text.toLowerCase().includes('itau')) return 'itau';
-            if (text.toLowerCase().includes('bradesco')) return 'bradesco';
-            if (text.toLowerCase().includes('caixa econômica') || text.toLowerCase().includes('caixa economica')) return 'caixa';
-            if (text.toLowerCase().includes('banco do brasil')) return 'bb';
-            return null;
-        }
-
-        function detectStatementColumns(headers) {
-            const detected = {};
-            headers.forEach((header, index) => {
-                if (!header) return;
-                const headerLower = String(header).toLowerCase().trim();
-                Object.keys(statementColumnMappings).forEach(field => {
-                    if (detected[field] !== undefined) return;
-                    const matches = statementColumnMappings[field].some(kw =>
-                        headerLower.includes(kw.toLowerCase())
-                    );
-                    if (matches) detected[field] = index;
-                });
-            });
-            return detected;
-        }
-
-        function findStatementHeaderRow(rows) {
-            for (let i = 0; i < Math.min(rows.length, 15); i++) {
-                const row = rows[i];
-                if (!row || row.length < 2) continue;
-                const rowText = row.map(c => String(c || '').toLowerCase()).join(' ');
-                const hasDateWord = statementColumnMappings.date.some(w => rowText.includes(w.toLowerCase()));
-                const hasBalanceWord = statementColumnMappings.balance.some(w => rowText.includes(w.toLowerCase()));
-                if (hasDateWord || hasBalanceWord) return i;
-            }
-            return 0;
-        }
-
-        function parseStatementDate(val) {
-            if (val === null || val === undefined || val === '') return null;
-            if (typeof val === 'number' && val > 1000) {
-                try {
-                    const d = XLSX.SSF.parse_date_code(val);
-                    if (d) return `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
-                } catch(e) {}
-            }
-            if (val instanceof Date) return val.toISOString().split('T')[0];
-            return CSVImport.parseDate(String(val));
-        }
-
-        function previewStatementInfo(rows, headerIdx, detected) {
-            const dataRows = rows.slice(headerIdx + 1);
-            let minDate = null, maxDate = null, count = 0;
-            for (const row of dataRows) {
-                if (!row || detected.date === undefined) continue;
-                const date = parseStatementDate(row[detected.date]);
-                if (!date) continue;
-                count++;
-                if (!minDate || date < minDate) minDate = date;
-                if (!maxDate || date > maxDate) maxDate = date;
-            }
-            return { count, minDate, maxDate };
-        }
-
-        async function importStatementFile() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.xlsx,.xls,.csv,.html,.txt';
-
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                try {
-                    let rows = [];
-                    const content = await file.text();
-
-                    if (content.includes('<HTML') || content.includes('<html') || content.includes('<table')) {
-                        rows = parseHTMLTable(content);
-                    } else if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
-                        const data = await file.arrayBuffer();
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-                    } else {
-                        rows = SmartImport.parseFile(content, file.name);
-                    }
-
-                    if (rows.length < 2) {
-                        App.notify('הקובץ ריק או לא תקין', 'error');
-                        return;
-                    }
-
-                    const bankFormat = detectBankFormat(rows);
-                    if (bankFormat) {
-                        const bankNames = { leumi: 'בנק לאומי', hapoalim: 'בנק הפועלים', discount: 'בנק דיסקונט', mizrahi: 'בנק מזרחי' };
-                        App.notify('זוהה פורמט: ' + bankNames[bankFormat], 'success');
-                    }
-
-                    const headerIdx = findStatementHeaderRow(rows);
-                    const headers = rows[headerIdx];
-                    const detected = detectStatementColumns(headers);
-
-                    if (detected.balance === undefined) {
-                        showStatementMappingModal(headers, rows, headerIdx);
-                        return;
-                    }
-
-                    showAccountSelectModal(rows, headerIdx, detected);
-                } catch (error) {
-                    console.error('Statement import error:', error);
-                    App.notify('שגיאה בייבוא: ' + error.message, 'error');
-                }
-            };
-
-            input.click();
-        }
-
-        function showAccountSelectModal(rows, headerIdx, detected) {
-            const accounts = Storage.getBankAccounts();
-            const { count, minDate, maxDate } = previewStatementInfo(rows, headerIdx, detected);
-            const fmt = d => d ? d.split('-').reverse().join('/') : '';
-            const preview = count > 0
-                ? `נמצאו ${count} תנועות מ-${fmt(minDate)} עד ${fmt(maxDate)}`
-                : 'לא נמצאו תנועות בקובץ';
-
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.id = 'accountSelectModal';
-            modal.innerHTML = `
-                <div class="modal" style="max-width: 480px;">
-                    <div class="modal-header">
-                        <h2>בחר חשבון לייבוא</h2>
-                        <button class="modal-close" onclick="document.getElementById('accountSelectModal').remove()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p style="color: var(--color-text-secondary); margin-bottom: 16px;">${preview}</p>
-                        <div class="form-group">
-                            <label>חשבון יעד</label>
-                            <select id="targetAccountSelect" class="form-control">
-                                <option value="new">➕ צור חשבון חדש</option>
-                                ${accounts.map(a => `<option value="${a.id}">${a.nameHe || a.nameEn} – ${I18n.t('bank.banks.' + a.bank) || a.bank}</option>`).join('')}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="document.getElementById('accountSelectModal').remove()">ביטול</button>
-                        <button class="btn btn-primary" onclick="confirmAccountSelect()">ייבא תנועות</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            window._statementData = { rows, headerIdx, detected };
-        }
-
-        function confirmAccountSelect() {
-            const accountId = document.getElementById('targetAccountSelect').value;
-            document.getElementById('accountSelectModal').remove();
-            const { rows, headerIdx, detected } = window._statementData;
-            importStatementData(accountId, rows, headerIdx, detected);
-        }
-
-        function importStatementData(accountId, rows, headerIdx, detected) {
-            const dataRows = rows.slice(headerIdx + 1);
-            const transactions = [];
-            const historyMap = {};
-
-            for (const row of dataRows) {
-                if (!row || row.length === 0) continue;
-
-                // Skip rows where all relevant cells are empty
-                const relevantVals = [
-                    detected.date !== undefined ? row[detected.date] : undefined,
-                    detected.description !== undefined ? row[detected.description] : undefined,
-                    detected.debit !== undefined ? row[detected.debit] : undefined,
-                    detected.credit !== undefined ? row[detected.credit] : undefined,
-                    detected.balance !== undefined ? row[detected.balance] : undefined
-                ];
-                if (relevantVals.every(v => v === null || v === undefined || v === '')) continue;
-
-                const date = parseStatementDate(detected.date !== undefined ? row[detected.date] : null);
-                if (!date) continue;
-
-                const desc = detected.description !== undefined ? String(row[detected.description] || '').trim() : '';
-
-                const rawDebit  = detected.debit !== undefined ? row[detected.debit] : null;
-                const rawCredit = detected.credit !== undefined ? row[detected.credit] : null;
-                const rawBal    = detected.balance !== undefined ? row[detected.balance] : null;
-
-                const debit  = (rawDebit  !== null && rawDebit  !== undefined && rawDebit  !== '') ? Math.abs(parseBankAmount(String(rawDebit))  || 0) : 0;
-                const credit = (rawCredit !== null && rawCredit !== undefined && rawCredit !== '') ? Math.abs(parseBankAmount(String(rawCredit)) || 0) : 0;
-                const bal    = (rawBal    !== null && rawBal    !== undefined && rawBal    !== '') ? parseBankAmount(String(rawBal)) : NaN;
-
-                const amount = credit - debit;
-                const tx = { date, description: desc, amount };
-                if (!isNaN(bal)) {
-                    tx.balance = bal;
-                    historyMap[date] = bal; // keep latest balance per date
-                }
-                transactions.push(tx);
-            }
-
-            if (transactions.length === 0) {
-                App.notify('לא נמצאו תנועות לייבוא', 'error');
-                return;
-            }
-
-            transactions.sort((a, b) => a.date.localeCompare(b.date));
-            const withBalance = transactions.filter(t => t.balance !== undefined);
-            const latestBalance = withBalance.length > 0 ? withBalance[withBalance.length - 1].balance : undefined;
-
-            let targetId = accountId;
-            if (accountId === 'new') {
-                const newAcc = Storage.addBankAccount({
-                    nameHe: 'חשבון מיובא',
-                    nameEn: 'Imported Account',
-                    bank: 'other',
-                    accountNumber: '',
-                    balance: latestBalance || 0,
-                    currency: 'ILS'
-                });
-                targetId = newAcc.id;
-            }
-
-            const accounts = Storage.getBankAccounts();
-            const acc = accounts.find(a => a.id === targetId);
-            if (!acc) {
-                App.notify('החשבון לא נמצא', 'error');
-                return;
-            }
-
-            // Merge transactions, deduplicate by date+description+amount
-            const txKey = t => `${t.date}|${t.description}|${t.amount}`;
-            const existingTx = acc.transactions || [];
-            const existingKeys = new Set(existingTx.map(txKey));
-            const newTx = transactions.filter(t => !existingKeys.has(txKey(t)));
-            const merged = [...existingTx, ...newTx].sort((a, b) => a.date.localeCompare(b.date));
-
-            // Build updated balance history
-            const histByDate = {};
-            (acc.history || []).forEach(h => { histByDate[h.date] = h.balance; });
-            Object.entries(historyMap).forEach(([date, balance]) => { histByDate[date] = balance; });
-            const updatedHistory = Object.entries(histByDate)
-                .map(([date, balance]) => ({ date, balance }))
-                .sort((a, b) => a.date.localeCompare(b.date));
-
-            const updatePayload = { transactions: merged };
-            if (latestBalance !== undefined) updatePayload.balance = latestBalance;
-            if (updatedHistory.length > 0) updatePayload.history = updatedHistory;
-
-            Storage.updateBankAccount(targetId, updatePayload);
-            const skipped = transactions.length - newTx.length;
-            if (newTx.length === 0) {
-                App.notify(`כל ${skipped} התנועות כבר קיימות — אין חדש לייבא`, 'info');
-            } else if (skipped > 0) {
-                App.notify(`יובאו ${newTx.length} תנועות חדשות · ${skipped} כפולות דולגו`, 'success');
-            } else {
-                App.notify(`יובאו ${newTx.length} תנועות בהצלחה`, 'success');
-            }
-            loadAccounts();
-            delete window._statementData;
-        }
-
-        function showStatementMappingModal(headers, rows, headerIdx) {
-            const opts = headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('');
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.id = 'stmtMappingModal';
-            modal.innerHTML = `
-                <div class="modal" style="max-width: 500px;">
-                    <div class="modal-header">
-                        <h2>מיפוי עמודות דף חשבון</h2>
-                        <button class="modal-close" onclick="document.getElementById('stmtMappingModal').remove()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p style="color: var(--color-text-secondary);">לא זוהו עמודות אוטומטית. אנא בחר ידנית:</p>
-                        <div class="form-group">
-                            <label>תאריך *</label>
-                            <select id="smDate" class="form-control"><option value="-1">-- בחר --</option>${opts}</select>
-                        </div>
-                        <div class="form-group">
-                            <label>תיאור</label>
-                            <select id="smDesc" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
-                        </div>
-                        <div class="form-group">
-                            <label>חיוב</label>
-                            <select id="smDebit" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
-                        </div>
-                        <div class="form-group">
-                            <label>זכות</label>
-                            <select id="smCredit" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
-                        </div>
-                        <div class="form-group">
-                            <label>יתרה *</label>
-                            <select id="smBalance" class="form-control"><option value="-1">-- בחר --</option>${opts}</select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="document.getElementById('stmtMappingModal').remove()">ביטול</button>
-                        <button class="btn btn-primary" onclick="applyStatementMapping()">המשך</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            window._statementData = { rows, headerIdx };
-        }
-
-        function applyStatementMapping() {
-            const dateIdx    = parseInt(document.getElementById('smDate').value);
-            const balanceIdx = parseInt(document.getElementById('smBalance').value);
-            if (dateIdx < 0 || balanceIdx < 0) {
-                App.notify('יש לבחור לפחות תאריך ויתרה', 'error');
-                return;
-            }
-            const detected = {
-                date:        dateIdx,
-                balance:     balanceIdx,
-                description: parseInt(document.getElementById('smDesc').value),
-                debit:       parseInt(document.getElementById('smDebit').value),
-                credit:      parseInt(document.getElementById('smCredit').value)
-            };
-            Object.keys(detected).forEach(k => { if (detected[k] < 0) delete detected[k]; });
-            document.getElementById('stmtMappingModal').remove();
-            const { rows, headerIdx } = window._statementData;
-            showAccountSelectModal(rows, headerIdx, detected);
-        }
-
-        // ============== TRANSACTION HISTORY UI ==============
-
-        let _allTransactions = [];
-        let _showAllTx = false;
-
-        function renderTransactions(accounts) {
-            const card      = document.getElementById('transactionsCard');
-            const tbody     = document.getElementById('transactionsTable');
-            const showAllBtn = document.getElementById('showAllTxBtn');
-
-            _allTransactions = [];
-            accounts.forEach(acc => {
-                (acc.transactions || []).forEach(tx => {
-                    _allTransactions.push({ ...tx, accountName: acc.nameHe || acc.nameEn });
-                });
-            });
-
-            if (_allTransactions.length === 0) {
-                card.style.display = 'none';
-                return;
-            }
-
-            _allTransactions.sort((a, b) => b.date.localeCompare(a.date));
-
-            card.style.display = 'block';
-            const toShow = _showAllTx ? _allTransactions : _allTransactions.slice(0, 15);
-            showAllBtn.style.display = _allTransactions.length > 15 ? 'block' : 'none';
-            showAllBtn.textContent = _showAllTx ? 'הצג פחות' : `הצג הכל (${_allTransactions.length})`;
-
-            tbody.innerHTML = toShow.map(tx => {
-                const amountColor = tx.amount < 0 ? 'color: var(--color-danger)' : 'color: var(--color-success)';
-                const amountSign  = tx.amount >= 0 ? '+' : '';
-                const balance     = tx.balance !== undefined ? I18n.formatCurrency(tx.balance) : '–';
-                const dateDisplay = tx.date ? tx.date.split('-').reverse().join('/') : '';
-                return `<tr>
-                    <td>${dateDisplay}</td>
-                    <td>${tx.description || ''}</td>
-                    <td style="${amountColor}">${amountSign}${I18n.formatCurrency(tx.amount)}</td>
-                    <td>${balance}</td>
-                </tr>`;
-            }).join('');
-        }
-
-        function toggleAllTransactions() {
-            _showAllTx = !_showAllTx;
-            renderTransactions(Storage.getBankAccounts());
-        }
-
-        const BANK_CODE_MAP = {'לאומי':'leumi','פועלים':'hapoalim','מזרחי-טפחות':'mizrahi','דיסקונט':'discount'};
-
-        // Auto-match: name → bank code → closest balance → single account
-        function findBestBankMatch(accounts, data) {
-            if (!accounts.length) return { match: null, candidates: [] };
-
-            // 1. Account name contains source string
-            const nameMatch = accounts.find(a => a.nameHe && data.source && a.nameHe.includes(data.source));
-            if (nameMatch) return { match: nameMatch, candidates: [] };
-
-            // 2. Match by bank code
-            const bankCode = BANK_CODE_MAP[data.source];
-            if (bankCode) {
-                const byBank = accounts.filter(a => a.bank === bankCode);
-                if (byBank.length === 1) return { match: byBank[0], candidates: [] };
-                if (byBank.length > 1) {
-                    // Prefer the account whose balance is closest to the imported balance
-                    if (data.balance != null) {
-                        const sorted = [...byBank].sort((a, b) =>
-                            Math.abs((a.balance||0) - data.balance) - Math.abs((b.balance||0) - data.balance));
-                        if (Math.abs((sorted[0].balance||0) - data.balance) < 1000)
-                            return { match: sorted[0], candidates: [] };
-                    }
-                    return { match: null, candidates: byBank }; // need picker
-                }
-            }
-
-            // 3. Only one account exists — use it
-            if (accounts.length === 1) return { match: accounts[0], candidates: [] };
-
-            return { match: null, candidates: [] };
-        }
-
-        async function importFromBankBookmarklet() {
-            try {
-                const text = await navigator.clipboard.readText();
-                const data = JSON.parse(text);
-                if (!data.__finsight_bank) {
-                    App.notify('הקליפבורד לא מכיל נתוני בנק. לחץ על הסימניה באתר הבנק תחילה.', 'error');
-                    return;
-                }
-
-                const accounts = Storage.getBankAccounts();
-                const { match, candidates } = findBestBankMatch(accounts, data);
-
-                if (candidates.length > 1) {
-                    showBankPickerModal(data, candidates);
-                    return;
-                }
-
-                if (!match) {
-                    // No match — offer to create
-                    if (!confirm(`לא נמצא חשבון "${data.source}". ליצור חשבון חדש?`)) return;
-                    Storage.addBankAccount({
-                        nameHe: data.source, nameEn: data.source,
-                        bank: BANK_CODE_MAP[data.source] || 'other',
-                        balance: data.balance || 0, currency: 'ILS',
-                        transactions: data.transactions || []
-                    });
-                    loadAccounts();
-                    App.notify(`✅ חשבון "${data.source}" נוצר עם ${data.transactions?.length || 0} תנועות`, 'success');
-                    return;
-                }
-
-                applyBankImport(match, data);
-
-            } catch(e) {
-                if (e.name === 'SyntaxError') App.notify('תוכן הקליפבורד אינו תקין', 'error');
-                else App.notify('לא ניתן לקרוא מהקליפבורד', 'error');
-            }
-        }
-
-        function showBankPickerModal(data, candidates) {
-            const existing = document.getElementById('bankPickerModal');
-            if (existing) existing.remove();
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.id = 'bankPickerModal';
-            modal.innerHTML = `
-                <div class="modal" style="max-width:440px;">
-                    <div class="modal-header">
-                        <h2>בחר חשבון לייבוא</h2>
-                        <button class="modal-close" onclick="document.getElementById('bankPickerModal').remove()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p style="color:var(--color-text-secondary);margin-bottom:12px;">
-                            נמצאו ${data.transactions?.length||0} תנועות מ-${data.source}. לאיזה חשבון לייבא?
-                        </p>
-                        <div class="form-group">
-                            <select id="bankPickerSelect" class="form-control">
-                                ${candidates.map(a => `<option value="${a.id}">${a.nameHe||a.nameEn} — ₪${(a.balance||0).toLocaleString('he-IL')}</option>`).join('')}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="document.getElementById('bankPickerModal').remove()">ביטול</button>
-                        <button class="btn btn-primary" onclick="confirmBankPicker()">ייבא</button>
-                    </div>
-                </div>`;
-            document.body.appendChild(modal);
-            window._pendingBankData = data;
-        }
-
-        function confirmBankPicker() {
-            const id = document.getElementById('bankPickerSelect').value;
-            const data = window._pendingBankData;
-            document.getElementById('bankPickerModal').remove();
-            const account = Storage.getBankAccounts().find(a => a.id === id);
-            if (account) applyBankImport(account, data);
-        }
-
-        function applyBankImport(target, data) {
-            const updates = {};
-            if (data.balance != null) updates.balance = data.balance;
-            const existing = target.transactions || [];
-            const keys = new Set(existing.map(t => `${t.date}|${t.description}|${t.amount}`));
-            const newTxs = (data.transactions||[]).filter(t => !keys.has(`${t.date}|${t.description}|${t.amount}`));
-            updates.transactions = [...existing, ...newTxs].sort((a, b) => b.date.localeCompare(a.date));
-            Storage.updateBankAccount(target.id, updates);
-            loadAccounts();
-            const balStr = data.balance != null ? ` | יתרה: ₪${Math.abs(data.balance).toLocaleString('he-IL')}` : '';
-            App.notify(`✅ ${newTxs.length} תנועות חדשות${balStr}`, 'success');
-        }
-    </script>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
+
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>
+ <span>🏦</span>
+ <span data-i18n="bank.title">חשבונות בנק</span>
+ </h1>
+ </header>
+
+ <!-- Total Balance Card -->
+ <div class="net-worth-banner" style="border-color: var(--color-bank);">
+ <div class="label" data-i18n="bank.balance">יתרה כוללת</div>
+ <div class="value" id="totalBalance" style="background: linear-gradient(90deg, var(--color-bank), #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">₪0</div>
+ </div>
+
+ <!-- Add Account Button -->
+ <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+ <button class="btn btn-primary" onclick="openAddModal()">
+ <span>➕</span>
+ <span data-i18n="bank.addAccount">הוסף חשבון</span>
+ </button>
+ <button class="btn btn-secondary" onclick="importSmartFile()">
+ <span>📥</span>
+ <span data-i18n="bank.smartImport">ייבוא נתונים</span>
+ </button>
+ <button class="btn btn-secondary" onclick="ImageImport.openImagePicker('bank')">
+ <span>📷</span>
+ <span data-i18n="bank.importImage">ייבוא מתמונה</span>
+ </button>
+ <button class="btn btn-secondary" onclick="importStatementFile()">
+ <span>📄</span>
+ <span>ייבוא דף חשבון</span>
+ </button>
+ <button class="btn btn-secondary" onclick="importFromBankBookmarklet()">
+ <span>📋</span>
+ <span>ייבוא מסימניה</span>
+ </button>
+ <span class="tooltip-btn" data-tooltip="לחץ על סימניית FinSight בנק באתר הבנק,&#10;חזור לכאן ולחץ כפתור זה.&#10;להגדרת הסימניה: הגדרות ← ייבוא מאתרי אשראי">?</span>
+ </div>
+
+ <!-- Accounts List -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📋</span>
+ <span data-i18n="bank.title">חשבונות בנק</span>
+ </h2>
+ </div>
+ <div class="table-container">
+ <table>
+ <thead>
+ <tr>
+ <th data-i18n="bank.accountName">שם החשבון</th>
+ <th data-i18n="bank.bankName">בנק</th>
+ <th data-i18n="bank.accountNumber">מספר חשבון</th>
+ <th data-i18n="bank.balance">יתרה</th>
+ <th data-i18n="common.actions">פעולות</th>
+ </tr>
+ </thead>
+ <tbody id="accountsTable">
+ <!-- Will be populated by JS -->
+ </tbody>
+ <tfoot id="accountsFooter" style="display: none;">
+ <tr style="background: var(--color-bg-secondary); font-weight: bold;">
+ <td colspan="3" style="text-align: right;" data-i18n="bank.totalBalanceLabel">סה"כ יתרות</td>
+ <td id="totalBalanceFooter">₪0</td>
+ <td></td>
+ </tr>
+ </tfoot>
+ </table>
+ </div>
+ </div>
+
+ <!-- Balance History Chart -->
+ <div class="card" id="historyCard" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📈</span>
+ <span data-i18n="bank.balanceHistory">היסטוריית יתרות</span>
+ </h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="balanceHistoryChart"></canvas>
+ </div>
+ </div>
+
+ <!-- Transactions History -->
+ <div class="card" id="transactionsCard" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">📜</span> תנועות אחרונות</h2>
+ <button class="btn btn-sm btn-secondary" id="showAllTxBtn" onclick="toggleAllTransactions()" style="display:none;">הצג הכל</button>
+ </div>
+ <div class="table-container">
+ <table>
+ <thead>
+ <tr>
+ <th>תאריך</th>
+ <th>תיאור</th>
+ <th>סכום</th>
+ <th>יתרה</th>
+ </tr>
+ </thead>
+ <tbody id="transactionsTable"></tbody>
+ </table>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
+
+ <!-- Mobile Menu Toggle -->
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
+
+ <!-- Add/Edit Account Modal -->
+ <div class="modal-overlay" id="accountModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 id="modalTitle" data-i18n="bank.addAccount">הוסף חשבון</h2>
+ <button class="modal-close" onclick="closeModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="accountForm">
+ <input type="hidden" id="accountId">
+
+ <div class="form-group">
+ <label data-i18n="bank.accountName">שם החשבון</label>
+ <input type="text" class="form-control" id="accountName" required>
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="bank.bankName">בנק</label>
+ <select class="form-control" id="bankName" required>
+ <option value="leumi" data-i18n="bank.banks.leumi">בנק לאומי</option>
+ <option value="hapoalim" data-i18n="bank.banks.hapoalim">בנק הפועלים</option>
+ <option value="discount" data-i18n="bank.banks.discount">בנק דיסקונט</option>
+ <option value="mizrahi" data-i18n="bank.banks.mizrahi">בנק מזרחי טפחות</option>
+ <option value="international" data-i18n="bank.banks.international">הבנק הבינלאומי</option>
+ <option value="mercantile" data-i18n="bank.banks.mercantile">בנק מרכנתיל</option>
+ <option value="otsar" data-i18n="bank.banks.otsar">אוצר החייל</option>
+ <option value="yahav" data-i18n="bank.banks.yahav">בנק יהב</option>
+ <option value="massad" data-i18n="bank.banks.massad">בנק מסד</option>
+ <option value="nubank" data-i18n="bank.banks.nubank">Nubank</option>
+ <option value="itau" data-i18n="bank.banks.itau">Itaú</option>
+ <option value="bradesco" data-i18n="bank.banks.bradesco">Bradesco</option>
+ <option value="caixa" data-i18n="bank.banks.caixa">Caixa Econômica</option>
+ <option value="bb" data-i18n="bank.banks.bb">Banco do Brasil</option>
+ <option value="other" data-i18n="bank.banks.other">אחר</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="bank.accountNumber">מספר חשבון</label>
+ <input type="text" class="form-control" id="accountNumber" maxlength="10" pattern="[0-9]{1,10}">
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="bank.balance">יתרה</label>
+ <input type="number" class="form-control" id="balance" step="0.01" required>
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveAccount()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
+
+ <!-- Update Balance Modal -->
+ <div class="modal-overlay" id="updateBalanceModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 data-i18n="bank.updateBalance">עדכן יתרה</h2>
+ <button class="modal-close" onclick="closeUpdateModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="updateBalanceForm">
+ <input type="hidden" id="updateAccountId">
+ <div class="form-group">
+ <label data-i18n="bank.balance">יתרה חדשה</label>
+ <input type="number" class="form-control" id="newBalance" step="0.01" required>
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeUpdateModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="updateBalance()" data-i18n="common.update">עדכן</button>
+ </div>
+ </div>
+ </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/charts.js"></script>
+ <script src="../js/csv-import.js"></script>
+ <script src="../js/smart-import.js"></script>
+ <script src="../js/image-import.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ // Page specific code
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'bank';
+ loadAccounts();
+ });
+
+ function loadAccounts() {
+ const accounts = Storage.getBankAccounts();
+ const tbody = document.getElementById('accountsTable');
+ const totalEl = document.getElementById('totalBalance');
+
+ const footer = document.getElementById('accountsFooter');
+ const footerTotal = document.getElementById('totalBalanceFooter');
+
+ if (accounts.length === 0) {
+ tbody.innerHTML = `<tr><td colspan="5"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏦</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין חשבונות בנק</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף את החשבון הראשון שלך כדי לעקוב אחרי היתרות</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף חשבון</button></div></td></tr>`;
+ totalEl.textContent = I18n.formatCurrency(0);
+ footer.style.display = 'none';
+ document.getElementById('historyCard').style.display = 'none';
+ return;
+ }
+
+ const total = accounts.reduce((sum, acc) => sum + (acc.balance || 0), 0);
+ totalEl.textContent = I18n.formatCurrency(total);
+ footerTotal.textContent = I18n.formatCurrency(total);
+ footer.style.display = 'table-footer-group';
+
+ tbody.innerHTML = accounts.map(acc => {
+ // Mask account number - show last 4 digits only
+ const accNum = acc.accountNumber || '';
+ const maskedNum = accNum.length > 4 ? '****' + accNum.slice(-4) : accNum;
+ return `
+ <tr>
+ <td>${I18n.currentLanguage === 'he' ? acc.nameHe || acc.nameEn : acc.nameEn || acc.nameHe}</td>
+ <td>${I18n.t('bank.banks.' + acc.bank) || acc.bank}</td>
+ <td>${maskedNum}</td>
+ <td>${I18n.formatCurrency(acc.balance)}</td>
+ <td>
+ <div class="action-buttons">
+ <button class="btn btn-secondary btn-sm" onclick="openUpdateBalanceModal('${acc.id}', ${acc.balance})" title="${I18n.t('bank.updateBalance')}">💰</button>
+ <button class="btn btn-secondary btn-sm" onclick="editAccount('${acc.id}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteAccount('${acc.id}')" title="${I18n.t('common.delete')}">🗑️</button>
+ </div>
+ </td>
+ </tr>
+ `;
+ }).join('');
+
+ // Show history chart with combined history
+ document.getElementById('historyCard').style.display = 'block';
+ const combinedHistory = [];
+ accounts.forEach(acc => {
+ if (acc.history) {
+ acc.history.forEach(h => {
+ const existing = combinedHistory.find(ch => ch.date === h.date);
+ if (existing) {
+ existing.balance += h.balance;
+ } else {
+ combinedHistory.push({ date: h.date, balance: h.balance });
+ }
+ });
+ }
+ });
+ if (combinedHistory.length > 0) {
+ Charts.createBalanceHistory('balanceHistoryChart', combinedHistory, I18n.t('bank.balance'), '#3b82f6');
+ }
+
+ renderTransactions(accounts);
+ }
+
+ function openAddModal() {
+ document.getElementById('modalTitle').textContent = I18n.t('bank.addAccount');
+ document.getElementById('accountForm').reset();
+ document.getElementById('accountId').value = '';
+ document.getElementById('accountModal').classList.add('active');
+ }
+
+ function closeModal() {
+ document.getElementById('accountModal').classList.remove('active');
+ }
+
+ function editAccount(id) {
+ const accounts = Storage.getBankAccounts();
+ const account = accounts.find(a => a.id === id);
+ if (!account) return;
+
+ document.getElementById('modalTitle').textContent = I18n.t('common.edit');
+ document.getElementById('accountId').value = account.id;
+ document.getElementById('accountName').value = account.nameHe || account.nameEn || '';
+ document.getElementById('bankName').value = account.bank;
+ document.getElementById('accountNumber').value = account.accountNumber;
+ document.getElementById('balance').value = account.balance;
+ document.getElementById('accountModal').classList.add('active');
+ }
+
+ function saveAccount() {
+ const id = document.getElementById('accountId').value;
+ const nameHe = document.getElementById('accountName').value;
+ const bank = document.getElementById('bankName').value;
+ const accountNumber = document.getElementById('accountNumber').value;
+ const balance = parseFloat(document.getElementById('balance').value);
+
+ if (!nameHe || !balance) {
+ App.notify('Please fill all required fields', 'error');
+ return;
+ }
+
+ if (id) {
+ // Update existing
+ Storage.updateBankAccount(id, { nameHe, nameEn: nameHe, bank, accountNumber, balance });
+ } else {
+ // Add new
+ Storage.addBankAccount({ nameHe, nameEn: nameHe, bank, accountNumber, balance, currency: 'ILS' });
+ }
+
+ closeModal();
+ loadAccounts();
+ App.notify(I18n.t('common.save') + ' ✓', 'success');
+ }
+
+ function openUpdateBalanceModal(id, currentBalance) {
+ document.getElementById('updateAccountId').value = id;
+ document.getElementById('newBalance').value = currentBalance;
+ document.getElementById('updateBalanceModal').classList.add('active');
+ }
+
+ function closeUpdateModal() {
+ document.getElementById('updateBalanceModal').classList.remove('active');
+ }
+
+ function updateBalance() {
+ const id = document.getElementById('updateAccountId').value;
+ const newBalance = parseFloat(document.getElementById('newBalance').value);
+
+ Storage.updateBankAccount(id, { balance: newBalance });
+ closeUpdateModal();
+ loadAccounts();
+ App.notify(I18n.t('bank.updateBalance') + ' ✓', 'success');
+ }
+
+ function deleteAccount(id) {
+ if (confirm(I18n.t('common.confirmDelete'))) {
+ Storage.deleteBankAccount(id);
+ loadAccounts();
+ App.notify(I18n.t('common.delete') + ' ✓', 'success');
+ }
+ }
+
+ function parseHTMLTable(html) {
+ const rows = [];
+ const parser = new DOMParser();
+ const doc = parser.parseFromString(html, 'text/html');
+
+ // Prefer dataTable class, fallback to any table
+ let tables = doc.querySelectorAll('table.dataTable');
+ if (tables.length === 0) {
+ tables = doc.querySelectorAll('table');
+ }
+
+ const seenRows = new Set();
+
+ for (const table of tables) {
+ const tableRows = table.querySelectorAll('tr');
+ for (const tr of tableRows) {
+ const cells = tr.querySelectorAll('th, td');
+ if (cells.length >= 2 && cells.length <= 10) {
+ const rowData = [];
+ cells.forEach(cell => {
+ // Clean up text - remove extra spaces and special characters
+ let text = cell.textContent.trim()
+ .replace(/\s+/g, ' ')
+ .replace(/[‎‏\u200e\u200f]/g, ''); // Remove RTL/LTR marks
+ rowData.push(text);
+ });
+
+ // Skip empty or duplicate rows
+ const rowKey = rowData.join('|');
+ if (rowData.some(cell => cell.length > 0) && !seenRows.has(rowKey)) {
+ seenRows.add(rowKey);
+ rows.push(rowData);
+ }
+ }
+ }
+ }
+
+ return rows;
+ }
+
+ // Bank account column mappings (multi-language)
+ const bankColumnMappings = {
+ name: ['שם', 'שם חשבון', 'סוג פעילות', 'פעילות', 'תיאור', 'name', 'account name', 'description', 'nome', 'nome da conta', 'descrição', 'activity', 'tipo', 'type'],
+ bank: ['בנק', 'שם בנק', 'bank', 'bank name', 'banco', 'instituição'],
+ accountNumber: ['מספר חשבון', 'חשבון', 'account number', 'account', 'número', 'número da conta', 'conta'],
+ balance: ['יתרה', 'יתרה בש', 'יתרה בשח', 'סכום', 'סכום בש', 'balance', 'amount', 'total', 'value', 'saldo', 'valor', 'montante']
+ };
+
+ async function importSmartFile() {
+ const input = document.createElement('input');
+ input.type = 'file';
+ input.accept = '.xlsx,.xls,.csv,.html,.txt';
+
+ input.onchange = async (e) => {
+ const file = e.target.files[0];
+ if (!file) return;
+
+ try {
+ let rows = [];
+ const content = await file.text();
+
+ // Check if it's HTML (bank exports often use .xls for HTML)
+ if (content.includes('<HTML') || content.includes('<html') || content.includes('<table')) {
+ rows = parseHTMLTable(content);
+ } else if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+ // Use SheetJS for real Excel files
+ const data = await file.arrayBuffer();
+ const workbook = XLSX.read(data, { type: 'array' });
+ const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+ rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+ } else {
+ // CSV/TXT - use existing parser
+ rows = SmartImport.parseFile(content, file.name);
+ }
+
+ if (rows.length < 2) {
+ App.notify(I18n.t('bank.fileEmptyOrInvalid'), 'error');
+ return;
+ }
+
+ // Find header row
+ const headerIdx = findBankHeaderRow(rows);
+ const headers = rows[headerIdx];
+
+ // Compute fingerprint of headers (for template auto-load)
+ const fingerprint = headers.map(h => String(h||'').trim().toLowerCase()).join('|');
+
+ // Try to load saved template for this exact header signature
+ let templates = {};
+ try { templates = JSON.parse(localStorage.getItem('finsight_import_templates') || '{}'); } catch(e){}
+ const savedTemplate = templates[fingerprint];
+
+ // Auto-detect columns (or use saved template)
+ let detected = savedTemplate?.mapping || detectBankColumns(headers);
+
+ // If balance column not found, show manual mapping
+ if (detected.balance === undefined) {
+ showColumnMappingModal(headers, rows, headerIdx);
+ return;
+ }
+
+ // Build preview: first 5 data rows showing key columns
+ const dataRows = rows.slice(headerIdx + 1).filter(r => {
+ const fc = String(r[0]||'').trim();
+ return fc && !fc.includes('סה"כ') && !fc.includes('total');
+ });
+ const previewCount = Math.min(5, dataRows.length);
+ const colKeys = Object.keys(detected);
+ const previewHtml = `
+ <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">
+ ${I18n.t('bank.previewIntro') || 'נמצאו'} <b>${dataRows.length}</b> ${I18n.t('bank.rowsTotal') || 'שורות'}.
+ ${savedTemplate ? `<span style="color:var(--color-success);font-size:11px;margin-inline-start:6px">✓ ${I18n.t('bank.templateLoaded') || 'תבנית טעונה'}</span>` : ''}
+ </div>
+ <div style="overflow-x:auto;border:1px solid var(--color-border);border-radius:8px;">
+ <table style="width:100%;font-size:12px;border-collapse:collapse;">
+ <thead>
+ <tr style="background:var(--color-bg-secondary)">
+ ${colKeys.map(k => `<th style="padding:6px 10px;text-align:start;font-weight:700;color:var(--color-primary)">${k}<br><span style="font-weight:400;color:var(--color-text-secondary);font-size:10px">${headers[detected[k]] || ''}</span></th>`).join('')}
+ </tr>
+ </thead>
+ <tbody>
+ ${dataRows.slice(0, previewCount).map(row => `
+ <tr style="border-top:1px solid var(--color-border)">
+ ${colKeys.map(k => `<td style="padding:6px 10px;color:var(--color-text)">${String(row[detected[k]] || '').slice(0, 40)}</td>`).join('')}
+ </tr>
+ `).join('')}
+ </tbody>
+ </table>
+ </div>
+ <div style="font-size:11px;color:var(--color-text-secondary);margin-top:10px">
+ ${I18n.t('bank.previewShowing') || 'מציג'} ${previewCount} ${I18n.t('bank.outOf') || 'מתוך'} ${dataRows.length}
+ </div>
+ `;
+
+ // Show preview modal with confirm/cancel
+ const confirmed = await showPreviewModal(previewHtml, dataRows.length);
+ if (!confirmed) return;
+
+ // Import the data
+ const imported = importBankData(rows, headerIdx, detected);
+
+ if (imported > 0) {
+ // Save template for future auto-import
+ try {
+ templates[fingerprint] = { mapping: detected, savedAt: new Date().toISOString() };
+ localStorage.setItem('finsight_import_templates', JSON.stringify(templates));
+ } catch(e){}
+ App.notify(I18n.t('bank.importedAccounts') + ` (${imported})`, 'success');
+ loadAccounts();
+ } else {
+ App.notify(I18n.t('bank.noAccountsToImport'), 'error');
+ }
+ } catch (error) {
+ console.error('Import error:', error);
+ App.notify(I18n.t('bank.importError') + ': ' + error.message, 'error');
+ }
+ };
+
+ input.click();
+ }
+
+ // Preview modal — shows first 5 rows + Confirm/Cancel before final import
+ function showPreviewModal(innerHtml, totalCount) {
+ return new Promise(resolve => {
+ const overlay = document.createElement('div');
+ overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+ const modal = document.createElement('div');
+ modal.style.cssText = 'background:var(--color-bg);border:1px solid var(--color-border);border-radius:14px;padding:20px;max-width:760px;width:100%;max-height:80vh;overflow-y:auto;';
+ modal.innerHTML = `
+ <h3 style="margin:0 0 14px;font-size:18px;font-weight:700">📋 ${I18n.t('bank.previewTitle') || 'תצוגה מקדימה'}</h3>
+ ${innerHtml}
+ <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+ <button id="prev-cancel" class="btn btn-secondary">${I18n.t('common.cancel') || 'ביטול'}</button>
+ <button id="prev-ok" class="btn btn-primary">${I18n.t('bank.confirmImport') || 'אשר וייבא'} (${totalCount})</button>
+ </div>
+ `;
+ overlay.appendChild(modal);
+ document.body.appendChild(overlay);
+ modal.querySelector('#prev-cancel').onclick = () => { overlay.remove(); resolve(false); };
+ modal.querySelector('#prev-ok').onclick = () => { overlay.remove(); resolve(true); };
+ overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
+ });
+ }
+
+ function findBankHeaderRow(rows) {
+ for (let i = 0; i < Math.min(rows.length, 15); i++) {
+ const row = rows[i];
+ if (!row || row.length < 2) continue;
+
+ const rowText = row.map(c => String(c || '').toLowerCase()).join(' ');
+
+ // Check for balance-related words
+ const hasBalanceWord = bankColumnMappings.balance.some(w => rowText.includes(w.toLowerCase()));
+ const hasNameWord = bankColumnMappings.name.some(w => rowText.includes(w.toLowerCase()));
+
+ if (hasBalanceWord || hasNameWord) {
+ return i;
+ }
+ }
+ return 0;
+ }
+
+ function detectBankColumns(headers) {
+ const detected = {};
+ headers.forEach((header, index) => {
+ if (!header) return;
+ const headerLower = String(header).toLowerCase().trim();
+ Object.keys(bankColumnMappings).forEach(field => {
+ if (detected[field] !== undefined) return;
+ const matches = bankColumnMappings[field].some(kw =>
+ headerLower.includes(kw.toLowerCase())
+ );
+ if (matches) detected[field] = index;
+ });
+ });
+ return detected;
+ }
+
+ function importBankData(rows, headerIdx, detected) {
+ let imported = 0;
+ const dataRows = rows.slice(headerIdx + 1);
+
+ for (const row of dataRows) {
+ // Skip empty rows and summary rows
+ const firstCell = String(row[0] || '').trim();
+ if (!firstCell || firstCell.includes('סה"כ') || firstCell.includes('סהכ') || firstCell.includes('total')) continue;
+
+ const balanceVal = row[detected.balance];
+ const balance = typeof balanceVal === 'number' ? balanceVal :
+ parseFloat(String(balanceVal || '0').replace(/[^\d.-]/g, ''));
+ if (isNaN(balance)) continue;
+
+ const name = detected.name !== undefined ? String(row[detected.name] || I18n.t('bank.importedAccount')).trim() : I18n.t('bank.importedAccount');
+ const bank = detected.bank !== undefined ? String(row[detected.bank] || 'other') : 'other';
+ const accountNumber = detected.accountNumber !== undefined ?
+ String(row[detected.accountNumber] || '').replace(/[^\d]/g, '').slice(-10) : '';
+
+ // Map bank name to internal key
+ const bankKey = mapBankName(bank);
+
+ // Detect account type from name
+ let accountType = 'checking';
+ if (name.includes('ניירות ערך') || name.includes('ני"ע')) {
+ accountType = 'securities';
+ } else if (name.includes('מטבע חוץ') || name.includes('מט"ח')) {
+ accountType = 'forex';
+ } else if (name.includes('כ.א. חוץ') || name.includes('כרטיס אשראי')) {
+ accountType = 'creditcard';
+ }
+
+ Storage.addBankAccount({
+ nameHe: name,
+ nameEn: name,
+ bank: bankKey,
+ accountNumber: accountNumber,
+ balance: balance,
+ currency: 'ILS',
+ type: accountType
+ });
+ imported++;
+ }
+ return imported;
+ }
+
+ function showColumnMappingModal(headers, rows, headerIdx) {
+ // Create modal for manual column mapping
+ const modal = document.createElement('div');
+ modal.className = 'modal-overlay active';
+ modal.id = 'mappingModal';
+ modal.innerHTML = `
+ <div class="modal" style="max-width: 500px;">
+ <div class="modal-header">
+ <h2>${I18n.t('bank.selectColumns')}</h2>
+ <button class="modal-close" onclick="document.getElementById('mappingModal').remove()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <p>${I18n.t('bank.autoDetectFailed')}</p>
+ <div class="form-group">
+ <label>${I18n.t('bank.nameDescCol')}</label>
+ <select id="mapName" class="form-control">
+ <option value="-1">${I18n.t('bank.notSelected')}</option>
+ ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ </select>
+ </div>
+ <div class="form-group">
+ <label>${I18n.t('bank.balanceCol')}</label>
+ <select id="mapBalance" class="form-control" required>
+ <option value="-1">${I18n.t('bank.selectBalanceCol')}</option>
+ ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ </select>
+ </div>
+ <div class="form-group">
+ <label>${I18n.t('bank.bankCol')}</label>
+ <select id="mapBank" class="form-control">
+ <option value="-1">${I18n.t('bank.notSelected')}</option>
+ ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ </select>
+ </div>
+ <div class="form-group">
+ <label>${I18n.t('bank.accountCol')}</label>
+ <select id="mapAccount" class="form-control">
+ <option value="-1">${I18n.t('bank.notSelected')}</option>
+ ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ </select>
+ </div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="document.getElementById('mappingModal').remove()">${I18n.t('common.cancel')}</button>
+ <button class="btn btn-primary" onclick="applyManualMapping()">${I18n.t('bank.smartImport')}</button>
+ </div>
+ </div>
+ `;
+ document.body.appendChild(modal);
+
+ // Store data for later use
+ window._importData = { rows, headerIdx };
+ }
+
+ function applyManualMapping() {
+ const balanceIdx = parseInt(document.getElementById('mapBalance').value);
+ if (balanceIdx < 0) {
+ App.notify(I18n.t('bank.mustSelectBalance'), 'error');
+ return;
+ }
+
+ const detected = {
+ name: parseInt(document.getElementById('mapName').value),
+ balance: balanceIdx,
+ bank: parseInt(document.getElementById('mapBank').value),
+ accountNumber: parseInt(document.getElementById('mapAccount').value)
+ };
+
+ // Clean up -1 values
+ Object.keys(detected).forEach(k => {
+ if (detected[k] < 0) delete detected[k];
+ });
+
+ const { rows, headerIdx } = window._importData;
+ const imported = importBankData(rows, headerIdx, detected);
+
+ document.getElementById('mappingModal').remove();
+ delete window._importData;
+
+ if (imported > 0) {
+ App.notify(I18n.t('bank.importedAccounts') + ` (${imported})`, 'success');
+ loadAccounts();
+ } else {
+ App.notify(I18n.t('bank.noAccountsToImport'), 'error');
+ }
+ }
+
+ function mapBankName(bankText) {
+ if (!bankText) return 'other';
+ const bankLower = bankText.toLowerCase();
+
+ if (bankLower.includes('לאומי') || bankLower.includes('leumi')) return 'leumi';
+ if (bankLower.includes('פועלים') || bankLower.includes('hapoalim')) return 'hapoalim';
+ if (bankLower.includes('דיסקונט') || bankLower.includes('discount')) return 'discount';
+ if (bankLower.includes('מזרחי') || bankLower.includes('mizrahi')) return 'mizrahi';
+ if (bankLower.includes('בינלאומי') || bankLower.includes('international')) return 'international';
+ if (bankLower.includes('מרכנתיל') || bankLower.includes('mercantile')) return 'mercantile';
+ if (bankLower.includes('אוצר') || bankLower.includes('otsar')) return 'otsar';
+ if (bankLower.includes('יהב') || bankLower.includes('yahav')) return 'yahav';
+ if (bankLower.includes('מסד') || bankLower.includes('massad')) return 'massad';
+ if (bankLower.includes('nubank')) return 'nubank';
+ if (bankLower.includes('itaú') || bankLower.includes('itau')) return 'itau';
+ if (bankLower.includes('bradesco')) return 'bradesco';
+ if (bankLower.includes('caixa')) return 'caixa';
+ if (bankLower.includes('banco do brasil') || bankLower === 'bb') return 'bb';
+
+ return 'other';
+ }
+
+ // Parses both Israeli (1,234.56) and Brazilian (1.234,56) number formats
+ function parseBankAmount(str) {
+ if (!str) return NaN;
+ str = str.trim().replace(/\s/g, '').replace(/[₪$R$]/g, '');
+ if (!str) return NaN;
+ // Brazilian format: digits, then periods as thousands, then comma+2 decimals e.g. 1.234,56
+ if (/^\-?\d{1,3}(\.\d{3})*(,\d+)?$/.test(str)) {
+ return parseFloat(str.replace(/\./g, '').replace(',', '.'));
+ }
+ // Brazilian without thousands e.g. 234,56
+ if (/^\-?\d+(,\d+)$/.test(str)) {
+ return parseFloat(str.replace(',', '.'));
+ }
+ // Standard: remove commas (thousands) keep dot (decimal)
+ return parseFloat(str.replace(/,/g, ''));
+ }
+
+ // ============== STATEMENT IMPORT ==============
+
+ const statementColumnMappings = {
+ date: ['תאריך', 'תאריך ערך', 'תאריך עסקה', 'date', 'data', 'data lançamento'],
+ description: ['תיאור', 'תיאור פעולה', 'פרטים', 'שם בית העסק', 'description', 'descrição', 'histórico', 'lançamento'],
+ debit: ['חיוב', 'משיכות', 'משיכות/חיובים', 'debit', 'débito', 'valor débito', 'saídas'],
+ credit: ['זכות', 'הפקדות', 'הפקדות/זיכויים', 'credit', 'crédito', 'valor crédito', 'entradas'],
+ balance: ['יתרה', 'יתרה בשח', 'יתרה בש"ח', 'balance', 'saldo'],
+ reference: ['אסמכתא', 'מסמך', 'reference', 'documento', 'nº documento']
+ };
+
+ // Brazilian payment method detection — PIX, TED, DOC
+ function isBrazilianTransfer(desc) {
+ const d = (desc || '').toLowerCase();
+ return d.includes('pix') || d.includes(' ted ') || d.includes(' doc ') ||
+ d.startsWith('ted ') || d.startsWith('pix ') || d.startsWith('doc ');
+ }
+
+ function detectBankFormat(rows) {
+ const text = rows.slice(0, 10).map(r => (r || []).join(' ')).join(' ');
+ if (text.includes('לאומי')) return 'leumi';
+ if (text.includes('הפועלים')) return 'hapoalim';
+ if (text.includes('דיסקונט')) return 'discount';
+ if (text.includes('מזרחי')) return 'mizrahi';
+ if (text.toLowerCase().includes('nubank')) return 'nubank';
+ if (text.toLowerCase().includes('itaú') || text.toLowerCase().includes('itau')) return 'itau';
+ if (text.toLowerCase().includes('bradesco')) return 'bradesco';
+ if (text.toLowerCase().includes('caixa econômica') || text.toLowerCase().includes('caixa economica')) return 'caixa';
+ if (text.toLowerCase().includes('banco do brasil')) return 'bb';
+ return null;
+ }
+
+ function detectStatementColumns(headers) {
+ const detected = {};
+ headers.forEach((header, index) => {
+ if (!header) return;
+ const headerLower = String(header).toLowerCase().trim();
+ Object.keys(statementColumnMappings).forEach(field => {
+ if (detected[field] !== undefined) return;
+ const matches = statementColumnMappings[field].some(kw =>
+ headerLower.includes(kw.toLowerCase())
+ );
+ if (matches) detected[field] = index;
+ });
+ });
+ return detected;
+ }
+
+ function findStatementHeaderRow(rows) {
+ for (let i = 0; i < Math.min(rows.length, 15); i++) {
+ const row = rows[i];
+ if (!row || row.length < 2) continue;
+ const rowText = row.map(c => String(c || '').toLowerCase()).join(' ');
+ const hasDateWord = statementColumnMappings.date.some(w => rowText.includes(w.toLowerCase()));
+ const hasBalanceWord = statementColumnMappings.balance.some(w => rowText.includes(w.toLowerCase()));
+ if (hasDateWord || hasBalanceWord) return i;
+ }
+ return 0;
+ }
+
+ function parseStatementDate(val) {
+ if (val === null || val === undefined || val === '') return null;
+ if (typeof val === 'number' && val > 1000) {
+ try {
+ const d = XLSX.SSF.parse_date_code(val);
+ if (d) return `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
+ } catch(e) {}
+ }
+ if (val instanceof Date) return val.toISOString().split('T')[0];
+ return CSVImport.parseDate(String(val));
+ }
+
+ function previewStatementInfo(rows, headerIdx, detected) {
+ const dataRows = rows.slice(headerIdx + 1);
+ let minDate = null, maxDate = null, count = 0;
+ for (const row of dataRows) {
+ if (!row || detected.date === undefined) continue;
+ const date = parseStatementDate(row[detected.date]);
+ if (!date) continue;
+ count++;
+ if (!minDate || date < minDate) minDate = date;
+ if (!maxDate || date > maxDate) maxDate = date;
+ }
+ return { count, minDate, maxDate };
+ }
+
+ async function importStatementFile() {
+ const input = document.createElement('input');
+ input.type = 'file';
+ input.accept = '.xlsx,.xls,.csv,.html,.txt';
+
+ input.onchange = async (e) => {
+ const file = e.target.files[0];
+ if (!file) return;
+
+ try {
+ let rows = [];
+ const content = await file.text();
+
+ if (content.includes('<HTML') || content.includes('<html') || content.includes('<table')) {
+ rows = parseHTMLTable(content);
+ } else if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+ const data = await file.arrayBuffer();
+ const workbook = XLSX.read(data, { type: 'array' });
+ const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+ rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+ } else {
+ rows = SmartImport.parseFile(content, file.name);
+ }
+
+ if (rows.length < 2) {
+ App.notify('הקובץ ריק או לא תקין', 'error');
+ return;
+ }
+
+ const bankFormat = detectBankFormat(rows);
+ if (bankFormat) {
+ const bankNames = { leumi: 'בנק לאומי', hapoalim: 'בנק הפועלים', discount: 'בנק דיסקונט', mizrahi: 'בנק מזרחי' };
+ App.notify('זוהה פורמט: ' + bankNames[bankFormat], 'success');
+ }
+
+ const headerIdx = findStatementHeaderRow(rows);
+ const headers = rows[headerIdx];
+ const detected = detectStatementColumns(headers);
+
+ if (detected.balance === undefined) {
+ showStatementMappingModal(headers, rows, headerIdx);
+ return;
+ }
+
+ showAccountSelectModal(rows, headerIdx, detected);
+ } catch (error) {
+ console.error('Statement import error:', error);
+ App.notify('שגיאה בייבוא: ' + error.message, 'error');
+ }
+ };
+
+ input.click();
+ }
+
+ function showAccountSelectModal(rows, headerIdx, detected) {
+ const accounts = Storage.getBankAccounts();
+ const { count, minDate, maxDate } = previewStatementInfo(rows, headerIdx, detected);
+ const fmt = d => d ? d.split('-').reverse().join('/') : '';
+ const preview = count > 0
+ ? `נמצאו ${count} תנועות מ-${fmt(minDate)} עד ${fmt(maxDate)}`
+ : 'לא נמצאו תנועות בקובץ';
+
+ const modal = document.createElement('div');
+ modal.className = 'modal-overlay active';
+ modal.id = 'accountSelectModal';
+ modal.innerHTML = `
+ <div class="modal" style="max-width: 480px;">
+ <div class="modal-header">
+ <h2>בחר חשבון לייבוא</h2>
+ <button class="modal-close" onclick="document.getElementById('accountSelectModal').remove()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <p style="color: var(--color-text-secondary); margin-bottom: 16px;">${preview}</p>
+ <div class="form-group">
+ <label>חשבון יעד</label>
+ <select id="targetAccountSelect" class="form-control">
+ <option value="new">➕ צור חשבון חדש</option>
+ ${accounts.map(a => `<option value="${a.id}">${a.nameHe || a.nameEn} – ${I18n.t('bank.banks.' + a.bank) || a.bank}</option>`).join('')}
+ </select>
+ </div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="document.getElementById('accountSelectModal').remove()">ביטול</button>
+ <button class="btn btn-primary" onclick="confirmAccountSelect()">ייבא תנועות</button>
+ </div>
+ </div>
+ `;
+ document.body.appendChild(modal);
+ window._statementData = { rows, headerIdx, detected };
+ }
+
+ function confirmAccountSelect() {
+ const accountId = document.getElementById('targetAccountSelect').value;
+ document.getElementById('accountSelectModal').remove();
+ const { rows, headerIdx, detected } = window._statementData;
+ importStatementData(accountId, rows, headerIdx, detected);
+ }
+
+ function importStatementData(accountId, rows, headerIdx, detected) {
+ const dataRows = rows.slice(headerIdx + 1);
+ const transactions = [];
+ const historyMap = {};
+
+ for (const row of dataRows) {
+ if (!row || row.length === 0) continue;
+
+ // Skip rows where all relevant cells are empty
+ const relevantVals = [
+ detected.date !== undefined ? row[detected.date] : undefined,
+ detected.description !== undefined ? row[detected.description] : undefined,
+ detected.debit !== undefined ? row[detected.debit] : undefined,
+ detected.credit !== undefined ? row[detected.credit] : undefined,
+ detected.balance !== undefined ? row[detected.balance] : undefined
+ ];
+ if (relevantVals.every(v => v === null || v === undefined || v === '')) continue;
+
+ const date = parseStatementDate(detected.date !== undefined ? row[detected.date] : null);
+ if (!date) continue;
+
+ const desc = detected.description !== undefined ? String(row[detected.description] || '').trim() : '';
+
+ const rawDebit = detected.debit !== undefined ? row[detected.debit] : null;
+ const rawCredit = detected.credit !== undefined ? row[detected.credit] : null;
+ const rawBal = detected.balance !== undefined ? row[detected.balance] : null;
+
+ const debit = (rawDebit !== null && rawDebit !== undefined && rawDebit !== '') ? Math.abs(parseBankAmount(String(rawDebit)) || 0) : 0;
+ const credit = (rawCredit !== null && rawCredit !== undefined && rawCredit !== '') ? Math.abs(parseBankAmount(String(rawCredit)) || 0) : 0;
+ const bal = (rawBal !== null && rawBal !== undefined && rawBal !== '') ? parseBankAmount(String(rawBal)) : NaN;
+
+ const amount = credit - debit;
+ const tx = { date, description: desc, amount };
+ if (!isNaN(bal)) {
+ tx.balance = bal;
+ historyMap[date] = bal; // keep latest balance per date
+ }
+ transactions.push(tx);
+ }
+
+ if (transactions.length === 0) {
+ App.notify('לא נמצאו תנועות לייבוא', 'error');
+ return;
+ }
+
+ transactions.sort((a, b) => a.date.localeCompare(b.date));
+ const withBalance = transactions.filter(t => t.balance !== undefined);
+ const latestBalance = withBalance.length > 0 ? withBalance[withBalance.length - 1].balance : undefined;
+
+ let targetId = accountId;
+ if (accountId === 'new') {
+ const newAcc = Storage.addBankAccount({
+ nameHe: 'חשבון מיובא',
+ nameEn: 'Imported Account',
+ bank: 'other',
+ accountNumber: '',
+ balance: latestBalance || 0,
+ currency: 'ILS'
+ });
+ targetId = newAcc.id;
+ }
+
+ const accounts = Storage.getBankAccounts();
+ const acc = accounts.find(a => a.id === targetId);
+ if (!acc) {
+ App.notify('החשבון לא נמצא', 'error');
+ return;
+ }
+
+ // Merge transactions, deduplicate by date+description+amount
+ const txKey = t => `${t.date}|${t.description}|${t.amount}`;
+ const existingTx = acc.transactions || [];
+ const existingKeys = new Set(existingTx.map(txKey));
+ const newTx = transactions.filter(t => !existingKeys.has(txKey(t)));
+ const merged = [...existingTx, ...newTx].sort((a, b) => a.date.localeCompare(b.date));
+
+ // Build updated balance history
+ const histByDate = {};
+ (acc.history || []).forEach(h => { histByDate[h.date] = h.balance; });
+ Object.entries(historyMap).forEach(([date, balance]) => { histByDate[date] = balance; });
+ const updatedHistory = Object.entries(histByDate)
+ .map(([date, balance]) => ({ date, balance }))
+ .sort((a, b) => a.date.localeCompare(b.date));
+
+ const updatePayload = { transactions: merged };
+ if (latestBalance !== undefined) updatePayload.balance = latestBalance;
+ if (updatedHistory.length > 0) updatePayload.history = updatedHistory;
+
+ Storage.updateBankAccount(targetId, updatePayload);
+ const skipped = transactions.length - newTx.length;
+ if (newTx.length === 0) {
+ App.notify(`כל ${skipped} התנועות כבר קיימות — אין חדש לייבא`, 'info');
+ } else if (skipped > 0) {
+ App.notify(`יובאו ${newTx.length} תנועות חדשות · ${skipped} כפולות דולגו`, 'success');
+ } else {
+ App.notify(`יובאו ${newTx.length} תנועות בהצלחה`, 'success');
+ }
+ loadAccounts();
+ delete window._statementData;
+ }
+
+ function showStatementMappingModal(headers, rows, headerIdx) {
+ const opts = headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('');
+ const modal = document.createElement('div');
+ modal.className = 'modal-overlay active';
+ modal.id = 'stmtMappingModal';
+ modal.innerHTML = `
+ <div class="modal" style="max-width: 500px;">
+ <div class="modal-header">
+ <h2>מיפוי עמודות דף חשבון</h2>
+ <button class="modal-close" onclick="document.getElementById('stmtMappingModal').remove()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <p style="color: var(--color-text-secondary);">לא זוהו עמודות אוטומטית. אנא בחר ידנית:</p>
+ <div class="form-group">
+ <label>תאריך *</label>
+ <select id="smDate" class="form-control"><option value="-1">-- בחר --</option>${opts}</select>
+ </div>
+ <div class="form-group">
+ <label>תיאור</label>
+ <select id="smDesc" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
+ </div>
+ <div class="form-group">
+ <label>חיוב</label>
+ <select id="smDebit" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
+ </div>
+ <div class="form-group">
+ <label>זכות</label>
+ <select id="smCredit" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
+ </div>
+ <div class="form-group">
+ <label>יתרה *</label>
+ <select id="smBalance" class="form-control"><option value="-1">-- בחר --</option>${opts}</select>
+ </div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="document.getElementById('stmtMappingModal').remove()">ביטול</button>
+ <button class="btn btn-primary" onclick="applyStatementMapping()">המשך</button>
+ </div>
+ </div>
+ `;
+ document.body.appendChild(modal);
+ window._statementData = { rows, headerIdx };
+ }
+
+ function applyStatementMapping() {
+ const dateIdx = parseInt(document.getElementById('smDate').value);
+ const balanceIdx = parseInt(document.getElementById('smBalance').value);
+ if (dateIdx < 0 || balanceIdx < 0) {
+ App.notify('יש לבחור לפחות תאריך ויתרה', 'error');
+ return;
+ }
+ const detected = {
+ date: dateIdx,
+ balance: balanceIdx,
+ description: parseInt(document.getElementById('smDesc').value),
+ debit: parseInt(document.getElementById('smDebit').value),
+ credit: parseInt(document.getElementById('smCredit').value)
+ };
+ Object.keys(detected).forEach(k => { if (detected[k] < 0) delete detected[k]; });
+ document.getElementById('stmtMappingModal').remove();
+ const { rows, headerIdx } = window._statementData;
+ showAccountSelectModal(rows, headerIdx, detected);
+ }
+
+ // ============== TRANSACTION HISTORY UI ==============
+
+ let _allTransactions = [];
+ let _showAllTx = false;
+
+ function renderTransactions(accounts) {
+ const card = document.getElementById('transactionsCard');
+ const tbody = document.getElementById('transactionsTable');
+ const showAllBtn = document.getElementById('showAllTxBtn');
+
+ _allTransactions = [];
+ accounts.forEach(acc => {
+ (acc.transactions || []).forEach(tx => {
+ _allTransactions.push({ ...tx, accountName: acc.nameHe || acc.nameEn });
+ });
+ });
+
+ if (_allTransactions.length === 0) {
+ card.style.display = 'none';
+ return;
+ }
+
+ _allTransactions.sort((a, b) => b.date.localeCompare(a.date));
+
+ card.style.display = 'block';
+ const toShow = _showAllTx ? _allTransactions : _allTransactions.slice(0, 15);
+ showAllBtn.style.display = _allTransactions.length > 15 ? 'block' : 'none';
+ showAllBtn.textContent = _showAllTx ? 'הצג פחות' : `הצג הכל (${_allTransactions.length})`;
+
+ tbody.innerHTML = toShow.map(tx => {
+ const amountColor = tx.amount < 0 ? 'color: var(--color-danger)' : 'color: var(--color-success)';
+ const amountSign = tx.amount >= 0 ? '+' : '';
+ const balance = tx.balance !== undefined ? I18n.formatCurrency(tx.balance) : '–';
+ const dateDisplay = tx.date ? tx.date.split('-').reverse().join('/') : '';
+ return `<tr>
+ <td>${dateDisplay}</td>
+ <td>${tx.description || ''}</td>
+ <td style="${amountColor}">${amountSign}${I18n.formatCurrency(tx.amount)}</td>
+ <td>${balance}</td>
+ </tr>`;
+ }).join('');
+ }
+
+ function toggleAllTransactions() {
+ _showAllTx = !_showAllTx;
+ renderTransactions(Storage.getBankAccounts());
+ }
+
+ const BANK_CODE_MAP = {'לאומי':'leumi','פועלים':'hapoalim','מזרחי-טפחות':'mizrahi','דיסקונט':'discount'};
+
+ // Auto-match: name → bank code → closest balance → single account
+ function findBestBankMatch(accounts, data) {
+ if (!accounts.length) return { match: null, candidates: [] };
+
+ // 1. Account name contains source string
+ const nameMatch = accounts.find(a => a.nameHe && data.source && a.nameHe.includes(data.source));
+ if (nameMatch) return { match: nameMatch, candidates: [] };
+
+ // 2. Match by bank code
+ const bankCode = BANK_CODE_MAP[data.source];
+ if (bankCode) {
+ const byBank = accounts.filter(a => a.bank === bankCode);
+ if (byBank.length === 1) return { match: byBank[0], candidates: [] };
+ if (byBank.length > 1) {
+ // Prefer the account whose balance is closest to the imported balance
+ if (data.balance != null) {
+ const sorted = [...byBank].sort((a, b) =>
+ Math.abs((a.balance||0) - data.balance) - Math.abs((b.balance||0) - data.balance));
+ if (Math.abs((sorted[0].balance||0) - data.balance) < 1000)
+ return { match: sorted[0], candidates: [] };
+ }
+ return { match: null, candidates: byBank }; // need picker
+ }
+ }
+
+ // 3. Only one account exists — use it
+ if (accounts.length === 1) return { match: accounts[0], candidates: [] };
+
+ return { match: null, candidates: [] };
+ }
+
+ async function importFromBankBookmarklet() {
+ try {
+ const text = await navigator.clipboard.readText();
+ const data = JSON.parse(text);
+ if (!data.__finsight_bank) {
+ App.notify('הקליפבורד לא מכיל נתוני בנק. לחץ על הסימניה באתר הבנק תחילה.', 'error');
+ return;
+ }
+
+ const accounts = Storage.getBankAccounts();
+ const { match, candidates } = findBestBankMatch(accounts, data);
+
+ if (candidates.length > 1) {
+ showBankPickerModal(data, candidates);
+ return;
+ }
+
+ if (!match) {
+ // No match — offer to create
+ if (!confirm(`לא נמצא חשבון "${data.source}". ליצור חשבון חדש?`)) return;
+ Storage.addBankAccount({
+ nameHe: data.source, nameEn: data.source,
+ bank: BANK_CODE_MAP[data.source] || 'other',
+ balance: data.balance || 0, currency: 'ILS',
+ transactions: data.transactions || []
+ });
+ loadAccounts();
+ App.notify(`✅ חשבון "${data.source}" נוצר עם ${data.transactions?.length || 0} תנועות`, 'success');
+ return;
+ }
+
+ applyBankImport(match, data);
+
+ } catch(e) {
+ if (e.name === 'SyntaxError') App.notify('תוכן הקליפבורד אינו תקין', 'error');
+ else App.notify('לא ניתן לקרוא מהקליפבורד', 'error');
+ }
+ }
+
+ function showBankPickerModal(data, candidates) {
+ const existing = document.getElementById('bankPickerModal');
+ if (existing) existing.remove();
+ const modal = document.createElement('div');
+ modal.className = 'modal-overlay active';
+ modal.id = 'bankPickerModal';
+ modal.innerHTML = `
+ <div class="modal" style="max-width:440px;">
+ <div class="modal-header">
+ <h2>בחר חשבון לייבוא</h2>
+ <button class="modal-close" onclick="document.getElementById('bankPickerModal').remove()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <p style="color:var(--color-text-secondary);margin-bottom:12px;">
+ נמצאו ${data.transactions?.length||0} תנועות מ-${data.source}. לאיזה חשבון לייבא?
+ </p>
+ <div class="form-group">
+ <select id="bankPickerSelect" class="form-control">
+ ${candidates.map(a => `<option value="${a.id}">${a.nameHe||a.nameEn} — ₪${(a.balance||0).toLocaleString('he-IL')}</option>`).join('')}
+ </select>
+ </div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="document.getElementById('bankPickerModal').remove()">ביטול</button>
+ <button class="btn btn-primary" onclick="confirmBankPicker()">ייבא</button>
+ </div>
+ </div>`;
+ document.body.appendChild(modal);
+ window._pendingBankData = data;
+ }
+
+ function confirmBankPicker() {
+ const id = document.getElementById('bankPickerSelect').value;
+ const data = window._pendingBankData;
+ document.getElementById('bankPickerModal').remove();
+ const account = Storage.getBankAccounts().find(a => a.id === id);
+ if (account) applyBankImport(account, data);
+ }
+
+ function applyBankImport(target, data) {
+ const updates = {};
+ if (data.balance != null) updates.balance = data.balance;
+ const existing = target.transactions || [];
+ const keys = new Set(existing.map(t => `${t.date}|${t.description}|${t.amount}`));
+ const newTxs = (data.transactions||[]).filter(t => !keys.has(`${t.date}|${t.description}|${t.amount}`));
+ updates.transactions = [...existing, ...newTxs].sort((a, b) => b.date.localeCompare(a.date));
+ Storage.updateBankAccount(target.id, updates);
+ loadAccounts();
+ const balStr = data.balance != null ? ` | יתרה: ₪${Math.abs(data.balance).toLocaleString('he-IL')}` : '';
+ App.notify(`✅ ${newTxs.length} תנועות חדשות${balStr}`, 'success');
+ }
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

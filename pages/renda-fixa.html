@@ -3,24 +3,22 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
 <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DB63NWYGX5');</script>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+ <meta name="view-transition" content="same-origin">
+ <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon" href="../img/logo.svg">
 <meta name="theme-color" content="#6366f1">
@@ -33,88 +31,88 @@
 <main class="main-content">
 
 <div style="padding:24px 24px 16px;border-bottom:1px solid var(--color-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-  <div>
-    <h1 style="font-size:1.4rem;font-weight:700;margin:0;">📄 Renda Fixa</h1>
-    <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;">CDB · LCI · LCA · LC · Debêntures · Poupança</p>
-  </div>
-  <button onclick="openModal()" style="padding:9px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;font-size:0.88rem;">+ Adicionar</button>
+ <div>
+ <h1 style="font-size:1.4rem;font-weight:700;margin:0;">📄 Renda Fixa</h1>
+ <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;">CDB · LCI · LCA · LC · Debêntures · Poupança</p>
+ </div>
+ <button onclick="openModal()" style="padding:9px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;font-size:0.88rem;">+ Adicionar</button>
 </div>
 
 <div id="summaryCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;padding:20px 24px 0;"></div>
 
 <div style="padding:20px 24px;">
-  <div style="overflow-x:auto;border-radius:12px;border:1px solid var(--color-border);">
-    <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
-      <thead>
-        <tr style="background:var(--color-bg-hover);">
-          <th style="padding:12px 14px;text-align:left;font-weight:600;color:var(--color-text-secondary);">Produto</th>
-          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Investido</th>
-          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Valor Atual</th>
-          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Rendimento</th>
-          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">IR</th>
-          <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Vencimento</th>
-          <th style="padding:12px 14px;"></th>
-        </tr>
-      </thead>
-      <tbody id="holdingsBody">
-        <tr id="emptyRow"><td colspan="7" style="padding:40px;text-align:center;color:var(--color-text-secondary);">Nenhum produto cadastrado.</td></tr>
-      </tbody>
-    </table>
-  </div>
+ <div style="overflow-x:auto;border-radius:12px;border:1px solid var(--color-border);">
+ <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+ <thead>
+ <tr style="background:var(--color-bg-hover);">
+ <th style="padding:12px 14px;text-align:left;font-weight:600;color:var(--color-text-secondary);">Produto</th>
+ <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Investido</th>
+ <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Valor Atual</th>
+ <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Rendimento</th>
+ <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">IR</th>
+ <th style="padding:12px 14px;text-align:right;font-weight:600;color:var(--color-text-secondary);">Vencimento</th>
+ <th style="padding:12px 14px;"></th>
+ </tr>
+ </thead>
+ <tbody id="holdingsBody">
+ <tr id="emptyRow"><td colspan="7" style="padding:40px;text-align:center;color:var(--color-text-secondary);">Nenhum produto cadastrado.</td></tr>
+ </tbody>
+ </table>
+ </div>
 </div>
 
 <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;">
-  <div style="background:var(--color-bg-card);border-radius:16px;padding:28px;width:min(480px,95vw);border:1px solid var(--color-border);">
-    <h2 style="margin:0 0 20px;font-size:1.1rem;">Adicionar Renda Fixa</h2>
-    <div style="display:grid;gap:14px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div>
-          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Tipo</label>
-          <select id="mType" onchange="updateIRField()" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;">
-            <option value="cdb">CDB</option>
-            <option value="lci">LCI (isento IR)</option>
-            <option value="lca">LCA (isento IR)</option>
-            <option value="lc">LC</option>
-            <option value="debenture_inc">Debênture Incentivada (isento IR)</option>
-            <option value="debenture">Debênture</option>
-            <option value="poupanca">Poupança</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Banco / Emissor</label>
-          <input id="mIssuer" type="text" placeholder="Nubank, XP..." style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div>
-          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Valor Investido (R$)</label>
-          <input id="mAmount" type="number" min="0" step="0.01" placeholder="5000.00" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;" id="rateLabel">Taxa (%CDI ou % a.a.)</label>
-          <input id="mRate" type="number" step="0.01" placeholder="110" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div>
-          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Data de Aplicação</label>
-          <input id="mBuyDate" type="date" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Vencimento</label>
-          <input id="mMaturity" type="date" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
-        </div>
-      </div>
-      <div>
-        <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">CDI atual % a.a. (para calcular rendimento)</label>
-        <input id="mCdi" type="number" step="0.01" value="10.65" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;">
-      <button onclick="closeModal()" style="padding:9px 18px;border-radius:9px;border:1px solid var(--color-border);background:none;color:var(--color-text-secondary);cursor:pointer;">Cancelar</button>
-      <button onclick="saveHolding()" style="padding:9px 20px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;font-weight:600;cursor:pointer;">Salvar</button>
-    </div>
-  </div>
+ <div style="background:var(--color-bg-card);border-radius:16px;padding:28px;width:min(480px,95vw);border:1px solid var(--color-border);">
+ <h2 style="margin:0 0 20px;font-size:1.1rem;">Adicionar Renda Fixa</h2>
+ <div style="display:grid;gap:14px;">
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+ <div>
+ <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Tipo</label>
+ <select id="mType" onchange="updateIRField()" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;">
+ <option value="cdb">CDB</option>
+ <option value="lci">LCI (isento IR)</option>
+ <option value="lca">LCA (isento IR)</option>
+ <option value="lc">LC</option>
+ <option value="debenture_inc">Debênture Incentivada (isento IR)</option>
+ <option value="debenture">Debênture</option>
+ <option value="poupanca">Poupança</option>
+ </select>
+ </div>
+ <div>
+ <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Banco / Emissor</label>
+ <input id="mIssuer" type="text" placeholder="Nubank, XP..." style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+ </div>
+ </div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+ <div>
+ <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Valor Investido (R$)</label>
+ <input id="mAmount" type="number" min="0" step="0.01" placeholder="5000.00" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+ </div>
+ <div>
+ <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;" id="rateLabel">Taxa (%CDI ou % a.a.)</label>
+ <input id="mRate" type="number" step="0.01" placeholder="110" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+ </div>
+ </div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+ <div>
+ <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Data de Aplicação</label>
+ <input id="mBuyDate" type="date" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+ </div>
+ <div>
+ <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">Vencimento</label>
+ <input id="mMaturity" type="date" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+ </div>
+ </div>
+ <div>
+ <label style="font-size:0.82rem;color:var(--color-text-secondary);display:block;margin-bottom:4px;">CDI atual % a.a. (para calcular rendimento)</label>
+ <input id="mCdi" type="number" step="0.01" value="10.65" style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;box-sizing:border-box;">
+ </div>
+ </div>
+ <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;">
+ <button onclick="closeModal()" style="padding:9px 18px;border-radius:9px;border:1px solid var(--color-border);background:none;color:var(--color-text-secondary);cursor:pointer;">Cancelar</button>
+ <button onclick="saveHolding()" style="padding:9px 20px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;font-weight:600;cursor:pointer;">Salvar</button>
+ </div>
+ </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -122,9 +120,9 @@
 <script src="../js/firebase-config.js"></script>
 <script src="../js/idb.js"></script>
 <script src="../js/sidebar.js"></script>
-    <script src="../js/app.js"></script>
+ <script src="../js/app.js"></script>
 <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
 <script>
 const SK = 'finance_rendafixa';
@@ -136,70 +134,70 @@ function fmtBRL(v){return'R$ '+Math.abs(v).toLocaleString('pt-BR',{minimumFracti
 function fmtDate(d){return d?new Date(d).toLocaleDateString('pt-BR'):'—';}
 
 function calcCurrentValue(h) {
-  const days = Math.max(0,(Date.now()-new Date(h.buyDate).getTime())/86400000);
-  const years = days/365;
-  let effectiveRate = h.rate/100;
-  // If CDI-based (rate looks like 110 = 110% of CDI)
-  if (h.rate > 10 && h.cdi) effectiveRate = (h.rate/100) * (h.cdi/100);
-  return h.amount * Math.pow(1+effectiveRate, years);
+ const days = Math.max(0,(Date.now()-new Date(h.buyDate).getTime())/86400000);
+ const years = days/365;
+ let effectiveRate = h.rate/100;
+ // If CDI-based (rate looks like 110 = 110% of CDI)
+ if (h.rate > 10 && h.cdi) effectiveRate = (h.rate/100) * (h.cdi/100);
+ return h.amount * Math.pow(1+effectiveRate, years);
 }
 
 function irRate(days) {
-  return days>720?0.15:days>360?0.175:days>180?0.20:0.225;
+ return days>720?0.15:days>360?0.175:days>180?0.20:0.225;
 }
 
 function renderAll() {
-  const holdings = load();
-  const tbody = document.getElementById('holdingsBody');
-  tbody.querySelectorAll('tr:not(#emptyRow)').forEach(r=>r.remove());
-  document.getElementById('emptyRow').style.display = holdings.length?'none':'';
-  let totalInv=0, totalCurr=0;
-  holdings.forEach((h,i)=>{
-    const curr = calcCurrentValue(h);
-    const gain = curr - h.amount;
-    const days = Math.max(0,(Date.now()-new Date(h.buyDate).getTime())/86400000);
-    const exempt = IR_EXEMPT.has(h.type);
-    const ir = exempt ? 0 : Math.max(0,gain)*irRate(days);
-    const netGain = gain - ir;
-    totalInv+=h.amount; totalCurr+=curr;
-    const tr=document.createElement('tr');
-    tr.style.borderTop='1px solid var(--color-border)';
-    tr.innerHTML=`
-      <td style="padding:12px 14px;"><strong>${TYPE_LABELS[h.type]||h.type}</strong>${h.issuer?'<br><small style="color:var(--color-text-secondary)">'+h.issuer+'</small>':''}</td>
-      <td style="padding:12px 14px;text-align:right;">${fmtBRL(h.amount)}</td>
-      <td style="padding:12px 14px;text-align:right;font-weight:600;">${fmtBRL(curr)}</td>
-      <td style="padding:12px 14px;text-align:right;color:#10b981;">+${fmtBRL(netGain)}<br><small style="color:var(--color-text-secondary)">${((netGain/h.amount)*100).toFixed(2)}%</small></td>
-      <td style="padding:12px 14px;text-align:right;font-size:0.82rem;">${exempt?'<span style="color:#10b981">Isento</span>':fmtBRL(ir)}</td>
-      <td style="padding:12px 14px;text-align:right;font-size:0.82rem;">${fmtDate(h.maturity)}</td>
-      <td style="padding:12px 14px;"><button onclick="removeHolding(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;">✕</button></td>`;
-    tbody.appendChild(tr);
-  });
-  document.getElementById('summaryCards').innerHTML=`
-    ${card('💰','Investido',fmtBRL(totalInv),'')}
-    ${card('📈','Valor Atual',fmtBRL(totalCurr),'')}
-    ${card('🎯','Ganho Bruto',fmtBRL(totalCurr-totalInv),'#10b981')}
-    ${card('📦','Produtos',holdings.length+' produtos','')}`;
+ const holdings = load();
+ const tbody = document.getElementById('holdingsBody');
+ tbody.querySelectorAll('tr:not(#emptyRow)').forEach(r=>r.remove());
+ document.getElementById('emptyRow').style.display = holdings.length?'none':'';
+ let totalInv=0, totalCurr=0;
+ holdings.forEach((h,i)=>{
+ const curr = calcCurrentValue(h);
+ const gain = curr - h.amount;
+ const days = Math.max(0,(Date.now()-new Date(h.buyDate).getTime())/86400000);
+ const exempt = IR_EXEMPT.has(h.type);
+ const ir = exempt ? 0 : Math.max(0,gain)*irRate(days);
+ const netGain = gain - ir;
+ totalInv+=h.amount; totalCurr+=curr;
+ const tr=document.createElement('tr');
+ tr.style.borderTop='1px solid var(--color-border)';
+ tr.innerHTML=`
+ <td style="padding:12px 14px;"><strong>${TYPE_LABELS[h.type]||h.type}</strong>${h.issuer?'<br><small style="color:var(--color-text-secondary)">'+h.issuer+'</small>':''}</td>
+ <td style="padding:12px 14px;text-align:right;">${fmtBRL(h.amount)}</td>
+ <td style="padding:12px 14px;text-align:right;font-weight:600;">${fmtBRL(curr)}</td>
+ <td style="padding:12px 14px;text-align:right;color:#10b981;">+${fmtBRL(netGain)}<br><small style="color:var(--color-text-secondary)">${((netGain/h.amount)*100).toFixed(2)}%</small></td>
+ <td style="padding:12px 14px;text-align:right;font-size:0.82rem;">${exempt?'<span style="color:#10b981">Isento</span>':fmtBRL(ir)}</td>
+ <td style="padding:12px 14px;text-align:right;font-size:0.82rem;">${fmtDate(h.maturity)}</td>
+ <td style="padding:12px 14px;"><button onclick="removeHolding(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;">✕</button></td>`;
+ tbody.appendChild(tr);
+ });
+ document.getElementById('summaryCards').innerHTML=`
+ ${card('💰','Investido',fmtBRL(totalInv),'')}
+ ${card('📈','Valor Atual',fmtBRL(totalCurr),'')}
+ ${card('🎯','Ganho Bruto',fmtBRL(totalCurr-totalInv),'#10b981')}
+ ${card('📦','Produtos',holdings.length+' produtos','')}`;
 }
 
 function card(i,l,v,c){return`<div style="padding:16px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:12px;"><div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:4px;">${i} ${l}</div><div style="font-size:1.2rem;font-weight:700;${c?'color:'+c:''}">${v}</div></div>`;}
 
 function updateIRField(){
-  const exempt=IR_EXEMPT.has(document.getElementById('mType').value);
-  document.getElementById('rateLabel').textContent=exempt?'Taxa % a.a.':'Taxa (%CDI ou % a.a.)';
+ const exempt=IR_EXEMPT.has(document.getElementById('mType').value);
+ document.getElementById('rateLabel').textContent=exempt?'Taxa % a.a.':'Taxa (%CDI ou % a.a.)';
 }
 function openModal(){document.getElementById('mBuyDate').value=new Date().toISOString().split('T')[0];document.getElementById('modal').style.display='flex';}
 function closeModal(){document.getElementById('modal').style.display='none';}
 function saveHolding(){
-  const type=document.getElementById('mType').value;
-  const amount=parseFloat(document.getElementById('mAmount').value);
-  const rate=parseFloat(document.getElementById('mRate').value);
-  const buyDate=document.getElementById('mBuyDate').value;
-  const maturity=document.getElementById('mMaturity').value;
-  const issuer=document.getElementById('mIssuer').value.trim();
-  const cdi=parseFloat(document.getElementById('mCdi').value)||10.65;
-  if(!amount||!rate||!buyDate){alert('Preencha os campos obrigatórios.');return;}
-  const h=load();h.push({type,amount,rate,buyDate,maturity,issuer,cdi});save(h);closeModal();renderAll();
-  ['mAmount','mRate','mMaturity','mIssuer'].forEach(id=>document.getElementById(id).value='');
+ const type=document.getElementById('mType').value;
+ const amount=parseFloat(document.getElementById('mAmount').value);
+ const rate=parseFloat(document.getElementById('mRate').value);
+ const buyDate=document.getElementById('mBuyDate').value;
+ const maturity=document.getElementById('mMaturity').value;
+ const issuer=document.getElementById('mIssuer').value.trim();
+ const cdi=parseFloat(document.getElementById('mCdi').value)||10.65;
+ if(!amount||!rate||!buyDate){alert('Preencha os campos obrigatórios.');return;}
+ const h=load();h.push({type,amount,rate,buyDate,maturity,issuer,cdi});save(h);closeModal();renderAll();
+ ['mAmount','mRate','mMaturity','mIssuer'].forEach(id=>document.getElementById(id).value='');
 }
 function removeHolding(i){if(!confirm('Remover?'))return;const h=load();h.splice(i,1);save(h);renderAll();}
 document.addEventListener('DOMContentLoaded',renderAll);

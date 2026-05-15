@@ -3,1885 +3,1877 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#ef4444">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>כרטיסי אשראי - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .nav-link.active { background: var(--color-credit) !important; }
-        .page-header h1 { color: var(--color-credit); }
-        .btn-primary { background: var(--color-credit); }
-        .btn-primary:hover { background: #dc2626; }
-        .card-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #1a1a2e, #2d2d44);
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin: 10px;
-            border: 1px solid var(--color-border);
-        }
-        .card-chip .number {
-            font-family: monospace;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-        .hours-sub {
-            display: block;
-            font-size: 0.72rem;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
-            font-weight: normal;
-        }
-        #hoursToggleBtn.active {
-            background: var(--color-primary);
-            color: white;
-            border-color: var(--color-primary);
-        }
-        .month-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .month-selector select {
-            padding: 8px 15px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-        }
-        .search-filter {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .search-filter input {
-            padding: 8px 15px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: white;
-            min-width: 200px;
-        }
-        .search-filter select {
-            padding: 8px 15px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: white;
-        }
-        .alert {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-        .alert-warning {
-            background: rgba(245, 158, 11, 0.2);
-            border: 1px solid #f59e0b;
-        }
-        .alert-danger {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-        }
-        .alert-icon { font-size: 1.5rem; }
-        .alert-content strong { display: block; margin-bottom: 3px; }
-        .budget-progress {
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            height: 8px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        .budget-progress-bar {
-            height: 100%;
-            border-radius: 8px;
-            transition: width 0.3s;
-        }
-        /* Recurring Expenses Section */
-        .recurring-section {
-            margin-bottom: 20px;
-        }
-        .recurring-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            padding: 15px 20px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            transition: background 0.2s;
-        }
-        .recurring-toggle:hover {
-            background: var(--color-bg-hover);
-        }
-        .recurring-toggle-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .recurring-toggle .arrow {
-            transition: transform 0.3s;
-            font-size: 0.8rem;
-            color: var(--color-text-secondary);
-        }
-        .recurring-toggle.open .arrow {
-            transform: rotate(180deg);
-        }
-        .recurring-total-badge {
-            background: var(--color-credit);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .recurring-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .recurring-body.open {
-            max-height: 2000px;
-        }
-        .recurring-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-            padding: 15px 0;
-        }
-        .recurring-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            transition: border-color 0.2s;
-        }
-        .recurring-card:hover {
-            border-color: var(--color-credit);
-        }
-        .recurring-card.upcoming {
-            border-color: #f59e0b;
-            background: rgba(245, 158, 11, 0.05);
-        }
-        .recurring-card-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-        .recurring-card-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .recurring-card-name {
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .recurring-card-meta {
-            font-size: 0.8rem;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
-        }
-        .recurring-card-amount {
-            font-weight: 700;
-            color: var(--color-credit);
-            white-space: nowrap;
-        }
-        .recurring-card-actions {
-            display: flex;
-            gap: 4px;
-        }
-        .recurring-card-actions button {
-            padding: 4px 6px;
-            font-size: 0.75rem;
-        }
-        .recurring-fields {
-            display: none;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .recurring-fields.visible {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-        .recurring-fields .form-group {
-            margin-bottom: 0;
-        }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#ef4444">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>כרטיסי אשראי - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <style>
+ .nav-link.active { background: var(--color-credit) !important; }
+ .page-header h1 { color: var(--color-credit); }
+ .btn-primary { background: var(--color-credit); }
+ .btn-primary:hover { background: #dc2626; }
+ .card-chip {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+ padding: 15px 20px;
+ border-radius: 12px;
+ margin: 10px;
+ border: 1px solid var(--color-border);
+ }
+ .card-chip .number {
+ font-family: monospace;
+ font-size: 1.1rem;
+ letter-spacing: 2px;
+ }
+ .hours-sub {
+ display: block;
+ font-size: 0.72rem;
+ color: var(--color-text-secondary);
+ margin-top: 2px;
+ font-weight: normal;
+ }
+ #hoursToggleBtn.active {
+ background: var(--color-primary);
+ color: white;
+ border-color: var(--color-primary);
+ }
+ .month-selector {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ margin-bottom: 20px;
+ }
+ .month-selector select {
+ padding: 8px 15px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ color: white;
+ font-size: 1rem;
+ }
+ .search-filter {
+ display: flex;
+ gap: 10px;
+ flex-wrap: wrap;
+ align-items: center;
+ }
+ .search-filter input {
+ padding: 8px 15px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ color: white;
+ min-width: 200px;
+ }
+ .search-filter select {
+ padding: 8px 15px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ color: white;
+ }
+ .alert {
+ display: flex;
+ align-items: center;
+ gap: 15px;
+ padding: 15px;
+ border-radius: 12px;
+ margin-bottom: 15px;
+ }
+ .alert-warning {
+ background: rgba(245, 158, 11, 0.2);
+ border: 1px solid #f59e0b;
+ }
+ .alert-danger {
+ background: rgba(239, 68, 68, 0.2);
+ border: 1px solid #ef4444;
+ }
+ .alert-icon { font-size: 1.5rem; }
+ .alert-content strong { display: block; margin-bottom: 3px; }
+ .budget-progress {
+ background: rgba(255,255,255,0.1);
+ border-radius: 8px;
+ height: 8px;
+ margin-top: 10px;
+ overflow: hidden;
+ }
+ .budget-progress-bar {
+ height: 100%;
+ border-radius: 8px;
+ transition: width 0.3s;
+ }
+ /* Recurring Expenses Section */
+ .recurring-section {
+ margin-bottom: 20px;
+ }
+ .recurring-toggle {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ cursor: pointer;
+ padding: 15px 20px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ transition: background 0.2s;
+ }
+ .recurring-toggle:hover {
+ background: var(--color-bg-hover);
+ }
+ .recurring-toggle-right {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ }
+ .recurring-toggle .arrow {
+ transition: transform 0.3s;
+ font-size: 0.8rem;
+ color: var(--color-text-secondary);
+ }
+ .recurring-toggle.open .arrow {
+ transform: rotate(180deg);
+ }
+ .recurring-total-badge {
+ background: var(--color-credit);
+ color: white;
+ padding: 4px 12px;
+ border-radius: 20px;
+ font-size: 0.85rem;
+ font-weight: 600;
+ }
+ .recurring-body {
+ max-height: 0;
+ overflow: hidden;
+ transition: max-height 0.3s ease;
+ }
+ .recurring-body.open {
+ max-height: 2000px;
+ }
+ .recurring-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+ gap: 12px;
+ padding: 15px 0;
+ }
+ .recurring-card {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ padding: 14px 16px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 10px;
+ transition: border-color 0.2s;
+ }
+ .recurring-card:hover {
+ border-color: var(--color-credit);
+ }
+ .recurring-card.upcoming {
+ border-color: #f59e0b;
+ background: rgba(245, 158, 11, 0.05);
+ }
+ .recurring-card-icon {
+ font-size: 1.5rem;
+ flex-shrink: 0;
+ }
+ .recurring-card-info {
+ flex: 1;
+ min-width: 0;
+ }
+ .recurring-card-name {
+ font-weight: 600;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ }
+ .recurring-card-meta {
+ font-size: 0.8rem;
+ color: var(--color-text-secondary);
+ margin-top: 2px;
+ }
+ .recurring-card-amount {
+ font-weight: 700;
+ color: var(--color-credit);
+ white-space: nowrap;
+ }
+ .recurring-card-actions {
+ display: flex;
+ gap: 4px;
+ }
+ .recurring-card-actions button {
+ padding: 4px 6px;
+ font-size: 0.75rem;
+ }
+ .recurring-fields {
+ display: none;
+ gap: 10px;
+ margin-top: 10px;
+ }
+ .recurring-fields.visible {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ }
+ .recurring-fields .form-group {
+ margin-bottom: 0;
+ }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>
-                    <span>💳</span>
-                    <span data-i18n="credit.title">כרטיסי אשראי</span>
-                </h1>
-            </header>
-
-            <!-- Budget Alerts -->
-            <div id="budgetAlerts"></div>
-
-            <!-- Monthly Total with Budget Progress -->
-            <div class="net-worth-banner" style="border-color: var(--color-credit);">
-                <div class="label" data-i18n="credit.monthlyTotal">סה״כ חודשי</div>
-                <div class="value" id="monthlyTotal" style="background: linear-gradient(90deg, var(--color-credit), #f87171); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">₪0</div>
-                <div id="budgetProgressContainer" style="display: none; width: 100%; max-width: 400px; margin-top: 15px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--color-text-secondary);">
-                        <span id="budgetSpent">₪0</span>
-                        <span id="budgetLimit"></span>
-                    </div>
-                    <div class="budget-progress">
-                        <div class="budget-progress-bar" id="budgetProgressBar" style="width: 0%; background: var(--color-credit);"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cards Section -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">💳</span>
-                        <span data-i18n="credit.title">כרטיסי אשראי</span>
-                    </h2>
-                    <button class="btn btn-primary btn-sm" onclick="openCardModal()">
-                        <span>➕</span>
-                        <span data-i18n="credit.addCard">הוסף כרטיס</span>
-                    </button>
-                </div>
-                <div id="cardsContainer">
-                    <!-- Cards will be populated here -->
-                </div>
-            </div>
-
-            <!-- Recurring Expenses Section -->
-            <div class="recurring-section" id="recurringSection">
-                <div class="recurring-toggle" onclick="toggleRecurringSection()">
-                    <div class="recurring-toggle-right">
-                        <span>🔄</span>
-                        <strong data-i18n="credit.recurringExpenses">הוצאות קבועות</strong>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span class="recurring-total-badge" id="recurringTotalBadge">₪0</span>
-                        <span class="arrow">▼</span>
-                    </div>
-                </div>
-                <div class="recurring-body" id="recurringBody">
-                    <div class="recurring-grid" id="recurringGrid">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Expenses Section -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📋</span>
-                        <span data-i18n="credit.expenses">הוצאות</span>
-                    </h2>
-                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <button class="btn btn-primary btn-sm" onclick="openExpenseModal()">
-                            <span>➕</span>
-                            <span data-i18n="credit.addExpense">הוסף הוצאה</span>
-                        </button>
-                        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('smartImportInput').click()">
-                            <span>📥</span>
-                            <span data-i18n="credit.smartImport">ייבוא נתונים</span>
-                        </button>
-                        <button class="btn btn-secondary btn-sm" onclick="ImageImport.openImagePicker('credit')">
-                            <span>📷</span>
-                            <span data-i18n="credit.importImage">ייבוא מתמונה</span>
-                        </button>
-                        <input type="file" id="smartImportInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="smartImportFile(event)">
-                        <button class="btn btn-secondary btn-sm" onclick="importFromBookmarklet()">
-                            <span>📋</span>
-                            <span>ייבוא מסימניה</span>
-                        </button>
-                        <span class="tooltip-btn" data-tooltip="לחץ על הסימניה באתר האשראי,&#10;חזור לכאן ולחץ כפתור זה.&#10;להגדרת הסימניה: הגדרות ← ייבוא מאתרי אשראי">?</span>
-                        <button class="btn btn-secondary btn-sm" onclick="detectRecurringPayments()">
-                            <span>🔄</span>
-                            <span>זהה תשלומים קבועים</span>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteAllExpenses()">
-                            <span>🗑️</span>
-                            <span data-i18n="credit.deleteAll">מחק הכל</span>
-                        </button>
-                    </div>
-                </div>
-                <!-- Search and Filter -->
-                <div class="search-filter" style="margin-top: 15px;">
-                    <select id="monthFilter" onchange="loadExpenses()">
-                        <!-- Will be populated by JS -->
-                    </select>
-                    <select id="categoryFilter" onchange="loadExpenses()">
-                        <option value="" data-i18n="credit.allCategories">כל הקטגוריות</option>
-                        <option value="food" data-i18n="credit.categories.food">מזון ומסעדות</option>
-                        <option value="transport" data-i18n="credit.categories.transport">תחבורה ודלק</option>
-                        <option value="shopping" data-i18n="credit.categories.shopping">קניות</option>
-                        <option value="entertainment" data-i18n="credit.categories.entertainment">בילויים</option>
-                        <option value="bills" data-i18n="credit.categories.bills">חשבונות קבועים</option>
-                        <option value="health" data-i18n="credit.categories.health">בריאות</option>
-                        <option value="education" data-i18n="credit.categories.education">חינוך</option>
-                        <option value="other" data-i18n="credit.categories.other">אחר</option>
-                    </select>
-                    <input type="text" id="searchFilter" placeholder="🔍 חיפוש לפי תיאור..." data-i18n-placeholder="credit.searchByDesc" oninput="loadExpenses()">
-                    <button class="btn btn-secondary btn-sm" onclick="clearFilters()" data-i18n="credit.clearFilter">נקה סינון</button>
-                    <button class="btn btn-secondary btn-sm" id="hoursToggleBtn" onclick="toggleHoursMode()" title="הצג שעות עבודה">⏱️</button>
-                </div>
-                <div id="hoursRateRow" style="display:none; margin-top:10px; display:none; align-items:center; gap:10px; font-size:0.85rem; color:var(--color-text-secondary);">
-                    <span>שכר שעתי:</span>
-                    <input type="number" id="hourlyRateInput" min="1" placeholder="₪ לשעה"
-                        style="width:110px;padding:6px 10px;border:1px solid var(--color-border);border-radius:8px;background:var(--color-bg);color:var(--color-text-primary);font-size:0.9rem;"
-                        oninput="saveHourlyRate(this.value); loadExpenses()">
-                    <span style="font-size:0.75rem;">(ברוטו או נטו — לפי בחירתך)</span>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="credit.expenseDate">תאריך</th>
-                                <th data-i18n="credit.expenseCategory">קטגוריה</th>
-                                <th data-i18n="credit.expenseDescription">תיאור</th>
-                                <th data-i18n="credit.source">מקור</th>
-                                <th data-i18n="credit.expenseAmount">סכום</th>
-                                <th data-i18n="common.actions">פעולות</th>
-                            </tr>
-                        </thead>
-                        <tbody id="expensesTable">
-                            <!-- Will be populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Charts -->
-            <div class="charts-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span class="icon">📊</span>
-                            <span data-i18n="credit.categoryBreakdown">חלוקה לפי קטגוריות</span>
-                        </h2>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                    <div id="categoryBreakdown" style="padding: 15px; border-top: 1px solid var(--color-border);"></div>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
-
-    <!-- Add Card Modal -->
-    <div class="modal-overlay" id="cardModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 data-i18n="credit.addCard">הוסף כרטיס</h2>
-                <button class="modal-close" onclick="closeCardModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="cardForm">
-                    <input type="hidden" id="cardId">
-                    <div class="form-group">
-                        <label data-i18n="credit.cardName">שם הכרטיס</label>
-                        <input type="text" class="form-control" id="cardName" required placeholder="ויזה כאל">
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="credit.lastFour">4 ספרות אחרונות</label>
-                        <input type="text" class="form-control" id="lastFour" maxlength="4" pattern="[0-9]{4}" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="credit.creditLimit">מסגרת אשראי</label>
-                        <input type="number" class="form-control" id="creditLimit" step="100">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeCardModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveCard()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Expense Modal -->
-    <div class="modal-overlay" id="expenseModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 data-i18n="credit.addExpense">הוסף הוצאה</h2>
-                <button class="modal-close" onclick="closeExpenseModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="expenseForm">
-                    <input type="hidden" id="expenseId">
-                    <div class="form-group">
-                        <label data-i18n="credit.card">כרטיס</label>
-                        <select class="form-control" id="expenseCard" required>
-                            <!-- Will be populated by JS -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="credit.expenseDate">תאריך</label>
-                        <input type="date" class="form-control" id="expenseDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="credit.expenseAmount">סכום</label>
-                        <input type="number" class="form-control" id="expenseAmount" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="credit.expenseCategory">קטגוריה</label>
-                        <select class="form-control" id="expenseCategory" required>
-                            <option value="food" data-i18n="credit.categories.food">מזון ומסעדות</option>
-                            <option value="transport" data-i18n="credit.categories.transport">תחבורה ודלק</option>
-                            <option value="shopping" data-i18n="credit.categories.shopping">קניות</option>
-                            <option value="entertainment" data-i18n="credit.categories.entertainment">בילויים</option>
-                            <option value="bills" data-i18n="credit.categories.bills">חשבונות קבועים</option>
-                            <option value="health" data-i18n="credit.categories.health">בריאות</option>
-                            <option value="education" data-i18n="credit.categories.education">חינוך</option>
-                            <option value="other" data-i18n="credit.categories.other">אחר</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="credit.expenseDescription">תיאור</label>
-                        <input type="text" class="form-control" id="expenseDescription">
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="isRecurring" onchange="toggleRecurringFields()">
-                            <span data-i18n="credit.recurring">הוצאה קבועה</span>
-                        </label>
-                    </div>
-                    <div class="recurring-fields" id="recurringFields">
-                        <div class="form-group">
-                            <label data-i18n="credit.frequency">תדירות</label>
-                            <select class="form-control" id="recurringFrequency">
-                                <option value="monthly" data-i18n="credit.monthly">חודשי</option>
-                                <option value="weekly" data-i18n="credit.weekly">שבועי</option>
-                                <option value="biweekly" data-i18n="credit.biweekly">דו-שבועי</option>
-                                <option value="bimonthly" data-i18n="credit.bimonthly">דו-חודשי</option>
-                                <option value="quarterly" data-i18n="credit.quarterly">רבעוני</option>
-                                <option value="annually" data-i18n="credit.annually">שנתי</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="credit.chargeDay">יום חיוב</label>
-                            <input type="number" class="form-control" id="recurringDay" min="1" max="31" placeholder="1-31">
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label data-i18n="credit.endDate">תאריך סיום</label>
-                            <input type="date" class="form-control" id="recurringEndDate">
-                            <small style="color: var(--color-text-secondary);" data-i18n="credit.ongoing">ללא הגבלה</small>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeExpenseModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveExpense()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/charts.js"></script>
-    <script src="../js/csv-import.js"></script>
-    <script src="../js/smart-import.js"></script>
-    <script src="../js/image-import.js"></script>
-    <script src="../js/alerts.js"></script>
-    <script src="../js/tags.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        let selectedMonth = '';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'credit';
-            initMonthSelector();
-            initHoursMode();
-            loadCards();
-            loadExpenses();
-            renderRecurringSummary();
-        });
-
-        function initMonthSelector() {
-            const select = document.getElementById('monthFilter');
-            const now = new Date();
-            const monthsSet = new Set();
-
-            // Add last 12 months
-            for (let i = 0; i < 12; i++) {
-                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                monthsSet.add(value);
-            }
-
-            // Add months from existing expenses
-            const data = Storage.getCreditCards();
-            data.expenses.forEach(exp => {
-                if (exp.date) {
-                    const month = exp.date.substring(0, 7);
-                    monthsSet.add(month);
-                }
-            });
-
-            // Convert to array and sort descending
-            const months = Array.from(monthsSet).sort((a, b) => b.localeCompare(a)).map(value => {
-                const [year, month] = value.split('-');
-                const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-                const label = I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear();
-                return { value, label };
-            });
-
-            select.innerHTML = months.map((m, i) =>
-                `<option value="${m.value}" ${i === 0 ? 'selected' : ''}>${m.label}</option>`
-            ).join('');
-
-            selectedMonth = months[0]?.value || '';
-        }
-
-        function loadCards() {
-            const data = Storage.getCreditCards();
-            const container = document.getElementById('cardsContainer');
-
-            if (data.cards.length === 0) {
-                container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">💳</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין כרטיסי אשראי</div><div style="font-size:0.85rem;margin-bottom:20px">עקוב אחרי ההוצאות החודשיות שלך</div><button class="btn btn-primary btn-sm" onclick="openCardModal()">+ הוסף כרטיס</button></div>`;
-                return;
-            }
-
-            container.innerHTML = data.cards.map(card => `
-                <div class="card-chip">
-                    <span>💳</span>
-                    <span class="number">**** ${card.lastFour}</span>
-                    <span>${card.name}</span>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCard('${card.id}')" style="margin-right: 10px;">🗑️</button>
-                </div>
-            `).join('');
-
-            // Update expense card selector
-            const cardSelect = document.getElementById('expenseCard');
-            cardSelect.innerHTML = data.cards.map(card =>
-                `<option value="${card.id}">${card.name} (**** ${card.lastFour})</option>`
-            ).join('');
-        }
-
-        function loadExpenses() {
-            selectedMonth = document.getElementById('monthFilter').value;
-            const categoryFilter = document.getElementById('categoryFilter').value;
-            const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
-
-            const data = Storage.getCreditCards();
-            const tbody = document.getElementById('expensesTable');
-
-            let monthExpenses = data.expenses
-                .filter(exp => exp.date.startsWith(selectedMonth));
-
-            // Calculate total before filtering
-            const totalAll = monthExpenses.reduce((sum, exp) => sum + ((exp.currency || 'ILS') === 'ILS' ? exp.amount : 0), 0);
-
-            // Apply category filter
-            if (categoryFilter) {
-                monthExpenses = monthExpenses.filter(exp => exp.category === categoryFilter);
-            }
-
-            // Apply search filter
-            if (searchFilter) {
-                monthExpenses = monthExpenses.filter(exp =>
-                    (exp.description || '').toLowerCase().includes(searchFilter)
-                );
-            }
-
-            // Sort by date
-            monthExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            const total = monthExpenses.reduce((sum, exp) => sum + ((exp.currency || 'ILS') === 'ILS' ? exp.amount : 0), 0);
-            document.getElementById('monthlyTotal').textContent = I18n.formatCurrency(totalAll);
-
-            // Show budget progress
-            updateBudgetProgress(totalAll);
-
-            // Show alerts
-            Alerts.renderAlerts('budgetAlerts');
-
-            if (monthExpenses.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--color-text-secondary);">${I18n.t('credit.noExpenses')}</td></tr>`;
-                updateCategoryChart([], 0);
-                return;
-            }
-
-            const rows = monthExpenses.map(exp => {
-                // Show foreign transaction info
-                let foreignInfo = '';
-                var countryCode = getCountryFromDescription(exp.description);
-
-                if (exp.originalCurrency && exp.originalCurrency !== '₪' && exp.originalCurrency !== 'ILS') {
-                    // Has foreign currency info
-                    var origAmount = exp.originalAmount || exp.amount;
-                    var flag = countryCode ? getCountryFlag(countryCode) : getCurrencyFlag(exp.originalCurrency);
-                    var rate = exp.exchangeRate || '';
-                    var rateText = rate ? ' (' + rate + ')' : '';
-                    foreignInfo = '<span title="' + exp.originalCurrency + rateText + '">' + flag + ' ' + origAmount.toLocaleString('he-IL', {minimumFractionDigits:2,maximumFractionDigits:2}) + ' ' + exp.originalCurrency + rateText + '</span>';
-                } else if (exp.currency && exp.currency !== 'ILS') {
-                    // Bookmarklet-imported foreign currency transaction (pending, original currency)
-                    var flag2 = getCurrencyFlag(exp.currency);
-                    var fmtAmt2 = exp.amount.toLocaleString('he-IL', {minimumFractionDigits:2, maximumFractionDigits:2});
-                    foreignInfo = '<span title="' + exp.currency + '">' + flag2 + ' ' + fmtAmt2 + ' ' + exp.currency + '</span>';
-                } else if (countryCode && countryCode !== 'IL') {
-                    // No currency info but has foreign country in description
-                    var rateInfo = exp.exchangeRate ? ' (' + exp.exchangeRate + ')' : '';
-                    var cLabel = countryCode === 'BR' ? ' BRL' : countryCode === 'US' ? ' USD' : '';
-                    foreignInfo = '<span>' + getCountryFlag(countryCode) + cLabel + rateInfo + '</span>';
-                }
-
-                return `
-                    <tr>
-                        <td>${I18n.formatDate(exp.date)}</td>
-                        <td>${I18n.t('credit.categories.' + exp.category)}</td>
-                        <td>${exp.description}${exp.isRecurring ? ' 🔄' : ''}</td>
-                        <td>${foreignInfo}</td>
-                        <td class="negative">${I18n.formatCurrency(exp.amount, exp.currency || 'ILS')}${fmtHours(exp.amount, exp.currency, getHourlyRate())}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-secondary btn-sm" onclick="editExpense('${exp.id}')" title="${I18n.t('common.edit')}">✏️</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteExpense('${exp.id}')" title="${I18n.t('common.delete')}">🗑️</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            // Add totals row
-            rows.push(`
-                <tr style="font-weight: bold; background: var(--color-bg-hover); border-top: 2px solid var(--color-border);">
-                    <td colspan="4" style="text-align: left;">${I18n.t('credit.totalTransactions')} (${monthExpenses.length} ${I18n.t('credit.transactions')})</td>
-                    <td class="negative">${I18n.formatCurrency(total)}</td>
-                    <td></td>
-                </tr>
-            `);
-
-            // Populate table
-            tbody.innerHTML = rows.join('');
-
-            // Update category chart
-            updateCategoryChart(monthExpenses, total);
-        }
-
-        // Helper function to get country code from description suffix
-        function getCountryFromDescription(description) {
-            if (!description) return null;
-            var desc = description.toUpperCase().trim();
-            if (desc.endsWith(' BR')) return 'BR';
-            if (desc.endsWith(' US')) return 'US';
-            if (desc.endsWith(' UK') || desc.endsWith(' GB')) return 'GB';
-            if (desc.endsWith(' DE')) return 'DE';
-            if (desc.endsWith(' FR')) return 'FR';
-            if (desc.endsWith(' IT')) return 'IT';
-            if (desc.endsWith(' ES')) return 'ES';
-            if (desc.endsWith(' PT')) return 'PT';
-            if (desc.endsWith(' NL')) return 'NL';
-            if (desc.endsWith(' JP')) return 'JP';
-            if (desc.endsWith(' CN')) return 'CN';
-            if (desc.endsWith(' AU')) return 'AU';
-            if (desc.endsWith(' CA')) return 'CA';
-            if (desc.endsWith(' MX')) return 'MX';
-            if (desc.endsWith(' TH')) return 'TH';
-            if (desc.endsWith(' IL')) return 'IL';
-            return null;
-        }
-
-        // Helper function to get flag from country code
-        function getCountryFlag(code) {
-            if (code === 'BR') return '🇧🇷';
-            if (code === 'US') return '🇺🇸';
-            if (code === 'GB') return '🇬🇧';
-            if (code === 'DE') return '🇩🇪';
-            if (code === 'FR') return '🇫🇷';
-            if (code === 'IT') return '🇮🇹';
-            if (code === 'ES') return '🇪🇸';
-            if (code === 'PT') return '🇵🇹';
-            if (code === 'NL') return '🇳🇱';
-            if (code === 'JP') return '🇯🇵';
-            if (code === 'CN') return '🇨🇳';
-            if (code === 'AU') return '🇦🇺';
-            if (code === 'CA') return '🇨🇦';
-            if (code === 'MX') return '🇲🇽';
-            if (code === 'TH') return '🇹🇭';
-            if (code === 'IL') return '🇮🇱';
-            return '🌍';
-        }
-
-        // Helper function to get country flag from currency
-        function getCurrencyFlag(currency) {
-            const flags = {
-                'USD': '🇺🇸', '$': '🇺🇸',
-                'EUR': '🇪🇺', '€': '🇪🇺',
-                'GBP': '🇬🇧', '£': '🇬🇧',
-                'BRL': '🇧🇷', 'R$': '🇧🇷',
-                'JPY': '🇯🇵', '¥': '🇯🇵',
-                'CNY': '🇨🇳',
-                'CHF': '🇨🇭',
-                'AUD': '🇦🇺',
-                'CAD': '🇨🇦',
-                'THB': '🇹🇭',
-                'TRY': '🇹🇷',
-                'PLN': '🇵🇱',
-                'CZK': '🇨🇿',
-                'HUF': '🇭🇺',
-                'SEK': '🇸🇪',
-                'NOK': '🇳🇴',
-                'DKK': '🇩🇰',
-                'MXN': '🇲🇽',
-                'ARS': '🇦🇷',
-                'CLP': '🇨🇱',
-                'COP': '🇨🇴',
-                'PEN': '🇵🇪',
-                'INR': '🇮🇳',
-                'RUB': '🇷🇺',
-                'ZAR': '🇿🇦',
-                'AED': '🇦🇪',
-                'SGD': '🇸🇬',
-                'HKD': '🇭🇰',
-                'NZD': '🇳🇿',
-                'KRW': '🇰🇷'
-            };
-            return flags[currency] || '🌍';
-        }
-
-        function updateCategoryChart(expenses, grandTotal) {
-            const categoryTotals = {};
-            expenses.forEach(exp => {
-                categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
-            });
-
-            const ctx = document.getElementById('categoryChart');
-            const breakdownDiv = document.getElementById('categoryBreakdown');
-            const categories = Object.keys(categoryTotals);
-            const total = Object.values(categoryTotals).reduce((a, b) => a + b, 0);
-
-            if (categories.length === 0) {
-                breakdownDiv.innerHTML = '<p style="text-align: center; color: var(--color-text-secondary);">' + I18n.t('credit.noDataChart') + '</p>';
-                if (Charts.charts.categoryChart) {
-                    Charts.charts.categoryChart.destroy();
-                    Charts.charts.categoryChart = null;
-                }
-                return;
-            }
-
-            // Sort by amount descending
-            categories.sort((a, b) => categoryTotals[b] - categoryTotals[a]);
-
-            const chartData = {
-                labels: categories.map(cat => I18n.t('credit.categories.' + cat)),
-                datasets: [{
-                    data: categories.map(cat => categoryTotals[cat]),
-                    backgroundColor: categories.map(cat => Charts.colors.categories[cat] || Charts.colors.categories.other),
-                    borderWidth: 0
-                }]
-            };
-
-            if (Charts.charts.categoryChart) {
-                Charts.charts.categoryChart.data = chartData;
-                Charts.charts.categoryChart.update();
-            } else {
-                Charts.charts.categoryChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: chartData,
-                    options: {
-                        ...Charts.defaultOptions,
-                        cutout: '50%',
-                        plugins: {
-                            ...Charts.defaultOptions.plugins,
-                            tooltip: {
-                                callbacks: {
-                                    label: (context) => {
-                                        const value = context.raw;
-                                        const percentage = ((value / total) * 100).toFixed(1);
-                                        return `${context.label}: ${I18n.formatCurrency(value)} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Build breakdown table
-            var breakdownHtml = '<table style="width: 100%; border-collapse: collapse;">';
-            breakdownHtml += '<thead><tr style="border-bottom: 2px solid var(--color-border);">';
-            breakdownHtml += '<th style="text-align: right; padding: 8px 5px;">' + I18n.t('credit.expenseCategory') + '</th>';
-            breakdownHtml += '<th style="text-align: center; padding: 8px 5px; width: 60px;">%</th>';
-            breakdownHtml += '<th style="text-align: left; padding: 8px 5px; width: 100px;">' + I18n.t('common.amount') + '</th>';
-            breakdownHtml += '</tr></thead><tbody>';
-
-            categories.forEach(function(cat) {
-                var amount = categoryTotals[cat];
-                var percentage = ((amount / total) * 100).toFixed(1);
-                var color = Charts.colors.categories[cat] || Charts.colors.categories.other;
-                breakdownHtml += '<tr style="border-bottom: 1px solid var(--color-border);">';
-                breakdownHtml += '<td style="padding: 10px 5px;"><span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: ' + color + '; margin-left: 8px; vertical-align: middle;"></span>' + I18n.t('credit.categories.' + cat) + '</td>';
-                breakdownHtml += '<td style="text-align: center; padding: 10px 5px; font-weight: bold;">' + percentage + '%</td>';
-                breakdownHtml += '<td style="text-align: left; padding: 10px 5px; color: var(--color-negative);">' + I18n.formatCurrency(amount) + '</td>';
-                breakdownHtml += '</tr>';
-            });
-
-            // Add total row
-            breakdownHtml += '<tr style="font-weight: bold; background: var(--color-bg-hover);">';
-            breakdownHtml += '<td style="padding: 12px 5px;">' + I18n.t('credit.totalTransactions') + '</td>';
-            breakdownHtml += '<td style="text-align: center; padding: 12px 5px;">100%</td>';
-            breakdownHtml += '<td style="text-align: left; padding: 12px 5px; color: var(--color-negative);">' + I18n.formatCurrency(total) + '</td>';
-            breakdownHtml += '</tr></tbody></table>';
-
-            var breakdownRows = [breakdownHtml];
-
-            breakdownDiv.innerHTML = breakdownRows.join('');
-        }
-
-        // Card Modal Functions
-        function openCardModal() {
-            document.getElementById('cardForm').reset();
-            document.getElementById('cardId').value = '';
-            document.getElementById('cardModal').classList.add('active');
-        }
-
-        function closeCardModal() {
-            document.getElementById('cardModal').classList.remove('active');
-        }
-
-        function saveCard() {
-            const name = document.getElementById('cardName').value;
-            const lastFour = document.getElementById('lastFour').value;
-            const creditLimit = parseFloat(document.getElementById('creditLimit').value) || 0;
-
-            if (!name || !lastFour) {
-                App.notify('Please fill all required fields', 'error');
-                return;
-            }
-
-            Storage.addCreditCard({ name, lastFour, creditLimit });
-            closeCardModal();
-            loadCards();
-            App.notify(I18n.t('common.save') + ' ✓', 'success');
-        }
-
-        function deleteCard(id) {
-            if (confirm(I18n.t('common.confirmDelete'))) {
-                Storage.deleteCreditCard(id);
-                loadCards();
-                loadExpenses();
-                App.notify(I18n.t('common.delete') + ' ✓', 'success');
-            }
-        }
-
-        // Expense Modal Functions
-        function openExpenseModal() {
-            const data = Storage.getCreditCards();
-            if (data.cards.length === 0) {
-                App.notify(I18n.t('credit.addCardFirst'), 'error');
-                return;
-            }
-
-            document.getElementById('expenseForm').reset();
-            document.getElementById('expenseId').value = '';
-            document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('recurringFields').classList.remove('visible');
-            document.getElementById('expenseModal').classList.add('active');
-        }
-
-        function closeExpenseModal() {
-            document.getElementById('expenseModal').classList.remove('active');
-        }
-
-        function editExpense(id) {
-            const data = Storage.getCreditCards();
-            const expense = data.expenses.find(e => e.id === id);
-            if (!expense) return;
-
-            document.getElementById('expenseId').value = expense.id;
-            document.getElementById('expenseCard').value = expense.cardId;
-            document.getElementById('expenseDate').value = expense.date;
-            document.getElementById('expenseAmount').value = expense.amount;
-            document.getElementById('expenseCategory').value = expense.category;
-            document.getElementById('expenseDescription').value = expense.description || '';
-            document.getElementById('isRecurring').checked = expense.isRecurring || false;
-            // Load recurring fields
-            if (expense.isRecurring) {
-                document.getElementById('recurringFields').classList.add('visible');
-                document.getElementById('recurringFrequency').value = expense.recurringFrequency || 'monthly';
-                document.getElementById('recurringDay').value = expense.recurringDay || '';
-                document.getElementById('recurringEndDate').value = expense.recurringEndDate || '';
-            } else {
-                document.getElementById('recurringFields').classList.remove('visible');
-            }
-            document.getElementById('expenseModal').classList.add('active');
-        }
-
-        function saveExpense() {
-            const id = document.getElementById('expenseId').value;
-            const cardId = document.getElementById('expenseCard').value;
-            const date = document.getElementById('expenseDate').value;
-            const amount = parseFloat(document.getElementById('expenseAmount').value);
-            const category = document.getElementById('expenseCategory').value;
-            const description = document.getElementById('expenseDescription').value;
-            const isRecurring = document.getElementById('isRecurring').checked;
-
-            if (!cardId || !date || !amount || !category) {
-                App.notify('Please fill all required fields', 'error');
-                return;
-            }
-
-            const expenseData = { cardId, date, amount, category, description, isRecurring };
-
-            if (isRecurring) {
-                expenseData.recurringFrequency = document.getElementById('recurringFrequency').value;
-                expenseData.recurringDay = parseInt(document.getElementById('recurringDay').value) || null;
-                expenseData.recurringEndDate = document.getElementById('recurringEndDate').value || null;
-            } else {
-                expenseData.recurringFrequency = null;
-                expenseData.recurringDay = null;
-                expenseData.recurringEndDate = null;
-            }
-
-            if (id) {
-                Storage.updateExpense(id, expenseData);
-            } else {
-                Storage.addExpense(expenseData);
-            }
-
-            closeExpenseModal();
-            loadExpenses();
-            renderRecurringSummary();
-            App.notify(I18n.t('common.save') + ' ✓', 'success');
-        }
-
-        function deleteExpense(id) {
-            if (confirm(I18n.t('common.confirmDelete'))) {
-                Storage.deleteExpense(id);
-                loadExpenses();
-                renderRecurringSummary();
-                App.notify(I18n.t('common.delete') + ' ✓', 'success');
-            }
-        }
-
-        function deleteAllExpenses() {
-            var data = Storage.getCreditCards();
-            var count = data.expenses.length;
-            if (count === 0) {
-                App.notify(I18n.t('credit.noExpensesToDelete'), 'warning');
-                return;
-            }
-            if (confirm(I18n.t('credit.deleteAllConfirm').replace('{}', count))) {
-                data.expenses = [];
-                Storage.saveCreditCards(data);
-                loadExpenses();
-                App.notify(I18n.t('credit.deletedExpenses') + ' (' + count + ')', 'success');
-            }
-        }
-
-        // Recurring Expense Functions
-        function toggleRecurringFields() {
-            const fields = document.getElementById('recurringFields');
-            if (document.getElementById('isRecurring').checked) {
-                fields.classList.add('visible');
-            } else {
-                fields.classList.remove('visible');
-            }
-        }
-
-        function toggleRecurringSection() {
-            const toggle = document.querySelector('.recurring-toggle');
-            const body = document.getElementById('recurringBody');
-            toggle.classList.toggle('open');
-            body.classList.toggle('open');
-        }
-
-        function getNextChargeDate(expense) {
-            const day = expense.recurringDay || new Date(expense.date).getDate();
-            const now = new Date();
-            const freq = expense.recurringFrequency || 'monthly';
-
-            let next = new Date(now.getFullYear(), now.getMonth(), day);
-            if (next <= now) {
-                if (freq === 'weekly') next.setDate(next.getDate() + 7);
-                else if (freq === 'biweekly') next.setDate(next.getDate() + 14);
-                else if (freq === 'bimonthly') next.setMonth(next.getMonth() + 2);
-                else if (freq === 'quarterly') next.setMonth(next.getMonth() + 3);
-                else if (freq === 'annually') next.setFullYear(next.getFullYear() + 1);
-                else next.setMonth(next.getMonth() + 1);
-            }
-
-            if (expense.recurringEndDate && next > new Date(expense.recurringEndDate)) return null;
-            return next;
-        }
-
-        function getCategoryIcon(category) {
-            const icons = { food: '🍔', transport: '🚗', shopping: '🛒', entertainment: '🎬', bills: '📄', health: '💊', education: '📚', other: '📌' };
-            return icons[category] || '📌';
-        }
-
-        function renderRecurringSummary() {
-            const recurring = Storage.getRecurringExpenses();
-            const grid = document.getElementById('recurringGrid');
-            const badge = document.getElementById('recurringTotalBadge');
-            const section = document.getElementById('recurringSection');
-
-            if (recurring.length === 0) {
-                section.style.display = 'none';
-                return;
-            }
-            section.style.display = 'block';
-
-            const monthlyTotal = Storage.getMonthlyRecurringTotal();
-            badge.textContent = I18n.formatCurrency(monthlyTotal);
-
-            const freqLabels = {
-                weekly: I18n.t('credit.weekly'),
-                biweekly: I18n.t('credit.biweekly'),
-                monthly: I18n.t('credit.monthly'),
-                bimonthly: I18n.t('credit.bimonthly'),
-                quarterly: I18n.t('credit.quarterly'),
-                annually: I18n.t('credit.annually')
-            };
-
-            const now = new Date();
-            const in7days = new Date(now);
-            in7days.setDate(in7days.getDate() + 7);
-
-            grid.innerHTML = recurring.map(exp => {
-                const freq = exp.recurringFrequency || 'monthly';
-                const nextDate = getNextChargeDate(exp);
-                const isUpcoming = nextDate && nextDate <= in7days;
-                const nextStr = nextDate ? I18n.formatDate(nextDate.toISOString().split('T')[0]) : '-';
-
-                return `
-                    <div class="recurring-card${isUpcoming ? ' upcoming' : ''}">
-                        <span class="recurring-card-icon">${getCategoryIcon(exp.category)}</span>
-                        <div class="recurring-card-info">
-                            <div class="recurring-card-name">${exp.description || I18n.t('credit.categories.' + exp.category)}</div>
-                            <div class="recurring-card-meta">${freqLabels[freq] || freq} · ${I18n.t('credit.nextCharge')}: ${nextStr}</div>
-                        </div>
-                        <div class="recurring-card-amount">${I18n.formatCurrency(exp.amount)}</div>
-                        <div class="recurring-card-actions">
-                            <button class="btn btn-secondary btn-sm" onclick="editExpense('${exp.id}')" title="${I18n.t('common.edit')}">✏️</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Smart Import Function
-        async function smartImportFile(event) {
-            var file = event.target.files[0];
-            if (!file) return;
-
-            try {
-                var content = await file.text();
-                var result = SmartImport.importWithAutoDetect(content, file.name, 'expenses');
-
-                if (result.needsMapping) {
-                    // Show manual mapping modal
-                    SmartImport.showMappingModal(result.headers, result.detected, function(mapping) {
-                        var processResult = SmartImport.processRows(result.rows, result.headerIdx, mapping, 'expenses');
-                        if (processResult.success) {
-                            importExpensesFromSmartImport(processResult.items);
-                        } else {
-                            App.notify(processResult.error || I18n.t('bank.importError'), 'error');
-                        }
-                    });
-                } else if (result.success) {
-                    importExpensesFromSmartImport(result.items);
-                } else {
-                    App.notify(result.error || I18n.t('bank.importError'), 'error');
-                }
-            } catch (error) {
-                console.error('Smart import error:', error);
-                App.notify(I18n.t('credit.fileReadError') + ': ' + error.message, 'error');
-            }
-
-            event.target.value = '';
-        }
-
-        function importExpensesFromSmartImport(items) {
-            if (items.length === 0) {
-                App.notify(I18n.t('credit.noTransactionsFound'), 'warning');
-                return;
-            }
-
-            // Calculate total
-            var total = items.reduce(function(sum, e) { return sum + e.amount; }, 0);
-
-            // Show confirmation
-            var confirmed = confirm(
-                I18n.t('credit.foundTransactions') + ': ' + items.length + ' ' + I18n.t('credit.transactions') + '\n' +
-                I18n.t('credit.totalTransactions') + ': ' + I18n.formatCurrency(total) + '\n\n' +
-                items.slice(0, 3).map(function(e) {
-                    return '  ' + e.date + ' - ' + e.description + ' - ' + I18n.formatCurrency(e.amount, e.currency || 'ILS');
-                }).join('\n') + '\n' +
-                (items.length > 3 ? '  ...' + I18n.t('credit.moreTransactions') + ' ' + (items.length - 3) : '') + '\n\n' +
-                I18n.t('credit.importTransactions')
-            );
-
-            if (!confirmed) return;
-
-            // Get or create default card
-            var data = Storage.getCreditCards();
-            var cardId = data.cards[0] ? data.cards[0].id : null;
-
-            if (!cardId) {
-                var card = Storage.addCreditCard({
-                    name: I18n.t('credit.defaultCardName'),
-                    lastFour: items[0].cardLastFour || '0000',
-                    limit: 50000
-                });
-                cardId = card.id;
-            }
-
-            // Import expenses (skip duplicates)
-            var imported = 0;
-            var skipped = 0;
-            var existingExpenses = Storage.getCreditCards().expenses;
-
-            items.forEach(function(exp) {
-                // Check for duplicates
-                var isDuplicate = existingExpenses.some(function(existing) {
-                    return existing.date === exp.date &&
-                           existing.description === exp.description &&
-                           existing.amount === exp.amount;
-                });
-
-                if (isDuplicate) {
-                    skipped++;
-                    return;
-                }
-
-                Storage.addExpense({
-                    cardId: cardId,
-                    date: exp.date,
-                    amount: exp.amount,
-                    category: exp.category,
-                    description: exp.description,
-                    isRecurring: false,
-                    originalAmount: exp.originalAmount,
-                    originalCurrency: exp.originalCurrency,
-                    exchangeRate: exp.exchangeRate
-                });
-                imported++;
-            });
-
-            var msg = skipped > 0
-                ? I18n.t('credit.importSuccess') + ' ' + imported + ' ' + I18n.t('credit.transactions') + ' (' + skipped + ' ' + I18n.t('credit.duplicatesSkipped') + ')'
-                : I18n.t('credit.importSuccess') + ' ' + imported + ' ' + I18n.t('credit.transactions');
-            App.notify(msg, 'success');
-
-            // Switch to imported month
-            if (items.length > 0 && items[0].date) {
-                var importedMonth = items[0].date.substring(0, 7);
-                var monthFilter = document.getElementById('monthFilter');
-                var optionExists = Array.from(monthFilter.options).some(function(opt) {
-                    return opt.value === importedMonth;
-                });
-                if (!optionExists) {
-                    var date = new Date(importedMonth + '-01');
-                    var label = I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear();
-                    monthFilter.insertAdjacentHTML('beforeend', '<option value="' + importedMonth + '">' + label + '</option>');
-                }
-                monthFilter.value = importedMonth;
-            }
-
-            loadCards();
-            loadExpenses();
-        }
-
-        function clearFilters() {
-            document.getElementById('categoryFilter').value = '';
-            document.getElementById('searchFilter').value = '';
-            loadExpenses();
-        }
-
-        // Hours-worked mode
-        function getHourlyRate() {
-            return parseFloat(localStorage.getItem('finance_hourly_rate')) || 0;
-        }
-        function saveHourlyRate(v) {
-            localStorage.setItem('finance_hourly_rate', v);
-        }
-        function isHoursModeOn() {
-            return localStorage.getItem('finance_hours_mode') === '1';
-        }
-        function toggleHoursMode() {
-            const on = !isHoursModeOn();
-            localStorage.setItem('finance_hours_mode', on ? '1' : '0');
-            document.getElementById('hoursToggleBtn').classList.toggle('active', on);
-            const row = document.getElementById('hoursRateRow');
-            row.style.display = on ? 'flex' : 'none';
-            if (on && !getHourlyRate()) document.getElementById('hourlyRateInput').focus();
-            loadExpenses();
-        }
-        function initHoursMode() {
-            const on = isHoursModeOn();
-            const rate = getHourlyRate();
-            document.getElementById('hoursToggleBtn').classList.toggle('active', on);
-            document.getElementById('hoursRateRow').style.display = on ? 'flex' : 'none';
-            if (rate) document.getElementById('hourlyRateInput').value = rate;
-        }
-        function fmtHours(amount, currency, rate) {
-            if (!isHoursModeOn() || !rate || (currency || 'ILS') !== 'ILS') return '';
-            const h = amount / rate;
-            if (h < 0.1) return '';
-            const display = h >= 10 ? h.toFixed(1) : h.toFixed(1);
-            return `<span class="hours-sub">= ${display} שע׳</span>`;
-        }
-
-        function updateBudgetProgress(spent) {
-            const budgets = Alerts.getBudgets();
-            const thresholds = Alerts.getThresholds();
-            const container = document.getElementById('budgetProgressContainer');
-            const bar = document.getElementById('budgetProgressBar');
-
-            if (budgets.total > 0) {
-                container.style.display = 'block';
-                const percentage = (spent / budgets.total) * 100;
-
-                document.getElementById('budgetSpent').textContent = I18n.formatCurrency(spent);
-                document.getElementById('budgetLimit').textContent = `${I18n.t('credit.budgetOf')} ${I18n.formatCurrency(budgets.total)}`;
-
-                bar.style.width = `${Math.min(100, percentage)}%`;
-
-                if (percentage >= thresholds.danger) {
-                    bar.style.background = 'var(--color-negative)';
-                } else if (percentage >= thresholds.warning) {
-                    bar.style.background = '#f59e0b';
-                } else {
-                    bar.style.background = 'var(--color-positive)';
-                }
-            } else {
-                container.style.display = 'none';
-            }
-        }
-
-        async function importCSV() {
-            const format = CSVImport.showImportHelp('expenses');
-            const confirmed = confirm(
-                `${format.title}\n\n` +
-                `${format.columns.join(', ')}\n\n` +
-                `${format.example}\n\n` +
-                `${I18n.t('credit.csvContinue')}`
-            );
-
-            if (!confirmed) return;
-
-            const result = await CSVImport.openFilePicker('expenses');
-
-            if (result.success) {
-                App.notify(I18n.t('credit.importSuccess') + ' ' + result.imported + ' ' + I18n.t('credit.transactions'), 'success');
-                loadCards();
-                loadExpenses();
-            } else {
-                App.notify(result.error || I18n.t('bank.importError'), 'error');
-            }
-
-            if (result.errors && result.errors.length > 0) {
-                console.log('Import errors:', result.errors);
-            }
-        }
-
-        // Excel Import for Credit Card Transactions
-        async function importCreditExcel(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            try {
-                const content = await file.text();
-                const expenses = parseCreditExcel(content);
-
-                if (expenses.length === 0) {
-                    App.notify(I18n.t('credit.noTransactionsFound'), 'warning');
-                    return;
-                }
-
-                // Calculate total
-                const total = expenses.reduce((sum, e) => sum + e.amount, 0);
-
-                // Show confirmation
-                const confirmed = confirm(
-                    `${I18n.t('credit.foundTransactions')}: ${expenses.length} ${I18n.t('credit.transactions')}\n` +
-                    `${I18n.t('credit.totalTransactions')}: ${I18n.formatCurrency(total)}\n\n` +
-                    `${expenses.slice(0, 5).map(e => `  ${e.date} - ${e.description} - ${I18n.formatCurrency(e.amount)}`).join('\n')}\n` +
-                    `${expenses.length > 5 ? `  ...${I18n.t('credit.moreTransactions')} ${expenses.length - 5}` : ''}\n\n` +
-                    `${I18n.t('credit.importTransactions')}`
-                );
-
-                if (!confirmed) return;
-
-                // Get or create default card
-                const data = Storage.getCreditCards();
-                let cardId = data.cards[0]?.id;
-
-                if (!cardId) {
-                    // Create default card
-                    const card = Storage.addCreditCard({
-                        name: I18n.t('credit.defaultCardName'),
-                        lastFour: expenses[0]?.cardLastFour || '0000',
-                        limit: 50000
-                    });
-                    cardId = card.id;
-                }
-
-                // Import expenses (skip duplicates)
-                let imported = 0;
-                let skipped = 0;
-                const existingExpenses = Storage.getCreditCards().expenses;
-
-                expenses.forEach(exp => {
-                    // Check if expense already exists (same date, description, and amount)
-                    const isDuplicate = existingExpenses.some(existing =>
-                        existing.date === exp.date &&
-                        existing.description === exp.description &&
-                        existing.amount === exp.amount
-                    );
-
-                    if (isDuplicate) {
-                        skipped++;
-                        return;
-                    }
-
-                    Storage.addExpense({
-                        cardId,
-                        date: exp.date,
-                        amount: exp.amount,
-                        category: exp.category,
-                        description: exp.description,
-                        isRecurring: exp.isRecurring || false,
-                        originalAmount: exp.originalAmount,
-                        originalCurrency: exp.originalCurrency,
-                        exchangeRate: exp.exchangeRate
-                    });
-                    imported++;
-                });
-
-                const msg = skipped > 0
-                    ? `${I18n.t('credit.importSuccess')} ${imported} ${I18n.t('credit.transactions')} (${skipped} ${I18n.t('credit.duplicatesSkipped')})`
-                    : `${I18n.t('credit.importSuccess')} ${imported} ${I18n.t('credit.transactions')}`;
-                App.notify(msg, 'success');
-
-                // Switch to the month of the first imported expense
-                if (expenses.length > 0 && expenses[0].date) {
-                    const importedMonth = expenses[0].date.substring(0, 7); // YYYY-MM
-                    const monthFilter = document.getElementById('monthFilter');
-                    // Add the month if not in the list
-                    let optionExists = Array.from(monthFilter.options).some(opt => opt.value === importedMonth);
-                    if (!optionExists) {
-                        const date = new Date(importedMonth + '-01');
-                        const label = I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear();
-                        monthFilter.insertAdjacentHTML('beforeend', `<option value="${importedMonth}">${label}</option>`);
-                    }
-                    monthFilter.value = importedMonth;
-                }
-
-                loadCards();
-                loadExpenses();
-
-            } catch (error) {
-                console.error('Excel import error:', error);
-                App.notify(I18n.t('credit.fileReadError') + ': ' + error.message, 'error');
-            }
-
-            event.target.value = '';
-        }
-
-        function parseCreditExcel(content) {
-            const expenses = [];
-
-            // Parse XML-based Excel (xlsx)
-            const rowPattern = /<row[^>]*>([\s\S]*?)<\/row>/gi;
-            const cellPattern = /<c[^>]*>(?:<v>([^<]*)<\/v>)?/gi;
-            const valuePattern = /<v>([^<]*)<\/v>/;
-
-            // Find all rows
-            const rows = [];
-            let match;
-            while ((match = rowPattern.exec(content)) !== null) {
-                const rowContent = match[1];
-                const cells = [];
-
-                // Extract cell values
-                let cellMatch;
-                const cp = new RegExp(cellPattern.source, 'gi');
-                while ((cellMatch = cp.exec(rowContent)) !== null) {
-                    const cellContent = cellMatch[0];
-                    const valMatch = cellContent.match(valuePattern);
-                    cells.push(valMatch ? valMatch[1] : '');
-                }
-                rows.push(cells);
-            }
-
-            // Find header row (contains 'תאריך עסקה' or 'שם בית העסק')
-            let headerIdx = -1;
-            for (let i = 0; i < rows.length; i++) {
-                const rowText = rows[i].join(' ');
-                if (rowText.includes('תאריך עסקה') || rowText.includes('שם בית העסק')) {
-                    headerIdx = i;
-                    break;
-                }
-            }
-
-            if (headerIdx === -1) {
-                throw new Error(I18n.t('credit.badFormat'));
-            }
-
-            // Category mapping from Hebrew to internal
-            const categoryMap = {
-                'מזון ומסעדות': 'food',
-                'מסעדות, קפה וברים': 'food',
-                'סופרמרקט': 'food',
-                'תחבורה ודלק': 'transport',
-                'דלק, חשמל וגז': 'transport',
-                'קניות': 'shopping',
-                'אופנה והנעלה': 'shopping',
-                'ציוד לבית': 'shopping',
-                'בילויים': 'entertainment',
-                'פנאי, בידור וספורט': 'entertainment',
-                'חשבונות': 'bills',
-                'עירייה וממשלה': 'bills',
-                'שירותי תקשורת': 'bills',
-                'חשמל ומים': 'bills',
-                'בריאות': 'health',
-                'בריאות ויופי': 'health',
-                'חינוך': 'education',
-                'שונות': 'other'
-            };
-
-            // Parse data rows (after header)
-            for (let i = headerIdx + 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (row.length < 6) continue;
-
-                // Skip summary rows
-                if (row[0]?.includes('סך הכל') || row[0]?.includes('₪')) continue;
-
-                const dateStr = row[0]; // A: תאריך עסקה
-                const description = row[1]; // B: שם בית העסק
-                const categoryHeb = row[2]; // C: קטגוריה
-                const cardLastFour = row[3]; // D: 4 ספרות
-                const amountStr = row[5]; // F: סכום חיוב
-                const originalAmountStr = row[7]; // H: סכום עסקה מקורי
-                var originalCurrency = row[8]; // I: מטבע עסקה מקורי
-                const notes = row[10] || ''; // K: הערות
-                const exchangeRateStr = row[15] || ''; // P: שער המרה
-
-                if (!dateStr || !description || !amountStr) continue;
-
-                // Parse date (DD-MM-YYYY to YYYY-MM-DD)
-                const dateParts = dateStr.split('-');
-                if (dateParts.length !== 3) continue;
-                const date = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
-
-                // Parse amount
-                const amount = parseFloat(amountStr.replace(/,/g, ''));
-                if (isNaN(amount) || amount <= 0) continue;
-
-                // Parse original amount (for foreign transactions)
-                var originalAmount = parseFloat(originalAmountStr?.replace(/,/g, '') || '0');
-
-                // Parse exchange rate from text like "שער המרה מדולר לש"ח 3.1500"
-                var exchangeRate = null;
-                if (exchangeRateStr) {
-                    var rateMatch = exchangeRateStr.match(/(\d+\.?\d*)/);
-                    if (rateMatch) {
-                        exchangeRate = parseFloat(rateMatch[1]);
-                    }
-                    // If no original currency but has exchange rate, it's likely USD
-                    if ((!originalCurrency || originalCurrency === '₪' || originalCurrency === '') && exchangeRate) {
-                        originalCurrency = '$';
-                    }
-                }
-
-                // Map category
-                const category = categoryMap[categoryHeb] || 'other';
-
-                // Check if recurring
-                const isRecurring = notes.includes('הוראת קבע');
-
-                // Check if foreign transaction (original currency different from ILS)
-                var isForeign = originalCurrency && originalCurrency !== '₪' && originalCurrency !== 'ILS' && originalCurrency !== '';
-
-                expenses.push({
-                    date,
-                    description: description.trim(),
-                    amount,
-                    category,
-                    cardLastFour,
-                    isRecurring,
-                    originalAmount: (isForeign || exchangeRate) ? originalAmount : null,
-                    originalCurrency: (isForeign || exchangeRate) ? originalCurrency : null,
-                    exchangeRate: exchangeRate
-                });
-            }
-
-            return expenses;
-        }
-
-        function mapBookmarkletCategory(raw, description) {
-            var r = (raw || '').toLowerCase();
-            var d = (description || '').toLowerCase();
-
-            // Match against category name from the site (including Max real category strings)
-            if (r.includes('מסעדות') || r.includes('קפה') || r.includes('מזון') ||
-                r.includes('אוכל') || r.includes('סופרמרקט') || r.includes('בית קפה') || r.includes('food'))
-                return 'food';
-            if (r.includes('תחבורה') || r.includes('רכבים') || r.includes('תחנות דלק') ||
-                r.includes('תחנת') || r.includes('חניה') || r.includes('transport'))
-                return 'transport';
-            if (r.includes('טיסות') || r.includes('תיירות') || r.includes('נסיעות') ||
-                r.includes('מלון') || r.includes('travel'))
-                return 'entertainment';
-            if (r.includes('בידור') || r.includes('בילוי') || r.includes('פנאי') ||
-                r.includes('ספורט') || r.includes('entertainment'))
-                return 'entertainment';
-            if (r.includes('תקשורת') || r.includes('סלולר') || r.includes('ביטוח') ||
-                r.includes('חשמל') || r.includes('גז') || r.includes('מים') ||
-                r.includes('ארנונה') || r.includes('חשבון') || r.includes('תשלום') || r.includes('bills'))
-                return 'bills';
-            if (r.includes('דלק'))
-                return 'transport';
-            if (r.includes('רפואה') || r.includes('מרקחת') || r.includes('בריאות') ||
-                r.includes('קוסמטיקה') || r.includes('טיפוח') || r.includes('פארמ') ||
-                r.includes('קופת') || r.includes('שיניים') || r.includes('health'))
-                return 'health';
-            if (r.includes('אופנה') || r.includes('קניות') || r.includes('חנות') ||
-                r.includes('חנויות') || r.includes('מחשבים') || r.includes('אלקטרוניקה') ||
-                r.includes('shopping'))
-                return 'shopping';
-            if (r.includes('חינוך') || r.includes('לימוד') || r.includes('קורס') || r.includes('education'))
-                return 'education';
-
-            // Fallback: infer from business name (Hebrew)
-            if (d.includes('שופרסל') || d.includes('רמי לוי') || d.includes('מגה') ||
-                d.includes('ויקטורי') || d.includes('קו קופה') || d.includes('יינות ביתן') ||
-                d.includes('חצי חינם') || d.includes('מינימרקט') ||
-                d.includes('ארומה') || d.includes('קפה') || d.includes('מקדונלד') ||
-                d.includes('פיצה') || d.includes('סושי') || d.includes('שווארמה') ||
-                d.includes('מסעדה') || d.includes('בית קפה') || d.includes('סטייק') ||
-                d.includes('המבורגר') || d.includes('פלאפל') || d.includes('מאפה'))
-                return 'food';
-            if (d.includes('פז') || d.includes('סונול') || d.includes('דלק') ||
-                d.includes('גז') || d.includes('תחנת') || d.includes('חניה') ||
-                d.includes('פרקינג') || d.includes('רכבת') || d.includes('אגד') ||
-                d.includes('מונית') || d.includes('גט') || d.includes('יאנגו'))
-                return 'transport';
-            if (d.includes('הוט') || d.includes('yes ') || d.includes('בזק') ||
-                d.includes('סלקום') || d.includes('פרטנר') || d.includes('אורנג') ||
-                d.includes('גולן טלקום') || d.includes('012') ||
-                d.includes('חברת החשמל') || d.includes('שטראוס מים'))
-                return 'bills';
-            if (d.includes('מכבי') || d.includes('כללית') || d.includes('לאומית') ||
-                d.includes('מאוחדת') || d.includes('בית חולים') || d.includes('רופא') ||
-                d.includes('פארמ') || d.includes('סופר פארם') || d.includes('super-pharm') ||
-                d.includes('אופטיקה') || d.includes('שיניים'))
-                return 'health';
-            if (d.includes('פיטנס') || d.includes('כושר') || d.includes('ספורט') ||
-                d.includes('אייקון'))
-                return 'entertainment';
-            if (d.includes('אוניברסיטה') || d.includes('מכללה') || d.includes('גן ') ||
-                d.includes('בית ספר') || d.includes('קורס') || d.includes('udemy') ||
-                d.includes('coursera'))
-                return 'education';
-
-            // Fallback: infer from business name (English / international)
-            if (d.includes('pizza') || d.includes('burger') || d.includes('restaur') ||
-                d.includes('churrasco') || d.includes('salgad') || d.includes('comida') ||
-                d.includes('risoto') || d.includes('hortifr') || d.includes('fogao') ||
-                d.includes('fogão') || d.includes('massas') || d.includes('padaria') ||
-                d.includes('bakery') || d.includes('cafe') || d.includes('coffee') ||
-                d.includes('grill') || d.includes('snack') || d.includes('sushi') ||
-                d.includes('steak') || d.includes('food') || d.includes('mercado') ||
-                d.includes('supermark') || d.includes('oakberry') || d.includes('acai') ||
-                d.includes('dengo') || d.includes('banana') || d.includes('mac restaur') ||
-                d.includes('divino') || d.includes('camelias') || d.includes('cabana'))
-                return 'food';
-            if (d.includes('parking') || d.includes('allpark') || d.includes('uber') ||
-                d.includes('taxi') || d.includes('transfer') || d.includes('airline') ||
-                d.includes('airport') || d.includes('flight') || d.includes('rodoviaria'))
-                return 'transport';
-            if (d.includes('anthropic') || d.includes('claude') || d.includes('netflix') ||
-                d.includes('spotify') || d.includes('apple') || d.includes('google') ||
-                d.includes('microsoft') || d.includes('subscription') || d.includes('energia') ||
-                d.includes('electric') || d.includes('telecom') || d.includes('celular'))
-                return 'bills';
-            if (d.includes('clinica') || d.includes('clinic') || d.includes('drogaria') ||
-                d.includes('farmac') || d.includes('pharmacy') || d.includes('hospital') ||
-                d.includes('medic') || d.includes('saude') || d.includes('dental') ||
-                d.includes('odonto'))
-                return 'health';
-            if (d.includes('shopping') || d.includes('daiso') || d.includes('store') ||
-                d.includes('loja') || d.includes('mall'))
-                return 'shopping';
-            if (d.includes('sport') || d.includes('fitness') || d.includes('academia') ||
-                d.includes('gym') || d.includes('cinema') || d.includes('teatro'))
-                return 'entertainment';
-
-            return 'other';
-        }
-
-        function processBookmarkletText(text) {
-            try {
-                var data = JSON.parse(text);
-                if (!data.__finsight || !Array.isArray(data.transactions)) {
-                    App.notify('הקליפבורד לא מכיל נתוני FinSight. לחץ על הסימניה באתר האשראי תחילה.', 'error');
-                    return;
-                }
-                var items = data.transactions.map(function(tx) {
-                    var cur = (tx.currency || '').toUpperCase() || 'ILS';
-                    var item = { date: tx.date, description: tx.description, amount: tx.amount, currency: cur, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
-                    if (tx.originalCurrency) item.originalCurrency = tx.originalCurrency;
-                    if (tx.originalAmount) item.originalAmount = tx.originalAmount;
-                    return item;
-                });
-
-                // Update categories for already-imported transactions that were saved as 'other'
-                var existingExpenses = Storage.getCreditCards().expenses;
-                var updatedCount = 0;
-                items.forEach(function(item) {
-                    if (item.category === 'other') return;
-                    var match = existingExpenses.find(function(e) {
-                        return e.date === item.date && e.description === item.description && e.amount === item.amount && e.category === 'other';
-                    });
-                    if (match) {
-                        Storage.updateExpense(match.id, { category: item.category });
-                        updatedCount++;
-                    }
-                });
-                if (updatedCount > 0) {
-                    App.notify('עודכנו קטגוריות ל-' + updatedCount + ' עסקאות', 'success');
-                    loadExpenses();
-                    return;
-                }
-
-                var hasNew = items.some(function(item) {
-                    return !existingExpenses.some(function(e) {
-                        return e.date === item.date && e.description === item.description && e.amount === item.amount;
-                    });
-                });
-                if (!hasNew) {
-                    App.notify('כל העסקאות כבר ייובאו', 'warning');
-                    return;
-                }
-                App.notify('נטענו ' + items.length + ' עסקאות מ-' + (data.sourceName || data.source), 'success');
-                importExpensesFromSmartImport(items);
-            } catch(e) {
-                App.notify('תוכן אינו תקין.', 'error');
-            }
-        }
-
-        async function importFromBookmarklet() {
-            // Try clipboard API
-            try {
-                var text = await navigator.clipboard.readText();
-                processBookmarkletText(text);
-                return;
-            } catch(e) {}
-
-            // Fallback: paste modal
-            var prev = document.getElementById('__bklt_modal');
-            if (prev) prev.remove();
-            var modal = document.createElement('div');
-            modal.id = '__bklt_modal';
-            modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:12px;padding:20px;z-index:9999;width:320px;direction:rtl;box-shadow:0 8px 32px rgba(0,0,0,.5);';
-            modal.innerHTML = '<div style="font-weight:bold;margin-bottom:12px;">📋 הדבק נתוני FinSight</div><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;">לחץ Ctrl+V בתוך התיבה:</p><textarea id="__bklt_ta" style="width:100%;height:80px;padding:8px;background:#0f172a;color:white;border:1px solid var(--color-border);border-radius:6px;font-size:12px;resize:none;" placeholder="Ctrl+V כאן..."></textarea><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;"><button onclick="document.getElementById(\'__bklt_modal\').remove()" style="padding:8px 16px;background:transparent;color:var(--color-text);border:1px solid var(--color-border);border-radius:6px;cursor:pointer;">ביטול</button><button id="__bklt_ok" style="padding:8px 16px;background:var(--color-credit);color:white;border:none;border-radius:6px;cursor:pointer;">ייבוא</button></div>';
-            document.body.appendChild(modal);
-            document.getElementById('__bklt_ta').focus();
-            document.getElementById('__bklt_ok').onclick = function() {
-                var text = document.getElementById('__bklt_ta').value;
-                modal.remove();
-                processBookmarkletText(text);
-            };
-        }
-
-        function detectRecurringPayments() {
-            var allExpenses = Storage.getCreditCards().expenses;
-            if (!allExpenses.length) {
-                App.notify('אין הוצאות לניתוח', 'warning');
-                return;
-            }
-
-            // Group by normalized description
-            var groups = {};
-            allExpenses.forEach(function(e) {
-                var key = e.description.trim().toLowerCase();
-                if (!groups[key]) groups[key] = { description: e.description, category: e.category, entries: [] };
-                groups[key].entries.push(e);
-            });
-
-            // Find candidates: appear in 2+ distinct months, median amount
-            var existingSubs = Storage.getSubscriptions().map(function(s) {
-                return s.name.trim().toLowerCase();
-            });
-
-            var candidates = [];
-            Object.values(groups).forEach(function(g) {
-                var months = [...new Set(g.entries.map(function(e) {
-                    return e.date.substring(0, 7); // YYYY-MM
-                }))];
-                if (months.length < 2) return;
-
-                // Calculate median amount
-                var amounts = g.entries.map(function(e) { return e.amount; }).sort(function(a, b) { return a - b; });
-                var median = amounts[Math.floor(amounts.length / 2)];
-
-                // Check amounts are consistent (max 30% variation from median)
-                var consistent = amounts.every(function(a) { return Math.abs(a - median) / median < 0.3; });
-                if (!consistent) return;
-
-                // Skip if already a subscription
-                if (existingSubs.includes(g.description.trim().toLowerCase())) return;
-
-                // Map category
-                var subCategory = 'fixed_bills';
-                if (['entertainment', 'education'].includes(g.category)) subCategory = 'subscriptions';
-                if (g.category === 'health') subCategory = 'insurance';
-
-                candidates.push({
-                    description: g.description,
-                    amount: Math.round(median * 100) / 100,
-                    months: months.length,
-                    category: subCategory
-                });
-            });
-
-            if (!candidates.length) {
-                App.notify('לא נמצאו תשלומים קבועים חדשים', 'info');
-                return;
-            }
-
-            // Sort by amount descending
-            candidates.sort(function(a, b) { return b.amount - a.amount; });
-
-            // Show modal
-            var prev = document.getElementById('__rec_modal');
-            if (prev) prev.remove();
-
-            var modal = document.createElement('div');
-            modal.id = '__rec_modal';
-            modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
-
-            var rows = candidates.map(function(c, i) {
-                return '<label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-border);cursor:pointer;">' +
-                    '<input type="checkbox" checked data-i="' + i + '" style="width:16px;height:16px;accent-color:var(--color-credit);">' +
-                    '<span style="flex:1;">' + c.description + '</span>' +
-                    '<span style="color:var(--color-text-secondary);font-size:0.8rem;">' + c.months + ' חודשים</span>' +
-                    '<span style="font-weight:600;min-width:70px;text-align:left;">₪' + c.amount.toLocaleString() + '</span>' +
-                    '</label>';
-            }).join('');
-
-            modal.innerHTML = '<div style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;direction:rtl;">' +
-                '<div style="font-weight:700;font-size:1.1rem;margin-bottom:6px;">🔄 תשלומים קבועים שזוהו</div>' +
-                '<div style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:16px;">נמצאו ' + candidates.length + ' תשלומים שחוזרים על עצמם. סמן את אלה שתרצה להוסיף לתשלומים קבועים:</div>' +
-                '<div id="__rec_rows">' + rows + '</div>' +
-                '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">' +
-                '<button onclick="document.getElementById(\'__rec_modal\').remove()" style="padding:8px 16px;background:transparent;color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;cursor:pointer;">ביטול</button>' +
-                '<button id="__rec_save" style="padding:8px 20px;background:var(--color-credit);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">הוסף לתשלומים קבועים</button>' +
-                '</div></div>';
-
-            document.body.appendChild(modal);
-
-            document.getElementById('__rec_save').onclick = function() {
-                var checkboxes = document.querySelectorAll('#__rec_rows input[type=checkbox]:checked');
-                var added = 0;
-                checkboxes.forEach(function(cb) {
-                    var c = candidates[parseInt(cb.dataset.i)];
-                    Storage.addSubscription({
-                        name: c.description,
-                        amount: c.amount,
-                        category: c.category,
-                        frequency: 'monthly',
-                        active: true,
-                        nextPayment: new Date().toISOString().substring(0, 10)
-                    });
-                    added++;
-                });
-                modal.remove();
-                if (added > 0) App.notify('נוספו ' + added + ' תשלומים קבועים', 'success');
-            };
-        }
-
-        document.addEventListener('paste', function(e) {
-            var text = e.clipboardData.getData('text');
-            if (!text.includes('__finsight')) return;
-            try {
-                var data = JSON.parse(text);
-                if (!data.__finsight || !Array.isArray(data.transactions)) return;
-                e.preventDefault();
-                processBookmarkletText(text);
-            } catch(e) {}
-        });
-    </script>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
+
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>
+ <span>💳</span>
+ <span data-i18n="credit.title">כרטיסי אשראי</span>
+ </h1>
+ </header>
+
+ <!-- Budget Alerts -->
+ <div id="budgetAlerts"></div>
+
+ <!-- Monthly Total with Budget Progress -->
+ <div class="net-worth-banner" style="border-color: var(--color-credit);">
+ <div class="label" data-i18n="credit.monthlyTotal">סה״כ חודשי</div>
+ <div class="value" id="monthlyTotal" style="background: linear-gradient(90deg, var(--color-credit), #f87171); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">₪0</div>
+ <div id="budgetProgressContainer" style="display: none; width: 100%; max-width: 400px; margin-top: 15px;">
+ <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--color-text-secondary);">
+ <span id="budgetSpent">₪0</span>
+ <span id="budgetLimit"></span>
+ </div>
+ <div class="budget-progress">
+ <div class="budget-progress-bar" id="budgetProgressBar" style="width: 0%; background: var(--color-credit);"></div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Cards Section -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">💳</span>
+ <span data-i18n="credit.title">כרטיסי אשראי</span>
+ </h2>
+ <button class="btn btn-primary btn-sm" onclick="openCardModal()">
+ <span>➕</span>
+ <span data-i18n="credit.addCard">הוסף כרטיס</span>
+ </button>
+ </div>
+ <div id="cardsContainer">
+ <!-- Cards will be populated here -->
+ </div>
+ </div>
+
+ <!-- Recurring Expenses Section -->
+ <div class="recurring-section" id="recurringSection">
+ <div class="recurring-toggle" onclick="toggleRecurringSection()">
+ <div class="recurring-toggle-right">
+ <span>🔄</span>
+ <strong data-i18n="credit.recurringExpenses">הוצאות קבועות</strong>
+ </div>
+ <div style="display: flex; align-items: center; gap: 10px;">
+ <span class="recurring-total-badge" id="recurringTotalBadge">₪0</span>
+ <span class="arrow">▼</span>
+ </div>
+ </div>
+ <div class="recurring-body" id="recurringBody">
+ <div class="recurring-grid" id="recurringGrid">
+ <!-- Populated by JS -->
+ </div>
+ </div>
+ </div>
+
+ <!-- Expenses Section -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📋</span>
+ <span data-i18n="credit.expenses">הוצאות</span>
+ </h2>
+ <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+ <button class="btn btn-primary btn-sm" onclick="openExpenseModal()">
+ <span>➕</span>
+ <span data-i18n="credit.addExpense">הוסף הוצאה</span>
+ </button>
+ <button class="btn btn-secondary btn-sm" onclick="document.getElementById('smartImportInput').click()">
+ <span>📥</span>
+ <span data-i18n="credit.smartImport">ייבוא נתונים</span>
+ </button>
+ <button class="btn btn-secondary btn-sm" onclick="ImageImport.openImagePicker('credit')">
+ <span>📷</span>
+ <span data-i18n="credit.importImage">ייבוא מתמונה</span>
+ </button>
+ <input type="file" id="smartImportInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="smartImportFile(event)">
+ <button class="btn btn-secondary btn-sm" onclick="importFromBookmarklet()">
+ <span>📋</span>
+ <span>ייבוא מסימניה</span>
+ </button>
+ <span class="tooltip-btn" data-tooltip="לחץ על הסימניה באתר האשראי,&#10;חזור לכאן ולחץ כפתור זה.&#10;להגדרת הסימניה: הגדרות ← ייבוא מאתרי אשראי">?</span>
+ <button class="btn btn-secondary btn-sm" onclick="detectRecurringPayments()">
+ <span>🔄</span>
+ <span>זהה תשלומים קבועים</span>
+ </button>
+ <button class="btn btn-danger btn-sm" onclick="deleteAllExpenses()">
+ <span>🗑️</span>
+ <span data-i18n="credit.deleteAll">מחק הכל</span>
+ </button>
+ </div>
+ </div>
+ <!-- Search and Filter -->
+ <div class="search-filter" style="margin-top: 15px;">
+ <select id="monthFilter" onchange="loadExpenses()">
+ <!-- Will be populated by JS -->
+ </select>
+ <select id="categoryFilter" onchange="loadExpenses()">
+ <option value="" data-i18n="credit.allCategories">כל הקטגוריות</option>
+ <option value="food" data-i18n="credit.categories.food">מזון ומסעדות</option>
+ <option value="transport" data-i18n="credit.categories.transport">תחבורה ודלק</option>
+ <option value="shopping" data-i18n="credit.categories.shopping">קניות</option>
+ <option value="entertainment" data-i18n="credit.categories.entertainment">בילויים</option>
+ <option value="bills" data-i18n="credit.categories.bills">חשבונות קבועים</option>
+ <option value="health" data-i18n="credit.categories.health">בריאות</option>
+ <option value="education" data-i18n="credit.categories.education">חינוך</option>
+ <option value="other" data-i18n="credit.categories.other">אחר</option>
+ </select>
+ <input type="text" id="searchFilter" placeholder="🔍 חיפוש לפי תיאור..." data-i18n-placeholder="credit.searchByDesc" oninput="loadExpenses()">
+ <button class="btn btn-secondary btn-sm" onclick="clearFilters()" data-i18n="credit.clearFilter">נקה סינון</button>
+ <button class="btn btn-secondary btn-sm" id="hoursToggleBtn" onclick="toggleHoursMode()" title="הצג שעות עבודה">⏱️</button>
+ </div>
+ <div id="hoursRateRow" style="display:none; margin-top:10px; display:none; align-items:center; gap:10px; font-size:0.85rem; color:var(--color-text-secondary);">
+ <span>שכר שעתי:</span>
+ <input type="number" id="hourlyRateInput" min="1" placeholder="₪ לשעה"
+ style="width:110px;padding:6px 10px;border:1px solid var(--color-border);border-radius:8px;background:var(--color-bg);color:var(--color-text-primary);font-size:0.9rem;"
+ oninput="saveHourlyRate(this.value); loadExpenses()">
+ <span style="font-size:0.75rem;">(ברוטו או נטו — לפי בחירתך)</span>
+ </div>
+ <div class="table-container">
+ <table>
+ <thead>
+ <tr>
+ <th data-i18n="credit.expenseDate">תאריך</th>
+ <th data-i18n="credit.expenseCategory">קטגוריה</th>
+ <th data-i18n="credit.expenseDescription">תיאור</th>
+ <th data-i18n="credit.source">מקור</th>
+ <th data-i18n="credit.expenseAmount">סכום</th>
+ <th data-i18n="common.actions">פעולות</th>
+ </tr>
+ </thead>
+ <tbody id="expensesTable">
+ <!-- Will be populated by JS -->
+ </tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- Charts -->
+ <div class="charts-grid">
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📊</span>
+ <span data-i18n="credit.categoryBreakdown">חלוקה לפי קטגוריות</span>
+ </h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="categoryChart"></canvas>
+ </div>
+ <div id="categoryBreakdown" style="padding: 15px; border-top: 1px solid var(--color-border);"></div>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
+
+ <!-- Mobile Menu Toggle -->
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
+
+ <!-- Add Card Modal -->
+ <div class="modal-overlay" id="cardModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 data-i18n="credit.addCard">הוסף כרטיס</h2>
+ <button class="modal-close" onclick="closeCardModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="cardForm">
+ <input type="hidden" id="cardId">
+ <div class="form-group">
+ <label data-i18n="credit.cardName">שם הכרטיס</label>
+ <input type="text" class="form-control" id="cardName" required placeholder="ויזה כאל">
+ </div>
+ <div class="form-group">
+ <label data-i18n="credit.lastFour">4 ספרות אחרונות</label>
+ <input type="text" class="form-control" id="lastFour" maxlength="4" pattern="[0-9]{4}" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="credit.creditLimit">מסגרת אשראי</label>
+ <input type="number" class="form-control" id="creditLimit" step="100">
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeCardModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveCard()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
+
+ <!-- Add Expense Modal -->
+ <div class="modal-overlay" id="expenseModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 data-i18n="credit.addExpense">הוסף הוצאה</h2>
+ <button class="modal-close" onclick="closeExpenseModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="expenseForm">
+ <input type="hidden" id="expenseId">
+ <div class="form-group">
+ <label data-i18n="credit.card">כרטיס</label>
+ <select class="form-control" id="expenseCard" required>
+ <!-- Will be populated by JS -->
+ </select>
+ </div>
+ <div class="form-group">
+ <label data-i18n="credit.expenseDate">תאריך</label>
+ <input type="date" class="form-control" id="expenseDate" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="credit.expenseAmount">סכום</label>
+ <input type="number" class="form-control" id="expenseAmount" step="0.01" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="credit.expenseCategory">קטגוריה</label>
+ <select class="form-control" id="expenseCategory" required>
+ <option value="food" data-i18n="credit.categories.food">מזון ומסעדות</option>
+ <option value="transport" data-i18n="credit.categories.transport">תחבורה ודלק</option>
+ <option value="shopping" data-i18n="credit.categories.shopping">קניות</option>
+ <option value="entertainment" data-i18n="credit.categories.entertainment">בילויים</option>
+ <option value="bills" data-i18n="credit.categories.bills">חשבונות קבועים</option>
+ <option value="health" data-i18n="credit.categories.health">בריאות</option>
+ <option value="education" data-i18n="credit.categories.education">חינוך</option>
+ <option value="other" data-i18n="credit.categories.other">אחר</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label data-i18n="credit.expenseDescription">תיאור</label>
+ <input type="text" class="form-control" id="expenseDescription">
+ </div>
+ <div class="form-group">
+ <label>
+ <input type="checkbox" id="isRecurring" onchange="toggleRecurringFields()">
+ <span data-i18n="credit.recurring">הוצאה קבועה</span>
+ </label>
+ </div>
+ <div class="recurring-fields" id="recurringFields">
+ <div class="form-group">
+ <label data-i18n="credit.frequency">תדירות</label>
+ <select class="form-control" id="recurringFrequency">
+ <option value="monthly" data-i18n="credit.monthly">חודשי</option>
+ <option value="weekly" data-i18n="credit.weekly">שבועי</option>
+ <option value="biweekly" data-i18n="credit.biweekly">דו-שבועי</option>
+ <option value="bimonthly" data-i18n="credit.bimonthly">דו-חודשי</option>
+ <option value="quarterly" data-i18n="credit.quarterly">רבעוני</option>
+ <option value="annually" data-i18n="credit.annually">שנתי</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label data-i18n="credit.chargeDay">יום חיוב</label>
+ <input type="number" class="form-control" id="recurringDay" min="1" max="31" placeholder="1-31">
+ </div>
+ <div class="form-group" style="grid-column: 1 / -1;">
+ <label data-i18n="credit.endDate">תאריך סיום</label>
+ <input type="date" class="form-control" id="recurringEndDate">
+ <small style="color: var(--color-text-secondary);" data-i18n="credit.ongoing">ללא הגבלה</small>
+ </div>
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeExpenseModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveExpense()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
+
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/charts.js"></script>
+ <script src="../js/csv-import.js"></script>
+ <script src="../js/smart-import.js"></script>
+ <script src="../js/image-import.js"></script>
+ <script src="../js/alerts.js"></script>
+ <script src="../js/tags.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ let selectedMonth = '';
+
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'credit';
+ initMonthSelector();
+ initHoursMode();
+ loadCards();
+ loadExpenses();
+ renderRecurringSummary();
+ });
+
+ function initMonthSelector() {
+ const select = document.getElementById('monthFilter');
+ const now = new Date();
+ const monthsSet = new Set();
+
+ // Add last 12 months
+ for (let i = 0; i < 12; i++) {
+ const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+ const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+ monthsSet.add(value);
+ }
+
+ // Add months from existing expenses
+ const data = Storage.getCreditCards();
+ data.expenses.forEach(exp => {
+ if (exp.date) {
+ const month = exp.date.substring(0, 7);
+ monthsSet.add(month);
+ }
+ });
+
+ // Convert to array and sort descending
+ const months = Array.from(monthsSet).sort((a, b) => b.localeCompare(a)).map(value => {
+ const [year, month] = value.split('-');
+ const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+ const label = I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear();
+ return { value, label };
+ });
+
+ select.innerHTML = months.map((m, i) =>
+ `<option value="${m.value}" ${i === 0 ? 'selected' : ''}>${m.label}</option>`
+ ).join('');
+
+ selectedMonth = months[0]?.value || '';
+ }
+
+ function loadCards() {
+ const data = Storage.getCreditCards();
+ const container = document.getElementById('cardsContainer');
+
+ if (data.cards.length === 0) {
+ container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">💳</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין כרטיסי אשראי</div><div style="font-size:0.85rem;margin-bottom:20px">עקוב אחרי ההוצאות החודשיות שלך</div><button class="btn btn-primary btn-sm" onclick="openCardModal()">+ הוסף כרטיס</button></div>`;
+ return;
+ }
+
+ container.innerHTML = data.cards.map(card => `
+ <div class="card-chip">
+ <span>💳</span>
+ <span class="number">**** ${card.lastFour}</span>
+ <span>${card.name}</span>
+ <button class="btn btn-danger btn-sm" onclick="deleteCard('${card.id}')" style="margin-right: 10px;">🗑️</button>
+ </div>
+ `).join('');
+
+ // Update expense card selector
+ const cardSelect = document.getElementById('expenseCard');
+ cardSelect.innerHTML = data.cards.map(card =>
+ `<option value="${card.id}">${card.name} (**** ${card.lastFour})</option>`
+ ).join('');
+ }
+
+ function loadExpenses() {
+ selectedMonth = document.getElementById('monthFilter').value;
+ const categoryFilter = document.getElementById('categoryFilter').value;
+ const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+
+ const data = Storage.getCreditCards();
+ const tbody = document.getElementById('expensesTable');
+
+ let monthExpenses = data.expenses
+ .filter(exp => exp.date.startsWith(selectedMonth));
+
+ // Calculate total before filtering
+ const totalAll = monthExpenses.reduce((sum, exp) => sum + ((exp.currency || 'ILS') === 'ILS' ? exp.amount : 0), 0);
+
+ // Apply category filter
+ if (categoryFilter) {
+ monthExpenses = monthExpenses.filter(exp => exp.category === categoryFilter);
+ }
+
+ // Apply search filter
+ if (searchFilter) {
+ monthExpenses = monthExpenses.filter(exp =>
+ (exp.description || '').toLowerCase().includes(searchFilter)
+ );
+ }
+
+ // Sort by date
+ monthExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+ const total = monthExpenses.reduce((sum, exp) => sum + ((exp.currency || 'ILS') === 'ILS' ? exp.amount : 0), 0);
+ document.getElementById('monthlyTotal').textContent = I18n.formatCurrency(totalAll);
+
+ // Show budget progress
+ updateBudgetProgress(totalAll);
+
+ // Show alerts
+ Alerts.renderAlerts('budgetAlerts');
+
+ if (monthExpenses.length === 0) {
+ tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--color-text-secondary);">${I18n.t('credit.noExpenses')}</td></tr>`;
+ updateCategoryChart([], 0);
+ return;
+ }
+
+ const rows = monthExpenses.map(exp => {
+ // Show foreign transaction info
+ let foreignInfo = '';
+ var countryCode = getCountryFromDescription(exp.description);
+
+ if (exp.originalCurrency && exp.originalCurrency !== '₪' && exp.originalCurrency !== 'ILS') {
+ // Has foreign currency info
+ var origAmount = exp.originalAmount || exp.amount;
+ var flag = countryCode ? getCountryFlag(countryCode) : getCurrencyFlag(exp.originalCurrency);
+ var rate = exp.exchangeRate || '';
+ var rateText = rate ? ' (' + rate + ')' : '';
+ foreignInfo = '<span title="' + exp.originalCurrency + rateText + '">' + flag + ' ' + origAmount.toLocaleString('he-IL', {minimumFractionDigits:2,maximumFractionDigits:2}) + ' ' + exp.originalCurrency + rateText + '</span>';
+ } else if (exp.currency && exp.currency !== 'ILS') {
+ // Bookmarklet-imported foreign currency transaction (pending, original currency)
+ var flag2 = getCurrencyFlag(exp.currency);
+ var fmtAmt2 = exp.amount.toLocaleString('he-IL', {minimumFractionDigits:2, maximumFractionDigits:2});
+ foreignInfo = '<span title="' + exp.currency + '">' + flag2 + ' ' + fmtAmt2 + ' ' + exp.currency + '</span>';
+ } else if (countryCode && countryCode !== 'IL') {
+ // No currency info but has foreign country in description
+ var rateInfo = exp.exchangeRate ? ' (' + exp.exchangeRate + ')' : '';
+ var cLabel = countryCode === 'BR' ? ' BRL' : countryCode === 'US' ? ' USD' : '';
+ foreignInfo = '<span>' + getCountryFlag(countryCode) + cLabel + rateInfo + '</span>';
+ }
+
+ return `
+ <tr>
+ <td>${I18n.formatDate(exp.date)}</td>
+ <td>${I18n.t('credit.categories.' + exp.category)}</td>
+ <td>${exp.description}${exp.isRecurring ? ' 🔄' : ''}</td>
+ <td>${foreignInfo}</td>
+ <td class="negative">${I18n.formatCurrency(exp.amount, exp.currency || 'ILS')}${fmtHours(exp.amount, exp.currency, getHourlyRate())}</td>
+ <td>
+ <div class="action-buttons">
+ <button class="btn btn-secondary btn-sm" onclick="editExpense('${exp.id}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteExpense('${exp.id}')" title="${I18n.t('common.delete')}">🗑️</button>
+ </div>
+ </td>
+ </tr>
+ `;
+ });
+
+ // Add totals row
+ rows.push(`
+ <tr style="font-weight: bold; background: var(--color-bg-hover); border-top: 2px solid var(--color-border);">
+ <td colspan="4" style="text-align: left;">${I18n.t('credit.totalTransactions')} (${monthExpenses.length} ${I18n.t('credit.transactions')})</td>
+ <td class="negative">${I18n.formatCurrency(total)}</td>
+ <td></td>
+ </tr>
+ `);
+
+ // Populate table
+ tbody.innerHTML = rows.join('');
+
+ // Update category chart
+ updateCategoryChart(monthExpenses, total);
+ }
+
+ // Helper function to get country code from description suffix
+ function getCountryFromDescription(description) {
+ if (!description) return null;
+ var desc = description.toUpperCase().trim();
+ if (desc.endsWith(' BR')) return 'BR';
+ if (desc.endsWith(' US')) return 'US';
+ if (desc.endsWith(' UK') || desc.endsWith(' GB')) return 'GB';
+ if (desc.endsWith(' DE')) return 'DE';
+ if (desc.endsWith(' FR')) return 'FR';
+ if (desc.endsWith(' IT')) return 'IT';
+ if (desc.endsWith(' ES')) return 'ES';
+ if (desc.endsWith(' PT')) return 'PT';
+ if (desc.endsWith(' NL')) return 'NL';
+ if (desc.endsWith(' JP')) return 'JP';
+ if (desc.endsWith(' CN')) return 'CN';
+ if (desc.endsWith(' AU')) return 'AU';
+ if (desc.endsWith(' CA')) return 'CA';
+ if (desc.endsWith(' MX')) return 'MX';
+ if (desc.endsWith(' TH')) return 'TH';
+ if (desc.endsWith(' IL')) return 'IL';
+ return null;
+ }
+
+ // Helper function to get flag from country code
+ function getCountryFlag(code) {
+ if (code === 'BR') return '🇧🇷';
+ if (code === 'US') return '🇺🇸';
+ if (code === 'GB') return '🇬🇧';
+ if (code === 'DE') return '🇩🇪';
+ if (code === 'FR') return '🇫🇷';
+ if (code === 'IT') return '🇮🇹';
+ if (code === 'ES') return '🇪🇸';
+ if (code === 'PT') return '🇵🇹';
+ if (code === 'NL') return '🇳🇱';
+ if (code === 'JP') return '🇯🇵';
+ if (code === 'CN') return '🇨🇳';
+ if (code === 'AU') return '🇦🇺';
+ if (code === 'CA') return '🇨🇦';
+ if (code === 'MX') return '🇲🇽';
+ if (code === 'TH') return '🇹🇭';
+ if (code === 'IL') return '🇮🇱';
+ return '🌍';
+ }
+
+ // Helper function to get country flag from currency
+ function getCurrencyFlag(currency) {
+ const flags = {
+ 'USD': '🇺🇸', '$': '🇺🇸',
+ 'EUR': '🇪🇺', '€': '🇪🇺',
+ 'GBP': '🇬🇧', '£': '🇬🇧',
+ 'BRL': '🇧🇷', 'R$': '🇧🇷',
+ 'JPY': '🇯🇵', '¥': '🇯🇵',
+ 'CNY': '🇨🇳',
+ 'CHF': '🇨🇭',
+ 'AUD': '🇦🇺',
+ 'CAD': '🇨🇦',
+ 'THB': '🇹🇭',
+ 'TRY': '🇹🇷',
+ 'PLN': '🇵🇱',
+ 'CZK': '🇨🇿',
+ 'HUF': '🇭🇺',
+ 'SEK': '🇸🇪',
+ 'NOK': '🇳🇴',
+ 'DKK': '🇩🇰',
+ 'MXN': '🇲🇽',
+ 'ARS': '🇦🇷',
+ 'CLP': '🇨🇱',
+ 'COP': '🇨🇴',
+ 'PEN': '🇵🇪',
+ 'INR': '🇮🇳',
+ 'RUB': '🇷🇺',
+ 'ZAR': '🇿🇦',
+ 'AED': '🇦🇪',
+ 'SGD': '🇸🇬',
+ 'HKD': '🇭🇰',
+ 'NZD': '🇳🇿',
+ 'KRW': '🇰🇷'
+ };
+ return flags[currency] || '🌍';
+ }
+
+ function updateCategoryChart(expenses, grandTotal) {
+ const categoryTotals = {};
+ expenses.forEach(exp => {
+ categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+ });
+
+ const ctx = document.getElementById('categoryChart');
+ const breakdownDiv = document.getElementById('categoryBreakdown');
+ const categories = Object.keys(categoryTotals);
+ const total = Object.values(categoryTotals).reduce((a, b) => a + b, 0);
+
+ if (categories.length === 0) {
+ breakdownDiv.innerHTML = '<p style="text-align: center; color: var(--color-text-secondary);">' + I18n.t('credit.noDataChart') + '</p>';
+ if (Charts.charts.categoryChart) {
+ Charts.charts.categoryChart.destroy();
+ Charts.charts.categoryChart = null;
+ }
+ return;
+ }
+
+ // Sort by amount descending
+ categories.sort((a, b) => categoryTotals[b] - categoryTotals[a]);
+
+ const chartData = {
+ labels: categories.map(cat => I18n.t('credit.categories.' + cat)),
+ datasets: [{
+ data: categories.map(cat => categoryTotals[cat]),
+ backgroundColor: categories.map(cat => Charts.colors.categories[cat] || Charts.colors.categories.other),
+ borderWidth: 0
+ }]
+ };
+
+ if (Charts.charts.categoryChart) {
+ Charts.charts.categoryChart.data = chartData;
+ Charts.charts.categoryChart.update();
+ } else {
+ Charts.charts.categoryChart = new Chart(ctx, {
+ type: 'doughnut',
+ data: chartData,
+ options: {
+ ...Charts.defaultOptions,
+ cutout: '50%',
+ plugins: {
+ ...Charts.defaultOptions.plugins,
+ tooltip: {
+ callbacks: {
+ label: (context) => {
+ const value = context.raw;
+ const percentage = ((value / total) * 100).toFixed(1);
+ return `${context.label}: ${I18n.formatCurrency(value)} (${percentage}%)`;
+ }
+ }
+ }
+ }
+ }
+ });
+ }
+
+ // Build breakdown table
+ var breakdownHtml = '<table style="width: 100%; border-collapse: collapse;">';
+ breakdownHtml += '<thead><tr style="border-bottom: 2px solid var(--color-border);">';
+ breakdownHtml += '<th style="text-align: right; padding: 8px 5px;">' + I18n.t('credit.expenseCategory') + '</th>';
+ breakdownHtml += '<th style="text-align: center; padding: 8px 5px; width: 60px;">%</th>';
+ breakdownHtml += '<th style="text-align: left; padding: 8px 5px; width: 100px;">' + I18n.t('common.amount') + '</th>';
+ breakdownHtml += '</tr></thead><tbody>';
+
+ categories.forEach(function(cat) {
+ var amount = categoryTotals[cat];
+ var percentage = ((amount / total) * 100).toFixed(1);
+ var color = Charts.colors.categories[cat] || Charts.colors.categories.other;
+ breakdownHtml += '<tr style="border-bottom: 1px solid var(--color-border);">';
+ breakdownHtml += '<td style="padding: 10px 5px;"><span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: ' + color + '; margin-left: 8px; vertical-align: middle;"></span>' + I18n.t('credit.categories.' + cat) + '</td>';
+ breakdownHtml += '<td style="text-align: center; padding: 10px 5px; font-weight: bold;">' + percentage + '%</td>';
+ breakdownHtml += '<td style="text-align: left; padding: 10px 5px; color: var(--color-negative);">' + I18n.formatCurrency(amount) + '</td>';
+ breakdownHtml += '</tr>';
+ });
+
+ // Add total row
+ breakdownHtml += '<tr style="font-weight: bold; background: var(--color-bg-hover);">';
+ breakdownHtml += '<td style="padding: 12px 5px;">' + I18n.t('credit.totalTransactions') + '</td>';
+ breakdownHtml += '<td style="text-align: center; padding: 12px 5px;">100%</td>';
+ breakdownHtml += '<td style="text-align: left; padding: 12px 5px; color: var(--color-negative);">' + I18n.formatCurrency(total) + '</td>';
+ breakdownHtml += '</tr></tbody></table>';
+
+ var breakdownRows = [breakdownHtml];
+
+ breakdownDiv.innerHTML = breakdownRows.join('');
+ }
+
+ // Card Modal Functions
+ function openCardModal() {
+ document.getElementById('cardForm').reset();
+ document.getElementById('cardId').value = '';
+ document.getElementById('cardModal').classList.add('active');
+ }
+
+ function closeCardModal() {
+ document.getElementById('cardModal').classList.remove('active');
+ }
+
+ function saveCard() {
+ const name = document.getElementById('cardName').value;
+ const lastFour = document.getElementById('lastFour').value;
+ const creditLimit = parseFloat(document.getElementById('creditLimit').value) || 0;
+
+ if (!name || !lastFour) {
+ App.notify('Please fill all required fields', 'error');
+ return;
+ }
+
+ Storage.addCreditCard({ name, lastFour, creditLimit });
+ closeCardModal();
+ loadCards();
+ App.notify(I18n.t('common.save') + ' ✓', 'success');
+ }
+
+ function deleteCard(id) {
+ if (confirm(I18n.t('common.confirmDelete'))) {
+ Storage.deleteCreditCard(id);
+ loadCards();
+ loadExpenses();
+ App.notify(I18n.t('common.delete') + ' ✓', 'success');
+ }
+ }
+
+ // Expense Modal Functions
+ function openExpenseModal() {
+ const data = Storage.getCreditCards();
+ if (data.cards.length === 0) {
+ App.notify(I18n.t('credit.addCardFirst'), 'error');
+ return;
+ }
+
+ document.getElementById('expenseForm').reset();
+ document.getElementById('expenseId').value = '';
+ document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
+ document.getElementById('recurringFields').classList.remove('visible');
+ document.getElementById('expenseModal').classList.add('active');
+ }
+
+ function closeExpenseModal() {
+ document.getElementById('expenseModal').classList.remove('active');
+ }
+
+ function editExpense(id) {
+ const data = Storage.getCreditCards();
+ const expense = data.expenses.find(e => e.id === id);
+ if (!expense) return;
+
+ document.getElementById('expenseId').value = expense.id;
+ document.getElementById('expenseCard').value = expense.cardId;
+ document.getElementById('expenseDate').value = expense.date;
+ document.getElementById('expenseAmount').value = expense.amount;
+ document.getElementById('expenseCategory').value = expense.category;
+ document.getElementById('expenseDescription').value = expense.description || '';
+ document.getElementById('isRecurring').checked = expense.isRecurring || false;
+ // Load recurring fields
+ if (expense.isRecurring) {
+ document.getElementById('recurringFields').classList.add('visible');
+ document.getElementById('recurringFrequency').value = expense.recurringFrequency || 'monthly';
+ document.getElementById('recurringDay').value = expense.recurringDay || '';
+ document.getElementById('recurringEndDate').value = expense.recurringEndDate || '';
+ } else {
+ document.getElementById('recurringFields').classList.remove('visible');
+ }
+ document.getElementById('expenseModal').classList.add('active');
+ }
+
+ function saveExpense() {
+ const id = document.getElementById('expenseId').value;
+ const cardId = document.getElementById('expenseCard').value;
+ const date = document.getElementById('expenseDate').value;
+ const amount = parseFloat(document.getElementById('expenseAmount').value);
+ const category = document.getElementById('expenseCategory').value;
+ const description = document.getElementById('expenseDescription').value;
+ const isRecurring = document.getElementById('isRecurring').checked;
+
+ if (!cardId || !date || !amount || !category) {
+ App.notify('Please fill all required fields', 'error');
+ return;
+ }
+
+ const expenseData = { cardId, date, amount, category, description, isRecurring };
+
+ if (isRecurring) {
+ expenseData.recurringFrequency = document.getElementById('recurringFrequency').value;
+ expenseData.recurringDay = parseInt(document.getElementById('recurringDay').value) || null;
+ expenseData.recurringEndDate = document.getElementById('recurringEndDate').value || null;
+ } else {
+ expenseData.recurringFrequency = null;
+ expenseData.recurringDay = null;
+ expenseData.recurringEndDate = null;
+ }
+
+ if (id) {
+ Storage.updateExpense(id, expenseData);
+ } else {
+ Storage.addExpense(expenseData);
+ }
+
+ closeExpenseModal();
+ loadExpenses();
+ renderRecurringSummary();
+ App.notify(I18n.t('common.save') + ' ✓', 'success');
+ }
+
+ function deleteExpense(id) {
+ if (confirm(I18n.t('common.confirmDelete'))) {
+ Storage.deleteExpense(id);
+ loadExpenses();
+ renderRecurringSummary();
+ App.notify(I18n.t('common.delete') + ' ✓', 'success');
+ }
+ }
+
+ function deleteAllExpenses() {
+ var data = Storage.getCreditCards();
+ var count = data.expenses.length;
+ if (count === 0) {
+ App.notify(I18n.t('credit.noExpensesToDelete'), 'warning');
+ return;
+ }
+ if (confirm(I18n.t('credit.deleteAllConfirm').replace('{}', count))) {
+ data.expenses = [];
+ Storage.saveCreditCards(data);
+ loadExpenses();
+ App.notify(I18n.t('credit.deletedExpenses') + ' (' + count + ')', 'success');
+ }
+ }
+
+ // Recurring Expense Functions
+ function toggleRecurringFields() {
+ const fields = document.getElementById('recurringFields');
+ if (document.getElementById('isRecurring').checked) {
+ fields.classList.add('visible');
+ } else {
+ fields.classList.remove('visible');
+ }
+ }
+
+ function toggleRecurringSection() {
+ const toggle = document.querySelector('.recurring-toggle');
+ const body = document.getElementById('recurringBody');
+ toggle.classList.toggle('open');
+ body.classList.toggle('open');
+ }
+
+ function getNextChargeDate(expense) {
+ const day = expense.recurringDay || new Date(expense.date).getDate();
+ const now = new Date();
+ const freq = expense.recurringFrequency || 'monthly';
+
+ let next = new Date(now.getFullYear(), now.getMonth(), day);
+ if (next <= now) {
+ if (freq === 'weekly') next.setDate(next.getDate() + 7);
+ else if (freq === 'biweekly') next.setDate(next.getDate() + 14);
+ else if (freq === 'bimonthly') next.setMonth(next.getMonth() + 2);
+ else if (freq === 'quarterly') next.setMonth(next.getMonth() + 3);
+ else if (freq === 'annually') next.setFullYear(next.getFullYear() + 1);
+ else next.setMonth(next.getMonth() + 1);
+ }
+
+ if (expense.recurringEndDate && next > new Date(expense.recurringEndDate)) return null;
+ return next;
+ }
+
+ function getCategoryIcon(category) {
+ const icons = { food: '🍔', transport: '🚗', shopping: '🛒', entertainment: '🎬', bills: '📄', health: '💊', education: '📚', other: '📌' };
+ return icons[category] || '📌';
+ }
+
+ function renderRecurringSummary() {
+ const recurring = Storage.getRecurringExpenses();
+ const grid = document.getElementById('recurringGrid');
+ const badge = document.getElementById('recurringTotalBadge');
+ const section = document.getElementById('recurringSection');
+
+ if (recurring.length === 0) {
+ section.style.display = 'none';
+ return;
+ }
+ section.style.display = 'block';
+
+ const monthlyTotal = Storage.getMonthlyRecurringTotal();
+ badge.textContent = I18n.formatCurrency(monthlyTotal);
+
+ const freqLabels = {
+ weekly: I18n.t('credit.weekly'),
+ biweekly: I18n.t('credit.biweekly'),
+ monthly: I18n.t('credit.monthly'),
+ bimonthly: I18n.t('credit.bimonthly'),
+ quarterly: I18n.t('credit.quarterly'),
+ annually: I18n.t('credit.annually')
+ };
+
+ const now = new Date();
+ const in7days = new Date(now);
+ in7days.setDate(in7days.getDate() + 7);
+
+ grid.innerHTML = recurring.map(exp => {
+ const freq = exp.recurringFrequency || 'monthly';
+ const nextDate = getNextChargeDate(exp);
+ const isUpcoming = nextDate && nextDate <= in7days;
+ const nextStr = nextDate ? I18n.formatDate(nextDate.toISOString().split('T')[0]) : '-';
+
+ return `
+ <div class="recurring-card${isUpcoming ? ' upcoming' : ''}">
+ <span class="recurring-card-icon">${getCategoryIcon(exp.category)}</span>
+ <div class="recurring-card-info">
+ <div class="recurring-card-name">${exp.description || I18n.t('credit.categories.' + exp.category)}</div>
+ <div class="recurring-card-meta">${freqLabels[freq] || freq} · ${I18n.t('credit.nextCharge')}: ${nextStr}</div>
+ </div>
+ <div class="recurring-card-amount">${I18n.formatCurrency(exp.amount)}</div>
+ <div class="recurring-card-actions">
+ <button class="btn btn-secondary btn-sm" onclick="editExpense('${exp.id}')" title="${I18n.t('common.edit')}">✏️</button>
+ </div>
+ </div>
+ `;
+ }).join('');
+ }
+
+ // Smart Import Function
+ async function smartImportFile(event) {
+ var file = event.target.files[0];
+ if (!file) return;
+
+ try {
+ var content = await file.text();
+ var result = SmartImport.importWithAutoDetect(content, file.name, 'expenses');
+
+ if (result.needsMapping) {
+ // Show manual mapping modal
+ SmartImport.showMappingModal(result.headers, result.detected, function(mapping) {
+ var processResult = SmartImport.processRows(result.rows, result.headerIdx, mapping, 'expenses');
+ if (processResult.success) {
+ importExpensesFromSmartImport(processResult.items);
+ } else {
+ App.notify(processResult.error || I18n.t('bank.importError'), 'error');
+ }
+ });
+ } else if (result.success) {
+ importExpensesFromSmartImport(result.items);
+ } else {
+ App.notify(result.error || I18n.t('bank.importError'), 'error');
+ }
+ } catch (error) {
+ console.error('Smart import error:', error);
+ App.notify(I18n.t('credit.fileReadError') + ': ' + error.message, 'error');
+ }
+
+ event.target.value = '';
+ }
+
+ function importExpensesFromSmartImport(items) {
+ if (items.length === 0) {
+ App.notify(I18n.t('credit.noTransactionsFound'), 'warning');
+ return;
+ }
+
+ // Calculate total
+ var total = items.reduce(function(sum, e) { return sum + e.amount; }, 0);
+
+ // Show confirmation
+ var confirmed = confirm(
+ I18n.t('credit.foundTransactions') + ': ' + items.length + ' ' + I18n.t('credit.transactions') + '\n' +
+ I18n.t('credit.totalTransactions') + ': ' + I18n.formatCurrency(total) + '\n\n' +
+ items.slice(0, 3).map(function(e) {
+ return ' ' + e.date + ' - ' + e.description + ' - ' + I18n.formatCurrency(e.amount, e.currency || 'ILS');
+ }).join('\n') + '\n' +
+ (items.length > 3 ? ' ...' + I18n.t('credit.moreTransactions') + ' ' + (items.length - 3) : '') + '\n\n' +
+ I18n.t('credit.importTransactions')
+ );
+
+ if (!confirmed) return;
+
+ // Get or create default card
+ var data = Storage.getCreditCards();
+ var cardId = data.cards[0] ? data.cards[0].id : null;
+
+ if (!cardId) {
+ var card = Storage.addCreditCard({
+ name: I18n.t('credit.defaultCardName'),
+ lastFour: items[0].cardLastFour || '0000',
+ limit: 50000
+ });
+ cardId = card.id;
+ }
+
+ // Import expenses (skip duplicates)
+ var imported = 0;
+ var skipped = 0;
+ var existingExpenses = Storage.getCreditCards().expenses;
+
+ items.forEach(function(exp) {
+ // Check for duplicates
+ var isDuplicate = existingExpenses.some(function(existing) {
+ return existing.date === exp.date &&
+ existing.description === exp.description &&
+ existing.amount === exp.amount;
+ });
+
+ if (isDuplicate) {
+ skipped++;
+ return;
+ }
+
+ Storage.addExpense({
+ cardId: cardId,
+ date: exp.date,
+ amount: exp.amount,
+ category: exp.category,
+ description: exp.description,
+ isRecurring: false,
+ originalAmount: exp.originalAmount,
+ originalCurrency: exp.originalCurrency,
+ exchangeRate: exp.exchangeRate
+ });
+ imported++;
+ });
+
+ var msg = skipped > 0
+ ? I18n.t('credit.importSuccess') + ' ' + imported + ' ' + I18n.t('credit.transactions') + ' (' + skipped + ' ' + I18n.t('credit.duplicatesSkipped') + ')'
+ : I18n.t('credit.importSuccess') + ' ' + imported + ' ' + I18n.t('credit.transactions');
+ App.notify(msg, 'success');
+
+ // Switch to imported month
+ if (items.length > 0 && items[0].date) {
+ var importedMonth = items[0].date.substring(0, 7);
+ var monthFilter = document.getElementById('monthFilter');
+ var optionExists = Array.from(monthFilter.options).some(function(opt) {
+ return opt.value === importedMonth;
+ });
+ if (!optionExists) {
+ var date = new Date(importedMonth + '-01');
+ var label = I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear();
+ monthFilter.insertAdjacentHTML('beforeend', '<option value="' + importedMonth + '">' + label + '</option>');
+ }
+ monthFilter.value = importedMonth;
+ }
+
+ loadCards();
+ loadExpenses();
+ }
+
+ function clearFilters() {
+ document.getElementById('categoryFilter').value = '';
+ document.getElementById('searchFilter').value = '';
+ loadExpenses();
+ }
+
+ // Hours-worked mode
+ function getHourlyRate() {
+ return parseFloat(localStorage.getItem('finance_hourly_rate')) || 0;
+ }
+ function saveHourlyRate(v) {
+ localStorage.setItem('finance_hourly_rate', v);
+ }
+ function isHoursModeOn() {
+ return localStorage.getItem('finance_hours_mode') === '1';
+ }
+ function toggleHoursMode() {
+ const on = !isHoursModeOn();
+ localStorage.setItem('finance_hours_mode', on ? '1' : '0');
+ document.getElementById('hoursToggleBtn').classList.toggle('active', on);
+ const row = document.getElementById('hoursRateRow');
+ row.style.display = on ? 'flex' : 'none';
+ if (on && !getHourlyRate()) document.getElementById('hourlyRateInput').focus();
+ loadExpenses();
+ }
+ function initHoursMode() {
+ const on = isHoursModeOn();
+ const rate = getHourlyRate();
+ document.getElementById('hoursToggleBtn').classList.toggle('active', on);
+ document.getElementById('hoursRateRow').style.display = on ? 'flex' : 'none';
+ if (rate) document.getElementById('hourlyRateInput').value = rate;
+ }
+ function fmtHours(amount, currency, rate) {
+ if (!isHoursModeOn() || !rate || (currency || 'ILS') !== 'ILS') return '';
+ const h = amount / rate;
+ if (h < 0.1) return '';
+ const display = h >= 10 ? h.toFixed(1) : h.toFixed(1);
+ return `<span class="hours-sub">= ${display} שע׳</span>`;
+ }
+
+ function updateBudgetProgress(spent) {
+ const budgets = Alerts.getBudgets();
+ const thresholds = Alerts.getThresholds();
+ const container = document.getElementById('budgetProgressContainer');
+ const bar = document.getElementById('budgetProgressBar');
+
+ if (budgets.total > 0) {
+ container.style.display = 'block';
+ const percentage = (spent / budgets.total) * 100;
+
+ document.getElementById('budgetSpent').textContent = I18n.formatCurrency(spent);
+ document.getElementById('budgetLimit').textContent = `${I18n.t('credit.budgetOf')} ${I18n.formatCurrency(budgets.total)}`;
+
+ bar.style.width = `${Math.min(100, percentage)}%`;
+
+ if (percentage >= thresholds.danger) {
+ bar.style.background = 'var(--color-negative)';
+ } else if (percentage >= thresholds.warning) {
+ bar.style.background = '#f59e0b';
+ } else {
+ bar.style.background = 'var(--color-positive)';
+ }
+ } else {
+ container.style.display = 'none';
+ }
+ }
+
+ async function importCSV() {
+ const format = CSVImport.showImportHelp('expenses');
+ const confirmed = confirm(
+ `${format.title}\n\n` +
+ `${format.columns.join(', ')}\n\n` +
+ `${format.example}\n\n` +
+ `${I18n.t('credit.csvContinue')}`
+ );
+
+ if (!confirmed) return;
+
+ const result = await CSVImport.openFilePicker('expenses');
+
+ if (result.success) {
+ App.notify(I18n.t('credit.importSuccess') + ' ' + result.imported + ' ' + I18n.t('credit.transactions'), 'success');
+ loadCards();
+ loadExpenses();
+ } else {
+ App.notify(result.error || I18n.t('bank.importError'), 'error');
+ }
+
+ if (result.errors && result.errors.length > 0) {
+ console.log('Import errors:', result.errors);
+ }
+ }
+
+ // Excel Import for Credit Card Transactions
+ async function importCreditExcel(event) {
+ const file = event.target.files[0];
+ if (!file) return;
+
+ try {
+ const content = await file.text();
+ const expenses = parseCreditExcel(content);
+
+ if (expenses.length === 0) {
+ App.notify(I18n.t('credit.noTransactionsFound'), 'warning');
+ return;
+ }
+
+ // Calculate total
+ const total = expenses.reduce((sum, e) => sum + e.amount, 0);
+
+ // Show confirmation
+ const confirmed = confirm(
+ `${I18n.t('credit.foundTransactions')}: ${expenses.length} ${I18n.t('credit.transactions')}\n` +
+ `${I18n.t('credit.totalTransactions')}: ${I18n.formatCurrency(total)}\n\n` +
+ `${expenses.slice(0, 5).map(e => ` ${e.date} - ${e.description} - ${I18n.formatCurrency(e.amount)}`).join('\n')}\n` +
+ `${expenses.length > 5 ? ` ...${I18n.t('credit.moreTransactions')} ${expenses.length - 5}` : ''}\n\n` +
+ `${I18n.t('credit.importTransactions')}`
+ );
+
+ if (!confirmed) return;
+
+ // Get or create default card
+ const data = Storage.getCreditCards();
+ let cardId = data.cards[0]?.id;
+
+ if (!cardId) {
+ // Create default card
+ const card = Storage.addCreditCard({
+ name: I18n.t('credit.defaultCardName'),
+ lastFour: expenses[0]?.cardLastFour || '0000',
+ limit: 50000
+ });
+ cardId = card.id;
+ }
+
+ // Import expenses (skip duplicates)
+ let imported = 0;
+ let skipped = 0;
+ const existingExpenses = Storage.getCreditCards().expenses;
+
+ expenses.forEach(exp => {
+ // Check if expense already exists (same date, description, and amount)
+ const isDuplicate = existingExpenses.some(existing =>
+ existing.date === exp.date &&
+ existing.description === exp.description &&
+ existing.amount === exp.amount
+ );
+
+ if (isDuplicate) {
+ skipped++;
+ return;
+ }
+
+ Storage.addExpense({
+ cardId,
+ date: exp.date,
+ amount: exp.amount,
+ category: exp.category,
+ description: exp.description,
+ isRecurring: exp.isRecurring || false,
+ originalAmount: exp.originalAmount,
+ originalCurrency: exp.originalCurrency,
+ exchangeRate: exp.exchangeRate
+ });
+ imported++;
+ });
+
+ const msg = skipped > 0
+ ? `${I18n.t('credit.importSuccess')} ${imported} ${I18n.t('credit.transactions')} (${skipped} ${I18n.t('credit.duplicatesSkipped')})`
+ : `${I18n.t('credit.importSuccess')} ${imported} ${I18n.t('credit.transactions')}`;
+ App.notify(msg, 'success');
+
+ // Switch to the month of the first imported expense
+ if (expenses.length > 0 && expenses[0].date) {
+ const importedMonth = expenses[0].date.substring(0, 7); // YYYY-MM
+ const monthFilter = document.getElementById('monthFilter');
+ // Add the month if not in the list
+ let optionExists = Array.from(monthFilter.options).some(opt => opt.value === importedMonth);
+ if (!optionExists) {
+ const date = new Date(importedMonth + '-01');
+ const label = I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear();
+ monthFilter.insertAdjacentHTML('beforeend', `<option value="${importedMonth}">${label}</option>`);
+ }
+ monthFilter.value = importedMonth;
+ }
+
+ loadCards();
+ loadExpenses();
+
+ } catch (error) {
+ console.error('Excel import error:', error);
+ App.notify(I18n.t('credit.fileReadError') + ': ' + error.message, 'error');
+ }
+
+ event.target.value = '';
+ }
+
+ function parseCreditExcel(content) {
+ const expenses = [];
+
+ // Parse XML-based Excel (xlsx)
+ const rowPattern = /<row[^>]*>([\s\S]*?)<\/row>/gi;
+ const cellPattern = /<c[^>]*>(?:<v>([^<]*)<\/v>)?/gi;
+ const valuePattern = /<v>([^<]*)<\/v>/;
+
+ // Find all rows
+ const rows = [];
+ let match;
+ while ((match = rowPattern.exec(content)) !== null) {
+ const rowContent = match[1];
+ const cells = [];
+
+ // Extract cell values
+ let cellMatch;
+ const cp = new RegExp(cellPattern.source, 'gi');
+ while ((cellMatch = cp.exec(rowContent)) !== null) {
+ const cellContent = cellMatch[0];
+ const valMatch = cellContent.match(valuePattern);
+ cells.push(valMatch ? valMatch[1] : '');
+ }
+ rows.push(cells);
+ }
+
+ // Find header row (contains 'תאריך עסקה' or 'שם בית העסק')
+ let headerIdx = -1;
+ for (let i = 0; i < rows.length; i++) {
+ const rowText = rows[i].join(' ');
+ if (rowText.includes('תאריך עסקה') || rowText.includes('שם בית העסק')) {
+ headerIdx = i;
+ break;
+ }
+ }
+
+ if (headerIdx === -1) {
+ throw new Error(I18n.t('credit.badFormat'));
+ }
+
+ // Category mapping from Hebrew to internal
+ const categoryMap = {
+ 'מזון ומסעדות': 'food',
+ 'מסעדות, קפה וברים': 'food',
+ 'סופרמרקט': 'food',
+ 'תחבורה ודלק': 'transport',
+ 'דלק, חשמל וגז': 'transport',
+ 'קניות': 'shopping',
+ 'אופנה והנעלה': 'shopping',
+ 'ציוד לבית': 'shopping',
+ 'בילויים': 'entertainment',
+ 'פנאי, בידור וספורט': 'entertainment',
+ 'חשבונות': 'bills',
+ 'עירייה וממשלה': 'bills',
+ 'שירותי תקשורת': 'bills',
+ 'חשמל ומים': 'bills',
+ 'בריאות': 'health',
+ 'בריאות ויופי': 'health',
+ 'חינוך': 'education',
+ 'שונות': 'other'
+ };
+
+ // Parse data rows (after header)
+ for (let i = headerIdx + 1; i < rows.length; i++) {
+ const row = rows[i];
+ if (row.length < 6) continue;
+
+ // Skip summary rows
+ if (row[0]?.includes('סך הכל') || row[0]?.includes('₪')) continue;
+
+ const dateStr = row[0]; // A: תאריך עסקה
+ const description = row[1]; // B: שם בית העסק
+ const categoryHeb = row[2]; // C: קטגוריה
+ const cardLastFour = row[3]; // D: 4 ספרות
+ const amountStr = row[5]; // F: סכום חיוב
+ const originalAmountStr = row[7]; // H: סכום עסקה מקורי
+ var originalCurrency = row[8]; // I: מטבע עסקה מקורי
+ const notes = row[10] || ''; // K: הערות
+ const exchangeRateStr = row[15] || ''; // P: שער המרה
+
+ if (!dateStr || !description || !amountStr) continue;
+
+ // Parse date (DD-MM-YYYY to YYYY-MM-DD)
+ const dateParts = dateStr.split('-');
+ if (dateParts.length !== 3) continue;
+ const date = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
+ // Parse amount
+ const amount = parseFloat(amountStr.replace(/,/g, ''));
+ if (isNaN(amount) || amount <= 0) continue;
+
+ // Parse original amount (for foreign transactions)
+ var originalAmount = parseFloat(originalAmountStr?.replace(/,/g, '') || '0');
+
+ // Parse exchange rate from text like "שער המרה מדולר לש"ח 3.1500"
+ var exchangeRate = null;
+ if (exchangeRateStr) {
+ var rateMatch = exchangeRateStr.match(/(\d+\.?\d*)/);
+ if (rateMatch) {
+ exchangeRate = parseFloat(rateMatch[1]);
+ }
+ // If no original currency but has exchange rate, it's likely USD
+ if ((!originalCurrency || originalCurrency === '₪' || originalCurrency === '') && exchangeRate) {
+ originalCurrency = '$';
+ }
+ }
+
+ // Map category
+ const category = categoryMap[categoryHeb] || 'other';
+
+ // Check if recurring
+ const isRecurring = notes.includes('הוראת קבע');
+
+ // Check if foreign transaction (original currency different from ILS)
+ var isForeign = originalCurrency && originalCurrency !== '₪' && originalCurrency !== 'ILS' && originalCurrency !== '';
+
+ expenses.push({
+ date,
+ description: description.trim(),
+ amount,
+ category,
+ cardLastFour,
+ isRecurring,
+ originalAmount: (isForeign || exchangeRate) ? originalAmount : null,
+ originalCurrency: (isForeign || exchangeRate) ? originalCurrency : null,
+ exchangeRate: exchangeRate
+ });
+ }
+
+ return expenses;
+ }
+
+ function mapBookmarkletCategory(raw, description) {
+ var r = (raw || '').toLowerCase();
+ var d = (description || '').toLowerCase();
+
+ // Match against category name from the site (including Max real category strings)
+ if (r.includes('מסעדות') || r.includes('קפה') || r.includes('מזון') ||
+ r.includes('אוכל') || r.includes('סופרמרקט') || r.includes('בית קפה') || r.includes('food'))
+ return 'food';
+ if (r.includes('תחבורה') || r.includes('רכבים') || r.includes('תחנות דלק') ||
+ r.includes('תחנת') || r.includes('חניה') || r.includes('transport'))
+ return 'transport';
+ if (r.includes('טיסות') || r.includes('תיירות') || r.includes('נסיעות') ||
+ r.includes('מלון') || r.includes('travel'))
+ return 'entertainment';
+ if (r.includes('בידור') || r.includes('בילוי') || r.includes('פנאי') ||
+ r.includes('ספורט') || r.includes('entertainment'))
+ return 'entertainment';
+ if (r.includes('תקשורת') || r.includes('סלולר') || r.includes('ביטוח') ||
+ r.includes('חשמל') || r.includes('גז') || r.includes('מים') ||
+ r.includes('ארנונה') || r.includes('חשבון') || r.includes('תשלום') || r.includes('bills'))
+ return 'bills';
+ if (r.includes('דלק'))
+ return 'transport';
+ if (r.includes('רפואה') || r.includes('מרקחת') || r.includes('בריאות') ||
+ r.includes('קוסמטיקה') || r.includes('טיפוח') || r.includes('פארמ') ||
+ r.includes('קופת') || r.includes('שיניים') || r.includes('health'))
+ return 'health';
+ if (r.includes('אופנה') || r.includes('קניות') || r.includes('חנות') ||
+ r.includes('חנויות') || r.includes('מחשבים') || r.includes('אלקטרוניקה') ||
+ r.includes('shopping'))
+ return 'shopping';
+ if (r.includes('חינוך') || r.includes('לימוד') || r.includes('קורס') || r.includes('education'))
+ return 'education';
+
+ // Fallback: infer from business name (Hebrew)
+ if (d.includes('שופרסל') || d.includes('רמי לוי') || d.includes('מגה') ||
+ d.includes('ויקטורי') || d.includes('קו קופה') || d.includes('יינות ביתן') ||
+ d.includes('חצי חינם') || d.includes('מינימרקט') ||
+ d.includes('ארומה') || d.includes('קפה') || d.includes('מקדונלד') ||
+ d.includes('פיצה') || d.includes('סושי') || d.includes('שווארמה') ||
+ d.includes('מסעדה') || d.includes('בית קפה') || d.includes('סטייק') ||
+ d.includes('המבורגר') || d.includes('פלאפל') || d.includes('מאפה'))
+ return 'food';
+ if (d.includes('פז') || d.includes('סונול') || d.includes('דלק') ||
+ d.includes('גז') || d.includes('תחנת') || d.includes('חניה') ||
+ d.includes('פרקינג') || d.includes('רכבת') || d.includes('אגד') ||
+ d.includes('מונית') || d.includes('גט') || d.includes('יאנגו'))
+ return 'transport';
+ if (d.includes('הוט') || d.includes('yes ') || d.includes('בזק') ||
+ d.includes('סלקום') || d.includes('פרטנר') || d.includes('אורנג') ||
+ d.includes('גולן טלקום') || d.includes('012') ||
+ d.includes('חברת החשמל') || d.includes('שטראוס מים'))
+ return 'bills';
+ if (d.includes('מכבי') || d.includes('כללית') || d.includes('לאומית') ||
+ d.includes('מאוחדת') || d.includes('בית חולים') || d.includes('רופא') ||
+ d.includes('פארמ') || d.includes('סופר פארם') || d.includes('super-pharm') ||
+ d.includes('אופטיקה') || d.includes('שיניים'))
+ return 'health';
+ if (d.includes('פיטנס') || d.includes('כושר') || d.includes('ספורט') ||
+ d.includes('אייקון'))
+ return 'entertainment';
+ if (d.includes('אוניברסיטה') || d.includes('מכללה') || d.includes('גן ') ||
+ d.includes('בית ספר') || d.includes('קורס') || d.includes('udemy') ||
+ d.includes('coursera'))
+ return 'education';
+
+ // Fallback: infer from business name (English / international)
+ if (d.includes('pizza') || d.includes('burger') || d.includes('restaur') ||
+ d.includes('churrasco') || d.includes('salgad') || d.includes('comida') ||
+ d.includes('risoto') || d.includes('hortifr') || d.includes('fogao') ||
+ d.includes('fogão') || d.includes('massas') || d.includes('padaria') ||
+ d.includes('bakery') || d.includes('cafe') || d.includes('coffee') ||
+ d.includes('grill') || d.includes('snack') || d.includes('sushi') ||
+ d.includes('steak') || d.includes('food') || d.includes('mercado') ||
+ d.includes('supermark') || d.includes('oakberry') || d.includes('acai') ||
+ d.includes('dengo') || d.includes('banana') || d.includes('mac restaur') ||
+ d.includes('divino') || d.includes('camelias') || d.includes('cabana'))
+ return 'food';
+ if (d.includes('parking') || d.includes('allpark') || d.includes('uber') ||
+ d.includes('taxi') || d.includes('transfer') || d.includes('airline') ||
+ d.includes('airport') || d.includes('flight') || d.includes('rodoviaria'))
+ return 'transport';
+ if (d.includes('anthropic') || d.includes('claude') || d.includes('netflix') ||
+ d.includes('spotify') || d.includes('apple') || d.includes('google') ||
+ d.includes('microsoft') || d.includes('subscription') || d.includes('energia') ||
+ d.includes('electric') || d.includes('telecom') || d.includes('celular'))
+ return 'bills';
+ if (d.includes('clinica') || d.includes('clinic') || d.includes('drogaria') ||
+ d.includes('farmac') || d.includes('pharmacy') || d.includes('hospital') ||
+ d.includes('medic') || d.includes('saude') || d.includes('dental') ||
+ d.includes('odonto'))
+ return 'health';
+ if (d.includes('shopping') || d.includes('daiso') || d.includes('store') ||
+ d.includes('loja') || d.includes('mall'))
+ return 'shopping';
+ if (d.includes('sport') || d.includes('fitness') || d.includes('academia') ||
+ d.includes('gym') || d.includes('cinema') || d.includes('teatro'))
+ return 'entertainment';
+
+ return 'other';
+ }
+
+ function processBookmarkletText(text) {
+ try {
+ var data = JSON.parse(text);
+ if (!data.__finsight || !Array.isArray(data.transactions)) {
+ App.notify('הקליפבורד לא מכיל נתוני FinSight. לחץ על הסימניה באתר האשראי תחילה.', 'error');
+ return;
+ }
+ var items = data.transactions.map(function(tx) {
+ var cur = (tx.currency || '').toUpperCase() || 'ILS';
+ var item = { date: tx.date, description: tx.description, amount: tx.amount, currency: cur, category: mapBookmarkletCategory(tx.categoryRaw, tx.description), isRecurring: false };
+ if (tx.originalCurrency) item.originalCurrency = tx.originalCurrency;
+ if (tx.originalAmount) item.originalAmount = tx.originalAmount;
+ return item;
+ });
+
+ // Update categories for already-imported transactions that were saved as 'other'
+ var existingExpenses = Storage.getCreditCards().expenses;
+ var updatedCount = 0;
+ items.forEach(function(item) {
+ if (item.category === 'other') return;
+ var match = existingExpenses.find(function(e) {
+ return e.date === item.date && e.description === item.description && e.amount === item.amount && e.category === 'other';
+ });
+ if (match) {
+ Storage.updateExpense(match.id, { category: item.category });
+ updatedCount++;
+ }
+ });
+ if (updatedCount > 0) {
+ App.notify('עודכנו קטגוריות ל-' + updatedCount + ' עסקאות', 'success');
+ loadExpenses();
+ return;
+ }
+
+ var hasNew = items.some(function(item) {
+ return !existingExpenses.some(function(e) {
+ return e.date === item.date && e.description === item.description && e.amount === item.amount;
+ });
+ });
+ if (!hasNew) {
+ App.notify('כל העסקאות כבר ייובאו', 'warning');
+ return;
+ }
+ App.notify('נטענו ' + items.length + ' עסקאות מ-' + (data.sourceName || data.source), 'success');
+ importExpensesFromSmartImport(items);
+ } catch(e) {
+ App.notify('תוכן אינו תקין.', 'error');
+ }
+ }
+
+ async function importFromBookmarklet() {
+ // Try clipboard API
+ try {
+ var text = await navigator.clipboard.readText();
+ processBookmarkletText(text);
+ return;
+ } catch(e) {}
+
+ // Fallback: paste modal
+ var prev = document.getElementById('__bklt_modal');
+ if (prev) prev.remove();
+ var modal = document.createElement('div');
+ modal.id = '__bklt_modal';
+ modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:12px;padding:20px;z-index:9999;width:320px;direction:rtl;box-shadow:0 8px 32px rgba(0,0,0,.5);';
+ modal.innerHTML = '<div style="font-weight:bold;margin-bottom:12px;">📋 הדבק נתוני FinSight</div><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;">לחץ Ctrl+V בתוך התיבה:</p><textarea id="__bklt_ta" style="width:100%;height:80px;padding:8px;background:#0f172a;color:white;border:1px solid var(--color-border);border-radius:6px;font-size:12px;resize:none;" placeholder="Ctrl+V כאן..."></textarea><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;"><button onclick="document.getElementById(\'__bklt_modal\').remove()" style="padding:8px 16px;background:transparent;color:var(--color-text);border:1px solid var(--color-border);border-radius:6px;cursor:pointer;">ביטול</button><button id="__bklt_ok" style="padding:8px 16px;background:var(--color-credit);color:white;border:none;border-radius:6px;cursor:pointer;">ייבוא</button></div>';
+ document.body.appendChild(modal);
+ document.getElementById('__bklt_ta').focus();
+ document.getElementById('__bklt_ok').onclick = function() {
+ var text = document.getElementById('__bklt_ta').value;
+ modal.remove();
+ processBookmarkletText(text);
+ };
+ }
+
+ function detectRecurringPayments() {
+ var allExpenses = Storage.getCreditCards().expenses;
+ if (!allExpenses.length) {
+ App.notify('אין הוצאות לניתוח', 'warning');
+ return;
+ }
+
+ // Group by normalized description
+ var groups = {};
+ allExpenses.forEach(function(e) {
+ var key = e.description.trim().toLowerCase();
+ if (!groups[key]) groups[key] = { description: e.description, category: e.category, entries: [] };
+ groups[key].entries.push(e);
+ });
+
+ // Find candidates: appear in 2+ distinct months, median amount
+ var existingSubs = Storage.getSubscriptions().map(function(s) {
+ return s.name.trim().toLowerCase();
+ });
+
+ var candidates = [];
+ Object.values(groups).forEach(function(g) {
+ var months = [...new Set(g.entries.map(function(e) {
+ return e.date.substring(0, 7); // YYYY-MM
+ }))];
+ if (months.length < 2) return;
+
+ // Calculate median amount
+ var amounts = g.entries.map(function(e) { return e.amount; }).sort(function(a, b) { return a - b; });
+ var median = amounts[Math.floor(amounts.length / 2)];
+
+ // Check amounts are consistent (max 30% variation from median)
+ var consistent = amounts.every(function(a) { return Math.abs(a - median) / median < 0.3; });
+ if (!consistent) return;
+
+ // Skip if already a subscription
+ if (existingSubs.includes(g.description.trim().toLowerCase())) return;
+
+ // Map category
+ var subCategory = 'fixed_bills';
+ if (['entertainment', 'education'].includes(g.category)) subCategory = 'subscriptions';
+ if (g.category === 'health') subCategory = 'insurance';
+
+ candidates.push({
+ description: g.description,
+ amount: Math.round(median * 100) / 100,
+ months: months.length,
+ category: subCategory
+ });
+ });
+
+ if (!candidates.length) {
+ App.notify('לא נמצאו תשלומים קבועים חדשים', 'info');
+ return;
+ }
+
+ // Sort by amount descending
+ candidates.sort(function(a, b) { return b.amount - a.amount; });
+
+ // Show modal
+ var prev = document.getElementById('__rec_modal');
+ if (prev) prev.remove();
+
+ var modal = document.createElement('div');
+ modal.id = '__rec_modal';
+ modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+
+ var rows = candidates.map(function(c, i) {
+ return '<label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-border);cursor:pointer;">' +
+ '<input type="checkbox" checked data-i="' + i + '" style="width:16px;height:16px;accent-color:var(--color-credit);">' +
+ '<span style="flex:1;">' + c.description + '</span>' +
+ '<span style="color:var(--color-text-secondary);font-size:0.8rem;">' + c.months + ' חודשים</span>' +
+ '<span style="font-weight:600;min-width:70px;text-align:left;">₪' + c.amount.toLocaleString() + '</span>' +
+ '</label>';
+ }).join('');
+
+ modal.innerHTML = '<div style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;direction:rtl;">' +
+ '<div style="font-weight:700;font-size:1.1rem;margin-bottom:6px;">🔄 תשלומים קבועים שזוהו</div>' +
+ '<div style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:16px;">נמצאו ' + candidates.length + ' תשלומים שחוזרים על עצמם. סמן את אלה שתרצה להוסיף לתשלומים קבועים:</div>' +
+ '<div id="__rec_rows">' + rows + '</div>' +
+ '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">' +
+ '<button onclick="document.getElementById(\'__rec_modal\').remove()" style="padding:8px 16px;background:transparent;color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;cursor:pointer;">ביטול</button>' +
+ '<button id="__rec_save" style="padding:8px 20px;background:var(--color-credit);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">הוסף לתשלומים קבועים</button>' +
+ '</div></div>';
+
+ document.body.appendChild(modal);
+
+ document.getElementById('__rec_save').onclick = function() {
+ var checkboxes = document.querySelectorAll('#__rec_rows input[type=checkbox]:checked');
+ var added = 0;
+ checkboxes.forEach(function(cb) {
+ var c = candidates[parseInt(cb.dataset.i)];
+ Storage.addSubscription({
+ name: c.description,
+ amount: c.amount,
+ category: c.category,
+ frequency: 'monthly',
+ active: true,
+ nextPayment: new Date().toISOString().substring(0, 10)
+ });
+ added++;
+ });
+ modal.remove();
+ if (added > 0) App.notify('נוספו ' + added + ' תשלומים קבועים', 'success');
+ };
+ }
+
+ document.addEventListener('paste', function(e) {
+ var text = e.clipboardData.getData('text');
+ if (!text.includes('__finsight')) return;
+ try {
+ var data = JSON.parse(text);
+ if (!data.__finsight || !Array.isArray(data.transactions)) return;
+ e.preventDefault();
+ processBookmarkletText(text);
+ } catch(e) {}
+ });
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

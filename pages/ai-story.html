@@ -3,302 +3,294 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <title id="pageTitle">סיפור השבוע - WizeMoney</title>
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <link rel="stylesheet" href="../css/app.css">
-    <style>
-        .story-container { max-width: 720px; margin: 0 auto; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <title id="pageTitle">סיפור השבוע - WizeMoney</title>
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <link rel="stylesheet" href="../css/app.css">
+ <style>
+ .story-container { max-width: 720px; margin: 0 auto; }
 
-        /* API Key setup */
-        .api-setup {
-            background: var(--color-bg-card);
-            border-radius: 16px;
-            padding: 28px;
-            border: 1px solid var(--color-border);
-            text-align: center;
-        }
-        .api-setup h2 { color: var(--color-primary); margin-bottom: 10px; }
-        .api-setup p { color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6; }
-        .api-input-row { display: flex; gap: 10px; }
-        .api-input-row input {
-            flex: 1;
-            padding: 12px 14px;
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            background: var(--color-bg);
-            color: var(--color-text-primary);
-            font-size: 0.9rem;
-            font-family: monospace;
-        }
-        .api-input-row input:focus { outline: none; border-color: var(--color-primary); }
+ /* API Key setup */
+ .api-setup {
+ background: var(--color-bg-card);
+ border-radius: 16px;
+ padding: 28px;
+ border: 1px solid var(--color-border);
+ text-align: center;
+ }
+ .api-setup h2 { color: var(--color-primary); margin-bottom: 10px; }
+ .api-setup p { color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6; }
+ .api-input-row { display: flex; gap: 10px; }
+ .api-input-row input {
+ flex: 1;
+ padding: 12px 14px;
+ border: 1px solid var(--color-border);
+ border-radius: 10px;
+ background: var(--color-bg);
+ color: var(--color-text-primary);
+ font-size: 0.9rem;
+ font-family: monospace;
+ }
+ .api-input-row input:focus { outline: none; border-color: var(--color-primary); }
 
-        /* Controls */
-        .controls-row {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .controls-row select {
-            padding: 10px 14px;
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            background: var(--color-bg-card);
-            color: var(--color-text-primary);
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .generate-btn {
-            flex: 1;
-            min-width: 180px;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .generate-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,0.3); }
-        .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+ /* Controls */
+ .controls-row {
+ display: flex;
+ gap: 12px;
+ align-items: center;
+ margin-bottom: 20px;
+ flex-wrap: wrap;
+ }
+ .controls-row select {
+ padding: 10px 14px;
+ border: 1px solid var(--color-border);
+ border-radius: 10px;
+ background: var(--color-bg-card);
+ color: var(--color-text-primary);
+ font-size: 0.9rem;
+ cursor: pointer;
+ }
+ .generate-btn {
+ flex: 1;
+ min-width: 180px;
+ padding: 12px 20px;
+ background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+ border: none;
+ border-radius: 12px;
+ color: white;
+ font-size: 1rem;
+ font-weight: 700;
+ cursor: pointer;
+ transition: all 0.2s;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ }
+ .generate-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,0.3); }
+ .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        /* Loading */
-        .loading-wrap {
-            text-align: center;
-            padding: 60px 20px;
-            display: none;
-        }
-        .loading-dots { font-size: 2rem; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.3 } }
-        .loading-text { color: var(--color-text-secondary); margin-top: 12px; font-size: 0.9rem; }
+ /* Loading */
+ .loading-wrap {
+ text-align: center;
+ padding: 60px 20px;
+ display: none;
+ }
+ .loading-dots { font-size: 2rem; animation: pulse 1.5s infinite; }
+ @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.3 } }
+ .loading-text { color: var(--color-text-secondary); margin-top: 12px; font-size: 0.9rem; }
 
-        /* Story card */
-        .story-card {
-            background: var(--color-bg-card);
-            border-radius: 20px;
-            border: 1px solid var(--color-border);
-            overflow: hidden;
-            display: none;
-        }
+ /* Story card */
+ .story-card {
+ background: var(--color-bg-card);
+ border-radius: 20px;
+ border: 1px solid var(--color-border);
+ overflow: hidden;
+ display: none;
+ }
 
-        .story-header {
-            padding: 24px 28px 18px;
-            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08));
-            border-bottom: 1px solid var(--color-border);
-        }
-        .story-header .week-label {
-            font-size: 0.75rem;
-            color: var(--color-text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 6px;
-        }
-        .story-header h2 {
-            font-size: 1.4rem;
-            color: var(--color-text-primary);
-            margin: 0;
-            line-height: 1.3;
-        }
-        .story-header .mood-badge {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .mood-excellent { background: rgba(16,185,129,0.15); color: var(--color-positive); }
-        .mood-good { background: rgba(59,130,246,0.15); color: #3b82f6; }
-        .mood-warning { background: rgba(245,158,11,0.15); color: #f59e0b; }
-        .mood-critical { background: rgba(239,68,68,0.15); color: var(--color-negative); }
+ .story-header {
+ padding: 24px 28px 18px;
+ background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08));
+ border-bottom: 1px solid var(--color-border);
+ }
+ .story-header .week-label {
+ font-size: 0.75rem;
+ color: var(--color-text-secondary);
+ text-transform: uppercase;
+ letter-spacing: 0.05em;
+ margin-bottom: 6px;
+ }
+ .story-header h2 {
+ font-size: 1.4rem;
+ color: var(--color-text-primary);
+ margin: 0;
+ line-height: 1.3;
+ }
+ .story-header .mood-badge {
+ display: inline-block;
+ margin-top: 10px;
+ padding: 4px 12px;
+ border-radius: 20px;
+ font-size: 0.8rem;
+ font-weight: 600;
+ }
+ .mood-excellent { background: rgba(16,185,129,0.15); color: var(--color-positive); }
+ .mood-good { background: rgba(59,130,246,0.15); color: #3b82f6; }
+ .mood-warning { background: rgba(245,158,11,0.15); color: #f59e0b; }
+ .mood-critical { background: rgba(239,68,68,0.15); color: var(--color-negative); }
 
-        .story-body { padding: 24px 28px; }
+ .story-body { padding: 24px 28px; }
 
-        .story-main {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: var(--color-text-primary);
-            margin-bottom: 20px;
-        }
+ .story-main {
+ font-size: 1.05rem;
+ line-height: 1.8;
+ color: var(--color-text-primary);
+ margin-bottom: 20px;
+ }
 
-        .story-sections { display: flex; flex-direction: column; gap: 12px; }
+ .story-sections { display: flex; flex-direction: column; gap: 12px; }
 
-        .story-section {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-            background: var(--color-bg);
-            border-radius: 12px;
-            padding: 14px 16px;
-        }
-        .section-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
-        .section-content { flex: 1; }
-        .section-label { font-size: 0.72rem; color: var(--color-text-secondary); font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
-        .section-text { font-size: 0.92rem; color: var(--color-text-primary); line-height: 1.5; }
+ .story-section {
+ display: flex;
+ gap: 12px;
+ align-items: flex-start;
+ background: var(--color-bg);
+ border-radius: 12px;
+ padding: 14px 16px;
+ }
+ .section-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+ .section-content { flex: 1; }
+ .section-label { font-size: 0.72rem; color: var(--color-text-secondary); font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
+ .section-text { font-size: 0.92rem; color: var(--color-text-primary); line-height: 1.5; }
 
-        /* Quick stats */
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        @media (max-width: 500px) { .quick-stats { grid-template-columns: 1fr 1fr; } }
-        .quick-stat {
-            background: var(--color-bg);
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-        }
-        .quick-stat .qs-label { font-size: 0.7rem; color: var(--color-text-secondary); margin-bottom: 3px; }
-        .quick-stat .qs-value { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
+ /* Quick stats */
+ .quick-stats {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 10px;
+ margin-bottom: 20px;
+ }
+ @media (max-width: 500px) { .quick-stats { grid-template-columns: 1fr 1fr; } }
+ .quick-stat {
+ background: var(--color-bg);
+ border-radius: 10px;
+ padding: 12px;
+ text-align: center;
+ }
+ .quick-stat .qs-label { font-size: 0.7rem; color: var(--color-text-secondary); margin-bottom: 3px; }
+ .quick-stat .qs-value { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
 
-        .story-footer {
-            padding: 14px 28px;
-            border-top: 1px solid var(--color-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.75rem;
-            color: var(--color-text-secondary);
-        }
+ .story-footer {
+ padding: 14px 28px;
+ border-top: 1px solid var(--color-border);
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ font-size: 0.75rem;
+ color: var(--color-text-secondary);
+ }
 
-        /* Error */
-        .error-box {
-            background: rgba(239,68,68,0.08);
-            border: 1px solid rgba(239,68,68,0.25);
-            border-radius: 12px;
-            padding: 16px 20px;
-            color: var(--color-negative);
-            font-size: 0.9rem;
-            display: none;
-            margin-bottom: 16px;
-        }
+ /* Error */
+ .error-box {
+ background: rgba(239,68,68,0.08);
+ border: 1px solid rgba(239,68,68,0.25);
+ border-radius: 12px;
+ padding: 16px 20px;
+ color: var(--color-negative);
+ font-size: 0.9rem;
+ display: none;
+ margin-bottom: 16px;
+ }
 
-        /* Key row */
-        .key-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-        }
-        .key-row span { flex: 1; }
-        .key-change-btn {
-            background: none;
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            padding: 4px 10px;
-            color: var(--color-text-secondary);
-            cursor: pointer;
-            font-size: 0.78rem;
-        }
-        .key-change-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
-    </style>
+ /* Key row */
+ .key-row {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 12px 16px;
+ margin-bottom: 20px;
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ }
+ .key-row span { flex: 1; }
+ .key-change-btn {
+ background: none;
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ padding: 4px 10px;
+ color: var(--color-text-secondary);
+ cursor: pointer;
+ font-size: 0.78rem;
+ }
+ .key-change-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+ </style>
 </head>
 <body>
 <div class="app-container">
-    <header class="app-header">
-        <button class="btn-back" onclick="history.back()">→</button>
-        <h1>✨ <span data-i18n="aiStory.pageTitle">סיפור השבוע</span></h1>
-        <div></div>
-    </header>
+ <header class="app-header">
+ <button class="btn-back" onclick="history.back()">→</button>
+ <h1>✨ <span data-i18n="aiStory.pageTitle">סיפור השבוע</span></h1>
+ <div></div>
+ </header>
 
-    <main class="main-content">
-        <div class="story-container">
+ <main class="main-content">
+ <div class="story-container">
 
-            <!-- Login required (shown when not authenticated) -->
-            <div class="api-setup" id="apiSetup" style="display:none">
-                <div style="font-size:3rem;margin-bottom:16px">🔒</div>
-                <h2>התחבר לחשבון</h2>
-                <p style="color:var(--color-text-secondary);">יש להתחבר לחשבון FinSight כדי להשתמש בסיפור ה-AI.</p>
-                <p style="color:var(--color-text-secondary);font-size:0.85rem;">לחץ על "התחבר" בתפריט הצד.</p>
-            </div>
+ <!-- Login required (shown when not authenticated) -->
+ <div class="api-setup" id="apiSetup" style="display:none">
+ <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+ <h2>התחבר לחשבון</h2>
+ <p style="color:var(--color-text-secondary);">יש להתחבר לחשבון FinSight כדי להשתמש בסיפור ה-AI.</p>
+ <p style="color:var(--color-text-secondary);font-size:0.85rem;">לחץ על "התחבר" בתפריט הצד.</p>
+ </div>
 
-            <!-- Main UI -->
-            <div id="mainUI" style="display:none">
-                <div class="key-row">
-                    <span id="aiConnectedLabel">✨ AI מחובר</span>
-                </div>
+ <!-- Main UI -->
+ <div id="mainUI" style="display:none">
+ <div class="key-row">
+ <span id="aiConnectedLabel">✨ AI מחובר</span>
+ </div>
 
-                <div class="controls-row">
-                    <select id="rangeSelect">
-                        <option value="7" data-i18n="aiStory.range7">7 ימים אחרונים</option>
-                        <option value="14" data-i18n="aiStory.range14">14 ימים אחרונים</option>
-                        <option value="30" data-i18n="aiStory.range30">חודש אחרון</option>
-                        <option value="0" data-i18n="aiStory.range0">החודש הנוכחי</option>
-                    </select>
-                    <button class="generate-btn" id="generateBtn" onclick="generateStory()">
-                        <span>✨</span> <span id="btnText" data-i18n="aiStory.generateBtn">ספר לי את השבוע שלי</span>
-                    </button>
-                </div>
+ <div class="controls-row">
+ <select id="rangeSelect">
+ <option value="7" data-i18n="aiStory.range7">7 ימים אחרונים</option>
+ <option value="14" data-i18n="aiStory.range14">14 ימים אחרונים</option>
+ <option value="30" data-i18n="aiStory.range30">חודש אחרון</option>
+ <option value="0" data-i18n="aiStory.range0">החודש הנוכחי</option>
+ </select>
+ <button class="generate-btn" id="generateBtn" onclick="generateStory()">
+ <span>✨</span> <span id="btnText" data-i18n="aiStory.generateBtn">ספר לי את השבוע שלי</span>
+ </button>
+ </div>
 
-                <div class="error-box" id="errorBox"></div>
-                <div class="loading-wrap" id="loadingWrap">
-                    <div class="loading-dots">✨</div>
-                    <div class="loading-text" data-i18n="aiStory.loadingText">Claude קורא את ההוצאות שלך...</div>
-                </div>
+ <div class="error-box" id="errorBox"></div>
+ <div class="loading-wrap" id="loadingWrap">
+ <div class="loading-dots">✨</div>
+ <div class="loading-text" data-i18n="aiStory.loadingText">Claude קורא את ההוצאות שלך...</div>
+ </div>
 
-                <div class="story-card" id="storyCard">
-                    <div class="story-header">
-                        <div class="week-label" id="weekLabel"></div>
-                        <h2 id="storyHeadline"></h2>
-                        <span class="mood-badge" id="moodBadge"></span>
-                    </div>
-                    <div class="story-body">
-                        <div class="quick-stats" id="quickStats"></div>
-                        <div class="story-main" id="storyMain"></div>
-                        <div class="story-sections" id="storySections"></div>
-                    </div>
-                    <div class="story-footer">
-                        <span id="storyTimestamp"></span>
-                        <span style="color:var(--color-primary);cursor:pointer" onclick="generateStory()" data-i18n="aiStory.refresh">↻ רענן</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+ <div class="story-card" id="storyCard">
+ <div class="story-header">
+ <div class="week-label" id="weekLabel"></div>
+ <h2 id="storyHeadline"></h2>
+ <span class="mood-badge" id="moodBadge"></span>
+ </div>
+ <div class="story-body">
+ <div class="quick-stats" id="quickStats"></div>
+ <div class="story-main" id="storyMain"></div>
+ <div class="story-sections" id="storySections"></div>
+ </div>
+ <div class="story-footer">
+ <span id="storyTimestamp"></span>
+ <span style="color:var(--color-primary);cursor:pointer" onclick="generateStory()" data-i18n="aiStory.refresh">↻ רענן</span>
+ </div>
+ </div>
+ </div>
+ </div>
+ </main>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -308,7 +300,7 @@
 <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
 <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
 <script>
 const AI_CACHE_KEY = 'finance_ai_story_cache';
@@ -318,261 +310,261 @@ const aiProxy = firebase.functions().httpsCallable('aiProxy');
 function as(k) { return typeof I18n !== 'undefined' ? I18n.t('aiStory.' + k) : k; }
 
 function init() {
-    if (typeof I18n !== 'undefined') {
-        I18n.init();
-        document.title = as('pageTitle') + ' - FinSight';
-    }
+ if (typeof I18n !== 'undefined') {
+ I18n.init();
+ document.title = as('pageTitle') + ' - FinSight';
+ }
 }
 
 firebase.auth().onAuthStateChanged(user => {
-    currentUser = user;
-    document.getElementById('apiSetup').style.display = user ? 'none' : 'block';
-    document.getElementById('mainUI').style.display   = user ? 'block' : 'none';
-    if (user) loadCachedStory();
+ currentUser = user;
+ document.getElementById('apiSetup').style.display = user ? 'none' : 'block';
+ document.getElementById('mainUI').style.display = user ? 'block' : 'none';
+ if (user) loadCachedStory();
 });
 
 function loadCachedStory() {
-    try {
-        const cached = JSON.parse(localStorage.getItem(AI_CACHE_KEY) || 'null');
-        if (cached && cached.result) {
-            renderStory(cached.result, cached.stats, cached.range, new Date(cached.ts));
-        }
-    } catch(e) {}
+ try {
+ const cached = JSON.parse(localStorage.getItem(AI_CACHE_KEY) || 'null');
+ if (cached && cached.result) {
+ renderStory(cached.result, cached.stats, cached.range, new Date(cached.ts));
+ }
+ } catch(e) {}
 }
 
 function gatherData(days) {
-    const now = new Date();
-    let from;
-    if (days === 0) {
-        from = new Date(now.getFullYear(), now.getMonth(), 1);
-    } else {
-        from = new Date(now.getTime() - days * 86400000);
-    }
+ const now = new Date();
+ let from;
+ if (days === 0) {
+ from = new Date(now.getFullYear(), now.getMonth(), 1);
+ } else {
+ from = new Date(now.getTime() - days * 86400000);
+ }
 
-    const cc = Storage.getCreditCards();
-    const expenses = (cc.expenses || []).filter(e => new Date(e.date) >= from);
-    const budget = cc.budget || {};
+ const cc = Storage.getCreditCards();
+ const expenses = (cc.expenses || []).filter(e => new Date(e.date) >= from);
+ const budget = cc.budget || {};
 
-    // Aggregate
-    const totalILS = expenses
-        .filter(e => (e.currency || 'ILS') === 'ILS')
-        .reduce((s, e) => s + e.amount, 0);
+ // Aggregate
+ const totalILS = expenses
+ .filter(e => (e.currency || 'ILS') === 'ILS')
+ .reduce((s, e) => s + e.amount, 0);
 
-    const byCategory = {};
-    expenses.forEach(e => {
-        const cat = e.category || 'other';
-        byCategory[cat] = (byCategory[cat] || 0) + e.amount;
-    });
-    const topCat = Object.entries(byCategory).sort((a,b) => b[1]-a[1])[0];
+ const byCategory = {};
+ expenses.forEach(e => {
+ const cat = e.category || 'other';
+ byCategory[cat] = (byCategory[cat] || 0) + e.amount;
+ });
+ const topCat = Object.entries(byCategory).sort((a,b) => b[1]-a[1])[0];
 
-    const sorted = [...expenses].sort((a,b) => b.amount - a.amount);
-    const biggest = sorted[0];
+ const sorted = [...expenses].sort((a,b) => b.amount - a.amount);
+ const biggest = sorted[0];
 
-    // Days left in month / budget
-    const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-    const dayOfMonth = now.getDate();
-    const daysLeft = daysInMonth - dayOfMonth;
-    const monthTotal = (cc.expenses || [])
-        .filter(e => {
-            const d = new Date(e.date);
-            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear() && (e.currency||'ILS')==='ILS';
-        })
-        .reduce((s,e) => s+e.amount, 0);
-    const budgetTotal = budget.total || 0;
-    const budgetLeft = budgetTotal > 0 ? budgetTotal - monthTotal : null;
+ // Days left in month / budget
+ const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+ const dayOfMonth = now.getDate();
+ const daysLeft = daysInMonth - dayOfMonth;
+ const monthTotal = (cc.expenses || [])
+ .filter(e => {
+ const d = new Date(e.date);
+ return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear() && (e.currency||'ILS')==='ILS';
+ })
+ .reduce((s,e) => s+e.amount, 0);
+ const budgetTotal = budget.total || 0;
+ const budgetLeft = budgetTotal > 0 ? budgetTotal - monthTotal : null;
 
-    // Country breakdown
-    const countries = {};
-    expenses.forEach(e => {
-        const m = e.description && e.description.match(/\s+([A-Z]{2})$/);
-        if (m) countries[m[1]] = (countries[m[1]]||0) + e.amount;
-        else countries['IL'] = (countries['IL']||0) + e.amount;
-    });
+ // Country breakdown
+ const countries = {};
+ expenses.forEach(e => {
+ const m = e.description && e.description.match(/\s+([A-Z]{2})$/);
+ if (m) countries[m[1]] = (countries[m[1]]||0) + e.amount;
+ else countries['IL'] = (countries['IL']||0) + e.amount;
+ });
 
-    return {
-        from: from.toLocaleDateString('he-IL'),
-        to: now.toLocaleDateString('he-IL'),
-        count: expenses.length,
-        totalILS,
-        topCat: topCat ? { name: topCat[0], amount: topCat[1] } : null,
-        biggest: biggest ? { desc: biggest.description, amount: biggest.amount, currency: biggest.currency||'ILS', date: biggest.date } : null,
-        budgetLeft,
-        budgetTotal,
-        daysLeft,
-        monthTotal,
-        countries,
-        expenses: sorted.slice(0, 15).map(e => ({
-            date: e.date,
-            desc: e.description,
-            amount: e.amount,
-            currency: e.currency || 'ILS',
-            category: e.category
-        }))
-    };
+ return {
+ from: from.toLocaleDateString('he-IL'),
+ to: now.toLocaleDateString('he-IL'),
+ count: expenses.length,
+ totalILS,
+ topCat: topCat ? { name: topCat[0], amount: topCat[1] } : null,
+ biggest: biggest ? { desc: biggest.description, amount: biggest.amount, currency: biggest.currency||'ILS', date: biggest.date } : null,
+ budgetLeft,
+ budgetTotal,
+ daysLeft,
+ monthTotal,
+ countries,
+ expenses: sorted.slice(0, 15).map(e => ({
+ date: e.date,
+ desc: e.description,
+ amount: e.amount,
+ currency: e.currency || 'ILS',
+ category: e.category
+ }))
+ };
 }
 
 function buildPrompt(data) {
-    const langInstruction = as('promptInstruction');
-    const lines = [
-        `Dates: ${data.from} to ${data.to}`,
-        `Transactions: ${data.count}`,
-        `Total expenses (ILS): ₪${Math.round(data.totalILS).toLocaleString('en-US')}`,
-    ];
-    if (data.topCat) lines.push(`Top category: ${data.topCat.name} (₪${Math.round(data.topCat.amount).toLocaleString('en-US')})`);
-    if (data.biggest) lines.push(`Largest expense: ${data.biggest.desc} — ${data.biggest.amount} ${data.biggest.currency} (${data.biggest.date})`);
-    if (data.budgetLeft !== null) lines.push(`Monthly budget: ₪${data.budgetTotal.toLocaleString('en-US')} | Remaining: ₪${Math.round(data.budgetLeft).toLocaleString('en-US')} for ${data.daysLeft} days`);
+ const langInstruction = as('promptInstruction');
+ const lines = [
+ `Dates: ${data.from} to ${data.to}`,
+ `Transactions: ${data.count}`,
+ `Total expenses (ILS): ₪${Math.round(data.totalILS).toLocaleString('en-US')}`,
+ ];
+ if (data.topCat) lines.push(`Top category: ${data.topCat.name} (₪${Math.round(data.topCat.amount).toLocaleString('en-US')})`);
+ if (data.biggest) lines.push(`Largest expense: ${data.biggest.desc} — ${data.biggest.amount} ${data.biggest.currency} (${data.biggest.date})`);
+ if (data.budgetLeft !== null) lines.push(`Monthly budget: ₪${data.budgetTotal.toLocaleString('en-US')} | Remaining: ₪${Math.round(data.budgetLeft).toLocaleString('en-US')} for ${data.daysLeft} days`);
 
-    const countryList = Object.entries(data.countries).map(([c,v]) => `${c}: ₪${Math.round(v)}`).join(', ');
-    if (countryList) lines.push(`By country: ${countryList}`);
+ const countryList = Object.entries(data.countries).map(([c,v]) => `${c}: ₪${Math.round(v)}`).join(', ');
+ if (countryList) lines.push(`By country: ${countryList}`);
 
-    lines.push('', 'Top 15 transactions:');
-    data.expenses.forEach(e => lines.push(`  ${e.date} | ${e.desc} | ${e.amount} ${e.currency} | ${e.category||''}`));
+ lines.push('', 'Top 15 transactions:');
+ data.expenses.forEach(e => lines.push(` ${e.date} | ${e.desc} | ${e.amount} ${e.currency} | ${e.category||''}`));
 
-    return `You are a smart personal financial advisor. You received a user's expense data.
+ return `You are a smart personal financial advisor. You received a user's expense data.
 
 ${lines.join('\n')}
 
 ${langInstruction}
 Reply in JSON only (no markdown, no text outside JSON):
 {
-  "headline": "Short, engaging title for this period (up to 8 words)",
-  "story": "2-3 sentences describing expenses in a personal, warm, specific way with numbers and names.",
-  "highlight": "One interesting insight you found — something the user may not have noticed.",
-  "tip": "One practical tip relevant to this specific data.",
-  "mood": "exactly one of: excellent / good / warning / critical"
+ "headline": "Short, engaging title for this period (up to 8 words)",
+ "story": "2-3 sentences describing expenses in a personal, warm, specific way with numbers and names.",
+ "highlight": "One interesting insight you found — something the user may not have noticed.",
+ "tip": "One practical tip relevant to this specific data.",
+ "mood": "exactly one of: excellent / good / warning / critical"
 }`;
 }
 
 async function generateStory() {
-    if (!currentUser) {
-        showError('יש להתחבר לחשבון.');
-        return;
-    }
+ if (!currentUser) {
+ showError('יש להתחבר לחשבון.');
+ return;
+ }
 
-    const days = parseInt(document.getElementById('rangeSelect').value);
-    const data = gatherData(days);
+ const days = parseInt(document.getElementById('rangeSelect').value);
+ const data = gatherData(days);
 
-    if (data.count === 0) {
-        showError(as('noTransactions'));
-        return;
-    }
+ if (data.count === 0) {
+ showError(as('noTransactions'));
+ return;
+ }
 
-    setLoading(true);
-    hideError();
+ setLoading(true);
+ hideError();
 
-    try {
-        const prompt = buildPrompt(data);
-        const res = await aiProxy({
-            messages: [{ role: 'user', parts: [{ text: prompt }] }],
-            maxTokens: 600,
-        });
+ try {
+ const prompt = buildPrompt(data);
+ const res = await aiProxy({
+ messages: [{ role: 'user', parts: [{ text: prompt }] }],
+ maxTokens: 600,
+ });
 
-        const raw = res.data.text || '';
-        const cleaned = raw.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
-        const result = JSON.parse(cleaned);
+ const raw = res.data.text || '';
+ const cleaned = raw.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+ const result = JSON.parse(cleaned);
 
-        localStorage.setItem(AI_CACHE_KEY, JSON.stringify({ result, stats: data, range: days, ts: new Date().toISOString() }));
-        renderStory(result, data, days, new Date());
+ localStorage.setItem(AI_CACHE_KEY, JSON.stringify({ result, stats: data, range: days, ts: new Date().toISOString() }));
+ renderStory(result, data, days, new Date());
 
-    } catch(e) {
-        const msg = e.code === 'functions/resource-exhausted'
-            ? (e.message || 'הגעת למגבלה היומית.')
-            : (as('errorPrefix') + (e.message || e));
-        showError(msg);
-    } finally {
-        setLoading(false);
-    }
+ } catch(e) {
+ const msg = e.code === 'functions/resource-exhausted'
+ ? (e.message || 'הגעת למגבלה היומית.')
+ : (as('errorPrefix') + (e.message || e));
+ showError(msg);
+ } finally {
+ setLoading(false);
+ }
 }
 
 function renderStory(result, data, days, ts) {
-    const moodMap = {
-        excellent: { text: as('moodExcellent'), cls: 'mood-excellent' },
-        good:      { text: as('moodGood'),      cls: 'mood-good' },
-        warning:   { text: as('moodWarning'),   cls: 'mood-warning' },
-        critical:  { text: as('moodCritical'),  cls: 'mood-critical' }
-    };
-    const mood = moodMap[result.mood] || moodMap.good;
+ const moodMap = {
+ excellent: { text: as('moodExcellent'), cls: 'mood-excellent' },
+ good: { text: as('moodGood'), cls: 'mood-good' },
+ warning: { text: as('moodWarning'), cls: 'mood-warning' },
+ critical: { text: as('moodCritical'), cls: 'mood-critical' }
+ };
+ const mood = moodMap[result.mood] || moodMap.good;
 
-    document.getElementById('weekLabel').textContent = days === 0 ? as('currentMonth') : `${days} · ${data.from} – ${data.to}`;
-    document.getElementById('storyHeadline').textContent = result.headline || '';
+ document.getElementById('weekLabel').textContent = days === 0 ? as('currentMonth') : `${days} · ${data.from} – ${data.to}`;
+ document.getElementById('storyHeadline').textContent = result.headline || '';
 
-    const badge = document.getElementById('moodBadge');
-    badge.textContent = mood.text;
-    badge.className = 'mood-badge ' + mood.cls;
+ const badge = document.getElementById('moodBadge');
+ badge.textContent = mood.text;
+ badge.className = 'mood-badge ' + mood.cls;
 
-    // Quick stats
-    const qs = document.getElementById('quickStats');
-    const budgetPct = data.budgetTotal > 0 ? Math.round(data.monthTotal / data.budgetTotal * 100) : null;
-    qs.innerHTML = `
-        <div class="quick-stat">
-            <div class="qs-label">${as('statTotal')}</div>
-            <div class="qs-value">₪${Math.round(data.totalILS).toLocaleString('he-IL')}</div>
-        </div>
-        <div class="quick-stat">
-            <div class="qs-label">${as('statTransactions')}</div>
-            <div class="qs-value">${data.count}</div>
-        </div>
-        ${budgetPct !== null ? `
-        <div class="quick-stat">
-            <div class="qs-label">${as('statBudget')}</div>
-            <div class="qs-value" style="color:${budgetPct>90?'var(--color-negative)':budgetPct>70?'#f59e0b':'var(--color-positive)'}">${budgetPct}%</div>
-        </div>` : `
-        <div class="quick-stat">
-            <div class="qs-label">${as('statAvgDay')}</div>
-            <div class="qs-value">₪${data.count > 0 ? Math.round(data.totalILS / Math.max(days||30,1)).toLocaleString('he-IL') : 0}</div>
-        </div>`}
-    `;
+ // Quick stats
+ const qs = document.getElementById('quickStats');
+ const budgetPct = data.budgetTotal > 0 ? Math.round(data.monthTotal / data.budgetTotal * 100) : null;
+ qs.innerHTML = `
+ <div class="quick-stat">
+ <div class="qs-label">${as('statTotal')}</div>
+ <div class="qs-value">₪${Math.round(data.totalILS).toLocaleString('he-IL')}</div>
+ </div>
+ <div class="quick-stat">
+ <div class="qs-label">${as('statTransactions')}</div>
+ <div class="qs-value">${data.count}</div>
+ </div>
+ ${budgetPct !== null ? `
+ <div class="quick-stat">
+ <div class="qs-label">${as('statBudget')}</div>
+ <div class="qs-value" style="color:${budgetPct>90?'var(--color-negative)':budgetPct>70?'#f59e0b':'var(--color-positive)'}">${budgetPct}%</div>
+ </div>` : `
+ <div class="quick-stat">
+ <div class="qs-label">${as('statAvgDay')}</div>
+ <div class="qs-value">₪${data.count > 0 ? Math.round(data.totalILS / Math.max(days||30,1)).toLocaleString('he-IL') : 0}</div>
+ </div>`}
+ `;
 
-    document.getElementById('storyMain').textContent = result.story || '';
+ document.getElementById('storyMain').textContent = result.story || '';
 
-    const sections = document.getElementById('storySections');
-    const budgetText = data.budgetLeft !== null
-        ? (data.budgetLeft >= 0
-            ? as('budgetRemaining').replace('{left}', `₪${Math.round(data.budgetLeft).toLocaleString('he-IL')}`).replace('{total}', `₪${data.budgetTotal.toLocaleString('he-IL')}`).replace('{days}', data.daysLeft)
-            : as('budgetOver').replace('{amount}', `₪${Math.round(Math.abs(data.budgetLeft)).toLocaleString('he-IL')}`))
-        : '';
-    sections.innerHTML = `
-        <div class="story-section">
-            <div class="section-icon">💡</div>
-            <div class="section-content">
-                <div class="section-label">${as('sectionInsight')}</div>
-                <div class="section-text">${result.highlight || ''}</div>
-            </div>
-        </div>
-        <div class="story-section">
-            <div class="section-icon">🎯</div>
-            <div class="section-content">
-                <div class="section-label">${as('sectionTip')}</div>
-                <div class="section-text">${result.tip || ''}</div>
-            </div>
-        </div>
-        ${data.budgetLeft !== null ? `
-        <div class="story-section">
-            <div class="section-icon">${data.budgetLeft < 0 ? '🚨' : data.budgetLeft < data.budgetTotal * 0.1 ? '⚠️' : '📊'}</div>
-            <div class="section-content">
-                <div class="section-label">${as('sectionBudget')}</div>
-                <div class="section-text">${budgetText}</div>
-            </div>
-        </div>` : ''}
-    `;
+ const sections = document.getElementById('storySections');
+ const budgetText = data.budgetLeft !== null
+ ? (data.budgetLeft >= 0
+ ? as('budgetRemaining').replace('{left}', `₪${Math.round(data.budgetLeft).toLocaleString('he-IL')}`).replace('{total}', `₪${data.budgetTotal.toLocaleString('he-IL')}`).replace('{days}', data.daysLeft)
+ : as('budgetOver').replace('{amount}', `₪${Math.round(Math.abs(data.budgetLeft)).toLocaleString('he-IL')}`))
+ : '';
+ sections.innerHTML = `
+ <div class="story-section">
+ <div class="section-icon">💡</div>
+ <div class="section-content">
+ <div class="section-label">${as('sectionInsight')}</div>
+ <div class="section-text">${result.highlight || ''}</div>
+ </div>
+ </div>
+ <div class="story-section">
+ <div class="section-icon">🎯</div>
+ <div class="section-content">
+ <div class="section-label">${as('sectionTip')}</div>
+ <div class="section-text">${result.tip || ''}</div>
+ </div>
+ </div>
+ ${data.budgetLeft !== null ? `
+ <div class="story-section">
+ <div class="section-icon">${data.budgetLeft < 0 ? '🚨' : data.budgetLeft < data.budgetTotal * 0.1 ? '⚠️' : '📊'}</div>
+ <div class="section-content">
+ <div class="section-label">${as('sectionBudget')}</div>
+ <div class="section-text">${budgetText}</div>
+ </div>
+ </div>` : ''}
+ `;
 
-    const locale = I18n.currentLanguage === 'he' ? 'he-IL' : I18n.currentLanguage === 'pt' ? 'pt-BR' : 'en-US';
-    document.getElementById('storyTimestamp').textContent = as('updatedLabel') + ts.toLocaleString(locale, {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+ const locale = I18n.currentLanguage === 'he' ? 'he-IL' : I18n.currentLanguage === 'pt' ? 'pt-BR' : 'en-US';
+ document.getElementById('storyTimestamp').textContent = as('updatedLabel') + ts.toLocaleString(locale, {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
 
-    document.getElementById('storyCard').style.display = 'block';
+ document.getElementById('storyCard').style.display = 'block';
 }
 
 function setLoading(on) {
-    document.getElementById('loadingWrap').style.display = on ? 'block' : 'none';
-    document.getElementById('generateBtn').disabled = on;
-    document.getElementById('btnText').textContent = on ? as('generating') : as('generateBtn');
-    if (on) document.getElementById('storyCard').style.display = 'none';
+ document.getElementById('loadingWrap').style.display = on ? 'block' : 'none';
+ document.getElementById('generateBtn').disabled = on;
+ document.getElementById('btnText').textContent = on ? as('generating') : as('generateBtn');
+ if (on) document.getElementById('storyCard').style.display = 'none';
 }
 
 function showError(msg) {
-    const el = document.getElementById('errorBox');
-    el.textContent = msg;
-    el.style.display = 'block';
+ const el = document.getElementById('errorBox');
+ el.textContent = msg;
+ el.style.display = 'block';
 }
 function hideError() { document.getElementById('errorBox').style.display = 'none'; }
 

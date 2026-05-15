@@ -8,8 +8,7 @@ const firebaseConfig = {
     projectId: "finzilla-7f1f9",
     storageBucket: "finzilla-7f1f9.firebasestorage.app",
     messagingSenderId: "1027614800253",
-    appId: "1:1027614800253:web:ddfb62426252e0e8ebb414",
-    measurementId: "G-WRNP9L1J21"
+    appId: "1:1027614800253:web:ddfb62426252e0e8ebb414"
 };
 
 // Initialize Firebase

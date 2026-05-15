@@ -3,369 +3,361 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <title>WizeMoney - מיי גמל נט</title>
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <title>WizeMoney - מיי גמל נט</title>
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: #fff;
-            padding: 20px;
-        }
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+ background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+ min-height: 100vh;
+ color: #fff;
+ padding: 20px;
+ }
 
-        body.ltr {
-            direction: ltr;
-        }
+ body.ltr {
+ direction: ltr;
+ }
 
-        .dashboard {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+ .dashboard {
+ max-width: 1400px;
+ margin: 0 auto;
+ }
 
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+ header {
+ text-align: center;
+ margin-bottom: 40px;
+ }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+ header h1 {
+ font-size: 2.5rem;
+ margin-bottom: 10px;
+ background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ background-clip: text;
+ }
 
-        header p {
-            color: #8892b0;
-            font-size: 1.1rem;
-        }
+ header p {
+ color: #8892b0;
+ font-size: 1.1rem;
+ }
 
-        .nav-links {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
+ .nav-links {
+ margin-top: 15px;
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: center;
+ gap: 10px;
+ }
 
-        .nav-links a {
-            color: #00d2ff;
-            text-decoration: none;
-            padding: 8px 16px;
-            border: 1px solid #00d2ff;
-            border-radius: 20px;
-            transition: all 0.3s;
-        }
+ .nav-links a {
+ color: #00d2ff;
+ text-decoration: none;
+ padding: 8px 16px;
+ border: 1px solid #00d2ff;
+ border-radius: 20px;
+ transition: all 0.3s;
+ }
 
-        .nav-links a:hover, .nav-links a.active {
-            background: #00d2ff;
-            color: #1a1a2e;
-        }
+ .nav-links a:hover, .nav-links a.active {
+ background: #00d2ff;
+ color: #1a1a2e;
+ }
 
-        .source-badge {
-            display: inline-block;
-            background: #00d2ff;
-            color: #1a1a2e;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-top: 15px;
-        }
+ .source-badge {
+ display: inline-block;
+ background: #00d2ff;
+ color: #1a1a2e;
+ padding: 4px 12px;
+ border-radius: 20px;
+ font-size: 0.75rem;
+ font-weight: bold;
+ margin-top: 15px;
+ }
 
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
+ .cards-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+ gap: 25px;
+ margin-top: 40px;
+ }
 
-        .fund-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-            text-decoration: none;
-            color: inherit;
-        }
+ .fund-card {
+ background: rgba(255, 255, 255, 0.05);
+ border-radius: 16px;
+ padding: 30px;
+ backdrop-filter: blur(10px);
+ border: 1px solid rgba(255, 255, 255, 0.1);
+ transition: all 0.3s;
+ text-decoration: none;
+ color: inherit;
+ }
 
-        .fund-card:hover {
-            transform: translateY(-5px);
-            border-color: #00d2ff;
-            box-shadow: 0 10px 40px rgba(0, 210, 255, 0.2);
-        }
+ .fund-card:hover {
+ transform: translateY(-5px);
+ border-color: #00d2ff;
+ box-shadow: 0 10px 40px rgba(0, 210, 255, 0.2);
+ }
 
-        .fund-card .icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
+ .fund-card .icon {
+ font-size: 3rem;
+ margin-bottom: 15px;
+ }
 
-        .fund-card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #00d2ff;
-        }
+ .fund-card h2 {
+ font-size: 1.5rem;
+ margin-bottom: 10px;
+ color: #00d2ff;
+ }
 
-        .fund-card p {
-            color: #8892b0;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
+ .fund-card p {
+ color: #8892b0;
+ font-size: 0.95rem;
+ line-height: 1.5;
+ }
 
-        .fund-card .count {
-            margin-top: 15px;
-            padding: 8px 16px;
-            background: rgba(0, 210, 255, 0.1);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
+ .fund-card .count {
+ margin-top: 15px;
+ padding: 8px 16px;
+ background: rgba(0, 210, 255, 0.1);
+ border-radius: 20px;
+ font-size: 0.85rem;
+ display: inline-block;
+ }
 
-        .info-section {
-            background: rgba(0, 210, 255, 0.05);
-            border: 1px solid rgba(0, 210, 255, 0.2);
-            border-radius: 16px;
-            padding: 25px;
-            margin-top: 40px;
-        }
+ .info-section {
+ background: rgba(0, 210, 255, 0.05);
+ border: 1px solid rgba(0, 210, 255, 0.2);
+ border-radius: 16px;
+ padding: 25px;
+ margin-top: 40px;
+ }
 
-        .info-section h3 {
-            color: #00d2ff;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .info-section h3 {
+ color: #00d2ff;
+ margin-bottom: 15px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .info-section ul {
-            list-style: none;
-            color: #8892b0;
-        }
+ .info-section ul {
+ list-style: none;
+ color: #8892b0;
+ }
 
-        .info-section li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+ .info-section li {
+ padding: 8px 0;
+ border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+ }
 
-        .info-section li:last-child {
-            border-bottom: none;
-        }
+ .info-section li:last-child {
+ border-bottom: none;
+ }
 
-        .update-link {
-            display: inline-block;
-            margin-top: 30px;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
+ .update-link {
+ display: inline-block;
+ margin-top: 30px;
+ background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+ color: #fff;
+ padding: 12px 24px;
+ border-radius: 25px;
+ text-decoration: none;
+ font-weight: bold;
+ transition: all 0.3s;
+ }
 
-        .update-link:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(0, 210, 255, 0.3);
-        }
+ .update-link:hover {
+ transform: scale(1.05);
+ box-shadow: 0 5px 20px rgba(0, 210, 255, 0.3);
+ }
 
-        .data-source {
-            text-align: center;
-            margin-top: 40px;
-            color: #8892b0;
-            font-size: 0.9rem;
-        }
+ .data-source {
+ text-align: center;
+ margin-top: 40px;
+ color: #8892b0;
+ font-size: 0.9rem;
+ }
 
-        .data-source a {
-            color: #00d2ff;
-            text-decoration: none;
-        }
+ .data-source a {
+ color: #00d2ff;
+ text-decoration: none;
+ }
 
-        .last-update {
-            margin-top: 10px;
-            font-size: 0.85rem;
-        }
+ .last-update {
+ margin-top: 10px;
+ font-size: 0.85rem;
+ }
 
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
+ @media (max-width: 768px) {
+ header h1 {
+ font-size: 1.8rem;
+ }
 
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+ .cards-grid {
+ grid-template-columns: 1fr;
+ }
+ }
 
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="../js/i18n.js"></script>
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script src="../js/i18n.js"></script>
 </head>
 <body>
-    <div class="dashboard">
-        <header>
-            <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img" style="display: block; margin: 0 auto 15px; width: 160px; height: auto; border-radius: 12px;">
-            <h1 data-i18n="market.pages.mygemelTitle">קרנות ופנסיה - iGemel-Net</h1>
-            <p data-i18n="market.pages.mygemelSubtitle">השוואת קופות גמל, קרנות השתלמות וקרנות פנסיה - נתונים אמיתיים</p>
-            <span class="source-badge" id="sourceBadge">iGemel-Net</span>
-            <div class="nav-links">
-                <a href="../index.html" data-i18n="market.nav.dashboard">🏠 דאשבורד ראשי</a>
-                <a href="market-products.html" data-i18n="market.nav.marketProducts">🏪 מוצרים בשוק</a>
-                <a href="training.html" data-i18n="market.nav.training">קרנות השתלמות</a>
-                <a href="pension.html" data-i18n="market.nav.pension">קרנות פנסיה</a>
-                <a href="gemel.html" data-i18n="market.nav.gemel">קופות גמל</a>
-            </div>
-        </header>
+ <div class="dashboard">
+ <header>
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img" style="display: block; margin: 0 auto 15px; width: 160px; height: auto; border-radius: 12px;">
+ <h1 data-i18n="market.pages.mygemelTitle">קרנות ופנסיה - iGemel-Net</h1>
+ <p data-i18n="market.pages.mygemelSubtitle">השוואת קופות גמל, קרנות השתלמות וקרנות פנסיה - נתונים אמיתיים</p>
+ <span class="source-badge" id="sourceBadge">iGemel-Net</span>
+ <div class="nav-links">
+ <a href="../index.html" data-i18n="market.nav.dashboard">🏠 דאשבורד ראשי</a>
+ <a href="market-products.html" data-i18n="market.nav.marketProducts">🏪 מוצרים בשוק</a>
+ <a href="training.html" data-i18n="market.nav.training">קרנות השתלמות</a>
+ <a href="pension.html" data-i18n="market.nav.pension">קרנות פנסיה</a>
+ <a href="gemel.html" data-i18n="market.nav.gemel">קופות גמל</a>
+ </div>
+ </header>
 
-        <div class="cards-grid">
-            <a href="mygemel-training.html" class="fund-card">
-                <div class="icon">📚</div>
-                <h2 data-i18n="market.pages.mygemelCard1Title">קרנות השתלמות</h2>
-                <p data-i18n="market.pages.mygemelCard1Desc">השוואת קרנות השתלמות - תשואות, דמי ניהול והשוואה בין חברות</p>
-                <span class="count" id="trainingCount" data-i18n="market.labels.loading">טוען...</span>
-            </a>
+ <div class="cards-grid">
+ <a href="mygemel-training.html" class="fund-card">
+ <div class="icon">📚</div>
+ <h2 data-i18n="market.pages.mygemelCard1Title">קרנות השתלמות</h2>
+ <p data-i18n="market.pages.mygemelCard1Desc">השוואת קרנות השתלמות - תשואות, דמי ניהול והשוואה בין חברות</p>
+ <span class="count" id="trainingCount" data-i18n="market.labels.loading">טוען...</span>
+ </a>
 
-            <a href="mygemel-pension.html" class="fund-card">
-                <div class="icon">🏦</div>
-                <h2 data-i18n="market.pages.mygemelCard2Title">קרנות פנסיה</h2>
-                <p data-i18n="market.pages.mygemelCard2Desc">השוואת קרנות פנסיה - מסלולים, תשואות ודמי ניהול</p>
-                <span class="count" id="pensionCount" data-i18n="market.labels.loading">טוען...</span>
-            </a>
+ <a href="mygemel-pension.html" class="fund-card">
+ <div class="icon">🏦</div>
+ <h2 data-i18n="market.pages.mygemelCard2Title">קרנות פנסיה</h2>
+ <p data-i18n="market.pages.mygemelCard2Desc">השוואת קרנות פנסיה - מסלולים, תשואות ודמי ניהול</p>
+ <span class="count" id="pensionCount" data-i18n="market.labels.loading">טוען...</span>
+ </a>
 
-            <a href="mygemel-gemel.html" class="fund-card">
-                <div class="icon">💰</div>
-                <h2 data-i18n="market.pages.mygemelCard3Title">קופות גמל להשקעה</h2>
-                <p data-i18n="market.pages.mygemelCard3Desc">השוואת קופות גמל להשקעה - מסלולים, תשואות ודמי ניהול</p>
-                <span class="count" id="gemelCount" data-i18n="market.labels.loading">טוען...</span>
-            </a>
-        </div>
+ <a href="mygemel-gemel.html" class="fund-card">
+ <div class="icon">💰</div>
+ <h2 data-i18n="market.pages.mygemelCard3Title">קופות גמל להשקעה</h2>
+ <p data-i18n="market.pages.mygemelCard3Desc">השוואת קופות גמל להשקעה - מסלולים, תשואות ודמי ניהול</p>
+ <span class="count" id="gemelCount" data-i18n="market.labels.loading">טוען...</span>
+ </a>
+ </div>
 
-        <div class="info-section">
-            <h3>
-                <span>ℹ️</span>
-                <span data-i18n="market.pages.mygemelInfoTitle">מידע על הנתונים</span>
-            </h3>
-            <ul>
-                <li data-i18n="market.pages.mygemelInfo1">• נתונים רשמיים מרשות שוק ההון ומשרד האוצר</li>
-                <li data-i18n="market.pages.mygemelInfo2">• תשואות מצטברות וממוצעות של כלל העמיתים</li>
-                <li data-i18n="market.pages.mygemelInfo3">• תשואות ברוטו - לפני ניכוי דמי ניהול</li>
-                <li data-i18n="market.pages.mygemelInfo4">• דירוג לפי תשואות בתקופות שונות</li>
-            </ul>
-        </div>
+ <div class="info-section">
+ <h3>
+ <span>ℹ️</span>
+ <span data-i18n="market.pages.mygemelInfoTitle">מידע על הנתונים</span>
+ </h3>
+ <ul>
+ <li data-i18n="market.pages.mygemelInfo1">• נתונים רשמיים מרשות שוק ההון ומשרד האוצר</li>
+ <li data-i18n="market.pages.mygemelInfo2">• תשואות מצטברות וממוצעות של כלל העמיתים</li>
+ <li data-i18n="market.pages.mygemelInfo3">• תשואות ברוטו - לפני ניכוי דמי ניהול</li>
+ <li data-i18n="market.pages.mygemelInfo4">• דירוג לפי תשואות בתקופות שונות</li>
+ </ul>
+ </div>
 
-        <div class="data-source">
-            <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
-            <a href="https://www.igemel-net.co.il/" target="_blank">iGemel-Net.co.il</a>
-            <div class="last-update">
-                <span data-i18n="market.labels.lastUpdate">עדכון אחרון:</span>
-                <span id="lastUpdate">טוען...</span>
-            </div>
-        </div>
-    </div>
+ <div class="data-source">
+ <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
+ <a href="https://www.igemel-net.co.il/" target="_blank">iGemel-Net.co.il</a>
+ <div class="last-update">
+ <span data-i18n="market.labels.lastUpdate">עדכון אחרון:</span>
+ <span id="lastUpdate">טוען...</span>
+ </div>
+ </div>
+ </div>
 
-    <script src="../data/mygemel-funds.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        let currentLang = 'he';
+ <script src="../data/mygemel-funds.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ let currentLang = 'he';
 
-        function loadLanguage() {
-            const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
-            currentLang = settings.language || 'he';
-            if (typeof I18n !== 'undefined') {
-                I18n.currentLanguage = currentLang;
-                I18n.apply();
-            }
-            document.body.classList.toggle('ltr', currentLang !== 'he');
-            document.documentElement.lang = currentLang;
-            document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-        }
+ function loadLanguage() {
+ const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
+ currentLang = settings.language || 'he';
+ if (typeof I18n !== 'undefined') {
+ I18n.currentLanguage = currentLang;
+ I18n.apply();
+ }
+ document.body.classList.toggle('ltr', currentLang !== 'he');
+ document.documentElement.lang = currentLang;
+ document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+ }
 
 
-        function updateCounts() {
-            const training = MyGemelFunds.getData('training');
-            const pension = MyGemelFunds.getData('pension');
-            const gemel = MyGemelFunds.getData('gemel');
+ function updateCounts() {
+ const training = MyGemelFunds.getData('training');
+ const pension = MyGemelFunds.getData('pension');
+ const gemel = MyGemelFunds.getData('gemel');
 
-            const trainingText = currentLang === 'he' ? `${training.length} קרנות` : `${training.length} funds`;
-            const pensionText = currentLang === 'he' ? `${pension.length} קרנות` : `${pension.length} funds`;
-            const gemelText = currentLang === 'he' ? `${gemel.length} קופות` : `${gemel.length} funds`;
+ const trainingText = currentLang === 'he' ? `${training.length} קרנות` : `${training.length} funds`;
+ const pensionText = currentLang === 'he' ? `${pension.length} קרנות` : `${pension.length} funds`;
+ const gemelText = currentLang === 'he' ? `${gemel.length} קופות` : `${gemel.length} funds`;
 
-            document.getElementById('trainingCount').textContent = trainingText;
-            document.getElementById('pensionCount').textContent = pensionText;
-            document.getElementById('gemelCount').textContent = gemelText;
+ document.getElementById('trainingCount').textContent = trainingText;
+ document.getElementById('pensionCount').textContent = pensionText;
+ document.getElementById('gemelCount').textContent = gemelText;
 
-            // Update last update date
-            const lastUpdate = MyGemelFunds.getLastUpdate();
-            if (lastUpdate) {
-                const [year, month] = lastUpdate.split('-');
-                const monthNames = {
-                    he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
-                    en: { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' }
-                };
-                const monthName = monthNames[currentLang][month] || month;
-                document.getElementById('lastUpdate').textContent = `${monthName} ${year}`;
-            }
-        }
+ // Update last update date
+ const lastUpdate = MyGemelFunds.getLastUpdate();
+ if (lastUpdate) {
+ const [year, month] = lastUpdate.split('-');
+ const monthNames = {
+ he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
+ en: { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' }
+ };
+ const monthName = monthNames[currentLang][month] || month;
+ document.getElementById('lastUpdate').textContent = `${monthName} ${year}`;
+ }
+ }
 
-        function updateSourceBadge() {
-            const lastUpdate = MyGemelFunds.getLastUpdate();
-            if (!lastUpdate) return;
-            const [year, month] = lastUpdate.split('-');
-            const monthNames = {
-                he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
-                en: { '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec' }
-            };
-            const monthName = monthNames[currentLang][month] || month;
-            document.getElementById('sourceBadge').textContent = `iGemel-Net - ${monthName} ${year}`;
-        }
+ function updateSourceBadge() {
+ const lastUpdate = MyGemelFunds.getLastUpdate();
+ if (!lastUpdate) return;
+ const [year, month] = lastUpdate.split('-');
+ const monthNames = {
+ he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
+ en: { '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec' }
+ };
+ const monthName = monthNames[currentLang][month] || month;
+ document.getElementById('sourceBadge').textContent = `iGemel-Net - ${monthName} ${year}`;
+ }
 
-        // Initialize
-        loadLanguage();
-        updateCounts();
-        updateSourceBadge();
-    </script>
+ // Initialize
+ loadLanguage();
+ updateCounts();
+ updateSourceBadge();
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

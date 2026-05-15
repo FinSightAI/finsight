@@ -3,619 +3,611 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#ec4899">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>הלוואות - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <style>
-        .nav-link.active { background: var(--color-loans) !important; }
-        .page-header h1 { color: var(--color-loans); }
-        .btn-primary { background: var(--color-loans); }
-        .btn-primary:hover { background: #db2777; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#ec4899">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>הלוואות - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <style>
+ .nav-link.active { background: var(--color-loans) !important; }
+ .page-header h1 { color: var(--color-loans); }
+ .btn-primary { background: var(--color-loans); }
+ .btn-primary:hover { background: #db2777; }
 
-        .loan-cards { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-        .loan-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            padding: 20px;
-        }
-        .loan-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-        .loan-card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .loan-card-title h3 { margin: 0; font-size: 1.1rem; }
-        .loan-card-title .type-badge {
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: rgba(236, 72, 153, 0.2);
-            color: var(--color-loans);
-        }
-        .loan-card-title .lender {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-        }
-        .loan-card-actions { display: flex; gap: 8px; }
+ .loan-cards { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+ .loan-card {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: var(--radius-md);
+ padding: 20px;
+ }
+ .loan-card-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ margin-bottom: 15px;
+ }
+ .loan-card-title {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
+ .loan-card-title h3 { margin: 0; font-size: 1.1rem; }
+ .loan-card-title .type-badge {
+ font-size: 0.75rem;
+ padding: 2px 8px;
+ border-radius: 10px;
+ background: rgba(236, 72, 153, 0.2);
+ color: var(--color-loans);
+ }
+ .loan-card-title .lender {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ }
+ .loan-card-actions { display: flex; gap: 8px; }
 
-        .loan-progress-bar {
-            width: 100%;
-            height: 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        .loan-progress-bar .fill {
-            height: 100%;
-            border-radius: 5px;
-            background: linear-gradient(90deg, var(--color-positive), var(--color-loans));
-            transition: width 0.5s ease;
-        }
+ .loan-progress-bar {
+ width: 100%;
+ height: 10px;
+ background: rgba(255,255,255,0.1);
+ border-radius: 5px;
+ overflow: hidden;
+ margin: 10px 0;
+ }
+ .loan-progress-bar .fill {
+ height: 100%;
+ border-radius: 5px;
+ background: linear-gradient(90deg, var(--color-positive), var(--color-loans));
+ transition: width 0.5s ease;
+ }
 
-        .loan-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .loan-stat {
-            text-align: center;
-            padding: 10px;
-            background: var(--color-bg-primary);
-            border-radius: var(--radius-sm);
-        }
-        .loan-stat .label {
-            font-size: 0.75rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 4px;
-        }
-        .loan-stat .value {
-            font-size: 1rem;
-            font-weight: 600;
-        }
+ .loan-stats {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+ gap: 12px;
+ margin-top: 12px;
+ }
+ .loan-stat {
+ text-align: center;
+ padding: 10px;
+ background: var(--color-bg-primary);
+ border-radius: var(--radius-sm);
+ }
+ .loan-stat .label {
+ font-size: 0.75rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 4px;
+ }
+ .loan-stat .value {
+ font-size: 1rem;
+ font-weight: 600;
+ }
 
-        .summary-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .metric-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            padding: 15px;
-            text-align: center;
-        }
-        .metric-card .label {
-            color: var(--color-text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-        }
-        .metric-card .value {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
+ .summary-metrics {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+ gap: 15px;
+ margin-bottom: 25px;
+ }
+ .metric-card {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: var(--radius-md);
+ padding: 15px;
+ text-align: center;
+ }
+ .metric-card .label {
+ color: var(--color-text-secondary);
+ font-size: 0.85rem;
+ margin-bottom: 5px;
+ }
+ .metric-card .value {
+ font-size: 1.3rem;
+ font-weight: bold;
+ }
 
-        .amortization-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 1500;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 30px;
-            overflow-y: auto;
-        }
-        .amortization-overlay.active { display: flex; }
-        .amortization-panel {
-            background: var(--color-bg-secondary);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 800px;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 25px;
-        }
-        .amortization-panel h3 {
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .amortization-panel table { width: 100%; }
-        .amortization-panel table th,
-        .amortization-panel table td {
-            padding: 8px 10px;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        .amortization-panel tr.current-month {
-            background: rgba(236, 72, 153, 0.15);
-            font-weight: 600;
-        }
-        .amortization-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-    </style>
+ .amortization-overlay {
+ display: none;
+ position: fixed;
+ top: 0; left: 0; right: 0; bottom: 0;
+ background: rgba(0,0,0,0.7);
+ z-index: 1500;
+ justify-content: center;
+ align-items: flex-start;
+ padding: 30px;
+ overflow-y: auto;
+ }
+ .amortization-overlay.active { display: flex; }
+ .amortization-panel {
+ background: var(--color-bg-secondary);
+ border-radius: var(--radius-lg);
+ width: 100%;
+ max-width: 800px;
+ max-height: 85vh;
+ overflow-y: auto;
+ padding: 25px;
+ }
+ .amortization-panel h3 {
+ margin-bottom: 15px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ }
+ .amortization-panel table { width: 100%; }
+ .amortization-panel table th,
+ .amortization-panel table td {
+ padding: 8px 10px;
+ text-align: center;
+ font-size: 0.85rem;
+ }
+ .amortization-panel tr.current-month {
+ background: rgba(236, 72, 153, 0.15);
+ font-weight: 600;
+ }
+ .amortization-summary {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+ gap: 12px;
+ margin-bottom: 20px;
+ }
+ </style>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar"></aside>
+ <div class="app-container">
+ <aside class="sidebar"></aside>
 
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>
-                    <span>🏦</span>
-                    <span data-i18n="loans.title">הלוואות ומשכנתאות</span>
-                </h1>
-            </header>
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>
+ <span>🏦</span>
+ <span data-i18n="loans.title">הלוואות ומשכנתאות</span>
+ </h1>
+ </header>
 
-            <!-- Total Balance Banner -->
-            <div class="net-worth-banner" style="background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(236,72,153,0.05)); border: 1px solid rgba(236,72,153,0.3);">
-                <div class="label" data-i18n="loans.totalRemaining">סה"כ יתרת הלוואות</div>
-                <div class="value" id="totalRemainingBanner" style="color: var(--color-loans);">₪0</div>
-            </div>
+ <!-- Total Balance Banner -->
+ <div class="net-worth-banner" style="background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(236,72,153,0.05)); border: 1px solid rgba(236,72,153,0.3);">
+ <div class="label" data-i18n="loans.totalRemaining">סה"כ יתרת הלוואות</div>
+ <div class="value" id="totalRemainingBanner" style="color: var(--color-loans);">₪0</div>
+ </div>
 
-            <!-- Action Buttons -->
-            <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="openLoanModal()">
-                    <span>➕</span>
-                    <span data-i18n="loans.addLoan">הוסף הלוואה</span>
-                </button>
-            </div>
+ <!-- Action Buttons -->
+ <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+ <button class="btn btn-primary" onclick="openLoanModal()">
+ <span>➕</span>
+ <span data-i18n="loans.addLoan">הוסף הלוואה</span>
+ </button>
+ </div>
 
-            <!-- Loan Cards -->
-            <div class="loan-cards" id="loanCards">
-                <!-- populated by JS -->
-            </div>
+ <!-- Loan Cards -->
+ <div class="loan-cards" id="loanCards">
+ <!-- populated by JS -->
+ </div>
 
-            <!-- Summary Section -->
-            <div class="card" id="summarySection" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📊</span>
-                        <span data-i18n="common.total">סה״כ</span>
-                    </h2>
-                </div>
-                <div class="card-body" style="padding: 20px;">
-                    <div class="summary-metrics">
-                        <div class="metric-card">
-                            <div class="label" data-i18n="loans.totalOriginal">סה"כ סכום מקורי</div>
-                            <div class="value" id="summaryOriginal">₪0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="label" data-i18n="loans.totalRemaining">סה"כ יתרה</div>
-                            <div class="value" id="summaryRemaining" style="color: var(--color-loans);">₪0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="label" data-i18n="loans.totalMonthlyPayments">סה"כ תשלום חודשי</div>
-                            <div class="value" id="summaryMonthly">₪0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="label" data-i18n="loans.totalInterestCost">סה"כ עלות ריבית</div>
-                            <div class="value" id="summaryInterest" style="color: var(--color-negative);">₪0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
+ <!-- Summary Section -->
+ <div class="card" id="summarySection" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📊</span>
+ <span data-i18n="common.total">סה״כ</span>
+ </h2>
+ </div>
+ <div class="card-body" style="padding: 20px;">
+ <div class="summary-metrics">
+ <div class="metric-card">
+ <div class="label" data-i18n="loans.totalOriginal">סה"כ סכום מקורי</div>
+ <div class="value" id="summaryOriginal">₪0</div>
+ </div>
+ <div class="metric-card">
+ <div class="label" data-i18n="loans.totalRemaining">סה"כ יתרה</div>
+ <div class="value" id="summaryRemaining" style="color: var(--color-loans);">₪0</div>
+ </div>
+ <div class="metric-card">
+ <div class="label" data-i18n="loans.totalMonthlyPayments">סה"כ תשלום חודשי</div>
+ <div class="value" id="summaryMonthly">₪0</div>
+ </div>
+ <div class="metric-card">
+ <div class="label" data-i18n="loans.totalInterestCost">סה"כ עלות ריבית</div>
+ <div class="value" id="summaryInterest" style="color: var(--color-negative);">₪0</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
 
-        <button class="mobile-menu-toggle">☰</button>
+ <button class="mobile-menu-toggle">☰</button>
 
-        <div class="mobile-lang-switcher">
-            <button class="lang-btn" data-lang="he" onclick="I18n.setLanguage('he')">HE</button>
-            <button class="lang-btn" data-lang="en" onclick="I18n.setLanguage('en')">EN</button>
-            <button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage('pt')">PT</button>
-        </div>
-    </div>
+ <div class="mobile-lang-switcher">
+ <button class="lang-btn" data-lang="he" onclick="I18n.setLanguage('he')">HE</button>
+ <button class="lang-btn" data-lang="en" onclick="I18n.setLanguage('en')">EN</button>
+ <button class="lang-btn" data-lang="pt" onclick="I18n.setLanguage('pt')">PT</button>
+ </div>
+ </div>
 
-    <!-- Add/Edit Loan Modal -->
-    <div class="modal-overlay" id="loanModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="loanModalTitle" data-i18n="loans.addLoan">הוסף הלוואה</h2>
-                <button class="modal-close" onclick="closeLoanModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="loanForm">
-                    <input type="hidden" id="loanId">
-                    <div class="form-group">
-                        <label data-i18n="loans.loanName">שם ההלוואה</label>
-                        <input type="text" class="form-control" id="loanName" required placeholder="משכנתא דירה">
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.loanType">סוג הלוואה</label>
-                        <select class="form-control" id="loanType">
-                            <option value="mortgage" data-i18n="loans.types.mortgage">משכנתא</option>
-                            <option value="personal" data-i18n="loans.types.personal">הלוואה אישית</option>
-                            <option value="car" data-i18n="loans.types.car">הלוואת רכב</option>
-                            <option value="business" data-i18n="loans.types.business">הלוואה עסקית</option>
-                            <option value="education" data-i18n="loans.types.education">הלוואת לימודים</option>
-                            <option value="other" data-i18n="loans.types.other">אחר</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.lender">גוף מלווה</label>
-                        <input type="text" class="form-control" id="loanLender" placeholder="בנק לאומי">
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.originalAmount">סכום מקורי</label>
-                        <input type="number" class="form-control" id="loanOriginalAmount" min="0" step="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.remainingBalance">יתרה נוכחית</label>
-                        <input type="number" class="form-control" id="loanRemainingBalance" min="0" step="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.interestRate">ריבית שנתית (%)</label>
-                        <input type="number" class="form-control" id="loanInterestRate" min="0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.interestType">סוג ריבית</label>
-                        <select class="form-control" id="loanInterestType">
-                            <option value="fixed" data-i18n="loans.interestTypes.fixed">קבועה</option>
-                            <option value="variable" data-i18n="loans.interestTypes.variable">משתנה</option>
-                            <option value="prime" data-i18n="loans.interestTypes.prime">פריים</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.monthlyPayment">תשלום חודשי</label>
-                        <input type="number" class="form-control" id="loanMonthlyPayment" min="0" step="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.totalMonths">תקופה (חודשים)</label>
-                        <input type="number" class="form-control" id="loanTotalMonths" min="1" step="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="loans.startDate">תאריך התחלה</label>
-                        <input type="month" class="form-control" id="loanStartDate" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeLoanModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveLoan()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
+ <!-- Add/Edit Loan Modal -->
+ <div class="modal-overlay" id="loanModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 id="loanModalTitle" data-i18n="loans.addLoan">הוסף הלוואה</h2>
+ <button class="modal-close" onclick="closeLoanModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="loanForm">
+ <input type="hidden" id="loanId">
+ <div class="form-group">
+ <label data-i18n="loans.loanName">שם ההלוואה</label>
+ <input type="text" class="form-control" id="loanName" required placeholder="משכנתא דירה">
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.loanType">סוג הלוואה</label>
+ <select class="form-control" id="loanType">
+ <option value="mortgage" data-i18n="loans.types.mortgage">משכנתא</option>
+ <option value="personal" data-i18n="loans.types.personal">הלוואה אישית</option>
+ <option value="car" data-i18n="loans.types.car">הלוואת רכב</option>
+ <option value="business" data-i18n="loans.types.business">הלוואה עסקית</option>
+ <option value="education" data-i18n="loans.types.education">הלוואת לימודים</option>
+ <option value="other" data-i18n="loans.types.other">אחר</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.lender">גוף מלווה</label>
+ <input type="text" class="form-control" id="loanLender" placeholder="בנק לאומי">
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.originalAmount">סכום מקורי</label>
+ <input type="number" class="form-control" id="loanOriginalAmount" min="0" step="1" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.remainingBalance">יתרה נוכחית</label>
+ <input type="number" class="form-control" id="loanRemainingBalance" min="0" step="1" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.interestRate">ריבית שנתית (%)</label>
+ <input type="number" class="form-control" id="loanInterestRate" min="0" step="0.01" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.interestType">סוג ריבית</label>
+ <select class="form-control" id="loanInterestType">
+ <option value="fixed" data-i18n="loans.interestTypes.fixed">קבועה</option>
+ <option value="variable" data-i18n="loans.interestTypes.variable">משתנה</option>
+ <option value="prime" data-i18n="loans.interestTypes.prime">פריים</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.monthlyPayment">תשלום חודשי</label>
+ <input type="number" class="form-control" id="loanMonthlyPayment" min="0" step="1" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.totalMonths">תקופה (חודשים)</label>
+ <input type="number" class="form-control" id="loanTotalMonths" min="1" step="1" required>
+ </div>
+ <div class="form-group">
+ <label data-i18n="loans.startDate">תאריך התחלה</label>
+ <input type="month" class="form-control" id="loanStartDate" required>
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeLoanModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveLoan()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
 
-    <!-- Amortization Overlay -->
-    <div class="amortization-overlay" id="amortizationOverlay" onclick="if(event.target===this)closeAmortization()">
-        <div class="amortization-panel" id="amortizationPanel">
-            <!-- populated by JS -->
-        </div>
-    </div>
+ <!-- Amortization Overlay -->
+ <div class="amortization-overlay" id="amortizationOverlay" onclick="if(event.target===this)closeAmortization()">
+ <div class="amortization-panel" id="amortizationPanel">
+ <!-- populated by JS -->
+ </div>
+ </div>
 
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        const LOAN_TYPE_ICONS = {
-            mortgage: '🏠', personal: '💰', car: '🚗',
-            business: '🏢', education: '🎓', other: '📄'
-        };
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ const LOAN_TYPE_ICONS = {
+ mortgage: '🏠', personal: '💰', car: '🚗',
+ business: '🏢', education: '🎓', other: '📄'
+ };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'loans';
-            loadLoans();
-        });
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'loans';
+ loadLoans();
+ });
 
-        function loadLoans() {
-            const loans = Storage.getLoans();
-            const container = document.getElementById('loanCards');
-            const summarySection = document.getElementById('summarySection');
+ function loadLoans() {
+ const loans = Storage.getLoans();
+ const container = document.getElementById('loanCards');
+ const summarySection = document.getElementById('summarySection');
 
-            if (loans.length === 0) {
-                container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏦</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין הלוואות</div><div style="font-size:0.85rem;margin-bottom:20px">עקוב אחרי משכנתא, הלוואת רכב או כל הלוואה אחרת</div><button class="btn btn-primary btn-sm" onclick="openLoanModal()">+ הוסף הלוואה</button></div>`;
-                summarySection.style.display = 'none';
-                document.getElementById('totalRemainingBanner').textContent = I18n.formatCurrency(0);
-                return;
-            }
+ if (loans.length === 0) {
+ container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏦</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין הלוואות</div><div style="font-size:0.85rem;margin-bottom:20px">עקוב אחרי משכנתא, הלוואת רכב או כל הלוואה אחרת</div><button class="btn btn-primary btn-sm" onclick="openLoanModal()">+ הוסף הלוואה</button></div>`;
+ summarySection.style.display = 'none';
+ document.getElementById('totalRemainingBanner').textContent = I18n.formatCurrency(0);
+ return;
+ }
 
-            summarySection.style.display = '';
-            let totalOriginal = 0, totalRemaining = 0, totalMonthly = 0, totalInterest = 0;
+ summarySection.style.display = '';
+ let totalOriginal = 0, totalRemaining = 0, totalMonthly = 0, totalInterest = 0;
 
-            container.innerHTML = loans.map(loan => {
-                const paidPercent = loan.originalAmount > 0
-                    ? Math.min(100, ((loan.originalAmount - loan.remainingBalance) / loan.originalAmount) * 100)
-                    : 0;
-                const monthsElapsed = getMonthsElapsed(loan.startDate);
-                const monthsLeft = Math.max(0, loan.totalMonths - monthsElapsed);
-                const totalLifetimeInterest = calculateTotalInterest(loan);
+ container.innerHTML = loans.map(loan => {
+ const paidPercent = loan.originalAmount > 0
+ ? Math.min(100, ((loan.originalAmount - loan.remainingBalance) / loan.originalAmount) * 100)
+ : 0;
+ const monthsElapsed = getMonthsElapsed(loan.startDate);
+ const monthsLeft = Math.max(0, loan.totalMonths - monthsElapsed);
+ const totalLifetimeInterest = calculateTotalInterest(loan);
 
-                totalOriginal += loan.originalAmount || 0;
-                totalRemaining += loan.remainingBalance || 0;
-                totalMonthly += loan.monthlyPayment || 0;
-                totalInterest += totalLifetimeInterest;
+ totalOriginal += loan.originalAmount || 0;
+ totalRemaining += loan.remainingBalance || 0;
+ totalMonthly += loan.monthlyPayment || 0;
+ totalInterest += totalLifetimeInterest;
 
-                const typeName = I18n.t('loans.types.' + loan.type) || loan.type;
-                const interestTypeName = I18n.t('loans.interestTypes.' + loan.interestType) || loan.interestType;
+ const typeName = I18n.t('loans.types.' + loan.type) || loan.type;
+ const interestTypeName = I18n.t('loans.interestTypes.' + loan.interestType) || loan.interestType;
 
-                return `
-                <div class="loan-card">
-                    <div class="loan-card-header">
-                        <div class="loan-card-title">
-                            <span style="font-size: 1.5rem;">${LOAN_TYPE_ICONS[loan.type] || '📄'}</span>
-                            <div>
-                                <h3>${sanitize(loan.name)}</h3>
-                                <span class="type-badge">${sanitize(typeName)}</span>
-                                ${loan.lender ? `<span class="lender"> | ${sanitize(loan.lender)}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="loan-card-actions">
-                            <button class="btn btn-sm btn-secondary" onclick="showAmortization('${loan.id}')" title="${I18n.t('loans.amortizationTable')}">📊</button>
-                            <button class="btn btn-sm btn-secondary" onclick="editLoan('${loan.id}')" title="${I18n.t('common.edit')}">✏️</button>
-                            <button class="btn btn-sm btn-secondary" onclick="deleteLoan('${loan.id}')" title="${I18n.t('common.delete')}" style="color: var(--color-negative);">🗑️</button>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 4px;">
-                        <span>${I18n.t('loans.loanProgress')}: ${paidPercent.toFixed(0)}%</span>
-                        <span>${I18n.t('loans.monthsRemaining')}: ${monthsLeft}</span>
-                    </div>
-                    <div class="loan-progress-bar">
-                        <div class="fill" style="width: ${paidPercent}%;"></div>
-                    </div>
-                    <div class="loan-stats">
-                        <div class="loan-stat">
-                            <div class="label">${I18n.t('loans.originalAmount')}</div>
-                            <div class="value">${I18n.formatCurrency(loan.originalAmount)}</div>
-                        </div>
-                        <div class="loan-stat">
-                            <div class="label">${I18n.t('loans.remainingBalance')}</div>
-                            <div class="value" style="color: var(--color-loans);">${I18n.formatCurrency(loan.remainingBalance)}</div>
-                        </div>
-                        <div class="loan-stat">
-                            <div class="label">${I18n.t('loans.monthlyPayment')}</div>
-                            <div class="value">${I18n.formatCurrency(loan.monthlyPayment)}</div>
-                        </div>
-                        <div class="loan-stat">
-                            <div class="label">${I18n.t('loans.interestRate')}</div>
-                            <div class="value">${loan.interestRate}% ${sanitize(interestTypeName)}</div>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
+ return `
+ <div class="loan-card">
+ <div class="loan-card-header">
+ <div class="loan-card-title">
+ <span style="font-size: 1.5rem;">${LOAN_TYPE_ICONS[loan.type] || '📄'}</span>
+ <div>
+ <h3>${sanitize(loan.name)}</h3>
+ <span class="type-badge">${sanitize(typeName)}</span>
+ ${loan.lender ? `<span class="lender"> | ${sanitize(loan.lender)}</span>` : ''}
+ </div>
+ </div>
+ <div class="loan-card-actions">
+ <button class="btn btn-sm btn-secondary" onclick="showAmortization('${loan.id}')" title="${I18n.t('loans.amortizationTable')}">📊</button>
+ <button class="btn btn-sm btn-secondary" onclick="editLoan('${loan.id}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-sm btn-secondary" onclick="deleteLoan('${loan.id}')" title="${I18n.t('common.delete')}" style="color: var(--color-negative);">🗑️</button>
+ </div>
+ </div>
+ <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 4px;">
+ <span>${I18n.t('loans.loanProgress')}: ${paidPercent.toFixed(0)}%</span>
+ <span>${I18n.t('loans.monthsRemaining')}: ${monthsLeft}</span>
+ </div>
+ <div class="loan-progress-bar">
+ <div class="fill" style="width: ${paidPercent}%;"></div>
+ </div>
+ <div class="loan-stats">
+ <div class="loan-stat">
+ <div class="label">${I18n.t('loans.originalAmount')}</div>
+ <div class="value">${I18n.formatCurrency(loan.originalAmount)}</div>
+ </div>
+ <div class="loan-stat">
+ <div class="label">${I18n.t('loans.remainingBalance')}</div>
+ <div class="value" style="color: var(--color-loans);">${I18n.formatCurrency(loan.remainingBalance)}</div>
+ </div>
+ <div class="loan-stat">
+ <div class="label">${I18n.t('loans.monthlyPayment')}</div>
+ <div class="value">${I18n.formatCurrency(loan.monthlyPayment)}</div>
+ </div>
+ <div class="loan-stat">
+ <div class="label">${I18n.t('loans.interestRate')}</div>
+ <div class="value">${loan.interestRate}% ${sanitize(interestTypeName)}</div>
+ </div>
+ </div>
+ </div>`;
+ }).join('');
 
-            document.getElementById('totalRemainingBanner').textContent = I18n.formatCurrency(totalRemaining);
-            document.getElementById('summaryOriginal').textContent = I18n.formatCurrency(totalOriginal);
-            document.getElementById('summaryRemaining').textContent = I18n.formatCurrency(totalRemaining);
-            document.getElementById('summaryMonthly').textContent = I18n.formatCurrency(totalMonthly);
-            document.getElementById('summaryInterest').textContent = I18n.formatCurrency(totalInterest);
-        }
+ document.getElementById('totalRemainingBanner').textContent = I18n.formatCurrency(totalRemaining);
+ document.getElementById('summaryOriginal').textContent = I18n.formatCurrency(totalOriginal);
+ document.getElementById('summaryRemaining').textContent = I18n.formatCurrency(totalRemaining);
+ document.getElementById('summaryMonthly').textContent = I18n.formatCurrency(totalMonthly);
+ document.getElementById('summaryInterest').textContent = I18n.formatCurrency(totalInterest);
+ }
 
-        function getMonthsElapsed(startDate) {
-            if (!startDate) return 0;
-            const [y, m] = startDate.split('-').map(Number);
-            const now = new Date();
-            return (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - m);
-        }
+ function getMonthsElapsed(startDate) {
+ if (!startDate) return 0;
+ const [y, m] = startDate.split('-').map(Number);
+ const now = new Date();
+ return (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - m);
+ }
 
-        function calculateTotalInterest(loan) {
-            // Total interest = (monthlyPayment * totalMonths) - originalAmount
-            if (!loan.monthlyPayment || !loan.totalMonths || !loan.originalAmount) return 0;
-            return Math.max(0, (loan.monthlyPayment * loan.totalMonths) - loan.originalAmount);
-        }
+ function calculateTotalInterest(loan) {
+ // Total interest = (monthlyPayment * totalMonths) - originalAmount
+ if (!loan.monthlyPayment || !loan.totalMonths || !loan.originalAmount) return 0;
+ return Math.max(0, (loan.monthlyPayment * loan.totalMonths) - loan.originalAmount);
+ }
 
-        function openLoanModal(loanId) {
-            document.getElementById('loanId').value = '';
-            document.getElementById('loanForm').reset();
-            document.getElementById('loanModalTitle').textContent = I18n.t('loans.addLoan');
-            // Default start date to current month
-            const now = new Date();
-            document.getElementById('loanStartDate').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-            App.openModal('loanModal');
-        }
+ function openLoanModal(loanId) {
+ document.getElementById('loanId').value = '';
+ document.getElementById('loanForm').reset();
+ document.getElementById('loanModalTitle').textContent = I18n.t('loans.addLoan');
+ // Default start date to current month
+ const now = new Date();
+ document.getElementById('loanStartDate').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+ App.openModal('loanModal');
+ }
 
-        function closeLoanModal() {
-            App.closeModal('loanModal');
-        }
+ function closeLoanModal() {
+ App.closeModal('loanModal');
+ }
 
-        function saveLoan() {
-            const id = document.getElementById('loanId').value;
-            const loan = {
-                name: document.getElementById('loanName').value.trim(),
-                type: document.getElementById('loanType').value,
-                lender: document.getElementById('loanLender').value.trim(),
-                originalAmount: parseFloat(document.getElementById('loanOriginalAmount').value) || 0,
-                remainingBalance: parseFloat(document.getElementById('loanRemainingBalance').value) || 0,
-                interestRate: parseFloat(document.getElementById('loanInterestRate').value) || 0,
-                interestType: document.getElementById('loanInterestType').value,
-                monthlyPayment: parseFloat(document.getElementById('loanMonthlyPayment').value) || 0,
-                totalMonths: parseInt(document.getElementById('loanTotalMonths').value) || 0,
-                startDate: document.getElementById('loanStartDate').value
-            };
+ function saveLoan() {
+ const id = document.getElementById('loanId').value;
+ const loan = {
+ name: document.getElementById('loanName').value.trim(),
+ type: document.getElementById('loanType').value,
+ lender: document.getElementById('loanLender').value.trim(),
+ originalAmount: parseFloat(document.getElementById('loanOriginalAmount').value) || 0,
+ remainingBalance: parseFloat(document.getElementById('loanRemainingBalance').value) || 0,
+ interestRate: parseFloat(document.getElementById('loanInterestRate').value) || 0,
+ interestType: document.getElementById('loanInterestType').value,
+ monthlyPayment: parseFloat(document.getElementById('loanMonthlyPayment').value) || 0,
+ totalMonths: parseInt(document.getElementById('loanTotalMonths').value) || 0,
+ startDate: document.getElementById('loanStartDate').value
+ };
 
-            if (!loan.name) return;
+ if (!loan.name) return;
 
-            if (id) {
-                Storage.updateLoan(id, loan);
-            } else {
-                Storage.addLoan(loan);
-            }
+ if (id) {
+ Storage.updateLoan(id, loan);
+ } else {
+ Storage.addLoan(loan);
+ }
 
-            closeLoanModal();
-            loadLoans();
-            App.notify(I18n.t('loans.loanSaved'), 'success');
-        }
+ closeLoanModal();
+ loadLoans();
+ App.notify(I18n.t('loans.loanSaved'), 'success');
+ }
 
-        function editLoan(id) {
-            const loans = Storage.getLoans();
-            const loan = loans.find(l => l.id === id);
-            if (!loan) return;
+ function editLoan(id) {
+ const loans = Storage.getLoans();
+ const loan = loans.find(l => l.id === id);
+ if (!loan) return;
 
-            document.getElementById('loanId').value = id;
-            document.getElementById('loanName').value = loan.name || '';
-            document.getElementById('loanType').value = loan.type || 'personal';
-            document.getElementById('loanLender').value = loan.lender || '';
-            document.getElementById('loanOriginalAmount').value = loan.originalAmount || '';
-            document.getElementById('loanRemainingBalance').value = loan.remainingBalance || '';
-            document.getElementById('loanInterestRate').value = loan.interestRate || '';
-            document.getElementById('loanInterestType').value = loan.interestType || 'fixed';
-            document.getElementById('loanMonthlyPayment').value = loan.monthlyPayment || '';
-            document.getElementById('loanTotalMonths').value = loan.totalMonths || '';
-            document.getElementById('loanStartDate').value = loan.startDate || '';
+ document.getElementById('loanId').value = id;
+ document.getElementById('loanName').value = loan.name || '';
+ document.getElementById('loanType').value = loan.type || 'personal';
+ document.getElementById('loanLender').value = loan.lender || '';
+ document.getElementById('loanOriginalAmount').value = loan.originalAmount || '';
+ document.getElementById('loanRemainingBalance').value = loan.remainingBalance || '';
+ document.getElementById('loanInterestRate').value = loan.interestRate || '';
+ document.getElementById('loanInterestType').value = loan.interestType || 'fixed';
+ document.getElementById('loanMonthlyPayment').value = loan.monthlyPayment || '';
+ document.getElementById('loanTotalMonths').value = loan.totalMonths || '';
+ document.getElementById('loanStartDate').value = loan.startDate || '';
 
-            document.getElementById('loanModalTitle').textContent = I18n.t('loans.editLoan');
-            App.openModal('loanModal');
-        }
+ document.getElementById('loanModalTitle').textContent = I18n.t('loans.editLoan');
+ App.openModal('loanModal');
+ }
 
-        function deleteLoan(id) {
-            if (!confirm(I18n.t('loans.deleteLoanConfirm'))) return;
-            Storage.deleteLoan(id);
-            loadLoans();
-            App.notify(I18n.t('loans.loanDeleted'), 'success');
-        }
+ function deleteLoan(id) {
+ if (!confirm(I18n.t('loans.deleteLoanConfirm'))) return;
+ Storage.deleteLoan(id);
+ loadLoans();
+ App.notify(I18n.t('loans.loanDeleted'), 'success');
+ }
 
-        function showAmortization(loanId) {
-            const loans = Storage.getLoans();
-            const loan = loans.find(l => l.id === loanId);
-            if (!loan) return;
+ function showAmortization(loanId) {
+ const loans = Storage.getLoans();
+ const loan = loans.find(l => l.id === loanId);
+ if (!loan) return;
 
-            const panel = document.getElementById('amortizationPanel');
-            const monthlyRate = (loan.interestRate / 100) / 12;
-            const schedule = [];
-            let balance = loan.originalAmount;
-            let totalInterestPaid = 0;
-            const monthsElapsed = getMonthsElapsed(loan.startDate);
+ const panel = document.getElementById('amortizationPanel');
+ const monthlyRate = (loan.interestRate / 100) / 12;
+ const schedule = [];
+ let balance = loan.originalAmount;
+ let totalInterestPaid = 0;
+ const monthsElapsed = getMonthsElapsed(loan.startDate);
 
-            for (let i = 1; i <= loan.totalMonths; i++) {
-                const interestPayment = balance * monthlyRate;
-                const principalPayment = loan.monthlyPayment - interestPayment;
-                balance = Math.max(0, balance - principalPayment);
-                totalInterestPaid += interestPayment;
+ for (let i = 1; i <= loan.totalMonths; i++) {
+ const interestPayment = balance * monthlyRate;
+ const principalPayment = loan.monthlyPayment - interestPayment;
+ balance = Math.max(0, balance - principalPayment);
+ totalInterestPaid += interestPayment;
 
-                schedule.push({
-                    month: i,
-                    payment: loan.monthlyPayment,
-                    principal: principalPayment,
-                    interest: interestPayment,
-                    balance: balance,
-                    isCurrent: i === monthsElapsed
-                });
+ schedule.push({
+ month: i,
+ payment: loan.monthlyPayment,
+ principal: principalPayment,
+ interest: interestPayment,
+ balance: balance,
+ isCurrent: i === monthsElapsed
+ });
 
-                if (balance <= 0) break;
-            }
+ if (balance <= 0) break;
+ }
 
-            panel.innerHTML = `
-                <h3>
-                    <span>${sanitize(loan.name)} - ${I18n.t('loans.amortizationTable')}</span>
-                    <button class="btn btn-sm btn-secondary" onclick="closeAmortization()" data-i18n="loans.closeTable">${I18n.t('loans.closeTable')}</button>
-                </h3>
-                <div class="amortization-summary">
-                    <div class="metric-card">
-                        <div class="label">${I18n.t('loans.totalInterestPaid')}</div>
-                        <div class="value" style="color: var(--color-negative);">${I18n.formatCurrency(totalInterestPaid)}</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="label">${I18n.t('loans.paidSoFar')}</div>
-                        <div class="value" style="color: var(--color-positive);">${I18n.formatCurrency(loan.monthlyPayment * monthsElapsed)}</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="label">${I18n.t('loans.remainingToPay')}</div>
-                        <div class="value">${I18n.formatCurrency(loan.remainingBalance)}</div>
-                    </div>
-                </div>
-                <div class="table-container" style="max-height: 50vh;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>${I18n.t('loans.month')}</th>
-                                <th>${I18n.t('loans.payment')}</th>
-                                <th>${I18n.t('loans.principal')}</th>
-                                <th>${I18n.t('loans.interest')}</th>
-                                <th>${I18n.t('loans.balance')}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${schedule.map(row => `
-                                <tr class="${row.isCurrent ? 'current-month' : ''}">
-                                    <td>${row.month}${row.isCurrent ? ' ◄' : ''}</td>
-                                    <td>${I18n.formatCurrency(row.payment)}</td>
-                                    <td>${I18n.formatCurrency(row.principal)}</td>
-                                    <td>${I18n.formatCurrency(row.interest)}</td>
-                                    <td>${I18n.formatCurrency(row.balance)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
+ panel.innerHTML = `
+ <h3>
+ <span>${sanitize(loan.name)} - ${I18n.t('loans.amortizationTable')}</span>
+ <button class="btn btn-sm btn-secondary" onclick="closeAmortization()" data-i18n="loans.closeTable">${I18n.t('loans.closeTable')}</button>
+ </h3>
+ <div class="amortization-summary">
+ <div class="metric-card">
+ <div class="label">${I18n.t('loans.totalInterestPaid')}</div>
+ <div class="value" style="color: var(--color-negative);">${I18n.formatCurrency(totalInterestPaid)}</div>
+ </div>
+ <div class="metric-card">
+ <div class="label">${I18n.t('loans.paidSoFar')}</div>
+ <div class="value" style="color: var(--color-positive);">${I18n.formatCurrency(loan.monthlyPayment * monthsElapsed)}</div>
+ </div>
+ <div class="metric-card">
+ <div class="label">${I18n.t('loans.remainingToPay')}</div>
+ <div class="value">${I18n.formatCurrency(loan.remainingBalance)}</div>
+ </div>
+ </div>
+ <div class="table-container" style="max-height: 50vh;">
+ <table>
+ <thead>
+ <tr>
+ <th>${I18n.t('loans.month')}</th>
+ <th>${I18n.t('loans.payment')}</th>
+ <th>${I18n.t('loans.principal')}</th>
+ <th>${I18n.t('loans.interest')}</th>
+ <th>${I18n.t('loans.balance')}</th>
+ </tr>
+ </thead>
+ <tbody>
+ ${schedule.map(row => `
+ <tr class="${row.isCurrent ? 'current-month' : ''}">
+ <td>${row.month}${row.isCurrent ? ' ◄' : ''}</td>
+ <td>${I18n.formatCurrency(row.payment)}</td>
+ <td>${I18n.formatCurrency(row.principal)}</td>
+ <td>${I18n.formatCurrency(row.interest)}</td>
+ <td>${I18n.formatCurrency(row.balance)}</td>
+ </tr>
+ `).join('')}
+ </tbody>
+ </table>
+ </div>
+ `;
 
-            document.getElementById('amortizationOverlay').classList.add('active');
-            // Scroll to current month
-            const currentRow = panel.querySelector('.current-month');
-            if (currentRow) {
-                setTimeout(() => currentRow.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
-            }
-        }
+ document.getElementById('amortizationOverlay').classList.add('active');
+ // Scroll to current month
+ const currentRow = panel.querySelector('.current-month');
+ if (currentRow) {
+ setTimeout(() => currentRow.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+ }
+ }
 
-        function closeAmortization() {
-            document.getElementById('amortizationOverlay').classList.remove('active');
-        }
-    </script>
+ function closeAmortization() {
+ document.getElementById('amortizationOverlay').classList.remove('active');
+ }
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

@@ -3,434 +3,426 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#f59e0b">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>נכסים - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .nav-link.active { background: var(--color-assets) !important; }
-        .page-header h1 { color: var(--color-assets); }
-        .btn-primary { background: var(--color-assets); }
-        .btn-primary:hover { background: #d97706; }
-        .asset-icon {
-            font-size: 2rem;
-            margin-left: 10px;
-        }
-        .asset-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            transition: transform 0.2s;
-        }
-        .asset-card:hover {
-            transform: translateY(-2px);
-        }
-        .asset-card .info {
-            flex: 1;
-        }
-        .asset-card .name {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-        .asset-card .meta {
-            color: var(--color-text-secondary);
-            font-size: 0.9rem;
-        }
-        .asset-card .value {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--color-assets);
-        }
-        .asset-card .depreciation {
-            font-size: 0.85rem;
-            color: var(--color-negative);
-        }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#f59e0b">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>נכסים - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <style>
+ .nav-link.active { background: var(--color-assets) !important; }
+ .page-header h1 { color: var(--color-assets); }
+ .btn-primary { background: var(--color-assets); }
+ .btn-primary:hover { background: #d97706; }
+ .asset-icon {
+ font-size: 2rem;
+ margin-left: 10px;
+ }
+ .asset-card {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 20px;
+ display: flex;
+ align-items: center;
+ gap: 15px;
+ margin-bottom: 15px;
+ transition: transform 0.2s;
+ }
+ .asset-card:hover {
+ transform: translateY(-2px);
+ }
+ .asset-card .info {
+ flex: 1;
+ }
+ .asset-card .name {
+ font-weight: bold;
+ font-size: 1.1rem;
+ margin-bottom: 5px;
+ }
+ .asset-card .meta {
+ color: var(--color-text-secondary);
+ font-size: 0.9rem;
+ }
+ .asset-card .value {
+ font-size: 1.3rem;
+ font-weight: bold;
+ color: var(--color-assets);
+ }
+ .asset-card .depreciation {
+ font-size: 0.85rem;
+ color: var(--color-negative);
+ }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>
-                    <span>🏠</span>
-                    <span data-i18n="assets.title">נכסים נוספים</span>
-                </h1>
-            </header>
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>
+ <span>🏠</span>
+ <span data-i18n="assets.title">נכסים נוספים</span>
+ </h1>
+ </header>
 
-            <!-- Total Assets Value -->
-            <div class="net-worth-banner" style="border-color: var(--color-assets);">
-                <div class="label" data-i18n="assets.estimatedValue">שווי מוערך</div>
-                <div class="value" id="totalAssetsValue" style="background: linear-gradient(90deg, var(--color-assets), #fbbf24);">₪0</div>
-            </div>
+ <!-- Total Assets Value -->
+ <div class="net-worth-banner" style="border-color: var(--color-assets);">
+ <div class="label" data-i18n="assets.estimatedValue">שווי מוערך</div>
+ <div class="value" id="totalAssetsValue" style="background: linear-gradient(90deg, var(--color-assets), #fbbf24);">₪0</div>
+ </div>
 
-            <!-- Add Asset Button -->
-            <div style="margin-bottom: 20px;">
-                <button class="btn btn-primary" onclick="openAssetModal()">
-                    <span>➕</span>
-                    <span data-i18n="assets.addAsset">הוסף נכס</span>
-                </button>
-            </div>
+ <!-- Add Asset Button -->
+ <div style="margin-bottom: 20px;">
+ <button class="btn btn-primary" onclick="openAssetModal()">
+ <span>➕</span>
+ <span data-i18n="assets.addAsset">הוסף נכס</span>
+ </button>
+ </div>
 
-            <!-- Assets List -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📋</span>
-                        <span data-i18n="assets.title">נכסים</span>
-                    </h2>
-                </div>
-                <div id="assetsContainer">
-                    <!-- Will be populated by JS -->
-                </div>
-            </div>
+ <!-- Assets List -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📋</span>
+ <span data-i18n="assets.title">נכסים</span>
+ </h2>
+ </div>
+ <div id="assetsContainer">
+ <!-- Will be populated by JS -->
+ </div>
+ </div>
 
-            <!-- Distribution Chart -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📊</span>
-                        <span data-i18n="assets.chartTitle">חלוקת נכסים לפי סוג</span>
-                    </h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="assetsChart"></canvas>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
+ <!-- Distribution Chart -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📊</span>
+ <span data-i18n="assets.chartTitle">חלוקת נכסים לפי סוג</span>
+ </h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="assetsChart"></canvas>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
 
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
+ <!-- Mobile Menu Toggle -->
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
 
-    <!-- Add/Edit Asset Modal -->
-    <div class="modal-overlay" id="assetModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="modalTitle" data-i18n="assets.addAsset">הוסף נכס</h2>
-                <button class="modal-close" onclick="closeAssetModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="assetForm">
-                    <input type="hidden" id="assetId">
+ <!-- Add/Edit Asset Modal -->
+ <div class="modal-overlay" id="assetModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 id="modalTitle" data-i18n="assets.addAsset">הוסף נכס</h2>
+ <button class="modal-close" onclick="closeAssetModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="assetForm">
+ <input type="hidden" id="assetId">
 
-                    <div class="form-group">
-                        <label data-i18n="assets.assetType">סוג נכס</label>
-                        <select class="form-control" id="assetType" required onchange="togglePropertyFields()">
-                            <option value="car">🚗 רכב</option>
-                            <option value="property">🏠 נדל״ן</option>
-                            <option value="savings">💵 חסכונות</option>
-                            <option value="jewelry">💎 תכשיטים</option>
-                            <option value="electronics">💻 אלקטרוניקה</option>
-                            <option value="other">📦 אחר</option>
-                        </select>
-                    </div>
+ <div class="form-group">
+ <label data-i18n="assets.assetType">סוג נכס</label>
+ <select class="form-control" id="assetType" required onchange="togglePropertyFields()">
+ <option value="car">🚗 רכב</option>
+ <option value="property">🏠 נדל״ן</option>
+ <option value="savings">💵 חסכונות</option>
+ <option value="jewelry">💎 תכשיטים</option>
+ <option value="electronics">💻 אלקטרוניקה</option>
+ <option value="other">📦 אחר</option>
+ </select>
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="assets.assetName">שם הנכס</label>
-                        <input type="text" class="form-control" id="assetName" required placeholder="טויוטה קורולה 2022">
-                    </div>
+ <div class="form-group">
+ <label data-i18n="assets.assetName">שם הנכס</label>
+ <input type="text" class="form-control" id="assetName" required placeholder="טויוטה קורולה 2022">
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="assets.estimatedValue">שווי מוערך</label>
-                        <input type="number" class="form-control" id="assetValue" step="100" required>
-                    </div>
+ <div class="form-group">
+ <label data-i18n="assets.estimatedValue">שווי מוערך</label>
+ <input type="number" class="form-control" id="assetValue" step="100" required>
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="assets.purchaseDate">תאריך רכישה</label>
-                        <input type="date" class="form-control" id="purchaseDate">
-                    </div>
+ <div class="form-group">
+ <label data-i18n="assets.purchaseDate">תאריך רכישה</label>
+ <input type="date" class="form-control" id="purchaseDate">
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="assets.purchasePrice">מחיר רכישה</label>
-                        <input type="number" class="form-control" id="purchasePrice" step="100">
-                    </div>
+ <div class="form-group">
+ <label data-i18n="assets.purchasePrice">מחיר רכישה</label>
+ <input type="number" class="form-control" id="purchasePrice" step="100">
+ </div>
 
-                    <div id="propertyFields" style="display: none;">
-                        <div class="form-group">
-                            <label data-i18n="assets.area">שטח (מ"ר)</label>
-                            <input type="number" class="form-control" id="assetArea" step="1" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="assets.city">עיר</label>
-                            <input type="text" class="form-control" id="assetCity" placeholder="תל אביב">
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="assets.neighborhood">שכונה</label>
-                            <input type="text" class="form-control" id="assetNeighborhood" placeholder="פלורנטין">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeAssetModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveAsset()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
+ <div id="propertyFields" style="display: none;">
+ <div class="form-group">
+ <label data-i18n="assets.area">שטח (מ"ר)</label>
+ <input type="number" class="form-control" id="assetArea" step="1" min="0">
+ </div>
+ <div class="form-group">
+ <label data-i18n="assets.city">עיר</label>
+ <input type="text" class="form-control" id="assetCity" placeholder="תל אביב">
+ </div>
+ <div class="form-group">
+ <label data-i18n="assets.neighborhood">שכונה</label>
+ <input type="text" class="form-control" id="assetNeighborhood" placeholder="פלורנטין">
+ </div>
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeAssetModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveAsset()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
 
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/charts.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        const typeIcons = {
-            car: '🚗',
-            property: '🏠',
-            savings: '💵',
-            jewelry: '💎',
-            electronics: '💻',
-            other: '📦'
-        };
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/charts.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ const typeIcons = {
+ car: '🚗',
+ property: '🏠',
+ savings: '💵',
+ jewelry: '💎',
+ electronics: '💻',
+ other: '📦'
+ };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'assets';
-            loadAssets();
-        });
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'assets';
+ loadAssets();
+ });
 
-        function loadAssets() {
-            const assets = Storage.getAssets();
-            const container = document.getElementById('assetsContainer');
-            const totalEl = document.getElementById('totalAssetsValue');
+ function loadAssets() {
+ const assets = Storage.getAssets();
+ const container = document.getElementById('assetsContainer');
+ const totalEl = document.getElementById('totalAssetsValue');
 
-            if (assets.length === 0) {
-                container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏠</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין נכסים</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף דירה, רכב, או כל נכס אחר לחישוב שווי נקי</div><button class="btn btn-primary btn-sm" onclick="openAssetModal()">+ הוסף נכס</button></div>`;
-                totalEl.textContent = I18n.formatCurrency(0);
-                return;
-            }
+ if (assets.length === 0) {
+ container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏠</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין נכסים</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף דירה, רכב, או כל נכס אחר לחישוב שווי נקי</div><button class="btn btn-primary btn-sm" onclick="openAssetModal()">+ הוסף נכס</button></div>`;
+ totalEl.textContent = I18n.formatCurrency(0);
+ return;
+ }
 
-            const total = assets.reduce((sum, a) => sum + (a.value || 0), 0);
-            totalEl.textContent = I18n.formatCurrency(total);
+ const total = assets.reduce((sum, a) => sum + (a.value || 0), 0);
+ totalEl.textContent = I18n.formatCurrency(total);
 
-            container.innerHTML = assets.map(asset => {
-                const depreciation = asset.purchasePrice ? asset.purchasePrice - asset.value : 0;
-                const name = I18n.currentLanguage === 'he' ? asset.nameHe || asset.nameEn : asset.nameEn || asset.nameHe;
-                const isProperty = asset.type === 'property';
-                const pricePerSqm = isProperty && asset.area > 0 ? Math.round(asset.value / asset.area) : 0;
-                const madlanUrl = isProperty && asset.city && asset.neighborhood
-                    ? `https://www.madlan.co.il/deals/${encodeURIComponent(asset.city)}-${encodeURIComponent(asset.neighborhood)}`
-                    : null;
+ container.innerHTML = assets.map(asset => {
+ const depreciation = asset.purchasePrice ? asset.purchasePrice - asset.value : 0;
+ const name = I18n.currentLanguage === 'he' ? asset.nameHe || asset.nameEn : asset.nameEn || asset.nameHe;
+ const isProperty = asset.type === 'property';
+ const pricePerSqm = isProperty && asset.area > 0 ? Math.round(asset.value / asset.area) : 0;
+ const madlanUrl = isProperty && asset.city && asset.neighborhood
+ ? `https://www.madlan.co.il/deals/${encodeURIComponent(asset.city)}-${encodeURIComponent(asset.neighborhood)}`
+ : null;
 
-                return `
-                    <div class="asset-card">
-                        <div class="asset-icon">${typeIcons[asset.type] || '📦'}</div>
-                        <div class="info">
-                            <div class="name">${name}</div>
-                            <div class="meta">
-                                ${I18n.t('assets.types.' + asset.type)}
-                                ${asset.purchaseDate ? ' • ' + I18n.formatDate(asset.purchaseDate) : ''}
-                                ${isProperty && asset.area ? ' • ' + asset.area + ' ' + I18n.t('assets.sqm') : ''}
-                            </div>
-                            ${pricePerSqm > 0 ? `<div class="meta" style="margin-top:4px;">${I18n.t('assets.pricePerSqm')}: ${I18n.formatCurrency(pricePerSqm)}</div>` : ''}
-                            ${madlanUrl ? `<a href="${madlanUrl}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="margin-top:6px;display:inline-block;font-size:0.8rem;">🔍 ${I18n.t('assets.areaTransactions')}</a>` : ''}
-                        </div>
-                        <div style="text-align: left;">
-                            <div class="value">${I18n.formatCurrency(asset.value)}</div>
-                            ${depreciation > 0 ? `<div class="depreciation">${I18n.t('assets.depreciation')}: -${I18n.formatCurrency(depreciation)}</div>` : ''}
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-secondary btn-sm" onclick="editAsset('${asset.id}')" title="${I18n.t('common.edit')}">✏️</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteAsset('${asset.id}')" title="${I18n.t('common.delete')}">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+ return `
+ <div class="asset-card">
+ <div class="asset-icon">${typeIcons[asset.type] || '📦'}</div>
+ <div class="info">
+ <div class="name">${name}</div>
+ <div class="meta">
+ ${I18n.t('assets.types.' + asset.type)}
+ ${asset.purchaseDate ? ' • ' + I18n.formatDate(asset.purchaseDate) : ''}
+ ${isProperty && asset.area ? ' • ' + asset.area + ' ' + I18n.t('assets.sqm') : ''}
+ </div>
+ ${pricePerSqm > 0 ? `<div class="meta" style="margin-top:4px;">${I18n.t('assets.pricePerSqm')}: ${I18n.formatCurrency(pricePerSqm)}</div>` : ''}
+ ${madlanUrl ? `<a href="${madlanUrl}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="margin-top:6px;display:inline-block;font-size:0.8rem;">🔍 ${I18n.t('assets.areaTransactions')}</a>` : ''}
+ </div>
+ <div style="text-align: left;">
+ <div class="value">${I18n.formatCurrency(asset.value)}</div>
+ ${depreciation > 0 ? `<div class="depreciation">${I18n.t('assets.depreciation')}: -${I18n.formatCurrency(depreciation)}</div>` : ''}
+ </div>
+ <div class="action-buttons">
+ <button class="btn btn-secondary btn-sm" onclick="editAsset('${asset.id}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteAsset('${asset.id}')" title="${I18n.t('common.delete')}">🗑️</button>
+ </div>
+ </div>
+ `;
+ }).join('');
 
-            // Update chart
-            updateAssetsChart(assets);
-        }
+ // Update chart
+ updateAssetsChart(assets);
+ }
 
-        function updateAssetsChart(assets) {
-            const ctx = document.getElementById('assetsChart');
-            const typeGroups = {};
+ function updateAssetsChart(assets) {
+ const ctx = document.getElementById('assetsChart');
+ const typeGroups = {};
 
-            assets.forEach(asset => {
-                typeGroups[asset.type] = (typeGroups[asset.type] || 0) + asset.value;
-            });
+ assets.forEach(asset => {
+ typeGroups[asset.type] = (typeGroups[asset.type] || 0) + asset.value;
+ });
 
-            const types = Object.keys(typeGroups);
-            const colors = {
-                car: '#3b82f6',
-                property: '#10b981',
-                savings: '#f59e0b',
-                jewelry: '#ec4899',
-                electronics: '#8b5cf6',
-                other: '#6b7280'
-            };
+ const types = Object.keys(typeGroups);
+ const colors = {
+ car: '#3b82f6',
+ property: '#10b981',
+ savings: '#f59e0b',
+ jewelry: '#ec4899',
+ electronics: '#8b5cf6',
+ other: '#6b7280'
+ };
 
-            const chartData = {
-                labels: types.map(t => I18n.t('assets.types.' + t)),
-                datasets: [{
-                    data: Object.values(typeGroups),
-                    backgroundColor: types.map(t => colors[t] || colors.other),
-                    borderWidth: 0
-                }]
-            };
+ const chartData = {
+ labels: types.map(t => I18n.t('assets.types.' + t)),
+ datasets: [{
+ data: Object.values(typeGroups),
+ backgroundColor: types.map(t => colors[t] || colors.other),
+ borderWidth: 0
+ }]
+ };
 
-            if (Charts.charts.assetsChart) {
-                Charts.charts.assetsChart.data = chartData;
-                Charts.charts.assetsChart.update();
-            } else {
-                Charts.charts.assetsChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: chartData,
-                    options: {
-                        ...Charts.defaultOptions,
-                        cutout: '50%',
-                        plugins: {
-                            ...Charts.defaultOptions.plugins,
-                            tooltip: {
-                                callbacks: {
-                                    label: (context) => {
-                                        const value = context.raw;
-                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        const percentage = ((value / total) * 100).toFixed(1);
-                                        return `${context.label}: ${I18n.formatCurrency(value)} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
+ if (Charts.charts.assetsChart) {
+ Charts.charts.assetsChart.data = chartData;
+ Charts.charts.assetsChart.update();
+ } else {
+ Charts.charts.assetsChart = new Chart(ctx, {
+ type: 'doughnut',
+ data: chartData,
+ options: {
+ ...Charts.defaultOptions,
+ cutout: '50%',
+ plugins: {
+ ...Charts.defaultOptions.plugins,
+ tooltip: {
+ callbacks: {
+ label: (context) => {
+ const value = context.raw;
+ const total = context.dataset.data.reduce((a, b) => a + b, 0);
+ const percentage = ((value / total) * 100).toFixed(1);
+ return `${context.label}: ${I18n.formatCurrency(value)} (${percentage}%)`;
+ }
+ }
+ }
+ }
+ }
+ });
+ }
+ }
 
-        function togglePropertyFields() {
-            const type = document.getElementById('assetType').value;
-            document.getElementById('propertyFields').style.display = type === 'property' ? '' : 'none';
-        }
+ function togglePropertyFields() {
+ const type = document.getElementById('assetType').value;
+ document.getElementById('propertyFields').style.display = type === 'property' ? '' : 'none';
+ }
 
-        function openAssetModal() {
-            document.getElementById('modalTitle').textContent = I18n.t('assets.addAsset');
-            document.getElementById('assetForm').reset();
-            document.getElementById('assetId').value = '';
-            togglePropertyFields();
-            document.getElementById('assetModal').classList.add('active');
-        }
+ function openAssetModal() {
+ document.getElementById('modalTitle').textContent = I18n.t('assets.addAsset');
+ document.getElementById('assetForm').reset();
+ document.getElementById('assetId').value = '';
+ togglePropertyFields();
+ document.getElementById('assetModal').classList.add('active');
+ }
 
-        function closeAssetModal() {
-            document.getElementById('assetModal').classList.remove('active');
-        }
+ function closeAssetModal() {
+ document.getElementById('assetModal').classList.remove('active');
+ }
 
-        function editAsset(id) {
-            const assets = Storage.getAssets();
-            const asset = assets.find(a => a.id === id);
-            if (!asset) return;
+ function editAsset(id) {
+ const assets = Storage.getAssets();
+ const asset = assets.find(a => a.id === id);
+ if (!asset) return;
 
-            document.getElementById('modalTitle').textContent = I18n.t('common.edit');
-            document.getElementById('assetId').value = asset.id;
-            document.getElementById('assetType').value = asset.type;
-            document.getElementById('assetName').value = asset.nameHe || asset.nameEn || '';
-            document.getElementById('assetValue').value = asset.value;
-            document.getElementById('purchaseDate').value = asset.purchaseDate || '';
-            document.getElementById('purchasePrice').value = asset.purchasePrice || '';
-            document.getElementById('assetArea').value = asset.area || '';
-            document.getElementById('assetCity').value = asset.city || '';
-            document.getElementById('assetNeighborhood').value = asset.neighborhood || '';
-            togglePropertyFields();
-            document.getElementById('assetModal').classList.add('active');
-        }
+ document.getElementById('modalTitle').textContent = I18n.t('common.edit');
+ document.getElementById('assetId').value = asset.id;
+ document.getElementById('assetType').value = asset.type;
+ document.getElementById('assetName').value = asset.nameHe || asset.nameEn || '';
+ document.getElementById('assetValue').value = asset.value;
+ document.getElementById('purchaseDate').value = asset.purchaseDate || '';
+ document.getElementById('purchasePrice').value = asset.purchasePrice || '';
+ document.getElementById('assetArea').value = asset.area || '';
+ document.getElementById('assetCity').value = asset.city || '';
+ document.getElementById('assetNeighborhood').value = asset.neighborhood || '';
+ togglePropertyFields();
+ document.getElementById('assetModal').classList.add('active');
+ }
 
-        function saveAsset() {
-            const id = document.getElementById('assetId').value;
-            const type = document.getElementById('assetType').value;
-            const nameHe = document.getElementById('assetName').value;
-            const value = parseFloat(document.getElementById('assetValue').value);
-            const purchaseDate = document.getElementById('purchaseDate').value;
-            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || null;
+ function saveAsset() {
+ const id = document.getElementById('assetId').value;
+ const type = document.getElementById('assetType').value;
+ const nameHe = document.getElementById('assetName').value;
+ const value = parseFloat(document.getElementById('assetValue').value);
+ const purchaseDate = document.getElementById('purchaseDate').value;
+ const purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || null;
 
-            if (!type || !nameHe || !value) {
-                App.notify('Please fill all required fields', 'error');
-                return;
-            }
+ if (!type || !nameHe || !value) {
+ App.notify('Please fill all required fields', 'error');
+ return;
+ }
 
-            const assetData = { type, nameHe, nameEn: nameHe, value, purchaseDate, purchasePrice };
+ const assetData = { type, nameHe, nameEn: nameHe, value, purchaseDate, purchasePrice };
 
-            if (type === 'property') {
-                assetData.area = parseFloat(document.getElementById('assetArea').value) || null;
-                assetData.city = document.getElementById('assetCity').value || null;
-                assetData.neighborhood = document.getElementById('assetNeighborhood').value || null;
-            }
+ if (type === 'property') {
+ assetData.area = parseFloat(document.getElementById('assetArea').value) || null;
+ assetData.city = document.getElementById('assetCity').value || null;
+ assetData.neighborhood = document.getElementById('assetNeighborhood').value || null;
+ }
 
-            if (id) {
-                Storage.updateAsset(id, assetData);
-            } else {
-                Storage.addAsset(assetData);
-            }
+ if (id) {
+ Storage.updateAsset(id, assetData);
+ } else {
+ Storage.addAsset(assetData);
+ }
 
-            closeAssetModal();
-            loadAssets();
-            App.notify(I18n.t('common.save') + ' ✓', 'success');
-        }
+ closeAssetModal();
+ loadAssets();
+ App.notify(I18n.t('common.save') + ' ✓', 'success');
+ }
 
-        function deleteAsset(id) {
-            if (confirm(I18n.t('common.confirmDelete'))) {
-                Storage.deleteAsset(id);
-                loadAssets();
-                App.notify(I18n.t('common.delete') + ' ✓', 'success');
-            }
-        }
-    </script>
+ function deleteAsset(id) {
+ if (confirm(I18n.t('common.confirmDelete'))) {
+ Storage.deleteAsset(id);
+ loadAssets();
+ App.notify(I18n.t('common.delete') + ' ✓', 'success');
+ }
+ }
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

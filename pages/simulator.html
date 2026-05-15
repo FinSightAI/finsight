@@ -3,359 +3,351 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>סימולטור – WizeMoney</title>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="stylesheet" href="../css/app.css">
-    <style>
-        /* ── Simulator layout ── */
-        .sim-hero {
-            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
-            color: #fff;
-            border-radius: 20px;
-            padding: 32px 28px 24px;
-            margin-bottom: 28px;
-            text-align: center;
-        }
-        .sim-hero h1 { font-size: 1.7rem; margin: 0 0 6px; }
-        .sim-hero p  { opacity: .85; margin: 0; font-size: .95rem; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>סימולטור – WizeMoney</title>
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <link rel="stylesheet" href="../css/app.css">
+ <style>
+ /* ── Simulator layout ── */
+ .sim-hero {
+ background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+ color: #fff;
+ border-radius: 20px;
+ padding: 32px 28px 24px;
+ margin-bottom: 28px;
+ text-align: center;
+ }
+ .sim-hero h1 { font-size: 1.7rem; margin: 0 0 6px; }
+ .sim-hero p { opacity: .85; margin: 0; font-size: .95rem; }
 
-        /* ── Scenario cards ── */
-        .scenario-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 22px;
-        }
-        .scenario-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 22px 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,.07);
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-        .scenario-card h3 {
-            font-size: 1.05rem;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .scenario-card .subtitle {
-            font-size: .82rem;
-            color: var(--text-muted);
-            margin: -8px 0 0;
-        }
+ /* ── Scenario cards ── */
+ .scenario-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+ gap: 22px;
+ }
+ .scenario-card {
+ background: var(--card-bg);
+ border-radius: 16px;
+ padding: 22px 20px;
+ box-shadow: 0 2px 12px rgba(0,0,0,.07);
+ display: flex;
+ flex-direction: column;
+ gap: 14px;
+ }
+ .scenario-card h3 {
+ font-size: 1.05rem;
+ margin: 0;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
+ .scenario-card .subtitle {
+ font-size: .82rem;
+ color: var(--text-muted);
+ margin: -8px 0 0;
+ }
 
-        /* ── Sliders ── */
-        .slider-row {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: .85rem;
-            color: var(--text-muted);
-        }
-        .slider-label span:last-child {
-            font-weight: 700;
-            color: var(--text);
-        }
-        input[type=range] {
-            width: 100%;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
+ /* ── Sliders ── */
+ .slider-row {
+ display: flex;
+ flex-direction: column;
+ gap: 4px;
+ }
+ .slider-label {
+ display: flex;
+ justify-content: space-between;
+ font-size: .85rem;
+ color: var(--text-muted);
+ }
+ .slider-label span:last-child {
+ font-weight: 700;
+ color: var(--text);
+ }
+ input[type=range] {
+ width: 100%;
+ accent-color: var(--primary);
+ cursor: pointer;
+ }
 
-        /* ── Result banner ── */
-        .result-banner {
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-            border: 1px solid #86efac;
-            border-radius: 12px;
-            padding: 14px 16px;
-            text-align: center;
-        }
-        .result-banner .result-main {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #166534;
-            line-height: 1.1;
-        }
-        .result-banner .result-sub {
-            font-size: .8rem;
-            color: #166534;
-            opacity: .75;
-        }
-        .result-negative .result-main { color: #991b1b; }
-        .result-negative { background: linear-gradient(135deg,#fef2f2,#fee2e2); border-color: #fca5a5; }
+ /* ── Result banner ── */
+ .result-banner {
+ background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+ border: 1px solid #86efac;
+ border-radius: 12px;
+ padding: 14px 16px;
+ text-align: center;
+ }
+ .result-banner .result-main {
+ font-size: 1.8rem;
+ font-weight: 800;
+ color: #166534;
+ line-height: 1.1;
+ }
+ .result-banner .result-sub {
+ font-size: .8rem;
+ color: #166534;
+ opacity: .75;
+ }
+ .result-negative .result-main { color: #991b1b; }
+ .result-negative { background: linear-gradient(135deg,#fef2f2,#fee2e2); border-color: #fca5a5; }
 
-        /* ── Chart containers ── */
-        .chart-wrap {
-            position: relative;
-            height: 180px;
-        }
+ /* ── Chart containers ── */
+ .chart-wrap {
+ position: relative;
+ height: 180px;
+ }
 
-        /* ── Tabs for the big compound scenario ── */
-        .tab-bar {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .tab-bar button {
-            padding: 5px 13px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: transparent;
-            font-size: .8rem;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-        .tab-bar button.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
+ /* ── Tabs for the big compound scenario ── */
+ .tab-bar {
+ display: flex;
+ gap: 6px;
+ flex-wrap: wrap;
+ }
+ .tab-bar button {
+ padding: 5px 13px;
+ border-radius: 20px;
+ border: 1px solid var(--border);
+ background: transparent;
+ font-size: .8rem;
+ cursor: pointer;
+ color: var(--text-muted);
+ }
+ .tab-bar button.active {
+ background: var(--primary);
+ color: #fff;
+ border-color: var(--primary);
+ }
 
-        /* ── Checkboxes (subscriptions) ── */
-        .sub-list { display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-y: auto; }
-        .sub-row  { display: flex; align-items: center; gap: 10px; font-size: .88rem; }
-        .sub-row label { flex: 1; cursor: pointer; }
-        .sub-row .sub-amt { color: var(--text-muted); font-size: .8rem; }
+ /* ── Checkboxes (subscriptions) ── */
+ .sub-list { display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-y: auto; }
+ .sub-row { display: flex; align-items: center; gap: 10px; font-size: .88rem; }
+ .sub-row label { flex: 1; cursor: pointer; }
+ .sub-row .sub-amt { color: var(--text-muted); font-size: .8rem; }
 
-        /* ── Full-width card ── */
-        .scenario-card.wide { grid-column: 1 / -1; }
+ /* ── Full-width card ── */
+ .scenario-card.wide { grid-column: 1 / -1; }
 
-        /* ── Comparison table ── */
-        .cmp-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-        .cmp-table th, .cmp-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
-        .cmp-table th { color: var(--text-muted); font-weight: 600; }
-        .cmp-table td:first-child { text-align: right; }
-        .cmp-table .highlight { color: var(--primary); font-weight: 700; }
+ /* ── Comparison table ── */
+ .cmp-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+ .cmp-table th, .cmp-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+ .cmp-table th { color: var(--text-muted); font-weight: 600; }
+ .cmp-table td:first-child { text-align: right; }
+ .cmp-table .highlight { color: var(--primary); font-weight: 700; }
 
-        @media (max-width: 600px) {
-            .scenario-grid { grid-template-columns: 1fr; }
-            .sim-hero h1 { font-size: 1.3rem; }
-        }
-    </style>
+ @media (max-width: 600px) {
+ .scenario-grid { grid-template-columns: 1fr; }
+ .sim-hero h1 { font-size: 1.3rem; }
+ }
+ </style>
 </head>
 <body>
 <div class="app-layout">
-    <aside class="sidebar"></aside>
+ <aside class="sidebar"></aside>
 
-    <div class="main-content">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title" data-i18n="sim.title">⏳ סימולטור מה היה קורה</h1>
-                <p class="page-subtitle" data-i18n="sim.subtitle">שנה הרגל אחד — וראה מה זה שווה בעוד 20 שנה</p>
-            </div>
-        </div>
+ <div class="main-content">
+ <div class="page-header">
+ <div>
+ <h1 class="page-title" data-i18n="sim.title">⏳ סימולטור מה היה קורה</h1>
+ <p class="page-subtitle" data-i18n="sim.subtitle">שנה הרגל אחד — וראה מה זה שווה בעוד 20 שנה</p>
+ </div>
+ </div>
 
-        <!-- Hero stat -->
-        <div class="sim-hero" id="heroSection">
-            <h1 data-i18n="sim.heroTitle">💡 כל ₪1,000 שאתה חוסך היום</h1>
-            <p data-i18n="sim.heroDesc">שווה <strong id="heroAmount">₪5,427</strong> בעוד 20 שנה (תשואה שנתית 8.5%)</p>
-        </div>
+ <!-- Hero stat -->
+ <div class="sim-hero" id="heroSection">
+ <h1 data-i18n="sim.heroTitle">💡 כל ₪1,000 שאתה חוסך היום</h1>
+ <p data-i18n="sim.heroDesc">שווה <strong id="heroAmount">₪5,427</strong> בעוד 20 שנה (תשואה שנתית 8.5%)</p>
+ </div>
 
-        <div class="scenario-grid">
+ <div class="scenario-grid">
 
-            <!-- ── 1. Coffee & Restaurants ── -->
-            <div class="scenario-card">
-                <h3 data-i18n="sim.foodTitle">☕ קפה, מסעדות והוצאות שגרה</h3>
-                <p class="subtitle" id="foodSubtitle" data-i18n="sim.foodSubtitle">ממוצע חודשי מהכרטיסי אשראי שלך</p>
+ <!-- ── 1. Coffee & Restaurants ── -->
+ <div class="scenario-card">
+ <h3 data-i18n="sim.foodTitle">☕ קפה, מסעדות והוצאות שגרה</h3>
+ <p class="subtitle" id="foodSubtitle" data-i18n="sim.foodSubtitle">ממוצע חודשי מהכרטיסי אשראי שלך</p>
 
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.foodSaveLabel">חיסכון חודשי מהרגל זה</span><span id="foodSaveVal">₪500</span></div>
-                    <input type="range" id="foodSlider" min="100" max="3000" step="50" value="500">
-                </div>
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="foodYearsVal">10 שנים</span></div>
-                    <input type="range" id="foodYears" min="1" max="30" step="1" value="10">
-                </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.foodSaveLabel">חיסכון חודשי מהרגל זה</span><span id="foodSaveVal">₪500</span></div>
+ <input type="range" id="foodSlider" min="100" max="3000" step="50" value="500">
+ </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="foodYearsVal">10 שנים</span></div>
+ <input type="range" id="foodYears" min="1" max="30" step="1" value="10">
+ </div>
 
-                <div class="result-banner" id="foodResult">
-                    <div class="result-main" id="foodResultAmt">₪0</div>
-                    <div class="result-sub" data-i18n="sim.ifInvested">אם תשקיע במקום</div>
-                </div>
-                <div class="chart-wrap"><canvas id="foodChart"></canvas></div>
-            </div>
+ <div class="result-banner" id="foodResult">
+ <div class="result-main" id="foodResultAmt">₪0</div>
+ <div class="result-sub" data-i18n="sim.ifInvested">אם תשקיע במקום</div>
+ </div>
+ <div class="chart-wrap"><canvas id="foodChart"></canvas></div>
+ </div>
 
-            <!-- ── 2. Subscriptions ── -->
-            <div class="scenario-card">
-                <h3 data-i18n="sim.subsTitle">🔄 ביטול מנויים</h3>
-                <p class="subtitle" data-i18n="sim.subsSubtitle">בחר מה לבטל — ראה כמה צובר</p>
+ <!-- ── 2. Subscriptions ── -->
+ <div class="scenario-card">
+ <h3 data-i18n="sim.subsTitle">🔄 ביטול מנויים</h3>
+ <p class="subtitle" data-i18n="sim.subsSubtitle">בחר מה לבטל — ראה כמה צובר</p>
 
-                <div class="sub-list" id="subList">
-                    <div style="color:var(--text-muted);font-size:.85rem;" data-i18n="sim.loadingSubs">טוען מנויים...</div>
-                </div>
+ <div class="sub-list" id="subList">
+ <div style="color:var(--text-muted);font-size:.85rem;" data-i18n="sim.loadingSubs">טוען מנויים...</div>
+ </div>
 
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="subYearsVal">10 שנים</span></div>
-                    <input type="range" id="subYears" min="1" max="30" step="1" value="10">
-                </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="subYearsVal">10 שנים</span></div>
+ <input type="range" id="subYears" min="1" max="30" step="1" value="10">
+ </div>
 
-                <div class="result-banner" id="subResult">
-                    <div class="result-main" id="subResultAmt">₪0</div>
-                    <div class="result-sub" data-i18n="sim.cumulativeSavings">חיסכון מצטבר + תשואה</div>
-                </div>
-            </div>
+ <div class="result-banner" id="subResult">
+ <div class="result-main" id="subResultAmt">₪0</div>
+ <div class="result-sub" data-i18n="sim.cumulativeSavings">חיסכון מצטבר + תשואה</div>
+ </div>
+ </div>
 
-            <!-- ── 3. Pension boost ── -->
-            <div class="scenario-card">
-                <h3 data-i18n="sim.pensionTitle">🎯 הגדלת הפרשה לפנסיה</h3>
-                <p class="subtitle" id="pensionSubtitle" data-i18n="sim.pensionSubtitle">על בסיס ההכנסה החודשית שלך</p>
+ <!-- ── 3. Pension boost ── -->
+ <div class="scenario-card">
+ <h3 data-i18n="sim.pensionTitle">🎯 הגדלת הפרשה לפנסיה</h3>
+ <p class="subtitle" id="pensionSubtitle" data-i18n="sim.pensionSubtitle">על בסיס ההכנסה החודשית שלך</p>
 
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.pensionAddLabel">הגדלה חודשית נוספת</span><span id="pensionAddVal">₪500</span></div>
-                    <input type="range" id="pensionSlider" min="100" max="5000" step="100" value="500">
-                </div>
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.yearsToRetire">שנים עד פרישה</span><span id="pensionYearsVal">25 שנים</span></div>
-                    <input type="range" id="pensionYears" min="5" max="40" step="1" value="25">
-                </div>
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.annualReturn">תשואה שנתית</span><span id="pensionReturnVal">5%</span></div>
-                    <input type="range" id="pensionReturn" min="3" max="10" step="0.5" value="5">
-                </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.pensionAddLabel">הגדלה חודשית נוספת</span><span id="pensionAddVal">₪500</span></div>
+ <input type="range" id="pensionSlider" min="100" max="5000" step="100" value="500">
+ </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.yearsToRetire">שנים עד פרישה</span><span id="pensionYearsVal">25 שנים</span></div>
+ <input type="range" id="pensionYears" min="5" max="40" step="1" value="25">
+ </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.annualReturn">תשואה שנתית</span><span id="pensionReturnVal">5%</span></div>
+ <input type="range" id="pensionReturn" min="3" max="10" step="0.5" value="5">
+ </div>
 
-                <div class="result-banner" id="pensionResult">
-                    <div class="result-main" id="pensionResultAmt">₪0</div>
-                    <div class="result-sub" data-i18n="sim.extraAtRetirement">סכום נוסף בפנסיה בפרישה</div>
-                </div>
-            </div>
+ <div class="result-banner" id="pensionResult">
+ <div class="result-main" id="pensionResultAmt">₪0</div>
+ <div class="result-sub" data-i18n="sim.extraAtRetirement">סכום נוסף בפנסיה בפרישה</div>
+ </div>
+ </div>
 
-            <!-- ── 4. Loan prepayment ── -->
-            <div class="scenario-card">
-                <h3 data-i18n="sim.loanTitle">🏦 החזרת הלוואה מוקדמת</h3>
-                <p class="subtitle" id="loanSubtitle" data-i18n="sim.loanSubtitle">מה הריבית שאתה חוסך</p>
+ <!-- ── 4. Loan prepayment ── -->
+ <div class="scenario-card">
+ <h3 data-i18n="sim.loanTitle">🏦 החזרת הלוואה מוקדמת</h3>
+ <p class="subtitle" id="loanSubtitle" data-i18n="sim.loanSubtitle">מה הריבית שאתה חוסך</p>
 
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.loanBalLabel">יתרת הלוואה</span><span id="loanBalVal">₪200,000</span></div>
-                    <input type="range" id="loanBal" min="10000" max="2000000" step="10000" value="200000">
-                </div>
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.loanRateLabel">ריבית שנתית</span><span id="loanRateVal">4%</span></div>
-                    <input type="range" id="loanRate" min="1" max="12" step="0.25" value="4">
-                </div>
-                <div class="slider-row">
-                    <div class="slider-label"><span data-i18n="sim.extraPaymentLabel">תשלום נוסף חודשי</span><span id="loanExtraVal">₪1,000</span></div>
-                    <input type="range" id="loanExtra" min="100" max="10000" step="100" value="1000">
-                </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.loanBalLabel">יתרת הלוואה</span><span id="loanBalVal">₪200,000</span></div>
+ <input type="range" id="loanBal" min="10000" max="2000000" step="10000" value="200000">
+ </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.loanRateLabel">ריבית שנתית</span><span id="loanRateVal">4%</span></div>
+ <input type="range" id="loanRate" min="1" max="12" step="0.25" value="4">
+ </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.extraPaymentLabel">תשלום נוסף חודשי</span><span id="loanExtraVal">₪1,000</span></div>
+ <input type="range" id="loanExtra" min="100" max="10000" step="100" value="1000">
+ </div>
 
-                <div class="result-banner" id="loanResult">
-                    <div class="result-main" id="loanResultAmt">₪0</div>
-                    <div class="result-sub" id="loanResultSub" data-i18n="sim.interestSaving">חיסכון בריבית + קיצור תקופה</div>
-                </div>
-            </div>
+ <div class="result-banner" id="loanResult">
+ <div class="result-main" id="loanResultAmt">₪0</div>
+ <div class="result-sub" id="loanResultSub" data-i18n="sim.interestSaving">חיסכון בריבית + קיצור תקופה</div>
+ </div>
+ </div>
 
-            <!-- ── 5. Compound comparison (wide) ── -->
-            <div class="scenario-card wide">
-                <h3 data-i18n="sim.compoundTitle">📈 השקעה חודשית — כוח הריבית דריבית</h3>
-                <p class="subtitle" data-i18n="sim.compoundSubtitle">גרף השוואה בין אפיקי השקעה שונים</p>
+ <!-- ── 5. Compound comparison (wide) ── -->
+ <div class="scenario-card wide">
+ <h3 data-i18n="sim.compoundTitle">📈 השקעה חודשית — כוח הריבית דריבית</h3>
+ <p class="subtitle" data-i18n="sim.compoundSubtitle">גרף השוואה בין אפיקי השקעה שונים</p>
 
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
-                    <div class="slider-row">
-                        <div class="slider-label"><span data-i18n="sim.monthlyAmountLabel">סכום חודשי</span><span id="cmpMonthlyVal">₪2,000</span></div>
-                        <input type="range" id="cmpMonthly" min="200" max="20000" step="200" value="2000">
-                    </div>
-                    <div class="slider-row">
-                        <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="cmpYearsVal">20 שנים</span></div>
-                        <input type="range" id="cmpYears" min="5" max="40" step="1" value="20">
-                    </div>
-                </div>
+ <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.monthlyAmountLabel">סכום חודשי</span><span id="cmpMonthlyVal">₪2,000</span></div>
+ <input type="range" id="cmpMonthly" min="200" max="20000" step="200" value="2000">
+ </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.horizonLabel">אופק זמן</span><span id="cmpYearsVal">20 שנים</span></div>
+ <input type="range" id="cmpYears" min="5" max="40" step="1" value="20">
+ </div>
+ </div>
 
-                <div class="chart-wrap" style="height:260px;"><canvas id="cmpChart"></canvas></div>
+ <div class="chart-wrap" style="height:260px;"><canvas id="cmpChart"></canvas></div>
 
-                <table class="cmp-table" id="cmpTable">
-                    <thead>
-                        <tr><th data-i18n="sim.colChannel">אפיק</th><th data-i18n="sim.colReturn">תשואה</th><th data-i18n="sim.colFinal">סכום סופי</th><th data-i18n="sim.colProfit">רווח</th></tr>
-                    </thead>
-                    <tbody id="cmpBody"></tbody>
-                </table>
-            </div>
+ <table class="cmp-table" id="cmpTable">
+ <thead>
+ <tr><th data-i18n="sim.colChannel">אפיק</th><th data-i18n="sim.colReturn">תשואה</th><th data-i18n="sim.colFinal">סכום סופי</th><th data-i18n="sim.colProfit">רווח</th></tr>
+ </thead>
+ <tbody id="cmpBody"></tbody>
+ </table>
+ </div>
 
-            <!-- ── 6. Net worth projection (wide) ── -->
-            <div class="scenario-card wide">
-                <h3 data-i18n="sim.nwTitle">🚀 תחזית שווי נקי — שנה לשנה</h3>
-                <p class="subtitle" data-i18n="sim.nwSubtitle">בהנחה שתמשיך להכניס ולהוציא כמו היום</p>
+ <!-- ── 6. Net worth projection (wide) ── -->
+ <div class="scenario-card wide">
+ <h3 data-i18n="sim.nwTitle">🚀 תחזית שווי נקי — שנה לשנה</h3>
+ <p class="subtitle" data-i18n="sim.nwSubtitle">בהנחה שתמשיך להכניס ולהוציא כמו היום</p>
 
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
-                    <div class="slider-row">
-                        <div class="slider-label"><span data-i18n="sim.extraMonthlySavings">חיסכון חודשי נוסף</span><span id="nwSaveVal">₪0</span></div>
-                        <input type="range" id="nwSave" min="0" max="10000" step="200" value="0">
-                    </div>
-                    <div class="slider-row">
-                        <div class="slider-label"><span data-i18n="sim.annualReturnOnInv">תשואה שנתית על ההשקעות</span><span id="nwReturnVal">6%</span></div>
-                        <input type="range" id="nwReturn" min="0" max="15" step="0.5" value="6">
-                    </div>
-                </div>
+ <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.extraMonthlySavings">חיסכון חודשי נוסף</span><span id="nwSaveVal">₪0</span></div>
+ <input type="range" id="nwSave" min="0" max="10000" step="200" value="0">
+ </div>
+ <div class="slider-row">
+ <div class="slider-label"><span data-i18n="sim.annualReturnOnInv">תשואה שנתית על ההשקעות</span><span id="nwReturnVal">6%</span></div>
+ <input type="range" id="nwReturn" min="0" max="15" step="0.5" value="6">
+ </div>
+ </div>
 
-                <div class="chart-wrap" style="height:260px;"><canvas id="nwChart"></canvas></div>
-            </div>
+ <div class="chart-wrap" style="height:260px;"><canvas id="nwChart"></canvas></div>
+ </div>
 
-        </div>
-    </div><!-- /main-content -->
+ </div>
+ </div><!-- /main-content -->
 </div>
 
 <script src="../js/sidebar.js"></script>
-    <script src="../js/app.js"></script>
+ <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
 <script src="../js/idb.js"></script>
 <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 // ── Utilities ──────────────────────────────────────────────
 const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
 const fmtShort = n => {
-    if (n >= 1e6) return '₪' + (n / 1e6).toFixed(1) + 'M';
-    if (n >= 1000) return '₪' + Math.round(n / 1000) + 'K';
-    return fmt(n);
+ if (n >= 1e6) return '₪' + (n / 1e6).toFixed(1) + 'M';
+ if (n >= 1000) return '₪' + Math.round(n / 1000) + 'K';
+ return fmt(n);
 };
 
 // Compound future value of monthly contributions
-// FV = PMT × [((1+r)^n − 1) / r]   where r = monthly rate, n = months
+// FV = PMT × [((1+r)^n − 1) / r] where r = monthly rate, n = months
 function fvMonthly(monthly, annualRate, years) {
-    if (annualRate === 0) return monthly * years * 12;
-    const r = annualRate / 100 / 12;
-    const n = years * 12;
-    return monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+ if (annualRate === 0) return monthly * years * 12;
+ const r = annualRate / 100 / 12;
+ const n = years * 12;
+ return monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
 }
 
 // ── CHARTS registry (destroy before recreate) ──────────────
 const charts = {};
 function makeChart(id, cfg) {
-    if (charts[id]) charts[id].destroy();
-    const ctx = document.getElementById(id)?.getContext('2d');
-    if (!ctx) return;
-    charts[id] = new Chart(ctx, cfg);
+ if (charts[id]) charts[id].destroy();
+ const ctx = document.getElementById(id)?.getContext('2d');
+ if (!ctx) return;
+ charts[id] = new Chart(ctx, cfg);
 }
 
 // ── Colour palette ──────────────────────────────────────────
@@ -365,350 +357,350 @@ const PALETTE = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4'];
 // SCENARIO 1 — Food / Coffee
 // ══════════════════════════════════════════════════════════════
 function initFood() {
-    // Try to pull avg monthly food+restaurants from credit cards
-    try {
-        const cc = Storage.getCreditCards();
-        const now = new Date();
-        let total = 0, months = 0;
-        for (let i = 1; i <= 6; i++) {
-            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-            const amt = (cc.expenses || [])
-                .filter(e => e.date?.startsWith(key) && ['food','restaurants','entertainment'].includes(e.category))
-                .reduce((s, e) => s + e.amount, 0);
-            if (amt > 0) { total += amt; months++; }
-        }
-        if (months > 0) {
-            const avg = Math.round(total / months / 50) * 50;
-            document.getElementById('foodSlider').value = Math.min(3000, Math.max(100, avg));
-            document.getElementById('foodSubtitle').textContent = `ממוצע חודשי אמיתי: ${fmt(avg)} (מזון + מסעדות + בידור)`;
-        }
-    } catch(e) {}
+ // Try to pull avg monthly food+restaurants from credit cards
+ try {
+ const cc = Storage.getCreditCards();
+ const now = new Date();
+ let total = 0, months = 0;
+ for (let i = 1; i <= 6; i++) {
+ const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+ const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+ const amt = (cc.expenses || [])
+ .filter(e => e.date?.startsWith(key) && ['food','restaurants','entertainment'].includes(e.category))
+ .reduce((s, e) => s + e.amount, 0);
+ if (amt > 0) { total += amt; months++; }
+ }
+ if (months > 0) {
+ const avg = Math.round(total / months / 50) * 50;
+ document.getElementById('foodSlider').value = Math.min(3000, Math.max(100, avg));
+ document.getElementById('foodSubtitle').textContent = `ממוצע חודשי אמיתי: ${fmt(avg)} (מזון + מסעדות + בידור)`;
+ }
+ } catch(e) {}
 
-    const slider = document.getElementById('foodSlider');
-    const years  = document.getElementById('foodYears');
-    const RATE = 8.5;
+ const slider = document.getElementById('foodSlider');
+ const years = document.getElementById('foodYears');
+ const RATE = 8.5;
 
-    function update() {
-        const m = +slider.value, y = +years.value;
-        const fv = fvMonthly(m, RATE, y);
-        document.getElementById('foodSaveVal').textContent = fmt(m);
-        document.getElementById('foodYearsVal').textContent = y + ' ' + I18n.t('sim.years');
-        document.getElementById('foodResultAmt').textContent = fmtShort(fv);
+ function update() {
+ const m = +slider.value, y = +years.value;
+ const fv = fvMonthly(m, RATE, y);
+ document.getElementById('foodSaveVal').textContent = fmt(m);
+ document.getElementById('foodYearsVal').textContent = y + ' ' + I18n.t('sim.years');
+ document.getElementById('foodResultAmt').textContent = fmtShort(fv);
 
-        const labels = Array.from({length: y}, (_, i) => I18n.t('sim.yearLabel') + (i+1));
-        const saved = labels.map((_, i) => m * (i+1) * 12);
-        const invested = labels.map((_, i) => fvMonthly(m, RATE, i+1));
+ const labels = Array.from({length: y}, (_, i) => I18n.t('sim.yearLabel') + (i+1));
+ const saved = labels.map((_, i) => m * (i+1) * 12);
+ const invested = labels.map((_, i) => fvMonthly(m, RATE, i+1));
 
-        makeChart('foodChart', {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [
-                    { label: I18n.t('sim.savingsOnly'), data: saved,    borderColor: '#94a3b8', fill: false, pointRadius: 0, tension: .3 },
-                    { label: I18n.t('sim.invested'), data: invested, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.12)', fill: true, pointRadius: 0, tension: .3 }
-                ]
-            },
-            options: {
-                plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
-                scales: {
-                    y: { ticks: { callback: v => fmtShort(v), font: { size: 10 } }, grid: { color: 'rgba(0,0,0,.05)' } },
-                    x: { ticks: { font: { size: 10 } } }
-                },
-                animation: { duration: 250 }
-            }
-        });
-    }
-    slider.addEventListener('input', update);
-    years.addEventListener('input', update);
-    update();
+ makeChart('foodChart', {
+ type: 'line',
+ data: {
+ labels,
+ datasets: [
+ { label: I18n.t('sim.savingsOnly'), data: saved, borderColor: '#94a3b8', fill: false, pointRadius: 0, tension: .3 },
+ { label: I18n.t('sim.invested'), data: invested, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.12)', fill: true, pointRadius: 0, tension: .3 }
+ ]
+ },
+ options: {
+ plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+ scales: {
+ y: { ticks: { callback: v => fmtShort(v), font: { size: 10 } }, grid: { color: 'rgba(0,0,0,.05)' } },
+ x: { ticks: { font: { size: 10 } } }
+ },
+ animation: { duration: 250 }
+ }
+ });
+ }
+ slider.addEventListener('input', update);
+ years.addEventListener('input', update);
+ update();
 }
 
 // ══════════════════════════════════════════════════════════════
 // SCENARIO 2 — Subscriptions
 // ══════════════════════════════════════════════════════════════
 function initSubs() {
-    const subs = (Storage.getSubscriptions() || []).filter(s => s.active !== false);
-    const listEl = document.getElementById('subList');
+ const subs = (Storage.getSubscriptions() || []).filter(s => s.active !== false);
+ const listEl = document.getElementById('subList');
 
-    if (!subs.length) {
-        listEl.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;">${I18n.t('sim.noActiveSubs')}</div>`;
-    } else {
-        listEl.innerHTML = subs.map((s, i) => {
-            let amt = s.amount || 0;
-            if (s.billingCycle === 'yearly')    amt /= 12;
-            if (s.billingCycle === 'quarterly') amt /= 3;
-            return `<div class="sub-row">
-                <input type="checkbox" id="sub${i}" data-amt="${amt.toFixed(2)}" onchange="updateSubs()">
-                <label for="sub${i}">${s.name || 'מנוי'}</label>
-                <span class="sub-amt">${fmt(amt)}/${I18n.t('sim.month')}</span>
-            </div>`;
-        }).join('');
-    }
+ if (!subs.length) {
+ listEl.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;">${I18n.t('sim.noActiveSubs')}</div>`;
+ } else {
+ listEl.innerHTML = subs.map((s, i) => {
+ let amt = s.amount || 0;
+ if (s.billingCycle === 'yearly') amt /= 12;
+ if (s.billingCycle === 'quarterly') amt /= 3;
+ return `<div class="sub-row">
+ <input type="checkbox" id="sub${i}" data-amt="${amt.toFixed(2)}" onchange="updateSubs()">
+ <label for="sub${i}">${s.name || 'מנוי'}</label>
+ <span class="sub-amt">${fmt(amt)}/${I18n.t('sim.month')}</span>
+ </div>`;
+ }).join('');
+ }
 
-    const yearsSlider = document.getElementById('subYears');
-    yearsSlider.addEventListener('input', updateSubs);
+ const yearsSlider = document.getElementById('subYears');
+ yearsSlider.addEventListener('input', updateSubs);
 }
 
 function updateSubs() {
-    let monthly = 0;
-    document.querySelectorAll('#subList input[type=checkbox]:checked').forEach(cb => {
-        monthly += parseFloat(cb.dataset.amt || 0);
-    });
-    const y = +document.getElementById('subYears').value;
-    document.getElementById('subYearsVal').textContent = y + ' ' + I18n.t('sim.years');
-    const fv = fvMonthly(monthly, 8.5, y);
-    document.getElementById('subResultAmt').textContent = fmtShort(fv);
+ let monthly = 0;
+ document.querySelectorAll('#subList input[type=checkbox]:checked').forEach(cb => {
+ monthly += parseFloat(cb.dataset.amt || 0);
+ });
+ const y = +document.getElementById('subYears').value;
+ document.getElementById('subYearsVal').textContent = y + ' ' + I18n.t('sim.years');
+ const fv = fvMonthly(monthly, 8.5, y);
+ document.getElementById('subResultAmt').textContent = fmtShort(fv);
 }
 
 // ══════════════════════════════════════════════════════════════
 // SCENARIO 3 — Pension
 // ══════════════════════════════════════════════════════════════
 function initPension() {
-    try {
-        const income = Storage.get('finance_income') || [];
-        const monthlySalary = income
-            .filter(i => i.type === 'salary')
-            .reduce((s, i) => {
-                const m = i.frequency === 'annual' ? i.amount/12 : i.frequency === 'one_time' ? 0 : i.amount;
-                return s + m;
-            }, 0);
-        if (monthlySalary > 0) {
-            document.getElementById('pensionSubtitle').textContent = `משכורת חודשית: ${fmt(monthlySalary)}`;
-            const suggested = Math.round(monthlySalary * 0.02 / 100) * 100;
-            document.getElementById('pensionSlider').value = Math.min(5000, Math.max(100, suggested || 500));
-        }
-    } catch(e) {}
+ try {
+ const income = Storage.get('finance_income') || [];
+ const monthlySalary = income
+ .filter(i => i.type === 'salary')
+ .reduce((s, i) => {
+ const m = i.frequency === 'annual' ? i.amount/12 : i.frequency === 'one_time' ? 0 : i.amount;
+ return s + m;
+ }, 0);
+ if (monthlySalary > 0) {
+ document.getElementById('pensionSubtitle').textContent = `משכורת חודשית: ${fmt(monthlySalary)}`;
+ const suggested = Math.round(monthlySalary * 0.02 / 100) * 100;
+ document.getElementById('pensionSlider').value = Math.min(5000, Math.max(100, suggested || 500));
+ }
+ } catch(e) {}
 
-    const slider = document.getElementById('pensionSlider');
-    const years  = document.getElementById('pensionYears');
-    const ret    = document.getElementById('pensionReturn');
+ const slider = document.getElementById('pensionSlider');
+ const years = document.getElementById('pensionYears');
+ const ret = document.getElementById('pensionReturn');
 
-    function update() {
-        const m = +slider.value, y = +years.value, r = +ret.value;
-        const fv = fvMonthly(m, r, y);
-        document.getElementById('pensionAddVal').textContent = fmt(m);
-        document.getElementById('pensionYearsVal').textContent = y + ' ' + I18n.t('sim.years');
-        document.getElementById('pensionReturnVal').textContent = r + '%';
-        document.getElementById('pensionResultAmt').textContent = fmtShort(fv);
+ function update() {
+ const m = +slider.value, y = +years.value, r = +ret.value;
+ const fv = fvMonthly(m, r, y);
+ document.getElementById('pensionAddVal').textContent = fmt(m);
+ document.getElementById('pensionYearsVal').textContent = y + ' ' + I18n.t('sim.years');
+ document.getElementById('pensionReturnVal').textContent = r + '%';
+ document.getElementById('pensionResultAmt').textContent = fmtShort(fv);
 
-        // monthly income in retirement (25 years payout)
-        const monthly = fv / (25 * 12);
-        document.querySelector('#pensionResult .result-sub').textContent =
-            `≈ ${fmt(monthly)}/${I18n.t('sim.month')} ${I18n.t('sim.extraPensionSub')}`;
-    }
-    slider.addEventListener('input', update);
-    years.addEventListener('input', update);
-    ret.addEventListener('input', update);
-    update();
+ // monthly income in retirement (25 years payout)
+ const monthly = fv / (25 * 12);
+ document.querySelector('#pensionResult .result-sub').textContent =
+ `≈ ${fmt(monthly)}/${I18n.t('sim.month')} ${I18n.t('sim.extraPensionSub')}`;
+ }
+ slider.addEventListener('input', update);
+ years.addEventListener('input', update);
+ ret.addEventListener('input', update);
+ update();
 }
 
 // ══════════════════════════════════════════════════════════════
 // SCENARIO 4 — Loan prepayment
 // ══════════════════════════════════════════════════════════════
 function initLoan() {
-    try {
-        const loans = Storage.getLoans() || [];
-        if (loans.length > 0) {
-            const biggest = loans.reduce((a, b) =>
-                (b.remainingBalance || b.amount || 0) > (a.remainingBalance || a.amount || 0) ? b : a);
-            const bal = biggest.remainingBalance || biggest.amount || 0;
-            const rate = biggest.interestRate || 4;
-            if (bal > 0) {
-                document.getElementById('loanBal').value = Math.min(2000000, bal);
-                document.getElementById('loanRate').value = Math.min(12, rate);
-                document.getElementById('loanSubtitle').textContent =
-                    `ההלוואה הגדולה: ${biggest.name || ''} – ${fmt(bal)}`;
-            }
-        }
-    } catch(e) {}
+ try {
+ const loans = Storage.getLoans() || [];
+ if (loans.length > 0) {
+ const biggest = loans.reduce((a, b) =>
+ (b.remainingBalance || b.amount || 0) > (a.remainingBalance || a.amount || 0) ? b : a);
+ const bal = biggest.remainingBalance || biggest.amount || 0;
+ const rate = biggest.interestRate || 4;
+ if (bal > 0) {
+ document.getElementById('loanBal').value = Math.min(2000000, bal);
+ document.getElementById('loanRate').value = Math.min(12, rate);
+ document.getElementById('loanSubtitle').textContent =
+ `ההלוואה הגדולה: ${biggest.name || ''} – ${fmt(bal)}`;
+ }
+ }
+ } catch(e) {}
 
-    const balSlider   = document.getElementById('loanBal');
-    const rateSlider  = document.getElementById('loanRate');
-    const extraSlider = document.getElementById('loanExtra');
+ const balSlider = document.getElementById('loanBal');
+ const rateSlider = document.getElementById('loanRate');
+ const extraSlider = document.getElementById('loanExtra');
 
-    function update() {
-        const balance = +balSlider.value;
-        const rate    = +rateSlider.value;
-        const extra   = +extraSlider.value;
+ function update() {
+ const balance = +balSlider.value;
+ const rate = +rateSlider.value;
+ const extra = +extraSlider.value;
 
-        document.getElementById('loanBalVal').textContent   = fmtShort(balance);
-        document.getElementById('loanRateVal').textContent  = rate + '%';
-        document.getElementById('loanExtraVal').textContent = fmt(extra);
+ document.getElementById('loanBalVal').textContent = fmtShort(balance);
+ document.getElementById('loanRateVal').textContent = rate + '%';
+ document.getElementById('loanExtraVal').textContent = fmt(extra);
 
-        // Approximate: total interest saved = PV × rate × years saved
-        // Simple approximation: extra payment reduces principal faster
-        const monthlyRate = rate / 100 / 12;
-        // Years to payoff with normal payment (assume current monthly = balance/120 baseline)
-        // We'll calculate interest saved by simulating amortization
-        function totalInterest(principal, annualRate, extraMonthly) {
-            if (principal <= 0 || annualRate <= 0) return 0;
-            const r = annualRate / 100 / 12;
-            // standard payment for 20-year term baseline
-            const stdMonths = 240;
-            const stdPmt = principal * r * Math.pow(1+r, stdMonths) / (Math.pow(1+r, stdMonths) - 1);
-            let bal = principal, interest = 0, months = 0;
-            const pmt = stdPmt + extraMonthly;
-            while (bal > 0 && months < 480) {
-                const intCharge = bal * r;
-                interest += intCharge;
-                const principal_paid = Math.min(pmt - intCharge, bal);
-                bal -= principal_paid;
-                months++;
-            }
-            return { interest, months };
-        }
-        const base  = totalInterest(balance, rate, 0);
-        const extra_ = totalInterest(balance, rate, extra);
-        const saved  = base.interest - extra_.interest;
-        const monthsSaved = base.months - extra_.months;
-        const yearsSaved = (monthsSaved / 12).toFixed(1);
+ // Approximate: total interest saved = PV × rate × years saved
+ // Simple approximation: extra payment reduces principal faster
+ const monthlyRate = rate / 100 / 12;
+ // Years to payoff with normal payment (assume current monthly = balance/120 baseline)
+ // We'll calculate interest saved by simulating amortization
+ function totalInterest(principal, annualRate, extraMonthly) {
+ if (principal <= 0 || annualRate <= 0) return 0;
+ const r = annualRate / 100 / 12;
+ // standard payment for 20-year term baseline
+ const stdMonths = 240;
+ const stdPmt = principal * r * Math.pow(1+r, stdMonths) / (Math.pow(1+r, stdMonths) - 1);
+ let bal = principal, interest = 0, months = 0;
+ const pmt = stdPmt + extraMonthly;
+ while (bal > 0 && months < 480) {
+ const intCharge = bal * r;
+ interest += intCharge;
+ const principal_paid = Math.min(pmt - intCharge, bal);
+ bal -= principal_paid;
+ months++;
+ }
+ return { interest, months };
+ }
+ const base = totalInterest(balance, rate, 0);
+ const extra_ = totalInterest(balance, rate, extra);
+ const saved = base.interest - extra_.interest;
+ const monthsSaved = base.months - extra_.months;
+ const yearsSaved = (monthsSaved / 12).toFixed(1);
 
-        document.getElementById('loanResultAmt').textContent = fmtShort(Math.max(0, saved));
-        document.getElementById('loanResultSub').textContent =
-            `${I18n.t('sim.interestSaving')} · ${I18n.t('sim.periodShortened')}: ${yearsSaved} ${I18n.t('sim.years')}`;
-    }
-    balSlider.addEventListener('input', update);
-    rateSlider.addEventListener('input', update);
-    extraSlider.addEventListener('input', update);
-    update();
+ document.getElementById('loanResultAmt').textContent = fmtShort(Math.max(0, saved));
+ document.getElementById('loanResultSub').textContent =
+ `${I18n.t('sim.interestSaving')} · ${I18n.t('sim.periodShortened')}: ${yearsSaved} ${I18n.t('sim.years')}`;
+ }
+ balSlider.addEventListener('input', update);
+ rateSlider.addEventListener('input', update);
+ extraSlider.addEventListener('input', update);
+ update();
 }
 
 // ══════════════════════════════════════════════════════════════
 // SCENARIO 5 — Compound comparison
 // ══════════════════════════════════════════════════════════════
 function getChannels() {
-    return [
-        { name: I18n.t('sim.channelDeposit'),   rate: 3.5,  color: '#94a3b8' },
-        { name: I18n.t('sim.channelBonds'),      rate: 5.0,  color: '#60a5fa' },
-        { name: I18n.t('sim.channelTraining'),   rate: 6.5,  color: '#34d399' },
-        { name: 'S&P 500 (ETF)',                 rate: 10.0, color: '#f59e0b' },
-        { name: I18n.t('sim.channelGrowth'),     rate: 12.0, color: '#f43f5e' },
-    ];
+ return [
+ { name: I18n.t('sim.channelDeposit'), rate: 3.5, color: '#94a3b8' },
+ { name: I18n.t('sim.channelBonds'), rate: 5.0, color: '#60a5fa' },
+ { name: I18n.t('sim.channelTraining'), rate: 6.5, color: '#34d399' },
+ { name: 'S&P 500 (ETF)', rate: 10.0, color: '#f59e0b' },
+ { name: I18n.t('sim.channelGrowth'), rate: 12.0, color: '#f43f5e' },
+ ];
 }
 
 function initCmp() {
-    const monthly = document.getElementById('cmpMonthly');
-    const years   = document.getElementById('cmpYears');
+ const monthly = document.getElementById('cmpMonthly');
+ const years = document.getElementById('cmpYears');
 
-    function update() {
-        const m = +monthly.value, y = +years.value;
-        document.getElementById('cmpMonthlyVal').textContent = fmt(m);
-        document.getElementById('cmpYearsVal').textContent   = y + ' ' + I18n.t('sim.years');
+ function update() {
+ const m = +monthly.value, y = +years.value;
+ document.getElementById('cmpMonthlyVal').textContent = fmt(m);
+ document.getElementById('cmpYearsVal').textContent = y + ' ' + I18n.t('sim.years');
 
-        const labels = Array.from({length: y}, (_, i) => `${i+1}`);
-        const CHANNELS = getChannels();
-        const datasets = CHANNELS.map(c => ({
-            label: c.name,
-            data: labels.map((_, i) => fvMonthly(m, c.rate, i+1)),
-            borderColor: c.color,
-            backgroundColor: c.color + '18',
-            fill: false,
-            pointRadius: 0,
-            tension: .3
-        }));
+ const labels = Array.from({length: y}, (_, i) => `${i+1}`);
+ const CHANNELS = getChannels();
+ const datasets = CHANNELS.map(c => ({
+ label: c.name,
+ data: labels.map((_, i) => fvMonthly(m, c.rate, i+1)),
+ borderColor: c.color,
+ backgroundColor: c.color + '18',
+ fill: false,
+ pointRadius: 0,
+ tension: .3
+ }));
 
-        makeChart('cmpChart', {
-            type: 'line',
-            data: { labels, datasets },
-            options: {
-                plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
-                scales: {
-                    y: { ticks: { callback: v => fmtShort(v), font: { size: 10 } }, grid: { color: 'rgba(0,0,0,.05)' } },
-                    x: { title: { display: true, text: I18n.t('sim.yearLabel'), font: { size: 10 } }, ticks: { font: { size: 10 } } }
-                },
-                animation: { duration: 250 }
-            }
-        });
+ makeChart('cmpChart', {
+ type: 'line',
+ data: { labels, datasets },
+ options: {
+ plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
+ scales: {
+ y: { ticks: { callback: v => fmtShort(v), font: { size: 10 } }, grid: { color: 'rgba(0,0,0,.05)' } },
+ x: { title: { display: true, text: I18n.t('sim.yearLabel'), font: { size: 10 } }, ticks: { font: { size: 10 } } }
+ },
+ animation: { duration: 250 }
+ }
+ });
 
-        const tbody = document.getElementById('cmpBody');
-        const contributed = m * y * 12;
-        tbody.innerHTML = getChannels().map(c => {
-            const fv = fvMonthly(m, c.rate, y);
-            const profit = fv - contributed;
-            return `<tr>
-                <td>${c.name}</td>
-                <td>${c.rate}%</td>
-                <td class="highlight">${fmtShort(fv)}</td>
-                <td style="color:#10b981">+${fmtShort(profit)}</td>
-            </tr>`;
-        }).join('');
-        // Add "no investment" row
-        tbody.innerHTML += `<tr style="opacity:.5">
-            <td>${I18n.t('sim.channelCash')}</td><td>0%</td>
-            <td>${fmtShort(contributed)}</td><td>₪0</td>
-        </tr>`;
-    }
-    monthly.addEventListener('input', update);
-    years.addEventListener('input', update);
-    update();
+ const tbody = document.getElementById('cmpBody');
+ const contributed = m * y * 12;
+ tbody.innerHTML = getChannels().map(c => {
+ const fv = fvMonthly(m, c.rate, y);
+ const profit = fv - contributed;
+ return `<tr>
+ <td>${c.name}</td>
+ <td>${c.rate}%</td>
+ <td class="highlight">${fmtShort(fv)}</td>
+ <td style="color:#10b981">+${fmtShort(profit)}</td>
+ </tr>`;
+ }).join('');
+ // Add "no investment" row
+ tbody.innerHTML += `<tr style="opacity:.5">
+ <td>${I18n.t('sim.channelCash')}</td><td>0%</td>
+ <td>${fmtShort(contributed)}</td><td>₪0</td>
+ </tr>`;
+ }
+ monthly.addEventListener('input', update);
+ years.addEventListener('input', update);
+ update();
 }
 
 // ══════════════════════════════════════════════════════════════
 // SCENARIO 6 — Net worth projection
 // ══════════════════════════════════════════════════════════════
 function initNetWorth() {
-    const nw   = Storage.getNetWorth?.() || 0;
-    const save = document.getElementById('nwSave');
-    const ret  = document.getElementById('nwReturn');
+ const nw = Storage.getNetWorth?.() || 0;
+ const save = document.getElementById('nwSave');
+ const ret = document.getElementById('nwReturn');
 
-    function update() {
-        const extra = +save.value, rate = +ret.value;
-        document.getElementById('nwSaveVal').textContent   = fmt(extra);
-        document.getElementById('nwReturnVal').textContent = rate + '%';
+ function update() {
+ const extra = +save.value, rate = +ret.value;
+ document.getElementById('nwSaveVal').textContent = fmt(extra);
+ document.getElementById('nwReturnVal').textContent = rate + '%';
 
-        const YEARS = 20;
-        const labels = [I18n.t('sim.today'), ...Array.from({length: YEARS}, (_, i) => I18n.t('sim.yearLabel') + (i+1))];
-        const base = [], withSavings = [];
-        let b0 = nw, b1 = nw;
-        base.push(b0); withSavings.push(b1);
-        for (let i = 0; i < YEARS; i++) {
-            b0 = b0 * (1 + rate/100);
-            b1 = b1 * (1 + rate/100) + extra * 12;
-            base.push(b0);
-            withSavings.push(b1);
-        }
+ const YEARS = 20;
+ const labels = [I18n.t('sim.today'), ...Array.from({length: YEARS}, (_, i) => I18n.t('sim.yearLabel') + (i+1))];
+ const base = [], withSavings = [];
+ let b0 = nw, b1 = nw;
+ base.push(b0); withSavings.push(b1);
+ for (let i = 0; i < YEARS; i++) {
+ b0 = b0 * (1 + rate/100);
+ b1 = b1 * (1 + rate/100) + extra * 12;
+ base.push(b0);
+ withSavings.push(b1);
+ }
 
-        makeChart('nwChart', {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [
-                    { label: I18n.t('sim.noExtraSavings'), data: base,         borderColor: '#94a3b8', fill: false, pointRadius: 2, tension: .3 },
-                    { label: `+${fmt(extra)}/${I18n.t('sim.month')}`, data: withSavings, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.1)', fill: true, pointRadius: 2, tension: .3 }
-                ]
-            },
-            options: {
-                plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
-                scales: {
-                    y: { ticks: { callback: v => fmtShort(v), font: { size: 10 } }, grid: { color: 'rgba(0,0,0,.05)' } },
-                    x: { ticks: { font: { size: 9 }, maxRotation: 45 } }
-                },
-                animation: { duration: 250 }
-            }
-        });
-    }
-    save.addEventListener('input', update);
-    ret.addEventListener('input', update);
-    update();
+ makeChart('nwChart', {
+ type: 'line',
+ data: {
+ labels,
+ datasets: [
+ { label: I18n.t('sim.noExtraSavings'), data: base, borderColor: '#94a3b8', fill: false, pointRadius: 2, tension: .3 },
+ { label: `+${fmt(extra)}/${I18n.t('sim.month')}`, data: withSavings, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.1)', fill: true, pointRadius: 2, tension: .3 }
+ ]
+ },
+ options: {
+ plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+ scales: {
+ y: { ticks: { callback: v => fmtShort(v), font: { size: 10 } }, grid: { color: 'rgba(0,0,0,.05)' } },
+ x: { ticks: { font: { size: 9 }, maxRotation: 45 } }
+ },
+ animation: { duration: 250 }
+ }
+ });
+ }
+ save.addEventListener('input', update);
+ ret.addEventListener('input', update);
+ update();
 }
 
 // ── Hero stat ────────────────────────────────────────────────
 function updateHero() {
-    const fv = fvMonthly(1000, 8.5, 20);
-    document.getElementById('heroAmount').textContent = fmtShort(fv);
+ const fv = fvMonthly(1000, 8.5, 20);
+ document.getElementById('heroAmount').textContent = fmtShort(fv);
 }
 
 // ── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof I18n !== 'undefined') I18n.init();
-    updateHero();
-    initFood();
-    initSubs();
-    initPension();
-    initLoan();
-    initCmp();
-    initNetWorth();
+ if (typeof I18n !== 'undefined') I18n.init();
+ updateHero();
+ initFood();
+ initSubs();
+ initPension();
+ initLoan();
+ initCmp();
+ initNetWorth();
 });
 </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>

@@ -3,1594 +3,1586 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#8b5cf6">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>הקופות שלי - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .nav-link.active { background: #8b5cf6 !important; }
-        .page-header h1 { color: #8b5cf6; }
-        .btn-primary { background: #8b5cf6; color: #fff; }
-        .btn-primary:hover { background: #7c3aed; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#8b5cf6">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>הקופות שלי - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <style>
+ .nav-link.active { background: #8b5cf6 !important; }
+ .page-header h1 { color: #8b5cf6; }
+ .btn-primary { background: #8b5cf6; color: #fff; }
+ .btn-primary:hover { background: #7c3aed; }
 
-        .fund-type-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
+ .fund-type-tabs {
+ display: flex;
+ gap: 10px;
+ margin-bottom: 20px;
+ flex-wrap: wrap;
+ }
 
-        .fund-type-tab {
-            padding: 10px 20px;
-            border: 2px solid var(--color-border);
-            border-radius: var(--radius-md);
-            background: var(--color-bg-secondary);
-            color: var(--color-text-primary);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
+ .fund-type-tab {
+ padding: 10px 20px;
+ border: 2px solid var(--color-border);
+ border-radius: var(--radius-md);
+ background: var(--color-bg-secondary);
+ color: var(--color-text-primary);
+ cursor: pointer;
+ transition: all 0.3s;
+ font-weight: 500;
+ }
 
-        .fund-type-tab:hover {
-            border-color: var(--color-funds);
-        }
+ .fund-type-tab:hover {
+ border-color: var(--color-funds);
+ }
 
-        .fund-type-tab.active {
-            background: var(--color-funds);
-            border-color: var(--color-funds);
-            color: white;
-        }
+ .fund-type-tab.active {
+ background: var(--color-funds);
+ border-color: var(--color-funds);
+ color: white;
+ }
 
-        .fund-type-tab .icon {
-            margin-left: 8px;
-        }
+ .fund-type-tab .icon {
+ margin-left: 8px;
+ }
 
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
+ .summary-cards {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 15px;
+ margin-bottom: 25px;
+ }
 
-        .summary-card {
-            background: var(--color-bg-secondary);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            border: 1px solid var(--color-border);
-        }
+ .summary-card {
+ background: var(--color-bg-secondary);
+ border-radius: var(--radius-md);
+ padding: 20px;
+ border: 1px solid var(--color-border);
+ }
 
-        .summary-card .label {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 5px;
-        }
+ .summary-card .label {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 5px;
+ }
 
-        .summary-card .value {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
+ .summary-card .value {
+ font-size: 1.5rem;
+ font-weight: 700;
+ }
 
-        .track-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .track-row input[type="text"] { flex: 2; }
-        .track-row input[type="number"] { flex: 1; min-width: 70px; }
-        .track-row .btn-remove-track {
-            background: #ef4444;
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-size: 1rem;
-            line-height: 1;
-            flex-shrink: 0;
-        }
-        .track-row .btn-remove-track:hover { background: #dc2626; }
-        .track-total {
-            font-size: 0.85rem;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-        .track-total.ok { color: #10b981; }
-        .track-total.warn { color: #ef4444; }
-        .track-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 4px;
-        }
-        .track-badge {
-            font-size: 0.75rem;
-            background: var(--color-bg-secondary);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 1px 8px;
-            color: var(--color-text-secondary);
-        }
+ .track-row {
+ display: flex;
+ gap: 8px;
+ align-items: center;
+ margin-bottom: 8px;
+ }
+ .track-row input[type="text"] { flex: 2; }
+ .track-row input[type="number"] { flex: 1; min-width: 70px; }
+ .track-row .btn-remove-track {
+ background: #ef4444;
+ color: #fff;
+ border: none;
+ border-radius: var(--radius-sm);
+ width: 30px;
+ height: 30px;
+ cursor: pointer;
+ font-size: 1rem;
+ line-height: 1;
+ flex-shrink: 0;
+ }
+ .track-row .btn-remove-track:hover { background: #dc2626; }
+ .track-total {
+ font-size: 0.85rem;
+ margin-top: 4px;
+ font-weight: 600;
+ }
+ .track-total.ok { color: #10b981; }
+ .track-total.warn { color: #ef4444; }
+ .track-badges {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 4px;
+ margin-top: 4px;
+ }
+ .track-badge {
+ font-size: 0.75rem;
+ background: var(--color-bg-secondary);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 1px 8px;
+ color: var(--color-text-secondary);
+ }
 
-        .summary-card.pension .value { color: #f59e0b; }
-        .summary-card.training .value { color: #10b981; }
-        .summary-card.gemel .value { color: #3b82f6; }
-        .summary-card.savings .value { color: #ec4899; }
-        .summary-card.total .value { color: var(--color-funds); }
-    
+ .summary-card.pension .value { color: #f59e0b; }
+ .summary-card.training .value { color: #10b981; }
+ .summary-card.gemel .value { color: #3b82f6; }
+ .summary-card.savings .value { color: #ec4899; }
+ .summary-card.total .value { color: var(--color-funds); }
+ 
 /* Brazilian items — visible only when wl_market === 'br' */
 body:not(.market-br) .br-only { display: none !important; }
 </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>
-                    <span>💎</span>
-                    <span data-i18n="myFunds.title">הקופות שלי</span>
-                </h1>
-            </header>
-
-            <!-- Summary Cards -->
-            <div class="summary-cards">
-                <div class="summary-card pension">
-                    <div class="label">🏛️ <span data-i18n="myFunds.pension">פנסיה</span></div>
-                    <div class="value" id="pensionTotal">₪0</div>
-                </div>
-                <div class="summary-card training">
-                    <div class="label">🎓 <span data-i18n="myFunds.trainingFund">קרן השתלמות</span></div>
-                    <div class="value" id="trainingTotal">₪0</div>
-                </div>
-                <div class="summary-card gemel">
-                    <div class="label">💼 <span data-i18n="myFunds.providentFund">קופת גמל</span></div>
-                    <div class="value" id="gemelTotal">₪0</div>
-                </div>
-                <div class="summary-card savings">
-                    <div class="label">🐷 <span data-i18n="myFunds.savingsPolicy">פוליסת חיסכון</span></div>
-                    <div class="value" id="savingsTotal">₪0</div>
-                </div>
-                <div class="summary-card total">
-                    <div class="label">💎 <span data-i18n="myFunds.totalFunds">סה"כ חסכונות</span></div>
-                    <div class="value" id="allFundsTotal">₪0</div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="openAddModal()">
-                    <span>➕</span>
-                    <span data-i18n="myFunds.addFund">הוסף קרן</span>
-                </button>
-                <button class="btn btn-secondary" onclick="importSmartFile()">
-                    <span>📥</span>
-                    <span data-i18n="myFunds.smartImport">ייבוא נתונים</span>
-                </button>
-                <button class="btn btn-secondary" onclick="ImageImport.openImagePicker('funds')">
-                    <span>📷</span>
-                    <span data-i18n="myFunds.imageImport">ייבוא מתמונה</span>
-                </button>
-                <button class="btn btn-secondary" onclick="ImageImport.openPayslipPicker()">
-                    <span>📄</span>
-                    <span data-i18n="profile.scanPayslip">סרוק תלוש משכורת</span>
-                </button>
-                <button class="btn btn-secondary" onclick="importClearinghouse()" style="background: #059669; color: #fff;">
-                    <span>🏦</span>
-                    <span data-i18n="myFunds.importClearinghouse">ייבוא מהמסלקה</span>
-                </button>
-                <a href="https://www.swiftness.co.il/" target="_blank" rel="noopener" class="btn btn-secondary" style="text-decoration:none;font-size:0.85rem;">
-                    <span>🔗</span>
-                    <span data-i18n="myFunds.goToClearinghouse">המסלקה הפנסיונית</span>
-                </a>
-                <button class="btn btn-secondary" onclick="refreshAllReturns()">
-                    <span>🔄</span>
-                    <span data-i18n="myFunds.refreshReturns">רענן תשואות</span>
-                </button>
-            </div>
-
-            <!-- Fund Type Tabs -->
-            <div class="fund-type-tabs">
-                <button class="fund-type-tab active" data-type="all" onclick="filterByType('all')">
-                    <span class="icon">📊</span><span data-i18n="myFunds.all">הכל</span>
-                </button>
-                <button class="fund-type-tab" data-type="pension" onclick="filterByType('pension')">
-                    <span class="icon">🏛️</span><span data-i18n="myFunds.pension">פנסיה</span>
-                </button>
-                <button class="fund-type-tab" data-type="training" onclick="filterByType('training')">
-                    <span class="icon">🎓</span><span data-i18n="myFunds.trainingFund">קרן השתלמות</span>
-                </button>
-                <button class="fund-type-tab" data-type="gemel" onclick="filterByType('gemel')">
-                    <span class="icon">💼</span><span data-i18n="myFunds.providentFund">קופת גמל</span>
-                </button>
-                <button class="fund-type-tab" data-type="savings" onclick="filterByType('savings')">
-                    <span class="icon">🐷</span><span data-i18n="myFunds.savingsPolicy">פוליסת חיסכון</span>
-                </button>
-                <button class="fund-type-tab br-only" data-type="tesouro" data-br="1" onclick="filterByType('tesouro')">
-                    <span class="icon">🇧🇷</span><span data-i18n="myFunds.types.tesouro">Tesouro Direto</span>
-                </button>
-                <button class="fund-type-tab br-only" data-type="cdb" data-br="1" onclick="filterByType('cdb')">
-                    <span class="icon">🏦</span><span>CDB</span>
-                </button>
-                <button class="fund-type-tab br-only" data-type="lci_lca" data-br="1" onclick="filterByType('lci_lca')">
-                    <span class="icon">📄</span><span>LCI/LCA</span>
-                </button>
-                <button class="fund-type-tab br-only" data-type="fii" data-br="1" onclick="filterByType('fii')">
-                    <span class="icon">🏢</span><span>FII</span>
-                </button>
-                <button class="fund-type-tab br-only" data-type="poupanca" data-br="1" onclick="filterByType('poupanca')">
-                    <span class="icon">💰</span><span>Poupança</span>
-                </button>
-                <button class="fund-type-tab br-only" data-type="fgts" data-br="1" onclick="filterByType('fgts')">
-                    <span class="icon">🛡️</span><span>FGTS</span>
-                </button>
-                <button class="fund-type-tab br-only" data-type="pgbl_vgbl" data-br="1" onclick="filterByType('pgbl_vgbl')">
-                    <span class="icon">🧾</span><span>PGBL/VGBL</span>
-                </button>
-            </div>
-
-            <!-- Funds List -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📋</span>
-                        <span data-i18n="myFunds.fundList">רשימת קרנות</span>
-                    </h2>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="myFunds.fundName">שם הקרן</th>
-                                <th data-i18n="myFunds.type">סוג</th>
-                                <th data-i18n="myFunds.currentValue">שווי נוכחי</th>
-                                <th data-i18n="myFunds.monthCol">חודש</th>
-                                <th data-i18n="myFunds.yearCol">שנה</th>
-                                <th data-i18n="myFunds.threeYears">3 שנים</th>
-                                <th data-i18n="myFunds.fiveYears">5 שנים</th>
-                                <th data-i18n="myFunds.actions">פעולות</th>
-                            </tr>
-                        </thead>
-                        <tbody id="fundsTable">
-                            <!-- Will be populated by JS -->
-                        </tbody>
-                        <tfoot id="fundsFooter" style="display: none;">
-                            <tr style="background: var(--color-bg-secondary); font-weight: bold;">
-                                <td colspan="2" style="text-align: right;" data-i18n="myFunds.totalRow">סה"כ</td>
-                                <td id="totalValueFooter">₪0</td>
-                                <td colspan="5"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Distribution Chart -->
-            <div class="card" id="chartCard" style="display: none;">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <span class="icon">📊</span>
-                        <span data-i18n="myFunds.fundsDistribution">התפלגות קרנות</span>
-                    </h2>
-                </div>
-                <div class="chart-container" style="max-width: 400px; margin: 0 auto;">
-                    <canvas id="fundsChart"></canvas>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
-
-    <!-- Add/Edit Fund Modal -->
-    <div class="modal-overlay" id="fundModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="modalTitle" data-i18n="myFunds.addFund">הוסף קרן</h2>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="fundForm">
-                    <input type="hidden" id="fundId">
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.fundType">סוג קרן *</label>
-                        <select class="form-control" id="fundType" required>
-                            <option value="pension">🏛️ פנסיה</option>
-                            <option value="training">🎓 קרן השתלמות</option>
-                            <option value="gemel">💼 קופת גמל</option>
-                            <option value="savings">🐷 פוליסת חיסכון</option>
-                            <option class="br-only" disabled>── 🇧🇷 Brazil ──</option>
-                            <option class="br-only" data-br="1" value="tesouro">🇧🇷 Tesouro Direto</option>
-                            <option class="br-only" data-br="1" value="cdb">🏦 CDB</option>
-                            <option class="br-only" data-br="1" value="lci_lca">📄 LCI/LCA</option>
-                            <option class="br-only" data-br="1" value="fii">🏢 FII</option>
-                            <option class="br-only" data-br="1" value="poupanca">💰 Poupança</option>
-                            <option class="br-only" data-br="1" value="fgts">🛡️ FGTS</option>
-                            <option class="br-only" data-br="1" value="pgbl_vgbl">🧾 PGBL/VGBL</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.fundNameLabel">שם הקרן *</label>
-                        <input type="text" class="form-control" id="fundName" required data-i18n-placeholder="myFunds.fundNamePlaceholder" placeholder="לדוגמה: מיטב דש פנסיה">
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.managingCompany">חברה מנהלת</label>
-                        <select class="form-control" id="fundCompany">
-                            <option value="" data-i18n="myFunds.selectCompany">-- בחר --</option>
-                            <option value="meitav" data-i18n="myFunds.companyMeitav">מיטב דש</option>
-                            <option value="altshuler" data-i18n="myFunds.companyAltshuler">אלטשולר שחם</option>
-                            <option value="harel" data-i18n="myFunds.companyHarel">הראל</option>
-                            <option value="migdal" data-i18n="myFunds.companyMigdal">מגדל</option>
-                            <option value="menora" data-i18n="myFunds.companyMenora">מנורה מבטחים</option>
-                            <option value="phoenix" data-i18n="myFunds.companyPhoenix">הפניקס</option>
-                            <option value="clal" data-i18n="myFunds.companyClal">כלל</option>
-                            <option value="psagot" data-i18n="myFunds.companyPsagot">פסגות</option>
-                            <option value="analyst" data-i18n="myFunds.companyAnalyst">אנליסט</option>
-                            <option value="yelin" data-i18n="myFunds.companyYelin">ילין לפידות</option>
-                            <option value="more" data-i18n="myFunds.companyMore">מור</option>
-                            <option value="other" data-i18n="myFunds.companyOther">אחר</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.currentValueLabel">שווי נוכחי (₪) *</label>
-                        <input type="number" class="form-control" id="fundValue" step="0.01" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.monthlyDeposit">הפקדה חודשית (₪)</label>
-                        <input type="number" class="form-control" id="monthlyDeposit" step="0.01" value="0">
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.accountNumber">מספר חשבון/פוליסה</label>
-                        <input type="text" class="form-control" id="accountNumber" maxlength="20">
-                    </div>
-
-                    <div class="form-group" id="actuarialGroup" style="display: none;">
-                        <label data-i18n="myFunds.actuarialBalance">איזון אקטוארי (₪) - לפנסיה בלבד</label>
-                        <input type="number" class="form-control" id="actuarialBalance" step="0.01">
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.notes">הערות</label>
-                        <textarea class="form-control" id="fundNotes" rows="2"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="myFunds.tracks">מסלולי השקעה</label>
-                        <div id="tracksContainer"></div>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="addTrackRow()" style="margin-top: 6px;">
-                            ➕ <span data-i18n="myFunds.addTrack">הוסף מסלול</span>
-                        </button>
-                        <div id="trackTotal" class="track-total"></div>
-                        <datalist id="trackSuggestions">
-                            <option value="מניות">
-                            <option value="אג&quot;ח">
-                            <option value="כללי">
-                            <option value="שקלי">
-                            <option value="מדדי">
-                            <option value="חו&quot;ל">
-                            <option value="הלכתי">
-                            <option value="S&P 500">
-                        </datalist>
-                    </div>
-
-                    <div class="form-group">
-                        <label style="cursor: pointer;" onclick="document.getElementById('returnsSection').style.display = document.getElementById('returnsSection').style.display === 'none' ? 'block' : 'none'">
-                            <span>📊</span> <span data-i18n="myFunds.returns">תשואות</span> ▾
-                        </label>
-                        <div id="returnsSection" style="display: none;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                                <div>
-                                    <label style="font-size: 0.8rem;" data-i18n="myFunds.returnMonth">תשואה חודשית (%)</label>
-                                    <input type="number" class="form-control" id="fundReturnMonth" step="0.01" placeholder="0.00">
-                                </div>
-                                <div>
-                                    <label style="font-size: 0.8rem;" data-i18n="myFunds.returnYear">תשואה שנתית (%)</label>
-                                    <input type="number" class="form-control" id="fundReturnYear" step="0.01" placeholder="0.00">
-                                </div>
-                                <div>
-                                    <label style="font-size: 0.8rem;" data-i18n="myFunds.return3y">תשואה 3 שנים (%)</label>
-                                    <input type="number" class="form-control" id="fundReturn3y" step="0.01" placeholder="0.00">
-                                </div>
-                                <div>
-                                    <label style="font-size: 0.8rem;" data-i18n="myFunds.return5y">תשואה 5 שנים (%)</label>
-                                    <input type="number" class="form-control" id="fundReturn5y" step="0.01" placeholder="0.00">
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="autoFillReturns()">
-                                🔍 <span data-i18n="myFunds.fetchFromMarket">שלוף מנתוני שוק</span>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <script>
-                    document.getElementById('fundType').addEventListener('change', function() {
-                        document.getElementById('actuarialGroup').style.display =
-                            this.value === 'pension' ? 'block' : 'none';
-                    });
-                </script>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveFund()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Update Value Modal -->
-    <div class="modal-overlay" id="updateValueModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 data-i18n="myFunds.updateValue">עדכן שווי</h2>
-                <button class="modal-close" onclick="closeUpdateModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="updateValueForm">
-                    <input type="hidden" id="updateFundId">
-                    <div class="form-group">
-                        <label data-i18n="myFunds.newValue">שווי חדש (₪)</label>
-                        <input type="number" class="form-control" id="newValue" step="0.01" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeUpdateModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="updateValue()" data-i18n="common.update">עדכן</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="../data/market-funds.js"></script>
-    <script src="../data/mygemel-funds.js"></script>
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/smart-import.js"></script>
-    <script src="../js/image-import.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        const FUNDS_KEY = 'finance_my_funds';
-        let currentFilter = 'all';
-        let fundsChart = null;
-        let _returnsSource = null;
-
-        function getFundTypeNames() {
-            return {
-                pension: '🏛️ ' + I18n.t('myFunds.pension'),
-                training: '🎓 ' + I18n.t('myFunds.trainingFund'),
-                gemel: '💼 ' + I18n.t('myFunds.providentFund'),
-                savings: '🐷 ' + I18n.t('myFunds.savingsPolicy')
-            };
-        }
-
-        function getCompanyNames() {
-            return {
-                meitav: I18n.t('myFunds.companyMeitav'),
-                altshuler: I18n.t('myFunds.companyAltshuler'),
-                harel: I18n.t('myFunds.companyHarel'),
-                migdal: I18n.t('myFunds.companyMigdal'),
-                menora: I18n.t('myFunds.companyMenora'),
-                phoenix: I18n.t('myFunds.companyPhoenix'),
-                clal: I18n.t('myFunds.companyClal'),
-                psagot: I18n.t('myFunds.companyPsagot'),
-                analyst: I18n.t('myFunds.companyAnalyst'),
-                yelin: I18n.t('myFunds.companyYelin'),
-                more: I18n.t('myFunds.companyMore'),
-                other: I18n.t('myFunds.companyOther')
-            };
-        }
-
-        function matchMarketFund(name, company, type) {
-            const marketType = type === 'savings' ? null : type;
-            if (!marketType) return null;
-
-            const sources = [];
-            if (typeof MarketFunds !== 'undefined' && MarketFunds[marketType]) {
-                sources.push(...MarketFunds[marketType]);
-            }
-            if (typeof MyGemelFunds !== 'undefined' && MyGemelFunds[marketType]) {
-                sources.push(...MyGemelFunds[marketType]);
-            }
-            if (sources.length === 0) return null;
-
-            const nameLower = name.toLowerCase().trim();
-            const companyNames = getCompanyNames();
-            const companyDisplay = companyNames[company] || company || '';
-
-            // Try exact substring match on fund name
-            let match = sources.find(f => f.nameHe && nameLower.includes(f.nameHe.toLowerCase()));
-            if (!match) match = sources.find(f => f.nameHe && f.nameHe.toLowerCase().includes(nameLower));
-
-            // Try matching by company + partial name
-            if (!match && companyDisplay) {
-                const companyLower = companyDisplay.toLowerCase();
-                const companyMatches = sources.filter(f => f.companyHe && f.companyHe.toLowerCase().includes(companyLower));
-                if (companyMatches.length === 1) {
-                    match = companyMatches[0];
-                } else if (companyMatches.length > 1) {
-                    // Try to narrow down by name keywords
-                    const nameWords = nameLower.split(/\s+/).filter(w => w.length > 2);
-                    const keywordMatch = companyMatches.find(f => {
-                        const fName = f.nameHe.toLowerCase();
-                        return nameWords.some(w => fName.includes(w));
-                    });
-                    if (keywordMatch) {
-                        match = keywordMatch;
-                    } else {
-                        // Prefer "כללי" (general) or "מקיפה" (comprehensive) track
-                        match = companyMatches.find(f => {
-                            const n = f.nameHe.toLowerCase();
-                            return n.includes('כללי') || n.includes('מקיפה') || n.includes('מקיפת');
-                        }) || companyMatches[0];
-                    }
-                }
-            }
-
-            // Also try matching by company name directly (for clearinghouse imports)
-            if (!match && company) {
-                const companyLower = (companyDisplay || company).toLowerCase();
-                const companyMatches = sources.filter(f =>
-                    (f.companyHe && f.companyHe.toLowerCase().includes(companyLower)) ||
-                    (f.companyEn && f.companyEn.toLowerCase().includes(companyLower))
-                );
-                if (companyMatches.length === 1) {
-                    match = companyMatches[0];
-                } else if (companyMatches.length > 1) {
-                    match = companyMatches.find(f => {
-                        const n = f.nameHe.toLowerCase();
-                        return n.includes('כללי') || n.includes('מקיפה') || n.includes('מקיפת');
-                    }) || companyMatches[0];
-                }
-            }
-
-            if (!match) return null;
-            return {
-                month: match.month,
-                year1: match.year1,
-                year3: match.year3,
-                year5: match.year5,
-                matchName: match.nameHe
-            };
-        }
-
-        function autoFillReturns() {
-            const name = document.getElementById('fundName').value.trim();
-            const company = document.getElementById('fundCompany').value;
-            const type = document.getElementById('fundType').value;
-
-            if (!name) {
-                App.notify(I18n.t('myFunds.fillNameAndValue'), 'error');
-                return;
-            }
-
-            const result = matchMarketFund(name, company, type);
-            if (result) {
-                document.getElementById('fundReturnMonth').value = result.month ?? '';
-                document.getElementById('fundReturnYear').value = result.year1 ?? '';
-                document.getElementById('fundReturn3y').value = result.year3 ?? '';
-                document.getElementById('fundReturn5y').value = result.year5 ?? '';
-                _returnsSource = 'market';
-                App.notify(I18n.t('myFunds.marketMatchFound') + ' (' + result.matchName + ')', 'success');
-            } else {
-                App.notify(I18n.t('myFunds.marketMatchNotFound'), 'error');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'funds';
-            I18n.init();
-            // Translate fund type select options
-            const fundTypeNames = getFundTypeNames();
-            document.querySelectorAll('#fundType option').forEach(opt => {
-                if (fundTypeNames[opt.value]) opt.textContent = fundTypeNames[opt.value];
-            });
-            loadFunds();
-        });
-
-        function getFunds() {
-            const data = localStorage.getItem(FUNDS_KEY);
-            return data ? JSON.parse(data) : [];
-        }
-
-        function saveFunds(funds) {
-            localStorage.setItem(FUNDS_KEY, JSON.stringify(funds));
-        }
-
-        function loadFunds() {
-            const funds = getFunds();
-            const tbody = document.getElementById('fundsTable');
-            const footer = document.getElementById('fundsFooter');
-
-            // Update summary cards
-            const totals = { pension: 0, training: 0, gemel: 0, savings: 0 };
-            funds.forEach(f => {
-                if (totals[f.type] !== undefined) {
-                    totals[f.type] += f.value || 0;
-                }
-            });
-
-            document.getElementById('pensionTotal').textContent = I18n.formatCurrency(totals.pension);
-            document.getElementById('trainingTotal').textContent = I18n.formatCurrency(totals.training);
-            document.getElementById('gemelTotal').textContent = I18n.formatCurrency(totals.gemel);
-            document.getElementById('savingsTotal').textContent = I18n.formatCurrency(totals.savings);
-
-            const grandTotal = Object.values(totals).reduce((a, b) => a + b, 0);
-            document.getElementById('allFundsTotal').textContent = I18n.formatCurrency(grandTotal);
-
-            // Filter funds
-            const filteredFunds = currentFilter === 'all' ? funds : funds.filter(f => f.type === currentFilter);
-
-            if (filteredFunds.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">📊</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין קרנות / חסכונות</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף קרן השתלמות, פנסיה או גמל לעקוב אחרי הצמיחה</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף קרן</button></div></td></tr>`;
-                footer.style.display = 'none';
-                document.getElementById('chartCard').style.display = 'none';
-                return;
-            }
-
-            const totalValue = filteredFunds.reduce((sum, f) => sum + (f.value || 0), 0);
-            const totalDeposit = filteredFunds.reduce((sum, f) => sum + (f.monthlyDeposit || 0), 0);
-
-            tbody.innerHTML = filteredFunds.map(fund => {
-                const returns = fund.returns || calculateReturns(fund);
-                const formatReturn = (val) => {
-                    if (val == null) return '<span style="color: var(--color-text-secondary);">-</span>';
-                    const num = parseFloat(val);
-                    const color = num >= 0 ? '#10b981' : '#ef4444';
-                    return `<span style="color: ${color}; font-weight: 600;">${num >= 0 ? '+' : ''}${val}%</span>`;
-                };
-                const fundTypeNames = getFundTypeNames();
-                const actuarialInfo = fund.type === 'pension' && fund.actuarialBalance
-                    ? `<br><small style="color: var(--color-text-secondary);">${I18n.t('myFunds.balance')}: ${I18n.formatCurrency(fund.actuarialBalance)}</small>` : '';
-                const trackBadges = fund.tracks && fund.tracks.length > 0
-                    ? `<div class="track-badges">${fund.tracks.map(t => `<span class="track-badge">${t.name} ${t.percentage}%</span>`).join('')}</div>`
-                    : '';
-                const srcLabel = fund.returns
-                    ? (fund.returnsSource === 'market'
-                        ? `<span class="track-badge" style="background:#3b82f6; color:#fff; border-color:#3b82f6;">📊 ${I18n.t('myFunds.sourceMarket')}</span>`
-                        : `<span class="track-badge" style="background:#f59e0b; color:#fff; border-color:#f59e0b;">✏️ ${I18n.t('myFunds.sourceManual')}</span>`)
-                    : '';
-                return `
-                <tr>
-                    <td>
-                        <strong>${fund.name}</strong>
-                        <br><small style="color: var(--color-text-secondary);">${getCompanyNames()[fund.company] || fund.company || ''}</small>
-                        ${trackBadges}
-                        ${srcLabel ? `<div class="track-badges">${srcLabel}</div>` : ''}
-                    </td>
-                    <td>${fundTypeNames[fund.type] || fund.type}</td>
-                    <td>${I18n.formatCurrency(fund.value)}${actuarialInfo}</td>
-                    <td>${formatReturn(returns.month)}</td>
-                    <td>${formatReturn(returns.year1)}</td>
-                    <td>${formatReturn(returns.year3)}</td>
-                    <td>${formatReturn(returns.year5)}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-secondary btn-sm" onclick="openUpdateValueModal('${fund.id}', ${fund.value})" title="${I18n.t('myFunds.updateValue')}">💰</button>
-                            <button class="btn btn-secondary btn-sm" onclick="editFund('${fund.id}')" title="${I18n.t('common.edit')}">✏️</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteFund('${fund.id}')" title="${I18n.t('common.delete')}">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            }).join('');
-
-            document.getElementById('totalValueFooter').textContent = I18n.formatCurrency(totalValue);
-            footer.style.display = 'table-footer-group';
-
-            // Update chart
-            updateChart(totals);
-        }
-
-        function updateChart(totals) {
-            const chartCard = document.getElementById('chartCard');
-            const hasData = Object.values(totals).some(v => v > 0);
-
-            if (!hasData) {
-                chartCard.style.display = 'none';
-                return;
-            }
-
-            chartCard.style.display = 'block';
-            const ctx = document.getElementById('fundsChart').getContext('2d');
-
-            if (fundsChart) {
-                fundsChart.destroy();
-            }
-
-            fundsChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: [I18n.t('myFunds.pension'), I18n.t('myFunds.trainingFund'), I18n.t('myFunds.providentFund'), I18n.t('myFunds.savingsPolicy')],
-                    datasets: [{
-                        data: [totals.pension, totals.training, totals.gemel, totals.savings],
-                        backgroundColor: ['#f59e0b', '#10b981', '#3b82f6', '#ec4899'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#fff' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function filterByType(type) {
-            currentFilter = type;
-            document.querySelectorAll('.fund-type-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.type === type);
-            });
-            loadFunds();
-        }
-
-        function addTrackRow(name, percentage) {
-            const container = document.getElementById('tracksContainer');
-            const row = document.createElement('div');
-            row.className = 'track-row';
-            row.innerHTML = `
-                <input type="text" class="form-control" list="trackSuggestions" placeholder="${I18n.t('myFunds.trackName')}" value="${name || ''}">
-                <input type="number" class="form-control" placeholder="%" min="0" max="100" step="0.1" value="${percentage != null ? percentage : ''}" oninput="updateTrackTotal()">
-                <button type="button" class="btn-remove-track" onclick="removeTrackRow(this)">&times;</button>
-            `;
-            container.appendChild(row);
-            updateTrackTotal();
-        }
-
-        function removeTrackRow(btn) {
-            btn.closest('.track-row').remove();
-            updateTrackTotal();
-        }
-
-        function getTracksFromForm() {
-            const rows = document.querySelectorAll('#tracksContainer .track-row');
-            const tracks = [];
-            rows.forEach(row => {
-                const name = row.querySelector('input[type="text"]').value.trim();
-                const pct = parseFloat(row.querySelector('input[type="number"]').value);
-                if (name && !isNaN(pct)) {
-                    tracks.push({ name, percentage: pct });
-                }
-            });
-            return tracks;
-        }
-
-        function updateTrackTotal() {
-            const rows = document.querySelectorAll('#tracksContainer .track-row');
-            const el = document.getElementById('trackTotal');
-            if (rows.length === 0) { el.textContent = ''; return; }
-            let sum = 0;
-            rows.forEach(row => {
-                sum += parseFloat(row.querySelector('input[type="number"]').value) || 0;
-            });
-            const isOk = Math.abs(sum - 100) < 0.01;
-            el.className = 'track-total ' + (isOk ? 'ok' : 'warn');
-            el.textContent = I18n.t('myFunds.totalPercentage') + ': ' + sum.toFixed(1) + '%' + (isOk ? '' : ' — ' + I18n.t('myFunds.percentageWarning'));
-        }
-
-        function openAddModal() {
-            document.getElementById('modalTitle').textContent = I18n.t('myFunds.addFund');
-            document.getElementById('fundForm').reset();
-            document.getElementById('fundId').value = '';
-            document.getElementById('tracksContainer').innerHTML = '';
-            document.getElementById('trackTotal').textContent = '';
-            document.getElementById('fundReturnMonth').value = '';
-            document.getElementById('fundReturnYear').value = '';
-            document.getElementById('fundReturn3y').value = '';
-            document.getElementById('fundReturn5y').value = '';
-            document.getElementById('returnsSection').style.display = 'none';
-            _returnsSource = null;
-            document.getElementById('fundModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('fundModal').classList.remove('active');
-        }
-
-        function editFund(id) {
-            const funds = getFunds();
-            const fund = funds.find(f => f.id === id);
-            if (!fund) return;
-
-            document.getElementById('modalTitle').textContent = I18n.t('myFunds.editFund');
-            document.getElementById('fundId').value = fund.id;
-            document.getElementById('fundType').value = fund.type;
-            document.getElementById('fundType').dispatchEvent(new Event('change'));
-            document.getElementById('fundName').value = fund.name;
-            document.getElementById('fundCompany').value = fund.company || '';
-            document.getElementById('fundValue').value = fund.value;
-            document.getElementById('monthlyDeposit').value = fund.monthlyDeposit || 0;
-            document.getElementById('accountNumber').value = fund.accountNumber || '';
-            document.getElementById('actuarialBalance').value = fund.actuarialBalance || '';
-            document.getElementById('fundNotes').value = fund.notes || '';
-            // Load tracks
-            document.getElementById('tracksContainer').innerHTML = '';
-            if (fund.tracks && fund.tracks.length > 0) {
-                fund.tracks.forEach(t => addTrackRow(t.name, t.percentage));
-            }
-            updateTrackTotal();
-            // Load returns
-            const r = fund.returns || {};
-            document.getElementById('fundReturnMonth').value = r.month ?? '';
-            document.getElementById('fundReturnYear').value = r.year1 ?? '';
-            document.getElementById('fundReturn3y').value = r.year3 ?? '';
-            document.getElementById('fundReturn5y').value = r.year5 ?? '';
-            document.getElementById('returnsSection').style.display = (r.month != null || r.year1 != null || r.year3 != null || r.year5 != null) ? 'block' : 'none';
-            _returnsSource = fund.returnsSource || null;
-            document.getElementById('fundModal').classList.add('active');
-        }
-
-        function saveFund() {
-            const id = document.getElementById('fundId').value;
-            const type = document.getElementById('fundType').value;
-            const name = document.getElementById('fundName').value.trim();
-            const company = document.getElementById('fundCompany').value;
-            const value = parseFloat(document.getElementById('fundValue').value) || 0;
-            const monthlyDeposit = parseFloat(document.getElementById('monthlyDeposit').value) || 0;
-            const accountNumber = document.getElementById('accountNumber').value.trim();
-            const actuarialBalance = parseFloat(document.getElementById('actuarialBalance').value) || null;
-            const notes = document.getElementById('fundNotes').value.trim();
-            const tracks = getTracksFromForm();
-
-            // Collect returns
-            const rMonth = document.getElementById('fundReturnMonth').value;
-            const rYear = document.getElementById('fundReturnYear').value;
-            const r3y = document.getElementById('fundReturn3y').value;
-            const r5y = document.getElementById('fundReturn5y').value;
-            const hasReturns = rMonth !== '' || rYear !== '' || r3y !== '' || r5y !== '';
-            const returns = hasReturns ? {
-                month: rMonth !== '' ? parseFloat(rMonth) : null,
-                year1: rYear !== '' ? parseFloat(rYear) : null,
-                year3: r3y !== '' ? parseFloat(r3y) : null,
-                year5: r5y !== '' ? parseFloat(r5y) : null
-            } : null;
-            const returnsSource = hasReturns ? (_returnsSource || 'manual') : null;
-
-            if (!name || !value) {
-                App.notify(I18n.t('myFunds.fillNameAndValue'), 'error');
-                return;
-            }
-
-            const funds = getFunds();
-            const now = new Date().toISOString();
-            const today = now.split('T')[0];
-
-            if (id) {
-                // Update existing
-                const idx = funds.findIndex(f => f.id === id);
-                if (idx !== -1) {
-                    const oldFund = funds[idx];
-                    // Add to history if value changed
-                    let history = oldFund.history || [];
-                    if (oldFund.value !== value) {
-                        history = [...history, { date: today, value: value }];
-                    }
-                    funds[idx] = { ...oldFund, type, name, company, value, monthlyDeposit, accountNumber, actuarialBalance, notes, tracks, returns, returnsSource, history, updatedAt: now };
-                }
-            } else {
-                // Add new with initial history
-                funds.push({
-                    id: 'fund_' + Date.now(),
-                    type,
-                    name,
-                    company,
-                    value,
-                    monthlyDeposit,
-                    accountNumber,
-                    actuarialBalance,
-                    notes,
-                    tracks,
-                    returns,
-                    returnsSource,
-                    history: [{ date: today, value: value }],
-                    createdAt: now,
-                    updatedAt: now
-                });
-            }
-
-            saveFunds(funds);
-            closeModal();
-            loadFunds();
-            App.notify(I18n.t('myFunds.fundSaved'), 'success');
-        }
-
-        function openUpdateValueModal(id, currentValue) {
-            document.getElementById('updateFundId').value = id;
-            document.getElementById('newValue').value = currentValue;
-            document.getElementById('updateValueModal').classList.add('active');
-        }
-
-        function closeUpdateModal() {
-            document.getElementById('updateValueModal').classList.remove('active');
-        }
-
-        function updateValue() {
-            const id = document.getElementById('updateFundId').value;
-            const newValue = parseFloat(document.getElementById('newValue').value);
-
-            if (isNaN(newValue)) {
-                App.notify(I18n.t('myFunds.enterValidValue'), 'error');
-                return;
-            }
-
-            const funds = getFunds();
-            const idx = funds.findIndex(f => f.id === id);
-            if (idx !== -1) {
-                const now = new Date().toISOString();
-                const today = now.split('T')[0];
-                // Add to history
-                let history = funds[idx].history || [];
-                history = [...history, { date: today, value: newValue }];
-                funds[idx].value = newValue;
-                funds[idx].history = history;
-                funds[idx].updatedAt = now;
-                saveFunds(funds);
-            }
-
-            closeUpdateModal();
-            loadFunds();
-            App.notify(I18n.t('myFunds.valueUpdated'), 'success');
-        }
-
-        // Calculate returns based on history
-        function calculateReturns(fund) {
-            const history = fund.history || [];
-            if (history.length < 2) return { month: null, year1: null, year3: null, year5: null };
-
-            const now = new Date();
-            const currentValue = fund.value;
-
-            const getValueAtDate = (targetDate) => {
-                const sorted = [...history].sort((a, b) => new Date(a.date) - new Date(b.date));
-                let closest = null;
-                for (const h of sorted) {
-                    if (new Date(h.date) <= targetDate) {
-                        closest = h;
-                    }
-                }
-                return closest ? closest.value : null;
-            };
-
-            const monthAgo = new Date(now);
-            monthAgo.setMonth(monthAgo.getMonth() - 1);
-            const year1Ago = new Date(now);
-            year1Ago.setFullYear(year1Ago.getFullYear() - 1);
-            const year3Ago = new Date(now);
-            year3Ago.setFullYear(year3Ago.getFullYear() - 3);
-            const year5Ago = new Date(now);
-            year5Ago.setFullYear(year5Ago.getFullYear() - 5);
-
-            const calcReturn = (oldValue) => {
-                if (!oldValue || oldValue === 0) return null;
-                return ((currentValue - oldValue) / oldValue * 100).toFixed(2);
-            };
-
-            return {
-                month: calcReturn(getValueAtDate(monthAgo)),
-                year1: calcReturn(getValueAtDate(year1Ago)),
-                year3: calcReturn(getValueAtDate(year3Ago)),
-                year5: calcReturn(getValueAtDate(year5Ago))
-            };
-        }
-
-        function deleteFund(id) {
-            if (!confirm(I18n.t('myFunds.deleteFundConfirm'))) return;
-
-            const funds = getFunds().filter(f => f.id !== id);
-            saveFunds(funds);
-            loadFunds();
-            App.notify(I18n.t('myFunds.fundDeleted'), 'success');
-        }
-
-        // Smart Import
-        const fundColumnMappings = {
-            name: ['שם', 'שם קרן', 'קרן', 'תיאור', 'name', 'fund name', 'description'],
-            type: ['סוג', 'סוג קרן', 'type', 'fund type', 'tipo'],
-            company: ['חברה', 'חברה מנהלת', 'מנהל', 'company', 'manager'],
-            value: ['שווי', 'יתרה', 'סכום', 'ערך', 'value', 'balance', 'amount', 'total'],
-            monthlyDeposit: ['הפקדה', 'הפקדה חודשית', 'deposit', 'monthly']
-        };
-
-        async function importSmartFile() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.xlsx,.xls,.csv,.html,.txt';
-
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                try {
-                    let rows = [];
-                    const content = await file.text();
-
-                    if (content.includes('<HTML') || content.includes('<html') || content.includes('<table')) {
-                        rows = parseHTMLTable(content);
-                    } else if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
-                        const data = await file.arrayBuffer();
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-                    } else {
-                        rows = SmartImport.parseFile(content, file.name);
-                    }
-
-                    if (rows.length < 2) {
-                        App.notify(I18n.t('myFunds.fileEmptyOrInvalid'), 'error');
-                        return;
-                    }
-
-                    const headerIdx = findHeaderRow(rows);
-                    const headers = rows[headerIdx];
-                    const detected = detectColumns(headers);
-
-                    if (detected.value === undefined) {
-                        showMappingModal(headers, rows, headerIdx);
-                        return;
-                    }
-
-                    const imported = importFundData(rows, headerIdx, detected);
-
-                    if (imported > 0) {
-                        App.notify(I18n.t('myFunds.importedFunds').replace('{count}', imported), 'success');
-                        loadFunds();
-                    } else {
-                        App.notify(I18n.t('myFunds.noFundsToImport'), 'error');
-                    }
-                } catch (error) {
-                    console.error('Import error:', error);
-                    App.notify(I18n.t('myFunds.importError') + ': ' + error.message, 'error');
-                }
-            };
-
-            input.click();
-        }
-
-        function parseHTMLTable(html) {
-            const rows = [];
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            let tables = doc.querySelectorAll('table.dataTable');
-            if (tables.length === 0) tables = doc.querySelectorAll('table');
-
-            const seenRows = new Set();
-            for (const table of tables) {
-                for (const tr of table.querySelectorAll('tr')) {
-                    const cells = tr.querySelectorAll('th, td');
-                    if (cells.length >= 2 && cells.length <= 15) {
-                        const rowData = [];
-                        cells.forEach(cell => {
-                            rowData.push(cell.textContent.trim().replace(/\s+/g, ' ').replace(/[‎‏\u200e\u200f]/g, ''));
-                        });
-                        const rowKey = rowData.join('|');
-                        if (rowData.some(c => c.length > 0) && !seenRows.has(rowKey)) {
-                            seenRows.add(rowKey);
-                            rows.push(rowData);
-                        }
-                    }
-                }
-            }
-            return rows;
-        }
-
-        function findHeaderRow(rows) {
-            for (let i = 0; i < Math.min(rows.length, 15); i++) {
-                const row = rows[i];
-                if (!row || row.length < 2) continue;
-                const rowText = row.map(c => String(c || '').toLowerCase()).join(' ');
-                if (fundColumnMappings.value.some(w => rowText.includes(w.toLowerCase())) ||
-                    fundColumnMappings.name.some(w => rowText.includes(w.toLowerCase()))) {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
-        function detectColumns(headers) {
-            const detected = {};
-            headers.forEach((header, index) => {
-                if (!header) return;
-                const headerLower = String(header).toLowerCase().trim();
-                Object.keys(fundColumnMappings).forEach(field => {
-                    if (detected[field] !== undefined) return;
-                    if (fundColumnMappings[field].some(kw => headerLower.includes(kw.toLowerCase()))) {
-                        detected[field] = index;
-                    }
-                });
-            });
-            return detected;
-        }
-
-        function mapFundType(typeText) {
-            if (!typeText) return 'savings';
-            const t = typeText.toLowerCase();
-            if (t.includes('פנסיה') || t.includes('pension')) return 'pension';
-            if (t.includes('השתלמות') || t.includes('training')) return 'training';
-            if (t.includes('גמל') || t.includes('gemel') || t.includes('provident')) return 'gemel';
-            return 'savings';
-        }
-
-        function importFundData(rows, headerIdx, detected) {
-            let imported = 0;
-            const dataRows = rows.slice(headerIdx + 1);
-            const funds = getFunds();
-            const now = new Date().toISOString();
-
-            for (const row of dataRows) {
-                const firstCell = String(row[0] || '').trim();
-                if (!firstCell || firstCell.includes('סה"כ') || firstCell.includes('total')) continue;
-
-                const valueVal = row[detected.value];
-                const value = typeof valueVal === 'number' ? valueVal :
-                    parseFloat(String(valueVal || '0').replace(/[^\d.-]/g, ''));
-                if (isNaN(value) || value === 0) continue;
-
-                const name = detected.name !== undefined ? String(row[detected.name] || I18n.t('myFunds.importedFund')).trim() : I18n.t('myFunds.importedFund');
-                const type = detected.type !== undefined ? mapFundType(String(row[detected.type])) : 'savings';
-                const company = detected.company !== undefined ? String(row[detected.company] || '') : '';
-                const monthlyDeposit = detected.monthlyDeposit !== undefined ?
-                    parseFloat(String(row[detected.monthlyDeposit] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
-
-                funds.push({
-                    id: 'fund_' + Date.now() + '_' + imported,
-                    type,
-                    name,
-                    company,
-                    value,
-                    monthlyDeposit,
-                    createdAt: now,
-                    updatedAt: now
-                });
-                imported++;
-            }
-
-            if (imported > 0) saveFunds(funds);
-            return imported;
-        }
-
-        function showMappingModal(headers, rows, headerIdx) {
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.id = 'mappingModal';
-            modal.innerHTML = `
-                <div class="modal" style="max-width: 500px;">
-                    <div class="modal-header">
-                        <h2>${I18n.t('myFunds.selectColumns')}</h2>
-                        <button class="modal-close" onclick="document.getElementById('mappingModal').remove()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>${I18n.t('myFunds.selectColumnsDesc')}</p>
-                        <div class="form-group">
-                            <label>${I18n.t('myFunds.nameColumn')}</label>
-                            <select id="mapName" class="form-control">
-                                <option value="-1">${I18n.t('myFunds.notSelected')}</option>
-                                ${headers.map((h, i) => `<option value="${i}">${h || I18n.t('myFunds.column') + ' ' + (i+1)}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>${I18n.t('myFunds.valueColumn')}</label>
-                            <select id="mapValue" class="form-control" required>
-                                <option value="-1">${I18n.t('myFunds.selectOption')}</option>
-                                ${headers.map((h, i) => `<option value="${i}">${h || I18n.t('myFunds.column') + ' ' + (i+1)}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>${I18n.t('myFunds.typeColumn')}</label>
-                            <select id="mapType" class="form-control">
-                                <option value="-1">${I18n.t('myFunds.notSelected')}</option>
-                                ${headers.map((h, i) => `<option value="${i}">${h || I18n.t('myFunds.column') + ' ' + (i+1)}</option>`).join('')}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="document.getElementById('mappingModal').remove()">${I18n.t('common.cancel')}</button>
-                        <button class="btn btn-primary" onclick="applyMapping()">${I18n.t('myFunds.importBtn')}</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            window._importData = { rows, headerIdx };
-        }
-
-        function applyMapping() {
-            const valueIdx = parseInt(document.getElementById('mapValue').value);
-            if (valueIdx < 0) {
-                App.notify(I18n.t('myFunds.selectValueColumn'), 'error');
-                return;
-            }
-
-            const detected = {
-                name: parseInt(document.getElementById('mapName').value),
-                value: valueIdx,
-                type: parseInt(document.getElementById('mapType').value)
-            };
-
-            Object.keys(detected).forEach(k => { if (detected[k] < 0) delete detected[k]; });
-
-            const { rows, headerIdx } = window._importData;
-            const imported = importFundData(rows, headerIdx, detected);
-
-            document.getElementById('mappingModal').remove();
-            delete window._importData;
-
-            if (imported > 0) {
-                App.notify(I18n.t('myFunds.importedFunds').replace('{count}', imported), 'success');
-                loadFunds();
-            } else {
-                App.notify(I18n.t('myFunds.noFundsToImport'), 'error');
-            }
-        }
-
-        // ===== Clearinghouse (מסלקה פנסיונית) Import =====
-        function importClearinghouse() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.xls,.xlsx';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                try {
-                    const data = await file.arrayBuffer();
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    // Look for the products sheet
-                    const productsSheetName = workbook.SheetNames.find(n =>
-                        n.includes('פרטי המוצרים') || n.includes('מוצרים שלי')
-                    );
-                    if (!productsSheetName) {
-                        App.notify(I18n.t('myFunds.clearinghouseNotFound'), 'error');
-                        return;
-                    }
-                    const sheet = workbook.Sheets[productsSheetName];
-                    const rows = XLSX.utils.sheet_to_json(sheet);
-                    if (rows.length === 0) {
-                        App.notify(I18n.t('myFunds.clearinghouseNoProducts'), 'error');
-                        return;
-                    }
-                    // Also try to read deposit tracking sheet
-                    const depositsSheetName = workbook.SheetNames.find(n =>
-                        n.includes('מעקב הפקדות') || n.includes('הפקדות')
-                    );
-                    let depositRows = [];
-                    if (depositsSheetName) {
-                        depositRows = XLSX.utils.sheet_to_json(workbook.Sheets[depositsSheetName]);
-                    }
-                    showClearinghousePreview(rows, depositRows);
-                } catch (error) {
-                    console.error('Clearinghouse import error:', error);
-                    App.notify(I18n.t('myFunds.importError') + ': ' + error.message, 'error');
-                }
-            };
-            input.click();
-        }
-
-        function mapClearinghouseType(productName) {
-            if (!productName) return 'savings';
-            const p = productName.toLowerCase();
-            if (p.includes('פנסיה') || p.includes('pension')) return 'pension';
-            if (p.includes('השתלמות') || p.includes('training')) return 'training';
-            if (p.includes('גמל') || p.includes('gemel') || p.includes('provident')) return 'gemel';
-            return 'savings';
-        }
-
-        function mapClearinghouseCompany(companyName) {
-            if (!companyName) return 'other';
-            const c = companyName.toLowerCase();
-            if (c.includes('מיטב')) return 'meitav';
-            if (c.includes('אלטשולר')) return 'altshuler';
-            if (c.includes('הראל')) return 'harel';
-            if (c.includes('מגדל')) return 'migdal';
-            if (c.includes('מנורה')) return 'menora';
-            if (c.includes('פניקס') || c.includes('הפניקס')) return 'phoenix';
-            if (c.includes('כלל')) return 'clal';
-            if (c.includes('פסגות')) return 'psagot';
-            if (c.includes('אנליסט')) return 'analyst';
-            if (c.includes('ילין')) return 'yelin';
-            if (c.includes('מור')) return 'more';
-            return 'other';
-        }
-
-        const typeIcons = { pension: '🏛️', training: '🎓', gemel: '💼', savings: '🐷' };
-        const typeNames = { pension: 'פנסיה', training: 'השתלמות', gemel: 'גמל', savings: 'חיסכון' };
-
-        function calcMonthlyDeposit(depositRows, policyNum) {
-            if (!depositRows.length || !policyNum) return 0;
-            // Find deposits for this policy and calculate average monthly
-            const policyDeposits = depositRows.filter(d => {
-                const dp = String(d['מספר פוליסה'] || '');
-                return dp === String(policyNum);
-            });
-            if (policyDeposits.length === 0) return 0;
-            // Get most recent deposit entry
-            const last = policyDeposits[policyDeposits.length - 1];
-            const employee = parseFloat(last['הפקדות עובד']) || 0;
-            const employer = parseFloat(last['הפקדות מעסיק']) || 0;
-            const severance = parseFloat(last['הפקדות מעסיק לפיצויים']) || 0;
-            return employee + employer + severance;
-        }
-
-        function showClearinghousePreview(rows, depositRows) {
-            const existingFunds = getFunds();
-            const products = rows.map((row, idx) => {
-                const name = row['שם מוצר'] || '';
-                const company = row['שם חברה מנהלת'] || '';
-                const policyNum = String(row['מספר פוליסה'] || '');
-                const status = row['סטטוס'] || '';
-                const balance = parseFloat(row['סך הכל חיסכון']) || 0;
-                const feeDeposit = parseFloat(row['שיעור דמי ניהול מהפקדות']) || 0;
-                const feeSavings = parseFloat(row['שיעור דמי ניהול שנתי מחיסכון צבור']) || 0;
-                const ytdReturn = parseFloat(row['תשואה מתחילת השנה']) || 0;
-                const type = mapClearinghouseType(name);
-                const companyCode = mapClearinghouseCompany(company);
-                const monthlyDeposit = calcMonthlyDeposit(depositRows, policyNum);
-                const isActive = status === 'פעיל';
-                // Check if already exists by policy number
-                const existing = existingFunds.find(f => f.accountNumber === policyNum && policyNum);
-                return {
-                    idx, name, company, companyCode, policyNum, status,
-                    balance, feeDeposit, feeSavings, ytdReturn,
-                    type, monthlyDeposit, isActive, existing
-                };
-            }).filter(p => p.balance > 0 || p.isActive);
-
-            if (products.length === 0) {
-                App.notify(I18n.t('myFunds.clearinghouseNoProducts'), 'error');
-                return;
-            }
-
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.id = 'clearinghouseModal';
-
-            const productsHTML = products.map((p, i) => {
-                const statusBadge = p.existing
-                    ? `<span style="color:#f59e0b;font-size:0.75rem;">⚠️ ${I18n.t('myFunds.clearinghouseDuplicate')}</span>`
-                    : (p.isActive
-                        ? `<span style="color:#10b981;font-size:0.75rem;">✓ ${I18n.t('myFunds.clearinghouseActive')}</span>`
-                        : `<span style="color:#6b7280;font-size:0.75rem;">✗ ${I18n.t('myFunds.clearinghouseInactive')}</span>`);
-                const checked = (p.isActive || p.balance > 0) ? 'checked' : '';
-                return `
-                    <label style="display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:8px;cursor:pointer;background:var(--color-bg-secondary);">
-                        <input type="checkbox" ${checked} data-cidx="${i}" style="margin-top:4px;flex-shrink:0;">
-                        <div style="flex:1;min-width:0;">
-                            <div style="font-weight:600;margin-bottom:2px;">${typeIcons[p.type]} ${p.name}</div>
-                            <div style="font-size:0.85rem;color:var(--color-text-secondary);">${p.company}</div>
-                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;font-size:0.8rem;">
-                                <span>💰 ₪${p.balance.toLocaleString()}</span>
-                                ${p.monthlyDeposit ? `<span>📤 ₪${p.monthlyDeposit.toLocaleString()}/חודש</span>` : ''}
-                                ${p.ytdReturn ? `<span>📈 ${p.ytdReturn.toFixed(2)}%</span>` : ''}
-                                ${p.feeDeposit || p.feeSavings ? `<span>🏷️ ${p.feeDeposit}%/${p.feeSavings}%</span>` : ''}
-                            </div>
-                            <div style="margin-top:4px;">${statusBadge} <span style="font-size:0.75rem;color:var(--color-text-secondary);">| ${typeNames[p.type]} | #${p.policyNum}</span></div>
-                        </div>
-                    </label>`;
-            }).join('');
-
-            modal.innerHTML = `
-                <div class="modal" style="max-width:550px;max-height:85vh;overflow-y:auto;">
-                    <div class="modal-header">
-                        <h2>🏦 ${I18n.t('myFunds.clearinghousePreview')}</h2>
-                        <button class="modal-close" onclick="document.getElementById('clearinghouseModal').remove()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p style="margin-bottom:12px;color:var(--color-text-secondary);font-size:0.9rem;">${I18n.t('myFunds.clearinghouseDesc')}</p>
-                        <label style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;font-weight:600;">
-                            <input type="checkbox" id="clearinghouseSelectAll" checked onchange="toggleClearinghouseAll(this.checked)">
-                            ${I18n.t('myFunds.clearinghouseSelectAll')}
-                        </label>
-                        <div id="clearinghouseProducts">${productsHTML}</div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="document.getElementById('clearinghouseModal').remove()">${I18n.t('common.cancel')}</button>
-                        <button class="btn btn-primary" onclick="applyClearinghouseImport()" style="background:#059669;">${I18n.t('myFunds.clearinghouseImportSelected')}</button>
-                    </div>
-                </div>`;
-            document.body.appendChild(modal);
-            window._clearinghouseProducts = products;
-        }
-
-        function toggleClearinghouseAll(checked) {
-            document.querySelectorAll('#clearinghouseProducts input[type="checkbox"]').forEach(cb => {
-                cb.checked = checked;
-            });
-        }
-
-        function applyClearinghouseImport() {
-            const products = window._clearinghouseProducts;
-            if (!products) return;
-            const checkboxes = document.querySelectorAll('#clearinghouseProducts input[type="checkbox"]');
-            const funds = getFunds();
-            const now = new Date().toISOString();
-            let added = 0, updated = 0;
-
-            checkboxes.forEach(cb => {
-                if (!cb.checked) return;
-                const idx = parseInt(cb.dataset.cidx);
-                const p = products[idx];
-                if (!p) return;
-
-                if (p.existing) {
-                    // Update existing fund
-                    const f = funds.find(f => f.id === p.existing.id);
-                    if (f) {
-                        f.value = p.balance;
-                        if (p.monthlyDeposit) f.monthlyDeposit = p.monthlyDeposit;
-                        // Try to get full returns from market data
-                        const marketReturns = matchMarketFund(p.name, p.companyCode, p.type);
-                        f.returns = f.returns || {};
-                        if (marketReturns) {
-                            if (marketReturns.month != null) f.returns.month = marketReturns.month;
-                            if (marketReturns.year1 != null) f.returns.year1 = marketReturns.year1;
-                            if (marketReturns.year3 != null) f.returns.year3 = marketReturns.year3;
-                            if (marketReturns.year5 != null) f.returns.year5 = marketReturns.year5;
-                            f.returnsSource = 'market';
-                        } else if (p.ytdReturn) {
-                            f.returns.year1 = p.ytdReturn;
-                            f.returnsSource = 'clearinghouse';
-                        }
-                        // Add to history
-                        f.history = f.history || [];
-                        const today = new Date().toISOString().split('T')[0];
-                        if (!f.history.find(h => h.date === today)) {
-                            f.history.push({ date: today, value: p.balance });
-                        }
-                        f.updatedAt = now;
-                        updated++;
-                    }
-                } else {
-                    // Add new fund
-                    const newFund = {
-                        id: 'fund_' + Date.now() + '_' + added + '_' + updated,
-                        type: p.type,
-                        name: p.name,
-                        company: p.companyCode,
-                        value: p.balance,
-                        monthlyDeposit: p.monthlyDeposit || 0,
-                        accountNumber: p.policyNum,
-                        createdAt: now,
-                        updatedAt: now,
-                        history: [{ date: new Date().toISOString().split('T')[0], value: p.balance }]
-                    };
-                    // Try to get full returns from market data
-                    const marketReturns = matchMarketFund(p.name, p.companyCode, p.type);
-                    if (marketReturns) {
-                        newFund.returns = {
-                            month: marketReturns.month,
-                            year1: marketReturns.year1,
-                            year3: marketReturns.year3,
-                            year5: marketReturns.year5
-                        };
-                        newFund.returnsSource = 'market';
-                    } else if (p.ytdReturn) {
-                        newFund.returns = { year1: p.ytdReturn };
-                        newFund.returnsSource = 'clearinghouse';
-                    }
-                    if (p.type === 'pension') {
-                        const fees = [];
-                        if (p.feeDeposit) fees.push(`דמ"נ הפקדות: ${p.feeDeposit}%`);
-                        if (p.feeSavings) fees.push(`דמ"נ צבירה: ${p.feeSavings}%`);
-                        if (fees.length) newFund.notes = fees.join(' | ');
-                    }
-                    funds.push(newFund);
-                    added++;
-                }
-            });
-
-            if (added > 0 || updated > 0) {
-                saveFunds(funds);
-                loadFunds();
-                if (updated > 0) {
-                    App.notify(I18n.t('myFunds.clearinghouseUpdated').replace('{updated}', updated).replace('{added}', added), 'success');
-                } else {
-                    App.notify(I18n.t('myFunds.clearinghouseImported').replace('{count}', added), 'success');
-                }
-            } else {
-                App.notify(I18n.t('myFunds.noFundsToImport'), 'error');
-            }
-
-            document.getElementById('clearinghouseModal').remove();
-            delete window._clearinghouseProducts;
-        }
-
-        function refreshAllReturns() {
-            const funds = getFunds();
-            let matched = 0;
-            funds.forEach(f => {
-                const result = matchMarketFund(f.name, f.company, f.type);
-                if (result) {
-                    f.returns = f.returns || {};
-                    f.returns.month = result.month;
-                    f.returns.year1 = result.year1;
-                    f.returns.year3 = result.year3;
-                    f.returns.year5 = result.year5;
-                    f.returnsSource = 'market';
-                    f.updatedAt = new Date().toISOString();
-                    matched++;
-                }
-            });
-            if (matched > 0) {
-                saveFunds(funds);
-                loadFunds();
-                App.notify(I18n.t('myFunds.returnsRefreshed').replace('{count}', matched), 'success');
-            } else {
-                App.notify(I18n.t('myFunds.noReturnsMatched'), 'error');
-            }
-        }
-    </script>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
+
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>
+ <span>💎</span>
+ <span data-i18n="myFunds.title">הקופות שלי</span>
+ </h1>
+ </header>
+
+ <!-- Summary Cards -->
+ <div class="summary-cards">
+ <div class="summary-card pension">
+ <div class="label">🏛️ <span data-i18n="myFunds.pension">פנסיה</span></div>
+ <div class="value" id="pensionTotal">₪0</div>
+ </div>
+ <div class="summary-card training">
+ <div class="label">🎓 <span data-i18n="myFunds.trainingFund">קרן השתלמות</span></div>
+ <div class="value" id="trainingTotal">₪0</div>
+ </div>
+ <div class="summary-card gemel">
+ <div class="label">💼 <span data-i18n="myFunds.providentFund">קופת גמל</span></div>
+ <div class="value" id="gemelTotal">₪0</div>
+ </div>
+ <div class="summary-card savings">
+ <div class="label">🐷 <span data-i18n="myFunds.savingsPolicy">פוליסת חיסכון</span></div>
+ <div class="value" id="savingsTotal">₪0</div>
+ </div>
+ <div class="summary-card total">
+ <div class="label">💎 <span data-i18n="myFunds.totalFunds">סה"כ חסכונות</span></div>
+ <div class="value" id="allFundsTotal">₪0</div>
+ </div>
+ </div>
+
+ <!-- Action Buttons -->
+ <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+ <button class="btn btn-primary" onclick="openAddModal()">
+ <span>➕</span>
+ <span data-i18n="myFunds.addFund">הוסף קרן</span>
+ </button>
+ <button class="btn btn-secondary" onclick="importSmartFile()">
+ <span>📥</span>
+ <span data-i18n="myFunds.smartImport">ייבוא נתונים</span>
+ </button>
+ <button class="btn btn-secondary" onclick="ImageImport.openImagePicker('funds')">
+ <span>📷</span>
+ <span data-i18n="myFunds.imageImport">ייבוא מתמונה</span>
+ </button>
+ <button class="btn btn-secondary" onclick="ImageImport.openPayslipPicker()">
+ <span>📄</span>
+ <span data-i18n="profile.scanPayslip">סרוק תלוש משכורת</span>
+ </button>
+ <button class="btn btn-secondary" onclick="importClearinghouse()" style="background: #059669; color: #fff;">
+ <span>🏦</span>
+ <span data-i18n="myFunds.importClearinghouse">ייבוא מהמסלקה</span>
+ </button>
+ <a href="https://www.swiftness.co.il/" target="_blank" rel="noopener" class="btn btn-secondary" style="text-decoration:none;font-size:0.85rem;">
+ <span>🔗</span>
+ <span data-i18n="myFunds.goToClearinghouse">המסלקה הפנסיונית</span>
+ </a>
+ <button class="btn btn-secondary" onclick="refreshAllReturns()">
+ <span>🔄</span>
+ <span data-i18n="myFunds.refreshReturns">רענן תשואות</span>
+ </button>
+ </div>
+
+ <!-- Fund Type Tabs -->
+ <div class="fund-type-tabs">
+ <button class="fund-type-tab active" data-type="all" onclick="filterByType('all')">
+ <span class="icon">📊</span><span data-i18n="myFunds.all">הכל</span>
+ </button>
+ <button class="fund-type-tab" data-type="pension" onclick="filterByType('pension')">
+ <span class="icon">🏛️</span><span data-i18n="myFunds.pension">פנסיה</span>
+ </button>
+ <button class="fund-type-tab" data-type="training" onclick="filterByType('training')">
+ <span class="icon">🎓</span><span data-i18n="myFunds.trainingFund">קרן השתלמות</span>
+ </button>
+ <button class="fund-type-tab" data-type="gemel" onclick="filterByType('gemel')">
+ <span class="icon">💼</span><span data-i18n="myFunds.providentFund">קופת גמל</span>
+ </button>
+ <button class="fund-type-tab" data-type="savings" onclick="filterByType('savings')">
+ <span class="icon">🐷</span><span data-i18n="myFunds.savingsPolicy">פוליסת חיסכון</span>
+ </button>
+ <button class="fund-type-tab br-only" data-type="tesouro" data-br="1" onclick="filterByType('tesouro')">
+ <span class="icon">🇧🇷</span><span data-i18n="myFunds.types.tesouro">Tesouro Direto</span>
+ </button>
+ <button class="fund-type-tab br-only" data-type="cdb" data-br="1" onclick="filterByType('cdb')">
+ <span class="icon">🏦</span><span>CDB</span>
+ </button>
+ <button class="fund-type-tab br-only" data-type="lci_lca" data-br="1" onclick="filterByType('lci_lca')">
+ <span class="icon">📄</span><span>LCI/LCA</span>
+ </button>
+ <button class="fund-type-tab br-only" data-type="fii" data-br="1" onclick="filterByType('fii')">
+ <span class="icon">🏢</span><span>FII</span>
+ </button>
+ <button class="fund-type-tab br-only" data-type="poupanca" data-br="1" onclick="filterByType('poupanca')">
+ <span class="icon">💰</span><span>Poupança</span>
+ </button>
+ <button class="fund-type-tab br-only" data-type="fgts" data-br="1" onclick="filterByType('fgts')">
+ <span class="icon">🛡️</span><span>FGTS</span>
+ </button>
+ <button class="fund-type-tab br-only" data-type="pgbl_vgbl" data-br="1" onclick="filterByType('pgbl_vgbl')">
+ <span class="icon">🧾</span><span>PGBL/VGBL</span>
+ </button>
+ </div>
+
+ <!-- Funds List -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📋</span>
+ <span data-i18n="myFunds.fundList">רשימת קרנות</span>
+ </h2>
+ </div>
+ <div class="table-container">
+ <table>
+ <thead>
+ <tr>
+ <th data-i18n="myFunds.fundName">שם הקרן</th>
+ <th data-i18n="myFunds.type">סוג</th>
+ <th data-i18n="myFunds.currentValue">שווי נוכחי</th>
+ <th data-i18n="myFunds.monthCol">חודש</th>
+ <th data-i18n="myFunds.yearCol">שנה</th>
+ <th data-i18n="myFunds.threeYears">3 שנים</th>
+ <th data-i18n="myFunds.fiveYears">5 שנים</th>
+ <th data-i18n="myFunds.actions">פעולות</th>
+ </tr>
+ </thead>
+ <tbody id="fundsTable">
+ <!-- Will be populated by JS -->
+ </tbody>
+ <tfoot id="fundsFooter" style="display: none;">
+ <tr style="background: var(--color-bg-secondary); font-weight: bold;">
+ <td colspan="2" style="text-align: right;" data-i18n="myFunds.totalRow">סה"כ</td>
+ <td id="totalValueFooter">₪0</td>
+ <td colspan="5"></td>
+ </tr>
+ </tfoot>
+ </table>
+ </div>
+ </div>
+
+ <!-- Distribution Chart -->
+ <div class="card" id="chartCard" style="display: none;">
+ <div class="card-header">
+ <h2 class="card-title">
+ <span class="icon">📊</span>
+ <span data-i18n="myFunds.fundsDistribution">התפלגות קרנות</span>
+ </h2>
+ </div>
+ <div class="chart-container" style="max-width: 400px; margin: 0 auto;">
+ <canvas id="fundsChart"></canvas>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
+
+ <!-- Mobile Menu Toggle -->
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
+
+ <!-- Add/Edit Fund Modal -->
+ <div class="modal-overlay" id="fundModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 id="modalTitle" data-i18n="myFunds.addFund">הוסף קרן</h2>
+ <button class="modal-close" onclick="closeModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="fundForm">
+ <input type="hidden" id="fundId">
+
+ <div class="form-group">
+ <label data-i18n="myFunds.fundType">סוג קרן *</label>
+ <select class="form-control" id="fundType" required>
+ <option value="pension">🏛️ פנסיה</option>
+ <option value="training">🎓 קרן השתלמות</option>
+ <option value="gemel">💼 קופת גמל</option>
+ <option value="savings">🐷 פוליסת חיסכון</option>
+ <option class="br-only" disabled>── 🇧🇷 Brazil ──</option>
+ <option class="br-only" data-br="1" value="tesouro">🇧🇷 Tesouro Direto</option>
+ <option class="br-only" data-br="1" value="cdb">🏦 CDB</option>
+ <option class="br-only" data-br="1" value="lci_lca">📄 LCI/LCA</option>
+ <option class="br-only" data-br="1" value="fii">🏢 FII</option>
+ <option class="br-only" data-br="1" value="poupanca">💰 Poupança</option>
+ <option class="br-only" data-br="1" value="fgts">🛡️ FGTS</option>
+ <option class="br-only" data-br="1" value="pgbl_vgbl">🧾 PGBL/VGBL</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="myFunds.fundNameLabel">שם הקרן *</label>
+ <input type="text" class="form-control" id="fundName" required data-i18n-placeholder="myFunds.fundNamePlaceholder" placeholder="לדוגמה: מיטב דש פנסיה">
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="myFunds.managingCompany">חברה מנהלת</label>
+ <select class="form-control" id="fundCompany">
+ <option value="" data-i18n="myFunds.selectCompany">-- בחר --</option>
+ <option value="meitav" data-i18n="myFunds.companyMeitav">מיטב דש</option>
+ <option value="altshuler" data-i18n="myFunds.companyAltshuler">אלטשולר שחם</option>
+ <option value="harel" data-i18n="myFunds.companyHarel">הראל</option>
+ <option value="migdal" data-i18n="myFunds.companyMigdal">מגדל</option>
+ <option value="menora" data-i18n="myFunds.companyMenora">מנורה מבטחים</option>
+ <option value="phoenix" data-i18n="myFunds.companyPhoenix">הפניקס</option>
+ <option value="clal" data-i18n="myFunds.companyClal">כלל</option>
+ <option value="psagot" data-i18n="myFunds.companyPsagot">פסגות</option>
+ <option value="analyst" data-i18n="myFunds.companyAnalyst">אנליסט</option>
+ <option value="yelin" data-i18n="myFunds.companyYelin">ילין לפידות</option>
+ <option value="more" data-i18n="myFunds.companyMore">מור</option>
+ <option value="other" data-i18n="myFunds.companyOther">אחר</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="myFunds.currentValueLabel">שווי נוכחי (₪) *</label>
+ <input type="number" class="form-control" id="fundValue" step="0.01" required>
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="myFunds.monthlyDeposit">הפקדה חודשית (₪)</label>
+ <input type="number" class="form-control" id="monthlyDeposit" step="0.01" value="0">
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="myFunds.accountNumber">מספר חשבון/פוליסה</label>
+ <input type="text" class="form-control" id="accountNumber" maxlength="20">
+ </div>
+
+ <div class="form-group" id="actuarialGroup" style="display: none;">
+ <label data-i18n="myFunds.actuarialBalance">איזון אקטוארי (₪) - לפנסיה בלבד</label>
+ <input type="number" class="form-control" id="actuarialBalance" step="0.01">
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="myFunds.notes">הערות</label>
+ <textarea class="form-control" id="fundNotes" rows="2"></textarea>
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="myFunds.tracks">מסלולי השקעה</label>
+ <div id="tracksContainer"></div>
+ <button type="button" class="btn btn-secondary btn-sm" onclick="addTrackRow()" style="margin-top: 6px;">
+ ➕ <span data-i18n="myFunds.addTrack">הוסף מסלול</span>
+ </button>
+ <div id="trackTotal" class="track-total"></div>
+ <datalist id="trackSuggestions">
+ <option value="מניות">
+ <option value="אג&quot;ח">
+ <option value="כללי">
+ <option value="שקלי">
+ <option value="מדדי">
+ <option value="חו&quot;ל">
+ <option value="הלכתי">
+ <option value="S&P 500">
+ </datalist>
+ </div>
+
+ <div class="form-group">
+ <label style="cursor: pointer;" onclick="document.getElementById('returnsSection').style.display = document.getElementById('returnsSection').style.display === 'none' ? 'block' : 'none'">
+ <span>📊</span> <span data-i18n="myFunds.returns">תשואות</span> ▾
+ </label>
+ <div id="returnsSection" style="display: none;">
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+ <div>
+ <label style="font-size: 0.8rem;" data-i18n="myFunds.returnMonth">תשואה חודשית (%)</label>
+ <input type="number" class="form-control" id="fundReturnMonth" step="0.01" placeholder="0.00">
+ </div>
+ <div>
+ <label style="font-size: 0.8rem;" data-i18n="myFunds.returnYear">תשואה שנתית (%)</label>
+ <input type="number" class="form-control" id="fundReturnYear" step="0.01" placeholder="0.00">
+ </div>
+ <div>
+ <label style="font-size: 0.8rem;" data-i18n="myFunds.return3y">תשואה 3 שנים (%)</label>
+ <input type="number" class="form-control" id="fundReturn3y" step="0.01" placeholder="0.00">
+ </div>
+ <div>
+ <label style="font-size: 0.8rem;" data-i18n="myFunds.return5y">תשואה 5 שנים (%)</label>
+ <input type="number" class="form-control" id="fundReturn5y" step="0.01" placeholder="0.00">
+ </div>
+ </div>
+ <button type="button" class="btn btn-secondary btn-sm" onclick="autoFillReturns()">
+ 🔍 <span data-i18n="myFunds.fetchFromMarket">שלוף מנתוני שוק</span>
+ </button>
+ </div>
+ </div>
+ </form>
+ <script>
+ document.getElementById('fundType').addEventListener('change', function() {
+ document.getElementById('actuarialGroup').style.display =
+ this.value === 'pension' ? 'block' : 'none';
+ });
+ </script>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveFund()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
+
+ <!-- Update Value Modal -->
+ <div class="modal-overlay" id="updateValueModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 data-i18n="myFunds.updateValue">עדכן שווי</h2>
+ <button class="modal-close" onclick="closeUpdateModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="updateValueForm">
+ <input type="hidden" id="updateFundId">
+ <div class="form-group">
+ <label data-i18n="myFunds.newValue">שווי חדש (₪)</label>
+ <input type="number" class="form-control" id="newValue" step="0.01" required>
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeUpdateModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="updateValue()" data-i18n="common.update">עדכן</button>
+ </div>
+ </div>
+ </div>
+
+ <script src="../data/market-funds.js"></script>
+ <script src="../data/mygemel-funds.js"></script>
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/smart-import.js"></script>
+ <script src="../js/image-import.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ const FUNDS_KEY = 'finance_my_funds';
+ let currentFilter = 'all';
+ let fundsChart = null;
+ let _returnsSource = null;
+
+ function getFundTypeNames() {
+ return {
+ pension: '🏛️ ' + I18n.t('myFunds.pension'),
+ training: '🎓 ' + I18n.t('myFunds.trainingFund'),
+ gemel: '💼 ' + I18n.t('myFunds.providentFund'),
+ savings: '🐷 ' + I18n.t('myFunds.savingsPolicy')
+ };
+ }
+
+ function getCompanyNames() {
+ return {
+ meitav: I18n.t('myFunds.companyMeitav'),
+ altshuler: I18n.t('myFunds.companyAltshuler'),
+ harel: I18n.t('myFunds.companyHarel'),
+ migdal: I18n.t('myFunds.companyMigdal'),
+ menora: I18n.t('myFunds.companyMenora'),
+ phoenix: I18n.t('myFunds.companyPhoenix'),
+ clal: I18n.t('myFunds.companyClal'),
+ psagot: I18n.t('myFunds.companyPsagot'),
+ analyst: I18n.t('myFunds.companyAnalyst'),
+ yelin: I18n.t('myFunds.companyYelin'),
+ more: I18n.t('myFunds.companyMore'),
+ other: I18n.t('myFunds.companyOther')
+ };
+ }
+
+ function matchMarketFund(name, company, type) {
+ const marketType = type === 'savings' ? null : type;
+ if (!marketType) return null;
+
+ const sources = [];
+ if (typeof MarketFunds !== 'undefined' && MarketFunds[marketType]) {
+ sources.push(...MarketFunds[marketType]);
+ }
+ if (typeof MyGemelFunds !== 'undefined' && MyGemelFunds[marketType]) {
+ sources.push(...MyGemelFunds[marketType]);
+ }
+ if (sources.length === 0) return null;
+
+ const nameLower = name.toLowerCase().trim();
+ const companyNames = getCompanyNames();
+ const companyDisplay = companyNames[company] || company || '';
+
+ // Try exact substring match on fund name
+ let match = sources.find(f => f.nameHe && nameLower.includes(f.nameHe.toLowerCase()));
+ if (!match) match = sources.find(f => f.nameHe && f.nameHe.toLowerCase().includes(nameLower));
+
+ // Try matching by company + partial name
+ if (!match && companyDisplay) {
+ const companyLower = companyDisplay.toLowerCase();
+ const companyMatches = sources.filter(f => f.companyHe && f.companyHe.toLowerCase().includes(companyLower));
+ if (companyMatches.length === 1) {
+ match = companyMatches[0];
+ } else if (companyMatches.length > 1) {
+ // Try to narrow down by name keywords
+ const nameWords = nameLower.split(/\s+/).filter(w => w.length > 2);
+ const keywordMatch = companyMatches.find(f => {
+ const fName = f.nameHe.toLowerCase();
+ return nameWords.some(w => fName.includes(w));
+ });
+ if (keywordMatch) {
+ match = keywordMatch;
+ } else {
+ // Prefer "כללי" (general) or "מקיפה" (comprehensive) track
+ match = companyMatches.find(f => {
+ const n = f.nameHe.toLowerCase();
+ return n.includes('כללי') || n.includes('מקיפה') || n.includes('מקיפת');
+ }) || companyMatches[0];
+ }
+ }
+ }
+
+ // Also try matching by company name directly (for clearinghouse imports)
+ if (!match && company) {
+ const companyLower = (companyDisplay || company).toLowerCase();
+ const companyMatches = sources.filter(f =>
+ (f.companyHe && f.companyHe.toLowerCase().includes(companyLower)) ||
+ (f.companyEn && f.companyEn.toLowerCase().includes(companyLower))
+ );
+ if (companyMatches.length === 1) {
+ match = companyMatches[0];
+ } else if (companyMatches.length > 1) {
+ match = companyMatches.find(f => {
+ const n = f.nameHe.toLowerCase();
+ return n.includes('כללי') || n.includes('מקיפה') || n.includes('מקיפת');
+ }) || companyMatches[0];
+ }
+ }
+
+ if (!match) return null;
+ return {
+ month: match.month,
+ year1: match.year1,
+ year3: match.year3,
+ year5: match.year5,
+ matchName: match.nameHe
+ };
+ }
+
+ function autoFillReturns() {
+ const name = document.getElementById('fundName').value.trim();
+ const company = document.getElementById('fundCompany').value;
+ const type = document.getElementById('fundType').value;
+
+ if (!name) {
+ App.notify(I18n.t('myFunds.fillNameAndValue'), 'error');
+ return;
+ }
+
+ const result = matchMarketFund(name, company, type);
+ if (result) {
+ document.getElementById('fundReturnMonth').value = result.month ?? '';
+ document.getElementById('fundReturnYear').value = result.year1 ?? '';
+ document.getElementById('fundReturn3y').value = result.year3 ?? '';
+ document.getElementById('fundReturn5y').value = result.year5 ?? '';
+ _returnsSource = 'market';
+ App.notify(I18n.t('myFunds.marketMatchFound') + ' (' + result.matchName + ')', 'success');
+ } else {
+ App.notify(I18n.t('myFunds.marketMatchNotFound'), 'error');
+ }
+ }
+
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'funds';
+ I18n.init();
+ // Translate fund type select options
+ const fundTypeNames = getFundTypeNames();
+ document.querySelectorAll('#fundType option').forEach(opt => {
+ if (fundTypeNames[opt.value]) opt.textContent = fundTypeNames[opt.value];
+ });
+ loadFunds();
+ });
+
+ function getFunds() {
+ const data = localStorage.getItem(FUNDS_KEY);
+ return data ? JSON.parse(data) : [];
+ }
+
+ function saveFunds(funds) {
+ localStorage.setItem(FUNDS_KEY, JSON.stringify(funds));
+ }
+
+ function loadFunds() {
+ const funds = getFunds();
+ const tbody = document.getElementById('fundsTable');
+ const footer = document.getElementById('fundsFooter');
+
+ // Update summary cards
+ const totals = { pension: 0, training: 0, gemel: 0, savings: 0 };
+ funds.forEach(f => {
+ if (totals[f.type] !== undefined) {
+ totals[f.type] += f.value || 0;
+ }
+ });
+
+ document.getElementById('pensionTotal').textContent = I18n.formatCurrency(totals.pension);
+ document.getElementById('trainingTotal').textContent = I18n.formatCurrency(totals.training);
+ document.getElementById('gemelTotal').textContent = I18n.formatCurrency(totals.gemel);
+ document.getElementById('savingsTotal').textContent = I18n.formatCurrency(totals.savings);
+
+ const grandTotal = Object.values(totals).reduce((a, b) => a + b, 0);
+ document.getElementById('allFundsTotal').textContent = I18n.formatCurrency(grandTotal);
+
+ // Filter funds
+ const filteredFunds = currentFilter === 'all' ? funds : funds.filter(f => f.type === currentFilter);
+
+ if (filteredFunds.length === 0) {
+ tbody.innerHTML = `<tr><td colspan="7"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">📊</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין קרנות / חסכונות</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף קרן השתלמות, פנסיה או גמל לעקוב אחרי הצמיחה</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף קרן</button></div></td></tr>`;
+ footer.style.display = 'none';
+ document.getElementById('chartCard').style.display = 'none';
+ return;
+ }
+
+ const totalValue = filteredFunds.reduce((sum, f) => sum + (f.value || 0), 0);
+ const totalDeposit = filteredFunds.reduce((sum, f) => sum + (f.monthlyDeposit || 0), 0);
+
+ tbody.innerHTML = filteredFunds.map(fund => {
+ const returns = fund.returns || calculateReturns(fund);
+ const formatReturn = (val) => {
+ if (val == null) return '<span style="color: var(--color-text-secondary);">-</span>';
+ const num = parseFloat(val);
+ const color = num >= 0 ? '#10b981' : '#ef4444';
+ return `<span style="color: ${color}; font-weight: 600;">${num >= 0 ? '+' : ''}${val}%</span>`;
+ };
+ const fundTypeNames = getFundTypeNames();
+ const actuarialInfo = fund.type === 'pension' && fund.actuarialBalance
+ ? `<br><small style="color: var(--color-text-secondary);">${I18n.t('myFunds.balance')}: ${I18n.formatCurrency(fund.actuarialBalance)}</small>` : '';
+ const trackBadges = fund.tracks && fund.tracks.length > 0
+ ? `<div class="track-badges">${fund.tracks.map(t => `<span class="track-badge">${t.name} ${t.percentage}%</span>`).join('')}</div>`
+ : '';
+ const srcLabel = fund.returns
+ ? (fund.returnsSource === 'market'
+ ? `<span class="track-badge" style="background:#3b82f6; color:#fff; border-color:#3b82f6;">📊 ${I18n.t('myFunds.sourceMarket')}</span>`
+ : `<span class="track-badge" style="background:#f59e0b; color:#fff; border-color:#f59e0b;">✏️ ${I18n.t('myFunds.sourceManual')}</span>`)
+ : '';
+ return `
+ <tr>
+ <td>
+ <strong>${fund.name}</strong>
+ <br><small style="color: var(--color-text-secondary);">${getCompanyNames()[fund.company] || fund.company || ''}</small>
+ ${trackBadges}
+ ${srcLabel ? `<div class="track-badges">${srcLabel}</div>` : ''}
+ </td>
+ <td>${fundTypeNames[fund.type] || fund.type}</td>
+ <td>${I18n.formatCurrency(fund.value)}${actuarialInfo}</td>
+ <td>${formatReturn(returns.month)}</td>
+ <td>${formatReturn(returns.year1)}</td>
+ <td>${formatReturn(returns.year3)}</td>
+ <td>${formatReturn(returns.year5)}</td>
+ <td>
+ <div class="action-buttons">
+ <button class="btn btn-secondary btn-sm" onclick="openUpdateValueModal('${fund.id}', ${fund.value})" title="${I18n.t('myFunds.updateValue')}">💰</button>
+ <button class="btn btn-secondary btn-sm" onclick="editFund('${fund.id}')" title="${I18n.t('common.edit')}">✏️</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteFund('${fund.id}')" title="${I18n.t('common.delete')}">🗑️</button>
+ </div>
+ </td>
+ </tr>
+ `;
+ }).join('');
+
+ document.getElementById('totalValueFooter').textContent = I18n.formatCurrency(totalValue);
+ footer.style.display = 'table-footer-group';
+
+ // Update chart
+ updateChart(totals);
+ }
+
+ function updateChart(totals) {
+ const chartCard = document.getElementById('chartCard');
+ const hasData = Object.values(totals).some(v => v > 0);
+
+ if (!hasData) {
+ chartCard.style.display = 'none';
+ return;
+ }
+
+ chartCard.style.display = 'block';
+ const ctx = document.getElementById('fundsChart').getContext('2d');
+
+ if (fundsChart) {
+ fundsChart.destroy();
+ }
+
+ fundsChart = new Chart(ctx, {
+ type: 'doughnut',
+ data: {
+ labels: [I18n.t('myFunds.pension'), I18n.t('myFunds.trainingFund'), I18n.t('myFunds.providentFund'), I18n.t('myFunds.savingsPolicy')],
+ datasets: [{
+ data: [totals.pension, totals.training, totals.gemel, totals.savings],
+ backgroundColor: ['#f59e0b', '#10b981', '#3b82f6', '#ec4899'],
+ borderWidth: 0
+ }]
+ },
+ options: {
+ responsive: true,
+ plugins: {
+ legend: {
+ position: 'bottom',
+ labels: { color: '#fff' }
+ }
+ }
+ }
+ });
+ }
+
+ function filterByType(type) {
+ currentFilter = type;
+ document.querySelectorAll('.fund-type-tab').forEach(tab => {
+ tab.classList.toggle('active', tab.dataset.type === type);
+ });
+ loadFunds();
+ }
+
+ function addTrackRow(name, percentage) {
+ const container = document.getElementById('tracksContainer');
+ const row = document.createElement('div');
+ row.className = 'track-row';
+ row.innerHTML = `
+ <input type="text" class="form-control" list="trackSuggestions" placeholder="${I18n.t('myFunds.trackName')}" value="${name || ''}">
+ <input type="number" class="form-control" placeholder="%" min="0" max="100" step="0.1" value="${percentage != null ? percentage : ''}" oninput="updateTrackTotal()">
+ <button type="button" class="btn-remove-track" onclick="removeTrackRow(this)">&times;</button>
+ `;
+ container.appendChild(row);
+ updateTrackTotal();
+ }
+
+ function removeTrackRow(btn) {
+ btn.closest('.track-row').remove();
+ updateTrackTotal();
+ }
+
+ function getTracksFromForm() {
+ const rows = document.querySelectorAll('#tracksContainer .track-row');
+ const tracks = [];
+ rows.forEach(row => {
+ const name = row.querySelector('input[type="text"]').value.trim();
+ const pct = parseFloat(row.querySelector('input[type="number"]').value);
+ if (name && !isNaN(pct)) {
+ tracks.push({ name, percentage: pct });
+ }
+ });
+ return tracks;
+ }
+
+ function updateTrackTotal() {
+ const rows = document.querySelectorAll('#tracksContainer .track-row');
+ const el = document.getElementById('trackTotal');
+ if (rows.length === 0) { el.textContent = ''; return; }
+ let sum = 0;
+ rows.forEach(row => {
+ sum += parseFloat(row.querySelector('input[type="number"]').value) || 0;
+ });
+ const isOk = Math.abs(sum - 100) < 0.01;
+ el.className = 'track-total ' + (isOk ? 'ok' : 'warn');
+ el.textContent = I18n.t('myFunds.totalPercentage') + ': ' + sum.toFixed(1) + '%' + (isOk ? '' : ' — ' + I18n.t('myFunds.percentageWarning'));
+ }
+
+ function openAddModal() {
+ document.getElementById('modalTitle').textContent = I18n.t('myFunds.addFund');
+ document.getElementById('fundForm').reset();
+ document.getElementById('fundId').value = '';
+ document.getElementById('tracksContainer').innerHTML = '';
+ document.getElementById('trackTotal').textContent = '';
+ document.getElementById('fundReturnMonth').value = '';
+ document.getElementById('fundReturnYear').value = '';
+ document.getElementById('fundReturn3y').value = '';
+ document.getElementById('fundReturn5y').value = '';
+ document.getElementById('returnsSection').style.display = 'none';
+ _returnsSource = null;
+ document.getElementById('fundModal').classList.add('active');
+ }
+
+ function closeModal() {
+ document.getElementById('fundModal').classList.remove('active');
+ }
+
+ function editFund(id) {
+ const funds = getFunds();
+ const fund = funds.find(f => f.id === id);
+ if (!fund) return;
+
+ document.getElementById('modalTitle').textContent = I18n.t('myFunds.editFund');
+ document.getElementById('fundId').value = fund.id;
+ document.getElementById('fundType').value = fund.type;
+ document.getElementById('fundType').dispatchEvent(new Event('change'));
+ document.getElementById('fundName').value = fund.name;
+ document.getElementById('fundCompany').value = fund.company || '';
+ document.getElementById('fundValue').value = fund.value;
+ document.getElementById('monthlyDeposit').value = fund.monthlyDeposit || 0;
+ document.getElementById('accountNumber').value = fund.accountNumber || '';
+ document.getElementById('actuarialBalance').value = fund.actuarialBalance || '';
+ document.getElementById('fundNotes').value = fund.notes || '';
+ // Load tracks
+ document.getElementById('tracksContainer').innerHTML = '';
+ if (fund.tracks && fund.tracks.length > 0) {
+ fund.tracks.forEach(t => addTrackRow(t.name, t.percentage));
+ }
+ updateTrackTotal();
+ // Load returns
+ const r = fund.returns || {};
+ document.getElementById('fundReturnMonth').value = r.month ?? '';
+ document.getElementById('fundReturnYear').value = r.year1 ?? '';
+ document.getElementById('fundReturn3y').value = r.year3 ?? '';
+ document.getElementById('fundReturn5y').value = r.year5 ?? '';
+ document.getElementById('returnsSection').style.display = (r.month != null || r.year1 != null || r.year3 != null || r.year5 != null) ? 'block' : 'none';
+ _returnsSource = fund.returnsSource || null;
+ document.getElementById('fundModal').classList.add('active');
+ }
+
+ function saveFund() {
+ const id = document.getElementById('fundId').value;
+ const type = document.getElementById('fundType').value;
+ const name = document.getElementById('fundName').value.trim();
+ const company = document.getElementById('fundCompany').value;
+ const value = parseFloat(document.getElementById('fundValue').value) || 0;
+ const monthlyDeposit = parseFloat(document.getElementById('monthlyDeposit').value) || 0;
+ const accountNumber = document.getElementById('accountNumber').value.trim();
+ const actuarialBalance = parseFloat(document.getElementById('actuarialBalance').value) || null;
+ const notes = document.getElementById('fundNotes').value.trim();
+ const tracks = getTracksFromForm();
+
+ // Collect returns
+ const rMonth = document.getElementById('fundReturnMonth').value;
+ const rYear = document.getElementById('fundReturnYear').value;
+ const r3y = document.getElementById('fundReturn3y').value;
+ const r5y = document.getElementById('fundReturn5y').value;
+ const hasReturns = rMonth !== '' || rYear !== '' || r3y !== '' || r5y !== '';
+ const returns = hasReturns ? {
+ month: rMonth !== '' ? parseFloat(rMonth) : null,
+ year1: rYear !== '' ? parseFloat(rYear) : null,
+ year3: r3y !== '' ? parseFloat(r3y) : null,
+ year5: r5y !== '' ? parseFloat(r5y) : null
+ } : null;
+ const returnsSource = hasReturns ? (_returnsSource || 'manual') : null;
+
+ if (!name || !value) {
+ App.notify(I18n.t('myFunds.fillNameAndValue'), 'error');
+ return;
+ }
+
+ const funds = getFunds();
+ const now = new Date().toISOString();
+ const today = now.split('T')[0];
+
+ if (id) {
+ // Update existing
+ const idx = funds.findIndex(f => f.id === id);
+ if (idx !== -1) {
+ const oldFund = funds[idx];
+ // Add to history if value changed
+ let history = oldFund.history || [];
+ if (oldFund.value !== value) {
+ history = [...history, { date: today, value: value }];
+ }
+ funds[idx] = { ...oldFund, type, name, company, value, monthlyDeposit, accountNumber, actuarialBalance, notes, tracks, returns, returnsSource, history, updatedAt: now };
+ }
+ } else {
+ // Add new with initial history
+ funds.push({
+ id: 'fund_' + Date.now(),
+ type,
+ name,
+ company,
+ value,
+ monthlyDeposit,
+ accountNumber,
+ actuarialBalance,
+ notes,
+ tracks,
+ returns,
+ returnsSource,
+ history: [{ date: today, value: value }],
+ createdAt: now,
+ updatedAt: now
+ });
+ }
+
+ saveFunds(funds);
+ closeModal();
+ loadFunds();
+ App.notify(I18n.t('myFunds.fundSaved'), 'success');
+ }
+
+ function openUpdateValueModal(id, currentValue) {
+ document.getElementById('updateFundId').value = id;
+ document.getElementById('newValue').value = currentValue;
+ document.getElementById('updateValueModal').classList.add('active');
+ }
+
+ function closeUpdateModal() {
+ document.getElementById('updateValueModal').classList.remove('active');
+ }
+
+ function updateValue() {
+ const id = document.getElementById('updateFundId').value;
+ const newValue = parseFloat(document.getElementById('newValue').value);
+
+ if (isNaN(newValue)) {
+ App.notify(I18n.t('myFunds.enterValidValue'), 'error');
+ return;
+ }
+
+ const funds = getFunds();
+ const idx = funds.findIndex(f => f.id === id);
+ if (idx !== -1) {
+ const now = new Date().toISOString();
+ const today = now.split('T')[0];
+ // Add to history
+ let history = funds[idx].history || [];
+ history = [...history, { date: today, value: newValue }];
+ funds[idx].value = newValue;
+ funds[idx].history = history;
+ funds[idx].updatedAt = now;
+ saveFunds(funds);
+ }
+
+ closeUpdateModal();
+ loadFunds();
+ App.notify(I18n.t('myFunds.valueUpdated'), 'success');
+ }
+
+ // Calculate returns based on history
+ function calculateReturns(fund) {
+ const history = fund.history || [];
+ if (history.length < 2) return { month: null, year1: null, year3: null, year5: null };
+
+ const now = new Date();
+ const currentValue = fund.value;
+
+ const getValueAtDate = (targetDate) => {
+ const sorted = [...history].sort((a, b) => new Date(a.date) - new Date(b.date));
+ let closest = null;
+ for (const h of sorted) {
+ if (new Date(h.date) <= targetDate) {
+ closest = h;
+ }
+ }
+ return closest ? closest.value : null;
+ };
+
+ const monthAgo = new Date(now);
+ monthAgo.setMonth(monthAgo.getMonth() - 1);
+ const year1Ago = new Date(now);
+ year1Ago.setFullYear(year1Ago.getFullYear() - 1);
+ const year3Ago = new Date(now);
+ year3Ago.setFullYear(year3Ago.getFullYear() - 3);
+ const year5Ago = new Date(now);
+ year5Ago.setFullYear(year5Ago.getFullYear() - 5);
+
+ const calcReturn = (oldValue) => {
+ if (!oldValue || oldValue === 0) return null;
+ return ((currentValue - oldValue) / oldValue * 100).toFixed(2);
+ };
+
+ return {
+ month: calcReturn(getValueAtDate(monthAgo)),
+ year1: calcReturn(getValueAtDate(year1Ago)),
+ year3: calcReturn(getValueAtDate(year3Ago)),
+ year5: calcReturn(getValueAtDate(year5Ago))
+ };
+ }
+
+ function deleteFund(id) {
+ if (!confirm(I18n.t('myFunds.deleteFundConfirm'))) return;
+
+ const funds = getFunds().filter(f => f.id !== id);
+ saveFunds(funds);
+ loadFunds();
+ App.notify(I18n.t('myFunds.fundDeleted'), 'success');
+ }
+
+ // Smart Import
+ const fundColumnMappings = {
+ name: ['שם', 'שם קרן', 'קרן', 'תיאור', 'name', 'fund name', 'description'],
+ type: ['סוג', 'סוג קרן', 'type', 'fund type', 'tipo'],
+ company: ['חברה', 'חברה מנהלת', 'מנהל', 'company', 'manager'],
+ value: ['שווי', 'יתרה', 'סכום', 'ערך', 'value', 'balance', 'amount', 'total'],
+ monthlyDeposit: ['הפקדה', 'הפקדה חודשית', 'deposit', 'monthly']
+ };
+
+ async function importSmartFile() {
+ const input = document.createElement('input');
+ input.type = 'file';
+ input.accept = '.xlsx,.xls,.csv,.html,.txt';
+
+ input.onchange = async (e) => {
+ const file = e.target.files[0];
+ if (!file) return;
+
+ try {
+ let rows = [];
+ const content = await file.text();
+
+ if (content.includes('<HTML') || content.includes('<html') || content.includes('<table')) {
+ rows = parseHTMLTable(content);
+ } else if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+ const data = await file.arrayBuffer();
+ const workbook = XLSX.read(data, { type: 'array' });
+ const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+ rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+ } else {
+ rows = SmartImport.parseFile(content, file.name);
+ }
+
+ if (rows.length < 2) {
+ App.notify(I18n.t('myFunds.fileEmptyOrInvalid'), 'error');
+ return;
+ }
+
+ const headerIdx = findHeaderRow(rows);
+ const headers = rows[headerIdx];
+ const detected = detectColumns(headers);
+
+ if (detected.value === undefined) {
+ showMappingModal(headers, rows, headerIdx);
+ return;
+ }
+
+ const imported = importFundData(rows, headerIdx, detected);
+
+ if (imported > 0) {
+ App.notify(I18n.t('myFunds.importedFunds').replace('{count}', imported), 'success');
+ loadFunds();
+ } else {
+ App.notify(I18n.t('myFunds.noFundsToImport'), 'error');
+ }
+ } catch (error) {
+ console.error('Import error:', error);
+ App.notify(I18n.t('myFunds.importError') + ': ' + error.message, 'error');
+ }
+ };
+
+ input.click();
+ }
+
+ function parseHTMLTable(html) {
+ const rows = [];
+ const parser = new DOMParser();
+ const doc = parser.parseFromString(html, 'text/html');
+ let tables = doc.querySelectorAll('table.dataTable');
+ if (tables.length === 0) tables = doc.querySelectorAll('table');
+
+ const seenRows = new Set();
+ for (const table of tables) {
+ for (const tr of table.querySelectorAll('tr')) {
+ const cells = tr.querySelectorAll('th, td');
+ if (cells.length >= 2 && cells.length <= 15) {
+ const rowData = [];
+ cells.forEach(cell => {
+ rowData.push(cell.textContent.trim().replace(/\s+/g, ' ').replace(/[‎‏\u200e\u200f]/g, ''));
+ });
+ const rowKey = rowData.join('|');
+ if (rowData.some(c => c.length > 0) && !seenRows.has(rowKey)) {
+ seenRows.add(rowKey);
+ rows.push(rowData);
+ }
+ }
+ }
+ }
+ return rows;
+ }
+
+ function findHeaderRow(rows) {
+ for (let i = 0; i < Math.min(rows.length, 15); i++) {
+ const row = rows[i];
+ if (!row || row.length < 2) continue;
+ const rowText = row.map(c => String(c || '').toLowerCase()).join(' ');
+ if (fundColumnMappings.value.some(w => rowText.includes(w.toLowerCase())) ||
+ fundColumnMappings.name.some(w => rowText.includes(w.toLowerCase()))) {
+ return i;
+ }
+ }
+ return 0;
+ }
+
+ function detectColumns(headers) {
+ const detected = {};
+ headers.forEach((header, index) => {
+ if (!header) return;
+ const headerLower = String(header).toLowerCase().trim();
+ Object.keys(fundColumnMappings).forEach(field => {
+ if (detected[field] !== undefined) return;
+ if (fundColumnMappings[field].some(kw => headerLower.includes(kw.toLowerCase()))) {
+ detected[field] = index;
+ }
+ });
+ });
+ return detected;
+ }
+
+ function mapFundType(typeText) {
+ if (!typeText) return 'savings';
+ const t = typeText.toLowerCase();
+ if (t.includes('פנסיה') || t.includes('pension')) return 'pension';
+ if (t.includes('השתלמות') || t.includes('training')) return 'training';
+ if (t.includes('גמל') || t.includes('gemel') || t.includes('provident')) return 'gemel';
+ return 'savings';
+ }
+
+ function importFundData(rows, headerIdx, detected) {
+ let imported = 0;
+ const dataRows = rows.slice(headerIdx + 1);
+ const funds = getFunds();
+ const now = new Date().toISOString();
+
+ for (const row of dataRows) {
+ const firstCell = String(row[0] || '').trim();
+ if (!firstCell || firstCell.includes('סה"כ') || firstCell.includes('total')) continue;
+
+ const valueVal = row[detected.value];
+ const value = typeof valueVal === 'number' ? valueVal :
+ parseFloat(String(valueVal || '0').replace(/[^\d.-]/g, ''));
+ if (isNaN(value) || value === 0) continue;
+
+ const name = detected.name !== undefined ? String(row[detected.name] || I18n.t('myFunds.importedFund')).trim() : I18n.t('myFunds.importedFund');
+ const type = detected.type !== undefined ? mapFundType(String(row[detected.type])) : 'savings';
+ const company = detected.company !== undefined ? String(row[detected.company] || '') : '';
+ const monthlyDeposit = detected.monthlyDeposit !== undefined ?
+ parseFloat(String(row[detected.monthlyDeposit] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+
+ funds.push({
+ id: 'fund_' + Date.now() + '_' + imported,
+ type,
+ name,
+ company,
+ value,
+ monthlyDeposit,
+ createdAt: now,
+ updatedAt: now
+ });
+ imported++;
+ }
+
+ if (imported > 0) saveFunds(funds);
+ return imported;
+ }
+
+ function showMappingModal(headers, rows, headerIdx) {
+ const modal = document.createElement('div');
+ modal.className = 'modal-overlay active';
+ modal.id = 'mappingModal';
+ modal.innerHTML = `
+ <div class="modal" style="max-width: 500px;">
+ <div class="modal-header">
+ <h2>${I18n.t('myFunds.selectColumns')}</h2>
+ <button class="modal-close" onclick="document.getElementById('mappingModal').remove()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <p>${I18n.t('myFunds.selectColumnsDesc')}</p>
+ <div class="form-group">
+ <label>${I18n.t('myFunds.nameColumn')}</label>
+ <select id="mapName" class="form-control">
+ <option value="-1">${I18n.t('myFunds.notSelected')}</option>
+ ${headers.map((h, i) => `<option value="${i}">${h || I18n.t('myFunds.column') + ' ' + (i+1)}</option>`).join('')}
+ </select>
+ </div>
+ <div class="form-group">
+ <label>${I18n.t('myFunds.valueColumn')}</label>
+ <select id="mapValue" class="form-control" required>
+ <option value="-1">${I18n.t('myFunds.selectOption')}</option>
+ ${headers.map((h, i) => `<option value="${i}">${h || I18n.t('myFunds.column') + ' ' + (i+1)}</option>`).join('')}
+ </select>
+ </div>
+ <div class="form-group">
+ <label>${I18n.t('myFunds.typeColumn')}</label>
+ <select id="mapType" class="form-control">
+ <option value="-1">${I18n.t('myFunds.notSelected')}</option>
+ ${headers.map((h, i) => `<option value="${i}">${h || I18n.t('myFunds.column') + ' ' + (i+1)}</option>`).join('')}
+ </select>
+ </div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="document.getElementById('mappingModal').remove()">${I18n.t('common.cancel')}</button>
+ <button class="btn btn-primary" onclick="applyMapping()">${I18n.t('myFunds.importBtn')}</button>
+ </div>
+ </div>
+ `;
+ document.body.appendChild(modal);
+ window._importData = { rows, headerIdx };
+ }
+
+ function applyMapping() {
+ const valueIdx = parseInt(document.getElementById('mapValue').value);
+ if (valueIdx < 0) {
+ App.notify(I18n.t('myFunds.selectValueColumn'), 'error');
+ return;
+ }
+
+ const detected = {
+ name: parseInt(document.getElementById('mapName').value),
+ value: valueIdx,
+ type: parseInt(document.getElementById('mapType').value)
+ };
+
+ Object.keys(detected).forEach(k => { if (detected[k] < 0) delete detected[k]; });
+
+ const { rows, headerIdx } = window._importData;
+ const imported = importFundData(rows, headerIdx, detected);
+
+ document.getElementById('mappingModal').remove();
+ delete window._importData;
+
+ if (imported > 0) {
+ App.notify(I18n.t('myFunds.importedFunds').replace('{count}', imported), 'success');
+ loadFunds();
+ } else {
+ App.notify(I18n.t('myFunds.noFundsToImport'), 'error');
+ }
+ }
+
+ // ===== Clearinghouse (מסלקה פנסיונית) Import =====
+ function importClearinghouse() {
+ const input = document.createElement('input');
+ input.type = 'file';
+ input.accept = '.xls,.xlsx';
+ input.onchange = async (e) => {
+ const file = e.target.files[0];
+ if (!file) return;
+ try {
+ const data = await file.arrayBuffer();
+ const workbook = XLSX.read(data, { type: 'array' });
+ // Look for the products sheet
+ const productsSheetName = workbook.SheetNames.find(n =>
+ n.includes('פרטי המוצרים') || n.includes('מוצרים שלי')
+ );
+ if (!productsSheetName) {
+ App.notify(I18n.t('myFunds.clearinghouseNotFound'), 'error');
+ return;
+ }
+ const sheet = workbook.Sheets[productsSheetName];
+ const rows = XLSX.utils.sheet_to_json(sheet);
+ if (rows.length === 0) {
+ App.notify(I18n.t('myFunds.clearinghouseNoProducts'), 'error');
+ return;
+ }
+ // Also try to read deposit tracking sheet
+ const depositsSheetName = workbook.SheetNames.find(n =>
+ n.includes('מעקב הפקדות') || n.includes('הפקדות')
+ );
+ let depositRows = [];
+ if (depositsSheetName) {
+ depositRows = XLSX.utils.sheet_to_json(workbook.Sheets[depositsSheetName]);
+ }
+ showClearinghousePreview(rows, depositRows);
+ } catch (error) {
+ console.error('Clearinghouse import error:', error);
+ App.notify(I18n.t('myFunds.importError') + ': ' + error.message, 'error');
+ }
+ };
+ input.click();
+ }
+
+ function mapClearinghouseType(productName) {
+ if (!productName) return 'savings';
+ const p = productName.toLowerCase();
+ if (p.includes('פנסיה') || p.includes('pension')) return 'pension';
+ if (p.includes('השתלמות') || p.includes('training')) return 'training';
+ if (p.includes('גמל') || p.includes('gemel') || p.includes('provident')) return 'gemel';
+ return 'savings';
+ }
+
+ function mapClearinghouseCompany(companyName) {
+ if (!companyName) return 'other';
+ const c = companyName.toLowerCase();
+ if (c.includes('מיטב')) return 'meitav';
+ if (c.includes('אלטשולר')) return 'altshuler';
+ if (c.includes('הראל')) return 'harel';
+ if (c.includes('מגדל')) return 'migdal';
+ if (c.includes('מנורה')) return 'menora';
+ if (c.includes('פניקס') || c.includes('הפניקס')) return 'phoenix';
+ if (c.includes('כלל')) return 'clal';
+ if (c.includes('פסגות')) return 'psagot';
+ if (c.includes('אנליסט')) return 'analyst';
+ if (c.includes('ילין')) return 'yelin';
+ if (c.includes('מור')) return 'more';
+ return 'other';
+ }
+
+ const typeIcons = { pension: '🏛️', training: '🎓', gemel: '💼', savings: '🐷' };
+ const typeNames = { pension: 'פנסיה', training: 'השתלמות', gemel: 'גמל', savings: 'חיסכון' };
+
+ function calcMonthlyDeposit(depositRows, policyNum) {
+ if (!depositRows.length || !policyNum) return 0;
+ // Find deposits for this policy and calculate average monthly
+ const policyDeposits = depositRows.filter(d => {
+ const dp = String(d['מספר פוליסה'] || '');
+ return dp === String(policyNum);
+ });
+ if (policyDeposits.length === 0) return 0;
+ // Get most recent deposit entry
+ const last = policyDeposits[policyDeposits.length - 1];
+ const employee = parseFloat(last['הפקדות עובד']) || 0;
+ const employer = parseFloat(last['הפקדות מעסיק']) || 0;
+ const severance = parseFloat(last['הפקדות מעסיק לפיצויים']) || 0;
+ return employee + employer + severance;
+ }
+
+ function showClearinghousePreview(rows, depositRows) {
+ const existingFunds = getFunds();
+ const products = rows.map((row, idx) => {
+ const name = row['שם מוצר'] || '';
+ const company = row['שם חברה מנהלת'] || '';
+ const policyNum = String(row['מספר פוליסה'] || '');
+ const status = row['סטטוס'] || '';
+ const balance = parseFloat(row['סך הכל חיסכון']) || 0;
+ const feeDeposit = parseFloat(row['שיעור דמי ניהול מהפקדות']) || 0;
+ const feeSavings = parseFloat(row['שיעור דמי ניהול שנתי מחיסכון צבור']) || 0;
+ const ytdReturn = parseFloat(row['תשואה מתחילת השנה']) || 0;
+ const type = mapClearinghouseType(name);
+ const companyCode = mapClearinghouseCompany(company);
+ const monthlyDeposit = calcMonthlyDeposit(depositRows, policyNum);
+ const isActive = status === 'פעיל';
+ // Check if already exists by policy number
+ const existing = existingFunds.find(f => f.accountNumber === policyNum && policyNum);
+ return {
+ idx, name, company, companyCode, policyNum, status,
+ balance, feeDeposit, feeSavings, ytdReturn,
+ type, monthlyDeposit, isActive, existing
+ };
+ }).filter(p => p.balance > 0 || p.isActive);
+
+ if (products.length === 0) {
+ App.notify(I18n.t('myFunds.clearinghouseNoProducts'), 'error');
+ return;
+ }
+
+ const modal = document.createElement('div');
+ modal.className = 'modal-overlay active';
+ modal.id = 'clearinghouseModal';
+
+ const productsHTML = products.map((p, i) => {
+ const statusBadge = p.existing
+ ? `<span style="color:#f59e0b;font-size:0.75rem;">⚠️ ${I18n.t('myFunds.clearinghouseDuplicate')}</span>`
+ : (p.isActive
+ ? `<span style="color:#10b981;font-size:0.75rem;">✓ ${I18n.t('myFunds.clearinghouseActive')}</span>`
+ : `<span style="color:#6b7280;font-size:0.75rem;">✗ ${I18n.t('myFunds.clearinghouseInactive')}</span>`);
+ const checked = (p.isActive || p.balance > 0) ? 'checked' : '';
+ return `
+ <label style="display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:8px;cursor:pointer;background:var(--color-bg-secondary);">
+ <input type="checkbox" ${checked} data-cidx="${i}" style="margin-top:4px;flex-shrink:0;">
+ <div style="flex:1;min-width:0;">
+ <div style="font-weight:600;margin-bottom:2px;">${typeIcons[p.type]} ${p.name}</div>
+ <div style="font-size:0.85rem;color:var(--color-text-secondary);">${p.company}</div>
+ <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;font-size:0.8rem;">
+ <span>💰 ₪${p.balance.toLocaleString()}</span>
+ ${p.monthlyDeposit ? `<span>📤 ₪${p.monthlyDeposit.toLocaleString()}/חודש</span>` : ''}
+ ${p.ytdReturn ? `<span>📈 ${p.ytdReturn.toFixed(2)}%</span>` : ''}
+ ${p.feeDeposit || p.feeSavings ? `<span>🏷️ ${p.feeDeposit}%/${p.feeSavings}%</span>` : ''}
+ </div>
+ <div style="margin-top:4px;">${statusBadge} <span style="font-size:0.75rem;color:var(--color-text-secondary);">| ${typeNames[p.type]} | #${p.policyNum}</span></div>
+ </div>
+ </label>`;
+ }).join('');
+
+ modal.innerHTML = `
+ <div class="modal" style="max-width:550px;max-height:85vh;overflow-y:auto;">
+ <div class="modal-header">
+ <h2>🏦 ${I18n.t('myFunds.clearinghousePreview')}</h2>
+ <button class="modal-close" onclick="document.getElementById('clearinghouseModal').remove()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <p style="margin-bottom:12px;color:var(--color-text-secondary);font-size:0.9rem;">${I18n.t('myFunds.clearinghouseDesc')}</p>
+ <label style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;font-weight:600;">
+ <input type="checkbox" id="clearinghouseSelectAll" checked onchange="toggleClearinghouseAll(this.checked)">
+ ${I18n.t('myFunds.clearinghouseSelectAll')}
+ </label>
+ <div id="clearinghouseProducts">${productsHTML}</div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="document.getElementById('clearinghouseModal').remove()">${I18n.t('common.cancel')}</button>
+ <button class="btn btn-primary" onclick="applyClearinghouseImport()" style="background:#059669;">${I18n.t('myFunds.clearinghouseImportSelected')}</button>
+ </div>
+ </div>`;
+ document.body.appendChild(modal);
+ window._clearinghouseProducts = products;
+ }
+
+ function toggleClearinghouseAll(checked) {
+ document.querySelectorAll('#clearinghouseProducts input[type="checkbox"]').forEach(cb => {
+ cb.checked = checked;
+ });
+ }
+
+ function applyClearinghouseImport() {
+ const products = window._clearinghouseProducts;
+ if (!products) return;
+ const checkboxes = document.querySelectorAll('#clearinghouseProducts input[type="checkbox"]');
+ const funds = getFunds();
+ const now = new Date().toISOString();
+ let added = 0, updated = 0;
+
+ checkboxes.forEach(cb => {
+ if (!cb.checked) return;
+ const idx = parseInt(cb.dataset.cidx);
+ const p = products[idx];
+ if (!p) return;
+
+ if (p.existing) {
+ // Update existing fund
+ const f = funds.find(f => f.id === p.existing.id);
+ if (f) {
+ f.value = p.balance;
+ if (p.monthlyDeposit) f.monthlyDeposit = p.monthlyDeposit;
+ // Try to get full returns from market data
+ const marketReturns = matchMarketFund(p.name, p.companyCode, p.type);
+ f.returns = f.returns || {};
+ if (marketReturns) {
+ if (marketReturns.month != null) f.returns.month = marketReturns.month;
+ if (marketReturns.year1 != null) f.returns.year1 = marketReturns.year1;
+ if (marketReturns.year3 != null) f.returns.year3 = marketReturns.year3;
+ if (marketReturns.year5 != null) f.returns.year5 = marketReturns.year5;
+ f.returnsSource = 'market';
+ } else if (p.ytdReturn) {
+ f.returns.year1 = p.ytdReturn;
+ f.returnsSource = 'clearinghouse';
+ }
+ // Add to history
+ f.history = f.history || [];
+ const today = new Date().toISOString().split('T')[0];
+ if (!f.history.find(h => h.date === today)) {
+ f.history.push({ date: today, value: p.balance });
+ }
+ f.updatedAt = now;
+ updated++;
+ }
+ } else {
+ // Add new fund
+ const newFund = {
+ id: 'fund_' + Date.now() + '_' + added + '_' + updated,
+ type: p.type,
+ name: p.name,
+ company: p.companyCode,
+ value: p.balance,
+ monthlyDeposit: p.monthlyDeposit || 0,
+ accountNumber: p.policyNum,
+ createdAt: now,
+ updatedAt: now,
+ history: [{ date: new Date().toISOString().split('T')[0], value: p.balance }]
+ };
+ // Try to get full returns from market data
+ const marketReturns = matchMarketFund(p.name, p.companyCode, p.type);
+ if (marketReturns) {
+ newFund.returns = {
+ month: marketReturns.month,
+ year1: marketReturns.year1,
+ year3: marketReturns.year3,
+ year5: marketReturns.year5
+ };
+ newFund.returnsSource = 'market';
+ } else if (p.ytdReturn) {
+ newFund.returns = { year1: p.ytdReturn };
+ newFund.returnsSource = 'clearinghouse';
+ }
+ if (p.type === 'pension') {
+ const fees = [];
+ if (p.feeDeposit) fees.push(`דמ"נ הפקדות: ${p.feeDeposit}%`);
+ if (p.feeSavings) fees.push(`דמ"נ צבירה: ${p.feeSavings}%`);
+ if (fees.length) newFund.notes = fees.join(' | ');
+ }
+ funds.push(newFund);
+ added++;
+ }
+ });
+
+ if (added > 0 || updated > 0) {
+ saveFunds(funds);
+ loadFunds();
+ if (updated > 0) {
+ App.notify(I18n.t('myFunds.clearinghouseUpdated').replace('{updated}', updated).replace('{added}', added), 'success');
+ } else {
+ App.notify(I18n.t('myFunds.clearinghouseImported').replace('{count}', added), 'success');
+ }
+ } else {
+ App.notify(I18n.t('myFunds.noFundsToImport'), 'error');
+ }
+
+ document.getElementById('clearinghouseModal').remove();
+ delete window._clearinghouseProducts;
+ }
+
+ function refreshAllReturns() {
+ const funds = getFunds();
+ let matched = 0;
+ funds.forEach(f => {
+ const result = matchMarketFund(f.name, f.company, f.type);
+ if (result) {
+ f.returns = f.returns || {};
+ f.returns.month = result.month;
+ f.returns.year1 = result.year1;
+ f.returns.year3 = result.year3;
+ f.returns.year5 = result.year5;
+ f.returnsSource = 'market';
+ f.updatedAt = new Date().toISOString();
+ matched++;
+ }
+ });
+ if (matched > 0) {
+ saveFunds(funds);
+ loadFunds();
+ App.notify(I18n.t('myFunds.returnsRefreshed').replace('{count}', matched), 'success');
+ } else {
+ App.notify(I18n.t('myFunds.noReturnsMatched'), 'error');
+ }
+ }
+ </script>
 
 <script>
 (function() {
-    function applyMarket() {
-        var br = localStorage.getItem('wl_market') === 'br';
-        document.body.classList.toggle('market-br', br);
-    }
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyMarket);
-    } else { applyMarket(); }
-    window.addEventListener('storage', applyMarket);
+ function applyMarket() {
+ var br = localStorage.getItem('wl_market') === 'br';
+ document.body.classList.toggle('market-br', br);
+ }
+ if (document.readyState === 'loading') {
+ document.addEventListener('DOMContentLoaded', applyMarket);
+ } else { applyMarket(); }
+ window.addEventListener('storage', applyMarket);
 })();
 </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>

@@ -3,1019 +3,1011 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#10b981">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>בריאות פיננסית - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <style>
-        .nav-link.active { background: #10b981 !important; }
-        .page-header h1 { color: #10b981; }
-        .btn-primary { background: #10b981; }
-        .btn-primary:hover { background: #059669; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#10b981">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>בריאות פיננסית - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <style>
+ .nav-link.active { background: #10b981 !important; }
+ .page-header h1 { color: #10b981; }
+ .btn-primary { background: #10b981; }
+ .btn-primary:hover { background: #059669; }
 
-        /* ── Gauge ── */
-        .gauge-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 20px 10px;
-        }
+ /* ── Gauge ── */
+ .gauge-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 30px 20px 10px;
+ }
 
-        .gauge-svg {
-            width: 260px;
-            height: 160px;
-            overflow: visible;
-        }
+ .gauge-svg {
+ width: 260px;
+ height: 160px;
+ overflow: visible;
+ }
 
-        .gauge-track {
-            fill: none;
-            stroke: rgba(255,255,255,0.1);
-            stroke-width: 18;
-            stroke-linecap: round;
-        }
+ .gauge-track {
+ fill: none;
+ stroke: rgba(255,255,255,0.1);
+ stroke-width: 18;
+ stroke-linecap: round;
+ }
 
-        .gauge-fill {
-            fill: none;
-            stroke-width: 18;
-            stroke-linecap: round;
-            transition: stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1), stroke 0.5s ease;
-        }
+ .gauge-fill {
+ fill: none;
+ stroke-width: 18;
+ stroke-linecap: round;
+ transition: stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1), stroke 0.5s ease;
+ }
 
-        .gauge-score-text {
-            font-size: 42px;
-            font-weight: bold;
-            fill: white;
-        }
+ .gauge-score-text {
+ font-size: 42px;
+ font-weight: bold;
+ fill: white;
+ }
 
-        .gauge-grade-text {
-            font-size: 16px;
-            fill: #8892b0;
-        }
+ .gauge-grade-text {
+ font-size: 16px;
+ fill: #8892b0;
+ }
 
-        /* ── Grade Badge ── */
-        .grade-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 24px;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-top: 8px;
-        }
+ /* ── Grade Badge ── */
+ .grade-badge {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 8px 24px;
+ border-radius: 30px;
+ font-size: 1.1rem;
+ font-weight: bold;
+ margin-top: 8px;
+ }
 
-        .grade-A { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid rgba(16,185,129,0.4); }
-        .grade-B { background: rgba(59,130,246,0.2); color: #3b82f6; border: 1px solid rgba(59,130,246,0.4); }
-        .grade-C { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); }
-        .grade-D { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
-        .grade-F { background: rgba(220,38,38,0.15); color: #dc2626; border: 1px solid rgba(220,38,38,0.3); }
+ .grade-A { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid rgba(16,185,129,0.4); }
+ .grade-B { background: rgba(59,130,246,0.2); color: #3b82f6; border: 1px solid rgba(59,130,246,0.4); }
+ .grade-C { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); }
+ .grade-D { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+ .grade-F { background: rgba(220,38,38,0.15); color: #dc2626; border: 1px solid rgba(220,38,38,0.3); }
 
-        /* ── Category Cards ── */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 30px;
-        }
+ /* ── Category Cards ── */
+ .categories-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+ gap: 16px;
+ margin-bottom: 30px;
+ }
 
-        .category-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
+ .category-card {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 20px;
+ position: relative;
+ overflow: hidden;
+ }
 
-        .category-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 4px;
-            height: 100%;
-            border-radius: 0 16px 16px 0;
-        }
+ .category-card::before {
+ content: '';
+ position: absolute;
+ top: 0; right: 0;
+ width: 4px;
+ height: 100%;
+ border-radius: 0 16px 16px 0;
+ }
 
-        .cat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
+ .cat-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ margin-bottom: 12px;
+ }
 
-        .cat-icon-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .cat-icon-name {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .cat-icon { font-size: 1.8rem; }
+ .cat-icon { font-size: 1.8rem; }
 
-        .cat-name {
-            font-size: 1rem;
-            font-weight: 600;
-        }
+ .cat-name {
+ font-size: 1rem;
+ font-weight: 600;
+ }
 
-        .cat-desc {
-            font-size: 0.8rem;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
-        }
+ .cat-desc {
+ font-size: 0.8rem;
+ color: var(--color-text-secondary);
+ margin-top: 2px;
+ }
 
-        .cat-score {
-            text-align: left;
-            direction: ltr;
-        }
+ .cat-score {
+ text-align: left;
+ direction: ltr;
+ }
 
-        .cat-score .pts {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+ .cat-score .pts {
+ font-size: 1.5rem;
+ font-weight: bold;
+ }
 
-        .cat-score .max {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-        }
+ .cat-score .max {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ }
 
-        .cat-progress-track {
-            background: rgba(255,255,255,0.1);
-            border-radius: 6px;
-            height: 8px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
+ .cat-progress-track {
+ background: rgba(255,255,255,0.1);
+ border-radius: 6px;
+ height: 8px;
+ overflow: hidden;
+ margin-top: 12px;
+ }
 
-        .cat-progress-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-        }
+ .cat-progress-fill {
+ height: 100%;
+ border-radius: 6px;
+ transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+ }
 
-        .cat-detail {
-            font-size: 0.82rem;
-            color: var(--color-text-secondary);
-            margin-top: 8px;
-        }
+ .cat-detail {
+ font-size: 0.82rem;
+ color: var(--color-text-secondary);
+ margin-top: 8px;
+ }
 
-        .cat-na {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            font-style: italic;
-            margin-top: 12px;
-        }
+ .cat-na {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ font-style: italic;
+ margin-top: 12px;
+ }
 
-        /* ── Recommendations ── */
-        .recommendations-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+ /* ── Recommendations ── */
+ .recommendations-list {
+ list-style: none;
+ display: flex;
+ flex-direction: column;
+ gap: 12px;
+ }
 
-        .rec-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 14px 16px;
-        }
+ .rec-item {
+ display: flex;
+ align-items: flex-start;
+ gap: 14px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 14px 16px;
+ }
 
-        .rec-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+ .rec-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
 
-        .rec-body { flex: 1; }
+ .rec-body { flex: 1; }
 
-        .rec-title {
-            font-weight: 600;
-            margin-bottom: 3px;
-            font-size: 0.95rem;
-        }
+ .rec-title {
+ font-weight: 600;
+ margin-bottom: 3px;
+ font-size: 0.95rem;
+ }
 
-        .rec-desc {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            line-height: 1.5;
-        }
+ .rec-desc {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ line-height: 1.5;
+ }
 
-        .rec-severity-red { border-right: 3px solid #ef4444; }
-        .rec-severity-yellow { border-right: 3px solid #f59e0b; }
-        .rec-severity-blue { border-right: 3px solid #3b82f6; }
-        .rec-severity-green { border-right: 3px solid #10b981; }
+ .rec-severity-red { border-right: 3px solid #ef4444; }
+ .rec-severity-yellow { border-right: 3px solid #f59e0b; }
+ .rec-severity-blue { border-right: 3px solid #3b82f6; }
+ .rec-severity-green { border-right: 3px solid #10b981; }
 
-        /* ── Profile Banner ── */
-        .profile-banner {
-            background: rgba(245,158,11,0.1);
-            border: 1px solid rgba(245,158,11,0.3);
-            border-radius: 12px;
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            font-size: 0.9rem;
-        }
+ /* ── Profile Banner ── */
+ .profile-banner {
+ background: rgba(245,158,11,0.1);
+ border: 1px solid rgba(245,158,11,0.3);
+ border-radius: 12px;
+ padding: 14px 18px;
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ margin-bottom: 24px;
+ font-size: 0.9rem;
+ }
 
-        .profile-banner a {
-            color: #f59e0b;
-            text-decoration: underline;
-            cursor: pointer;
-        }
+ .profile-banner a {
+ color: #f59e0b;
+ text-decoration: underline;
+ cursor: pointer;
+ }
 
-        /* ── Score Hero ── */
-        .score-hero {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            padding: 10px 20px 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
+ /* ── Score Hero ── */
+ .score-hero {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 20px;
+ padding: 10px 20px 20px;
+ margin-bottom: 30px;
+ text-align: center;
+ }
 
-        .score-summary {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
+ .score-summary {
+ display: flex;
+ justify-content: center;
+ gap: 30px;
+ margin-top: 16px;
+ flex-wrap: wrap;
+ }
 
-        .score-stat { text-align: center; }
-        .score-stat .val { font-size: 1.3rem; font-weight: bold; }
-        .score-stat .lbl { font-size: 0.8rem; color: var(--color-text-secondary); }
+ .score-stat { text-align: center; }
+ .score-stat .val { font-size: 1.3rem; font-weight: bold; }
+ .score-stat .lbl { font-size: 0.8rem; color: var(--color-text-secondary); }
 
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--color-text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+ .section-title {
+ font-size: 1.1rem;
+ font-weight: 600;
+ margin-bottom: 16px;
+ color: var(--color-text-secondary);
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
 
-        @media (max-width: 640px) {
-            .categories-grid { grid-template-columns: 1fr 1fr; }
-            .gauge-svg { width: 220px; height: 140px; }
-        }
+ @media (max-width: 640px) {
+ .categories-grid { grid-template-columns: 1fr 1fr; }
+ .gauge-svg { width: 220px; height: 140px; }
+ }
 
-        @media (max-width: 400px) {
-            .categories-grid { grid-template-columns: 1fr; }
-        }
+ @media (max-width: 400px) {
+ .categories-grid { grid-template-columns: 1fr; }
+ }
 
-        /* ── Gamification ── */
-        .gamification-row {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-        }
+ /* ── Gamification ── */
+ .gamification-row {
+ display: flex;
+ gap: 14px;
+ flex-wrap: wrap;
+ margin-bottom: 28px;
+ }
 
-        .streak-card {
-            background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08));
-            border: 1px solid rgba(245,158,11,0.3);
-            border-radius: 16px;
-            padding: 18px 22px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex: 1;
-            min-width: 160px;
-        }
-        .streak-flame { font-size: 2.2rem; line-height: 1; }
-        .streak-info .streak-num {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #f59e0b;
-            line-height: 1;
-        }
-        .streak-info .streak-label {
-            font-size: 0.78rem;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
-        }
+ .streak-card {
+ background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08));
+ border: 1px solid rgba(245,158,11,0.3);
+ border-radius: 16px;
+ padding: 18px 22px;
+ display: flex;
+ align-items: center;
+ gap: 14px;
+ flex: 1;
+ min-width: 160px;
+ }
+ .streak-flame { font-size: 2.2rem; line-height: 1; }
+ .streak-info .streak-num {
+ font-size: 1.8rem;
+ font-weight: 800;
+ color: #f59e0b;
+ line-height: 1;
+ }
+ .streak-info .streak-label {
+ font-size: 0.78rem;
+ color: var(--color-text-secondary);
+ margin-top: 2px;
+ }
 
-        .level-card {
-            background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(59,130,246,0.08));
-            border: 1px solid rgba(139,92,246,0.3);
-            border-radius: 16px;
-            padding: 18px 22px;
-            flex: 2;
-            min-width: 200px;
-        }
-        .level-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .level-name {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #8b5cf6;
-        }
-        .level-pts { font-size: 0.8rem; color: var(--color-text-secondary); }
-        .level-bar-wrap {
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .level-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
-            transition: width 1s cubic-bezier(0.4,0,0.2,1);
-        }
-        .level-next { font-size: 0.72rem; color: var(--color-text-secondary); margin-top: 6px; }
+ .level-card {
+ background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(59,130,246,0.08));
+ border: 1px solid rgba(139,92,246,0.3);
+ border-radius: 16px;
+ padding: 18px 22px;
+ flex: 2;
+ min-width: 200px;
+ }
+ .level-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 10px;
+ }
+ .level-name {
+ font-size: 1rem;
+ font-weight: 700;
+ color: #8b5cf6;
+ }
+ .level-pts { font-size: 0.8rem; color: var(--color-text-secondary); }
+ .level-bar-wrap {
+ height: 8px;
+ background: rgba(255,255,255,0.1);
+ border-radius: 4px;
+ overflow: hidden;
+ }
+ .level-bar-fill {
+ height: 100%;
+ border-radius: 4px;
+ background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+ transition: width 1s cubic-bezier(0.4,0,0.2,1);
+ }
+ .level-next { font-size: 0.72rem; color: var(--color-text-secondary); margin-top: 6px; }
 
-        /* Achievements */
-        .achievements-grid {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-        }
+ /* Achievements */
+ .achievements-grid {
+ display: flex;
+ gap: 10px;
+ flex-wrap: wrap;
+ margin-bottom: 28px;
+ }
 
-        .achievement {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 170px;
-            transition: border-color 0.2s;
-        }
-        .achievement.unlocked {
-            border-color: rgba(16,185,129,0.4);
-            background: rgba(16,185,129,0.05);
-        }
-        .achievement.locked { opacity: 0.45; filter: grayscale(0.6); }
-        .ach-icon { font-size: 1.6rem; line-height: 1; }
-        .ach-name { font-size: 0.82rem; font-weight: 600; }
-        .ach-desc { font-size: 0.72rem; color: var(--color-text-secondary); margin-top: 2px; }
+ .achievement {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 12px 14px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ flex: 1;
+ min-width: 170px;
+ transition: border-color 0.2s;
+ }
+ .achievement.unlocked {
+ border-color: rgba(16,185,129,0.4);
+ background: rgba(16,185,129,0.05);
+ }
+ .achievement.locked { opacity: 0.45; filter: grayscale(0.6); }
+ .ach-icon { font-size: 1.6rem; line-height: 1; }
+ .ach-name { font-size: 0.82rem; font-weight: 600; }
+ .ach-desc { font-size: 0.72rem; color: var(--color-text-secondary); margin-top: 2px; }
 
-        /* Score history mini chart */
-        .history-chart-wrap {
-            margin-bottom: 28px;
-        }
-        .history-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            height: 70px;
-            margin-top: 12px;
-        }
-        .history-bar-col {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            height: 100%;
-        }
-        .history-bar-outer {
-            flex: 1;
-            width: 100%;
-            background: rgba(255,255,255,0.07);
-            border-radius: 4px;
-            display: flex;
-            align-items: flex-end;
-            overflow: hidden;
-        }
-        .history-bar-inner {
-            width: 100%;
-            border-radius: 4px;
-            transition: height 0.8s cubic-bezier(0.4,0,0.2,1);
-        }
-        .history-bar-label {
-            font-size: 0.62rem;
-            color: var(--color-text-secondary);
-            white-space: nowrap;
-        }
-        .history-bar-val {
-            font-size: 0.68rem;
-            font-weight: 600;
-        }
+ /* Score history mini chart */
+ .history-chart-wrap {
+ margin-bottom: 28px;
+ }
+ .history-bars {
+ display: flex;
+ align-items: flex-end;
+ gap: 8px;
+ height: 70px;
+ margin-top: 12px;
+ }
+ .history-bar-col {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 4px;
+ height: 100%;
+ }
+ .history-bar-outer {
+ flex: 1;
+ width: 100%;
+ background: rgba(255,255,255,0.07);
+ border-radius: 4px;
+ display: flex;
+ align-items: flex-end;
+ overflow: hidden;
+ }
+ .history-bar-inner {
+ width: 100%;
+ border-radius: 4px;
+ transition: height 0.8s cubic-bezier(0.4,0,0.2,1);
+ }
+ .history-bar-label {
+ font-size: 0.62rem;
+ color: var(--color-text-secondary);
+ white-space: nowrap;
+ }
+ .history-bar-val {
+ font-size: 0.68rem;
+ font-weight: 600;
+ }
 
-        /* Level-up toast */
-        .levelup-toast {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.7);
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            color: white;
-            border-radius: 20px;
-            padding: 30px 40px;
-            text-align: center;
-            z-index: 9999;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: none;
-        }
-        .levelup-toast.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .levelup-toast .lt-icon { font-size: 3rem; }
-        .levelup-toast .lt-title { font-size: 1.4rem; font-weight: 800; margin: 8px 0 4px; }
-        .levelup-toast .lt-sub { font-size: 0.9rem; opacity: 0.85; }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ /* Level-up toast */
+ .levelup-toast {
+ position: fixed;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%) scale(0.7);
+ background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+ color: white;
+ border-radius: 20px;
+ padding: 30px 40px;
+ text-align: center;
+ z-index: 9999;
+ box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+ opacity: 0;
+ transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+ pointer-events: none;
+ }
+ .levelup-toast.show {
+ opacity: 1;
+ transform: translate(-50%, -50%) scale(1);
+ }
+ .levelup-toast .lt-icon { font-size: 3rem; }
+ .levelup-toast .lt-title { font-size: 1.4rem; font-weight: 800; margin: 8px 0 4px; }
+ .levelup-toast .lt-sub { font-size: 0.9rem; opacity: 0.85; }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>🩺 <span data-i18n="healthScore.title">ציון בריאות פיננסית</span></h1>
-                <p data-i18n="healthScore.subtitle">סקירה של המצב הפיננסי שלך</p>
-            </header>
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>🩺 <span data-i18n="healthScore.title">ציון בריאות פיננסית</span></h1>
+ <p data-i18n="healthScore.subtitle">סקירה של המצב הפיננסי שלך</p>
+ </header>
 
-            <!-- Level-up toast -->
-            <div class="levelup-toast" id="levelupToast">
-                <div class="lt-icon">🏆</div>
-                <div class="lt-title" id="levelupTitle">עלית רמה!</div>
-                <div class="lt-sub" id="levelupSub"></div>
-            </div>
+ <!-- Level-up toast -->
+ <div class="levelup-toast" id="levelupToast">
+ <div class="lt-icon">🏆</div>
+ <div class="lt-title" id="levelupTitle">עלית רמה!</div>
+ <div class="lt-sub" id="levelupSub"></div>
+ </div>
 
-            <!-- Profile incomplete banner -->
-            <div class="profile-banner" id="profileBanner" style="display:none;">
-                <span>⚠️</span>
-                <span data-i18n="healthScore.completeProfile">השלם את הפרופיל הפיננסי לציון מדויק יותר</span>
-                <a href="profile.html" style="margin-right: auto;" data-i18n="nav.profile">פרופיל פיננסי ←</a>
-            </div>
+ <!-- Profile incomplete banner -->
+ <div class="profile-banner" id="profileBanner" style="display:none;">
+ <span>⚠️</span>
+ <span data-i18n="healthScore.completeProfile">השלם את הפרופיל הפיננסי לציון מדויק יותר</span>
+ <a href="profile.html" style="margin-right: auto;" data-i18n="nav.profile">פרופיל פיננסי ←</a>
+ </div>
 
-            <!-- Score Hero -->
-            <div class="score-hero">
-                <div class="gauge-container">
-                    <svg class="gauge-svg" viewBox="0 0 260 160">
-                        <!-- Background track: semi-circle M 30,130 A 100,100 0 0,1 230,130 -->
-                        <path class="gauge-track" d="M 30,130 A 100,100 0 0,1 230,130"/>
-                        <!-- Score fill -->
-                        <path class="gauge-fill" id="gaugeFill" d="M 30,130 A 100,100 0 0,1 230,130"
-                              stroke-dasharray="0 400"/>
-                        <!-- Score number -->
-                        <text class="gauge-score-text" x="130" y="118" text-anchor="middle" id="gaugeScoreText">–</text>
-                        <text class="gauge-grade-text" x="130" y="142" text-anchor="middle" id="gaugeGradeText"></text>
-                    </svg>
-                    <div id="gradeBadge" class="grade-badge" style="display:none;"></div>
-                </div>
+ <!-- Score Hero -->
+ <div class="score-hero">
+ <div class="gauge-container">
+ <svg class="gauge-svg" viewBox="0 0 260 160">
+ <!-- Background track: semi-circle M 30,130 A 100,100 0 0,1 230,130 -->
+ <path class="gauge-track" d="M 30,130 A 100,100 0 0,1 230,130"/>
+ <!-- Score fill -->
+ <path class="gauge-fill" id="gaugeFill" d="M 30,130 A 100,100 0 0,1 230,130"
+ stroke-dasharray="0 400"/>
+ <!-- Score number -->
+ <text class="gauge-score-text" x="130" y="118" text-anchor="middle" id="gaugeScoreText">–</text>
+ <text class="gauge-grade-text" x="130" y="142" text-anchor="middle" id="gaugeGradeText"></text>
+ </svg>
+ <div id="gradeBadge" class="grade-badge" style="display:none;"></div>
+ </div>
 
-                <div class="score-summary" id="scoreSummary"></div>
-            </div>
+ <div class="score-summary" id="scoreSummary"></div>
+ </div>
 
-            <!-- Gamification Row -->
-            <div class="gamification-row" id="gamificationRow" style="display:none;">
-                <div class="streak-card">
-                    <div class="streak-flame">🔥</div>
-                    <div class="streak-info">
-                        <div class="streak-num" id="streakNum">0</div>
-                        <div class="streak-label">חודשים ברצף<br>מעל ציון 70</div>
-                    </div>
-                </div>
-                <div class="level-card">
-                    <div class="level-row">
-                        <span class="level-name" id="levelName">מתחיל</span>
-                        <span class="level-pts" id="levelPts"></span>
-                    </div>
-                    <div class="level-bar-wrap">
-                        <div class="level-bar-fill" id="levelBarFill" style="width:0%"></div>
-                    </div>
-                    <div class="level-next" id="levelNext"></div>
-                </div>
-            </div>
+ <!-- Gamification Row -->
+ <div class="gamification-row" id="gamificationRow" style="display:none;">
+ <div class="streak-card">
+ <div class="streak-flame">🔥</div>
+ <div class="streak-info">
+ <div class="streak-num" id="streakNum">0</div>
+ <div class="streak-label">חודשים ברצף<br>מעל ציון 70</div>
+ </div>
+ </div>
+ <div class="level-card">
+ <div class="level-row">
+ <span class="level-name" id="levelName">מתחיל</span>
+ <span class="level-pts" id="levelPts"></span>
+ </div>
+ <div class="level-bar-wrap">
+ <div class="level-bar-fill" id="levelBarFill" style="width:0%"></div>
+ </div>
+ <div class="level-next" id="levelNext"></div>
+ </div>
+ </div>
 
-            <!-- Achievements -->
-            <div class="section-title" id="achTitle" style="display:none;">🏅 הישגים</div>
-            <div class="achievements-grid" id="achievementsGrid"></div>
+ <!-- Achievements -->
+ <div class="section-title" id="achTitle" style="display:none;">🏅 הישגים</div>
+ <div class="achievements-grid" id="achievementsGrid"></div>
 
-            <!-- Score History -->
-            <div class="history-chart-wrap card" id="historyChartWrap" style="display:none;">
-                <div class="card-header"><h2 class="card-title"><span class="icon">📈</span> היסטוריית ציון</h2></div>
-                <div class="card-body">
-                    <div class="history-bars" id="historyBars"></div>
-                </div>
-            </div>
+ <!-- Score History -->
+ <div class="history-chart-wrap card" id="historyChartWrap" style="display:none;">
+ <div class="card-header"><h2 class="card-title"><span class="icon">📈</span> היסטוריית ציון</h2></div>
+ <div class="card-body">
+ <div class="history-bars" id="historyBars"></div>
+ </div>
+ </div>
 
-            <!-- Category Cards -->
-            <div class="section-title">📊 <span data-i18n="healthScore.breakdown">פירוט לפי קטגוריה</span></div>
-            <div class="categories-grid" id="categoriesGrid"></div>
+ <!-- Category Cards -->
+ <div class="section-title">📊 <span data-i18n="healthScore.breakdown">פירוט לפי קטגוריה</span></div>
+ <div class="categories-grid" id="categoriesGrid"></div>
 
-            <!-- Recommendations -->
-            <div class="section-title">💡 <span data-i18n="healthScore.recommendations">המלצות לשיפור</span></div>
-            <ul class="recommendations-list" id="recommendationsList"></ul>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
-    </div>
+ <!-- Recommendations -->
+ <div class="section-title">💡 <span data-i18n="healthScore.recommendations">המלצות לשיפור</span></div>
+ <ul class="recommendations-list" id="recommendationsList"></ul>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
+ </div>
 
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/smart-tips.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        App.currentPage = 'healthScore';
-        I18n.init();
-        renderHealthScore();
-    });
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/smart-tips.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'healthScore';
+ I18n.init();
+ renderHealthScore();
+ });
 
-    document.addEventListener('languageChanged', () => {
-        renderHealthScore();
-    });
+ document.addEventListener('languageChanged', () => {
+ renderHealthScore();
+ });
 
-    // ─── Helpers ──────────────────────────────────────────────────────────────
+ // ─── Helpers ──────────────────────────────────────────────────────────────
 
-    function getMonthlyExpenses() {
-        const now = new Date();
-        const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-        const data = Storage.getCreditCards();
-        return data.expenses
-            .filter(e => e.date && e.date.startsWith(month))
-            .reduce((sum, e) => sum + (e.amount || 0), 0);
-    }
+ function getMonthlyExpenses() {
+ const now = new Date();
+ const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+ const data = Storage.getCreditCards();
+ return data.expenses
+ .filter(e => e.date && e.date.startsWith(month))
+ .reduce((sum, e) => sum + (e.amount || 0), 0);
+ }
 
-    function fmt(n) {
-        if (typeof I18n !== 'undefined' && I18n.formatCurrency) return I18n.formatCurrency(n);
-        return '₪' + Math.round(n).toLocaleString();
-    }
+ function fmt(n) {
+ if (typeof I18n !== 'undefined' && I18n.formatCurrency) return I18n.formatCurrency(n);
+ return '₪' + Math.round(n).toLocaleString();
+ }
 
-    function t(key) {
-        if (typeof I18n !== 'undefined' && I18n.t) return I18n.t(key) || key;
-        return key;
-    }
+ function t(key) {
+ if (typeof I18n !== 'undefined' && I18n.t) return I18n.t(key) || key;
+ return key;
+ }
 
-    // ─── Score Calculation ────────────────────────────────────────────────────
+ // ─── Score Calculation ────────────────────────────────────────────────────
 
-    function calculateScore() {
-        const profile = Storage.getUserProfile();
-        const bankBalance = Storage.getTotalBankBalance();
-        const monthlyExpenses = getMonthlyExpenses();
-        const netWorth = Storage.getNetWorth();
-        const loanPayments = Storage.getTotalMonthlyLoanPayments();
-        const loans = Storage.getLoans ? Storage.getLoans() : [];
-        const funds = Storage.getMyFunds();
-        const stocks = Storage.getStocks();
+ function calculateScore() {
+ const profile = Storage.getUserProfile();
+ const bankBalance = Storage.getTotalBankBalance();
+ const monthlyExpenses = getMonthlyExpenses();
+ const netWorth = Storage.getNetWorth();
+ const loanPayments = Storage.getTotalMonthlyLoanPayments();
+ const loans = Storage.getLoans ? Storage.getLoans() : [];
+ const funds = Storage.getMyFunds();
+ const stocks = Storage.getStocks();
 
-        const result = {
-            categories: [],
-            total: 0,
-            maxTotal: 100,
-            missingProfile: !profile || !profile.monthlyIncome
-        };
+ const result = {
+ categories: [],
+ total: 0,
+ maxTotal: 100,
+ missingProfile: !profile || !profile.monthlyIncome
+ };
 
-        // ── 1. Savings (25 pts) ──────────────────────────────────────
-        let savingsScore = null;
-        let savingsDetail = null;
-        if (monthlyExpenses > 0) {
-            const months = bankBalance / monthlyExpenses;
-            savingsScore = months >= 6 ? 25 : months >= 3 ? 18 : months >= 1 ? 10 : 3;
-            savingsDetail = months.toFixed(1) + ' ' + t('healthScore.emergencyMonths');
-        }
-        result.categories.push({
-            key: 'savings', icon: '💰',
-            score: savingsScore, max: 25,
-            detail: savingsDetail
-        });
+ // ── 1. Savings (25 pts) ──────────────────────────────────────
+ let savingsScore = null;
+ let savingsDetail = null;
+ if (monthlyExpenses > 0) {
+ const months = bankBalance / monthlyExpenses;
+ savingsScore = months >= 6 ? 25 : months >= 3 ? 18 : months >= 1 ? 10 : 3;
+ savingsDetail = months.toFixed(1) + ' ' + t('healthScore.emergencyMonths');
+ }
+ result.categories.push({
+ key: 'savings', icon: '💰',
+ score: savingsScore, max: 25,
+ detail: savingsDetail
+ });
 
-        // ── 2. Spending (25 pts) ─────────────────────────────────────
-        let spendingScore = null;
-        let spendingDetail = null;
-        if (profile?.monthlyIncome && monthlyExpenses > 0) {
-            const ratio = monthlyExpenses / profile.monthlyIncome;
-            spendingScore = ratio <= 0.50 ? 25
-                          : ratio <= 0.65 ? 20
-                          : ratio <= 0.75 ? 15
-                          : ratio <= 0.85 ? 8
-                          : ratio <= 0.95 ? 3 : 0;
-            spendingDetail = Math.round(ratio * 100) + '% ' + t('healthScore.spendingRatio');
-        }
-        result.categories.push({
-            key: 'spending', icon: '💸',
-            score: spendingScore, max: 25,
-            detail: spendingDetail
-        });
+ // ── 2. Spending (25 pts) ─────────────────────────────────────
+ let spendingScore = null;
+ let spendingDetail = null;
+ if (profile?.monthlyIncome && monthlyExpenses > 0) {
+ const ratio = monthlyExpenses / profile.monthlyIncome;
+ spendingScore = ratio <= 0.50 ? 25
+ : ratio <= 0.65 ? 20
+ : ratio <= 0.75 ? 15
+ : ratio <= 0.85 ? 8
+ : ratio <= 0.95 ? 3 : 0;
+ spendingDetail = Math.round(ratio * 100) + '% ' + t('healthScore.spendingRatio');
+ }
+ result.categories.push({
+ key: 'spending', icon: '💸',
+ score: spendingScore, max: 25,
+ detail: spendingDetail
+ });
 
-        // ── 3. Debt (20 pts) ─────────────────────────────────────────
-        let debtScore = null;
-        let debtDetail = null;
-        const hasLoans = loans.length > 0 || loanPayments > 0;
-        if (!hasLoans) {
-            debtScore = 20;
-            debtDetail = t('healthScore.debtFree');
-        } else if (profile?.monthlyIncome) {
-            const ratio = loanPayments / profile.monthlyIncome;
-            debtScore = ratio < 0.10 ? 17
-                      : ratio < 0.20 ? 13
-                      : ratio < 0.30 ? 8
-                      : ratio < 0.40 ? 3 : 0;
-            debtDetail = Math.round(ratio * 100) + '% ' + t('healthScore.ofIncome');
-        }
-        result.categories.push({
-            key: 'debt', icon: '📋',
-            score: debtScore, max: 20,
-            detail: debtDetail
-        });
+ // ── 3. Debt (20 pts) ─────────────────────────────────────────
+ let debtScore = null;
+ let debtDetail = null;
+ const hasLoans = loans.length > 0 || loanPayments > 0;
+ if (!hasLoans) {
+ debtScore = 20;
+ debtDetail = t('healthScore.debtFree');
+ } else if (profile?.monthlyIncome) {
+ const ratio = loanPayments / profile.monthlyIncome;
+ debtScore = ratio < 0.10 ? 17
+ : ratio < 0.20 ? 13
+ : ratio < 0.30 ? 8
+ : ratio < 0.40 ? 3 : 0;
+ debtDetail = Math.round(ratio * 100) + '% ' + t('healthScore.ofIncome');
+ }
+ result.categories.push({
+ key: 'debt', icon: '📋',
+ score: debtScore, max: 20,
+ detail: debtDetail
+ });
 
-        // ── 4. Investments (20 pts) ──────────────────────────────────
-        const hasPension = funds.some(f => f.type === 'pension') || profile?.hasPension;
-        const hasTraining = funds.some(f => f.type === 'training') || profile?.hasTrainingFund;
-        const hasStocks = stocks.holdings.length > 0 || Storage.getTotalStocksValue() > 0;
-        const investScore = (hasPension ? 8 : 0) + (hasTraining ? 6 : 0) + (hasStocks ? 6 : 0);
-        const investDetails = [
-            (hasPension ? '✓ ' : '✗ ') + t('funds.pensionFund'),
-            (hasTraining ? '✓ ' : '✗ ') + t('nav.trainingFunds'),
-            (hasStocks ? '✓ ' : '✗ ') + t('nav.stocks')
-        ].join(' · ');
-        result.categories.push({
-            key: 'investments', icon: '📈',
-            score: investScore, max: 20,
-            detail: investDetails
-        });
+ // ── 4. Investments (20 pts) ──────────────────────────────────
+ const hasPension = funds.some(f => f.type === 'pension') || profile?.hasPension;
+ const hasTraining = funds.some(f => f.type === 'training') || profile?.hasTrainingFund;
+ const hasStocks = stocks.holdings.length > 0 || Storage.getTotalStocksValue() > 0;
+ const investScore = (hasPension ? 8 : 0) + (hasTraining ? 6 : 0) + (hasStocks ? 6 : 0);
+ const investDetails = [
+ (hasPension ? '✓ ' : '✗ ') + t('funds.pensionFund'),
+ (hasTraining ? '✓ ' : '✗ ') + t('nav.trainingFunds'),
+ (hasStocks ? '✓ ' : '✗ ') + t('nav.stocks')
+ ].join(' · ');
+ result.categories.push({
+ key: 'investments', icon: '📈',
+ score: investScore, max: 20,
+ detail: investDetails
+ });
 
-        // ── 5. Net Worth (10 pts) ────────────────────────────────────
-        let nwScore = 0;
-        let nwDetail = null;
-        if (netWorth > 0) {
-            nwScore = 5;
-            if (profile?.monthlyIncome && netWorth > profile.monthlyIncome * 12) nwScore = 10;
-        }
-        nwDetail = fmt(netWorth);
-        result.categories.push({
-            key: 'networth', icon: '🏦',
-            score: nwScore, max: 10,
-            detail: nwDetail
-        });
+ // ── 5. Net Worth (10 pts) ────────────────────────────────────
+ let nwScore = 0;
+ let nwDetail = null;
+ if (netWorth > 0) {
+ nwScore = 5;
+ if (profile?.monthlyIncome && netWorth > profile.monthlyIncome * 12) nwScore = 10;
+ }
+ nwDetail = fmt(netWorth);
+ result.categories.push({
+ key: 'networth', icon: '🏦',
+ score: nwScore, max: 10,
+ detail: nwDetail
+ });
 
-        // ── Total ────────────────────────────────────────────────────
-        // Only sum categories that have a score (not null)
-        result.total = result.categories.reduce((sum, c) => sum + (c.score ?? 0), 0);
-        // Adjust max for N/A categories
-        const availableMax = result.categories.reduce((sum, c) => sum + (c.score !== null ? c.max : 0), 0);
-        if (availableMax < result.maxTotal && availableMax > 0) {
-            // Scale score to 100
-            result.scaledTotal = Math.round((result.total / availableMax) * 100);
-        } else {
-            result.scaledTotal = result.total;
-        }
+ // ── Total ────────────────────────────────────────────────────
+ // Only sum categories that have a score (not null)
+ result.total = result.categories.reduce((sum, c) => sum + (c.score ?? 0), 0);
+ // Adjust max for N/A categories
+ const availableMax = result.categories.reduce((sum, c) => sum + (c.score !== null ? c.max : 0), 0);
+ if (availableMax < result.maxTotal && availableMax > 0) {
+ // Scale score to 100
+ result.scaledTotal = Math.round((result.total / availableMax) * 100);
+ } else {
+ result.scaledTotal = result.total;
+ }
 
-        return result;
-    }
+ return result;
+ }
 
-    function getGrade(score) {
-        if (score >= 85) return { grade: 'A', label: t('healthScore.gradeA') };
-        if (score >= 70) return { grade: 'B', label: t('healthScore.gradeB') };
-        if (score >= 55) return { grade: 'C', label: t('healthScore.gradeC') };
-        if (score >= 40) return { grade: 'D', label: t('healthScore.gradeD') };
-        return { grade: 'F', label: t('healthScore.gradeF') };
-    }
+ function getGrade(score) {
+ if (score >= 85) return { grade: 'A', label: t('healthScore.gradeA') };
+ if (score >= 70) return { grade: 'B', label: t('healthScore.gradeB') };
+ if (score >= 55) return { grade: 'C', label: t('healthScore.gradeC') };
+ if (score >= 40) return { grade: 'D', label: t('healthScore.gradeD') };
+ return { grade: 'F', label: t('healthScore.gradeF') };
+ }
 
-    function getScoreColor(score) {
-        if (score >= 70) return '#10b981';
-        if (score >= 40) return '#f59e0b';
-        return '#ef4444';
-    }
+ function getScoreColor(score) {
+ if (score >= 70) return '#10b981';
+ if (score >= 40) return '#f59e0b';
+ return '#ef4444';
+ }
 
-    function getCategoryColor(pct) {
-        if (pct >= 0.75) return '#10b981';
-        if (pct >= 0.45) return '#f59e0b';
-        return '#ef4444';
-    }
+ function getCategoryColor(pct) {
+ if (pct >= 0.75) return '#10b981';
+ if (pct >= 0.45) return '#f59e0b';
+ return '#ef4444';
+ }
 
-    // ─── Render ───────────────────────────────────────────────────────────────
+ // ─── Render ───────────────────────────────────────────────────────────────
 
-    function renderHealthScore() {
-        const data = calculateScore();
-        const score = data.scaledTotal;
-        const { grade, label } = getGrade(score);
-        const color = getScoreColor(score);
+ function renderHealthScore() {
+ const data = calculateScore();
+ const score = data.scaledTotal;
+ const { grade, label } = getGrade(score);
+ const color = getScoreColor(score);
 
-        // Profile banner
-        if (data.missingProfile) {
-            document.getElementById('profileBanner').style.display = 'flex';
-        }
+ // Profile banner
+ if (data.missingProfile) {
+ document.getElementById('profileBanner').style.display = 'flex';
+ }
 
-        // Gauge animation
-        const arcLength = Math.PI * 100; // r=100
-        const filled = (score / 100) * arcLength;
-        const gaugeFill = document.getElementById('gaugeFill');
-        gaugeFill.setAttribute('stroke', color);
-        // Animate from 0
-        gaugeFill.setAttribute('stroke-dasharray', `0 ${arcLength + 100}`);
-        requestAnimationFrame(() => {
-            setTimeout(() => {
-                gaugeFill.setAttribute('stroke-dasharray', `${filled} ${arcLength - filled + 100}`);
-            }, 50);
-        });
+ // Gauge animation
+ const arcLength = Math.PI * 100; // r=100
+ const filled = (score / 100) * arcLength;
+ const gaugeFill = document.getElementById('gaugeFill');
+ gaugeFill.setAttribute('stroke', color);
+ // Animate from 0
+ gaugeFill.setAttribute('stroke-dasharray', `0 ${arcLength + 100}`);
+ requestAnimationFrame(() => {
+ setTimeout(() => {
+ gaugeFill.setAttribute('stroke-dasharray', `${filled} ${arcLength - filled + 100}`);
+ }, 50);
+ });
 
-        document.getElementById('gaugeScoreText').textContent = score;
-        document.getElementById('gaugeScoreText').setAttribute('fill', color);
-        document.getElementById('gaugeGradeText').textContent = `${grade} – ${label}`;
+ document.getElementById('gaugeScoreText').textContent = score;
+ document.getElementById('gaugeScoreText').setAttribute('fill', color);
+ document.getElementById('gaugeGradeText').textContent = `${grade} – ${label}`;
 
-        // Grade badge
-        const badge = document.getElementById('gradeBadge');
-        badge.className = `grade-badge grade-${grade}`;
-        badge.textContent = `${grade} · ${label}`;
-        badge.style.display = 'inline-flex';
+ // Grade badge
+ const badge = document.getElementById('gradeBadge');
+ badge.className = `grade-badge grade-${grade}`;
+ badge.textContent = `${grade} · ${label}`;
+ badge.style.display = 'inline-flex';
 
-        // Score summary
-        const netWorth = Storage.getNetWorth();
-        document.getElementById('scoreSummary').innerHTML = `
-            <div class="score-stat">
-                <div class="val" style="color:${color}">${score}<span style="font-size:1rem;color:#8892b0">/100</span></div>
-                <div class="lbl">${t('healthScore.totalScore')}</div>
-            </div>
-            <div class="score-stat">
-                <div class="val">${fmt(netWorth)}</div>
-                <div class="lbl">${t('dashboard.netWorth') || 'שווי נקי'}</div>
-            </div>
-        `;
+ // Score summary
+ const netWorth = Storage.getNetWorth();
+ document.getElementById('scoreSummary').innerHTML = `
+ <div class="score-stat">
+ <div class="val" style="color:${color}">${score}<span style="font-size:1rem;color:#8892b0">/100</span></div>
+ <div class="lbl">${t('healthScore.totalScore')}</div>
+ </div>
+ <div class="score-stat">
+ <div class="val">${fmt(netWorth)}</div>
+ <div class="lbl">${t('dashboard.netWorth') || 'שווי נקי'}</div>
+ </div>
+ `;
 
-        // Category cards
-        const grid = document.getElementById('categoriesGrid');
-        grid.innerHTML = data.categories.map(cat => {
-            const name = t(`healthScore.${cat.key}`);
-            const desc = t(`healthScore.${cat.key}Desc`);
-            const isNA = cat.score === null;
-            const pct = isNA ? 0 : cat.score / cat.max;
-            const catColor = isNA ? '#8892b0' : getCategoryColor(pct);
-            const scoreDisplay = isNA
-                ? `<span style="color:#8892b0">${t('healthScore.na')}</span>`
-                : `<span class="pts" style="color:${catColor}">${cat.score}</span><span class="max">/${cat.max}</span>`;
-            const barWidth = isNA ? 0 : Math.round(pct * 100);
+ // Category cards
+ const grid = document.getElementById('categoriesGrid');
+ grid.innerHTML = data.categories.map(cat => {
+ const name = t(`healthScore.${cat.key}`);
+ const desc = t(`healthScore.${cat.key}Desc`);
+ const isNA = cat.score === null;
+ const pct = isNA ? 0 : cat.score / cat.max;
+ const catColor = isNA ? '#8892b0' : getCategoryColor(pct);
+ const scoreDisplay = isNA
+ ? `<span style="color:#8892b0">${t('healthScore.na')}</span>`
+ : `<span class="pts" style="color:${catColor}">${cat.score}</span><span class="max">/${cat.max}</span>`;
+ const barWidth = isNA ? 0 : Math.round(pct * 100);
 
-            return `
-                <div class="category-card" style="border-right-color:${catColor}">
-                    <div style="position:absolute;top:0;right:0;width:4px;height:100%;background:${catColor};border-radius:0 16px 16px 0;"></div>
-                    <div class="cat-header">
-                        <div class="cat-icon-name">
-                            <span class="cat-icon">${cat.icon}</span>
-                            <div>
-                                <div class="cat-name">${name}</div>
-                                <div class="cat-desc">${desc}</div>
-                            </div>
-                        </div>
-                        <div class="cat-score">${scoreDisplay}</div>
-                    </div>
-                    <div class="cat-progress-track">
-                        <div class="cat-progress-fill" style="width:0%;background:${catColor}" data-width="${barWidth}"></div>
-                    </div>
-                    ${cat.detail ? `<div class="cat-detail">${cat.detail}</div>` : ''}
-                    ${isNA ? `<div class="cat-na">${t('healthScore.needsIncomeData') || 'נדרש נתון הכנסה בפרופיל'}</div>` : ''}
-                </div>
-            `;
-        }).join('');
+ return `
+ <div class="category-card" style="border-right-color:${catColor}">
+ <div style="position:absolute;top:0;right:0;width:4px;height:100%;background:${catColor};border-radius:0 16px 16px 0;"></div>
+ <div class="cat-header">
+ <div class="cat-icon-name">
+ <span class="cat-icon">${cat.icon}</span>
+ <div>
+ <div class="cat-name">${name}</div>
+ <div class="cat-desc">${desc}</div>
+ </div>
+ </div>
+ <div class="cat-score">${scoreDisplay}</div>
+ </div>
+ <div class="cat-progress-track">
+ <div class="cat-progress-fill" style="width:0%;background:${catColor}" data-width="${barWidth}"></div>
+ </div>
+ ${cat.detail ? `<div class="cat-detail">${cat.detail}</div>` : ''}
+ ${isNA ? `<div class="cat-na">${t('healthScore.needsIncomeData') || 'נדרש נתון הכנסה בפרופיל'}</div>` : ''}
+ </div>
+ `;
+ }).join('');
 
-        // Animate category bars
-        requestAnimationFrame(() => {
-            setTimeout(() => {
-                grid.querySelectorAll('.cat-progress-fill').forEach(el => {
-                    el.style.width = el.dataset.width + '%';
-                });
-            }, 100);
-        });
+ // Animate category bars
+ requestAnimationFrame(() => {
+ setTimeout(() => {
+ grid.querySelectorAll('.cat-progress-fill').forEach(el => {
+ el.style.width = el.dataset.width + '%';
+ });
+ }, 100);
+ });
 
-        // Gamification
-        renderGamification(score);
+ // Gamification
+ renderGamification(score);
 
-        // Recommendations
-        renderRecommendations();
-    }
+ // Recommendations
+ renderRecommendations();
+ }
 
-    // ─── Gamification ─────────────────────────────────────────────────────────
+ // ─── Gamification ─────────────────────────────────────────────────────────
 
-    const HISTORY_KEY = 'finance_health_score_history';
-    const LEVELS = [
-        { name: 'מתחיל', min: 0,  max: 30,  icon: '🌱' },
-        { name: 'מתקדם', min: 30, max: 50,  icon: '📗' },
-        { name: 'בינוני', min: 50, max: 65,  icon: '💼' },
-        { name: 'טוב',    min: 65, max: 80,  icon: '⭐' },
-        { name: 'מצוין',  min: 80, max: 92,  icon: '🏅' },
-        { name: 'מאסטר',  min: 92, max: 101, icon: '🏆' },
-    ];
+ const HISTORY_KEY = 'finance_health_score_history';
+ const LEVELS = [
+ { name: 'מתחיל', min: 0, max: 30, icon: '🌱' },
+ { name: 'מתקדם', min: 30, max: 50, icon: '📗' },
+ { name: 'בינוני', min: 50, max: 65, icon: '💼' },
+ { name: 'טוב', min: 65, max: 80, icon: '⭐' },
+ { name: 'מצוין', min: 80, max: 92, icon: '🏅' },
+ { name: 'מאסטר', min: 92, max: 101, icon: '🏆' },
+ ];
 
-    const ACHIEVEMENTS = [
-        { id: 'first_score',   icon: '🎯', name: 'צעד ראשון',       desc: 'חישבת את הציון הפיננסי שלך',            check: (h) => h.length >= 1 },
-        { id: 'score_50',      icon: '📈', name: 'חצי הדרך',        desc: 'הגעת לציון 50+',                        check: (h) => h.some(e => e.score >= 50) },
-        { id: 'score_70',      icon: '⭐', name: 'בריאות טובה',      desc: 'הגעת לציון 70+',                        check: (h) => h.some(e => e.score >= 70) },
-        { id: 'score_85',      icon: '🏅', name: 'מצטיין',           desc: 'הגעת לציון 85+',                        check: (h) => h.some(e => e.score >= 85) },
-        { id: 'streak_3',      icon: '🔥', name: '3 חודשים בלהבה',   desc: '3 חודשים ברצף עם ציון 70+',             check: (h, streak) => streak >= 3 },
-        { id: 'streak_6',      icon: '💎', name: 'יציבות פיננסית',   desc: '6 חודשים ברצף עם ציון 70+',             check: (h, streak) => streak >= 6 },
-        { id: 'improving',     icon: '📊', name: 'במגמת עלייה',      desc: 'הציון עלה 3 חודשים ברצף',               check: (h) => h.length >= 3 && h.slice(-3).every((e,i,a) => i === 0 || e.score >= a[i-1].score) },
-        { id: 'consistent',    icon: '🗓️', name: 'עקביות',           desc: '6 כניסות לציון הבריאות',                check: (h) => h.length >= 6 },
-    ];
+ const ACHIEVEMENTS = [
+ { id: 'first_score', icon: '🎯', name: 'צעד ראשון', desc: 'חישבת את הציון הפיננסי שלך', check: (h) => h.length >= 1 },
+ { id: 'score_50', icon: '📈', name: 'חצי הדרך', desc: 'הגעת לציון 50+', check: (h) => h.some(e => e.score >= 50) },
+ { id: 'score_70', icon: '⭐', name: 'בריאות טובה', desc: 'הגעת לציון 70+', check: (h) => h.some(e => e.score >= 70) },
+ { id: 'score_85', icon: '🏅', name: 'מצטיין', desc: 'הגעת לציון 85+', check: (h) => h.some(e => e.score >= 85) },
+ { id: 'streak_3', icon: '🔥', name: '3 חודשים בלהבה', desc: '3 חודשים ברצף עם ציון 70+', check: (h, streak) => streak >= 3 },
+ { id: 'streak_6', icon: '💎', name: 'יציבות פיננסית', desc: '6 חודשים ברצף עם ציון 70+', check: (h, streak) => streak >= 6 },
+ { id: 'improving', icon: '📊', name: 'במגמת עלייה', desc: 'הציון עלה 3 חודשים ברצף', check: (h) => h.length >= 3 && h.slice(-3).every((e,i,a) => i === 0 || e.score >= a[i-1].score) },
+ { id: 'consistent', icon: '🗓️', name: 'עקביות', desc: '6 כניסות לציון הבריאות', check: (h) => h.length >= 6 },
+ ];
 
-    function getScoreHistory() {
-        try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
-        catch { return []; }
-    }
+ function getScoreHistory() {
+ try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+ catch { return []; }
+ }
 
-    function saveScoreHistory(score) {
-        const history = getScoreHistory();
-        const today = new Date().toISOString().slice(0, 7); // YYYY-MM
-        // Update or add current month
-        const idx = history.findIndex(e => e.month === today);
-        if (idx !== -1) {
-            history[idx].score = score;
-        } else {
-            history.push({ month: today, score });
-        }
-        // Keep last 12 months
-        if (history.length > 12) history.splice(0, history.length - 12);
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-        return history;
-    }
+ function saveScoreHistory(score) {
+ const history = getScoreHistory();
+ const today = new Date().toISOString().slice(0, 7); // YYYY-MM
+ // Update or add current month
+ const idx = history.findIndex(e => e.month === today);
+ if (idx !== -1) {
+ history[idx].score = score;
+ } else {
+ history.push({ month: today, score });
+ }
+ // Keep last 12 months
+ if (history.length > 12) history.splice(0, history.length - 12);
+ localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+ return history;
+ }
 
-    function calcStreak(history) {
-        // Count consecutive months from most recent with score >= 70
-        const sorted = [...history].sort((a, b) => b.month.localeCompare(a.month));
-        let streak = 0;
-        for (const entry of sorted) {
-            if (entry.score >= 70) streak++;
-            else break;
-        }
-        return streak;
-    }
+ function calcStreak(history) {
+ // Count consecutive months from most recent with score >= 70
+ const sorted = [...history].sort((a, b) => b.month.localeCompare(a.month));
+ let streak = 0;
+ for (const entry of sorted) {
+ if (entry.score >= 70) streak++;
+ else break;
+ }
+ return streak;
+ }
 
-    function getLevel(score) {
-        return LEVELS.find(l => score >= l.min && score < l.max) || LEVELS[0];
-    }
+ function getLevel(score) {
+ return LEVELS.find(l => score >= l.min && score < l.max) || LEVELS[0];
+ }
 
-    function renderGamification(score) {
-        const history = saveScoreHistory(score);
-        const streak = calcStreak(history);
-        const level = getLevel(score);
-        const nextLevel = LEVELS.find(l => l.min > score);
+ function renderGamification(score) {
+ const history = saveScoreHistory(score);
+ const streak = calcStreak(history);
+ const level = getLevel(score);
+ const nextLevel = LEVELS.find(l => l.min > score);
 
-        // Check if level changed
-        const prevHistory = history.slice(0, -1);
-        if (prevHistory.length > 0) {
-            const prevScore = prevHistory[prevHistory.length - 1].score;
-            const prevLevel = getLevel(prevScore);
-            if (level.name !== prevLevel.name && score > prevScore) {
-                showLevelUpToast(level);
-            }
-        }
+ // Check if level changed
+ const prevHistory = history.slice(0, -1);
+ if (prevHistory.length > 0) {
+ const prevScore = prevHistory[prevHistory.length - 1].score;
+ const prevLevel = getLevel(prevScore);
+ if (level.name !== prevLevel.name && score > prevScore) {
+ showLevelUpToast(level);
+ }
+ }
 
-        // Show gamification row
-        document.getElementById('gamificationRow').style.display = 'flex';
+ // Show gamification row
+ document.getElementById('gamificationRow').style.display = 'flex';
 
-        // Streak
-        document.getElementById('streakNum').textContent = streak;
+ // Streak
+ document.getElementById('streakNum').textContent = streak;
 
-        // Level
-        document.getElementById('levelName').textContent = level.icon + ' ' + level.name;
-        const pct = ((score - level.min) / (level.max - level.min) * 100).toFixed(0);
-        document.getElementById('levelPts').textContent = `${score}/100 נקודות`;
-        requestAnimationFrame(() => {
-            document.getElementById('levelBarFill').style.width = pct + '%';
-        });
-        document.getElementById('levelNext').textContent = nextLevel
-            ? `עוד ${nextLevel.min - score} נקודות לרמת "${nextLevel.icon} ${nextLevel.name}"`
-            : '🏆 הגעת לרמה המקסימלית!';
+ // Level
+ document.getElementById('levelName').textContent = level.icon + ' ' + level.name;
+ const pct = ((score - level.min) / (level.max - level.min) * 100).toFixed(0);
+ document.getElementById('levelPts').textContent = `${score}/100 נקודות`;
+ requestAnimationFrame(() => {
+ document.getElementById('levelBarFill').style.width = pct + '%';
+ });
+ document.getElementById('levelNext').textContent = nextLevel
+ ? `עוד ${nextLevel.min - score} נקודות לרמת "${nextLevel.icon} ${nextLevel.name}"`
+ : '🏆 הגעת לרמה המקסימלית!';
 
-        // Achievements
-        const achGrid = document.getElementById('achievementsGrid');
-        const achTitle = document.getElementById('achTitle');
-        const rendered = ACHIEVEMENTS.map(ach => {
-            const unlocked = ach.check(history, streak);
-            return `<div class="achievement ${unlocked ? 'unlocked' : 'locked'}">
-                <span class="ach-icon">${ach.icon}</span>
-                <div>
-                    <div class="ach-name">${ach.name}</div>
-                    <div class="ach-desc">${ach.desc}</div>
-                </div>
-            </div>`;
-        });
-        achGrid.innerHTML = rendered.join('');
-        achTitle.style.display = '';
+ // Achievements
+ const achGrid = document.getElementById('achievementsGrid');
+ const achTitle = document.getElementById('achTitle');
+ const rendered = ACHIEVEMENTS.map(ach => {
+ const unlocked = ach.check(history, streak);
+ return `<div class="achievement ${unlocked ? 'unlocked' : 'locked'}">
+ <span class="ach-icon">${ach.icon}</span>
+ <div>
+ <div class="ach-name">${ach.name}</div>
+ <div class="ach-desc">${ach.desc}</div>
+ </div>
+ </div>`;
+ });
+ achGrid.innerHTML = rendered.join('');
+ achTitle.style.display = '';
 
-        // Score history bars
-        if (history.length >= 2) {
-            const wrap = document.getElementById('historyChartWrap');
-            wrap.style.display = '';
-            const barsEl = document.getElementById('historyBars');
-            const maxScore = Math.max(...history.map(h => h.score), 1);
-            const monthNames = ['ינ','פב','מר','אפ','מי','יו','יל','אג','ספ','אק','נו','דצ'];
+ // Score history bars
+ if (history.length >= 2) {
+ const wrap = document.getElementById('historyChartWrap');
+ wrap.style.display = '';
+ const barsEl = document.getElementById('historyBars');
+ const maxScore = Math.max(...history.map(h => h.score), 1);
+ const monthNames = ['ינ','פב','מר','אפ','מי','יו','יל','אג','ספ','אק','נו','דצ'];
 
-            barsEl.innerHTML = history.slice(-6).map(entry => {
-                const h = Math.round((entry.score / 100) * 100);
-                const color = entry.score >= 70 ? '#10b981' : entry.score >= 50 ? '#f59e0b' : '#ef4444';
-                const m = parseInt(entry.month.split('-')[1]) - 1;
-                return `<div class="history-bar-col">
-                    <div class="history-bar-val" style="color:${color}">${entry.score}</div>
-                    <div class="history-bar-outer">
-                        <div class="history-bar-inner" style="height:0%;background:${color}" data-h="${h}"></div>
-                    </div>
-                    <div class="history-bar-label">${monthNames[m]}</div>
-                </div>`;
-            }).join('');
+ barsEl.innerHTML = history.slice(-6).map(entry => {
+ const h = Math.round((entry.score / 100) * 100);
+ const color = entry.score >= 70 ? '#10b981' : entry.score >= 50 ? '#f59e0b' : '#ef4444';
+ const m = parseInt(entry.month.split('-')[1]) - 1;
+ return `<div class="history-bar-col">
+ <div class="history-bar-val" style="color:${color}">${entry.score}</div>
+ <div class="history-bar-outer">
+ <div class="history-bar-inner" style="height:0%;background:${color}" data-h="${h}"></div>
+ </div>
+ <div class="history-bar-label">${monthNames[m]}</div>
+ </div>`;
+ }).join('');
 
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    barsEl.querySelectorAll('.history-bar-inner').forEach(el => {
-                        el.style.height = el.dataset.h + '%';
-                    });
-                }, 100);
-            });
-        }
-    }
+ requestAnimationFrame(() => {
+ setTimeout(() => {
+ barsEl.querySelectorAll('.history-bar-inner').forEach(el => {
+ el.style.height = el.dataset.h + '%';
+ });
+ }, 100);
+ });
+ }
+ }
 
-    function showLevelUpToast(level) {
-        const toast = document.getElementById('levelupToast');
-        document.getElementById('levelupTitle').textContent = `עלית לרמת "${level.name}"! ${level.icon}`;
-        document.getElementById('levelupSub').textContent = 'כל הכבוד — אתה מתקדם פיננסית 🎉';
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3500);
-    }
+ function showLevelUpToast(level) {
+ const toast = document.getElementById('levelupToast');
+ document.getElementById('levelupTitle').textContent = `עלית לרמת "${level.name}"! ${level.icon}`;
+ document.getElementById('levelupSub').textContent = 'כל הכבוד — אתה מתקדם פיננסית 🎉';
+ toast.classList.add('show');
+ setTimeout(() => toast.classList.remove('show'), 3500);
+ }
 
-    function renderRecommendations() {
-        const list = document.getElementById('recommendationsList');
-        let tips = [];
-        try {
-            tips = SmartTips.generateTips()
-                .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))
-                .slice(0, 6);
-        } catch (e) { /* SmartTips unavailable */ }
+ function renderRecommendations() {
+ const list = document.getElementById('recommendationsList');
+ let tips = [];
+ try {
+ tips = SmartTips.generateTips()
+ .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))
+ .slice(0, 6);
+ } catch (e) { /* SmartTips unavailable */ }
 
-        const lang = (typeof I18n !== 'undefined') ? I18n.currentLanguage : 'he';
+ const lang = (typeof I18n !== 'undefined') ? I18n.currentLanguage : 'he';
 
-        if (tips.length === 0) {
-            list.innerHTML = `<li class="rec-item"><span class="rec-icon">⭐</span><div class="rec-body"><div class="rec-title">${t('healthScore.noRecommendations')}</div></div></li>`;
-            return;
-        }
+ if (tips.length === 0) {
+ list.innerHTML = `<li class="rec-item"><span class="rec-icon">⭐</span><div class="rec-body"><div class="rec-title">${t('healthScore.noRecommendations')}</div></div></li>`;
+ return;
+ }
 
-        list.innerHTML = tips.map(tip => {
-            const title = typeof tip.title === 'object' ? (tip.title[lang] || tip.title.he) : tip.title;
-            const desc = typeof tip.description === 'object' ? (tip.description[lang] || tip.description.he) : tip.description;
-            return `
-                <li class="rec-item rec-severity-${tip.severity || 'blue'}">
-                    <span class="rec-icon">${tip.icon || '💡'}</span>
-                    <div class="rec-body">
-                        <div class="rec-title">${title}</div>
-                        <div class="rec-desc">${desc}</div>
-                    </div>
-                </li>
-            `;
-        }).join('');
-    }
-    </script>
+ list.innerHTML = tips.map(tip => {
+ const title = typeof tip.title === 'object' ? (tip.title[lang] || tip.title.he) : tip.title;
+ const desc = typeof tip.description === 'object' ? (tip.description[lang] || tip.description.he) : tip.description;
+ return `
+ <li class="rec-item rec-severity-${tip.severity || 'blue'}">
+ <span class="rec-icon">${tip.icon || '💡'}</span>
+ <div class="rec-body">
+ <div class="rec-title">${title}</div>
+ <div class="rec-desc">${desc}</div>
+ </div>
+ </li>
+ `;
+ }).join('');
+ }
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

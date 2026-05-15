@@ -3,1148 +3,1140 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#6b7280">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>הגדרות - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <style>
-        .nav-link.active { background: #6b7280 !important; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#6b7280">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>הגדרות - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <style>
+ .nav-link.active { background: #6b7280 !important; }
 
-        .settings-section {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 25px;
-        }
+ .settings-section {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 25px;
+ margin-bottom: 25px;
+ }
 
-        .settings-section h2 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .settings-section h2 {
+ font-size: 1.3rem;
+ margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--color-border);
-        }
+ .setting-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 15px 0;
+ border-bottom: 1px solid var(--color-border);
+ }
 
-        .setting-row:last-child { border-bottom: none; }
+ .setting-row:last-child { border-bottom: none; }
 
-        .setting-label {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+ .setting-label {
+ display: flex;
+ flex-direction: column;
+ gap: 5px;
+ }
 
-        .setting-label span:first-child { font-weight: 500; }
-        .setting-label span:last-child { font-size: 0.85rem; color: var(--color-text-secondary); }
+ .setting-label span:first-child { font-weight: 500; }
+ .setting-label span:last-child { font-size: 0.85rem; color: var(--color-text-secondary); }
 
-        .budget-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .budget-input {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .budget-input input {
-            width: 120px;
-            padding: 8px 12px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: white;
-            text-align: left;
-        }
+ .budget-input input {
+ width: 120px;
+ padding: 8px 12px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ color: white;
+ text-align: left;
+ }
 
-        .category-budget {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--color-border);
-        }
+ .category-budget {
+ display: flex;
+ align-items: center;
+ gap: 15px;
+ padding: 12px 0;
+ border-bottom: 1px solid var(--color-border);
+ }
 
-        .category-budget:last-child { border-bottom: none; }
+ .category-budget:last-child { border-bottom: none; }
 
-        .category-icon { font-size: 1.5rem; }
+ .category-icon { font-size: 1.5rem; }
 
-        .category-name { flex: 1; }
+ .category-name { flex: 1; }
 
-        .custom-category-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
+ .custom-category-item {
+ display: flex;
+ align-items: center;
+ gap: 15px;
+ padding: 12px;
+ background: rgba(255,255,255,0.05);
+ border-radius: 8px;
+ margin-bottom: 10px;
+ }
 
-        .color-preview {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
+ .color-preview {
+ width: 24px;
+ height: 24px;
+ border-radius: 50%;
+ border: 2px solid white;
+ }
 
-        .danger-zone {
-            border-color: var(--color-credit);
-        }
+ .danger-zone {
+ border-color: var(--color-credit);
+ }
 
-        .danger-zone h2 { color: var(--color-credit); }
+ .danger-zone h2 { color: var(--color-credit); }
 
-        /* Toggle switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
+ /* Toggle switch */
+ .toggle-switch {
+ position: relative;
+ display: inline-block;
+ width: 50px;
+ height: 26px;
+ }
 
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+ .toggle-switch input {
+ opacity: 0;
+ width: 0;
+ height: 0;
+ }
 
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--color-border);
-            transition: .3s;
-            border-radius: 26px;
-        }
+ .toggle-slider {
+ position: absolute;
+ cursor: pointer;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-color: var(--color-border);
+ transition: .3s;
+ border-radius: 26px;
+ }
 
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
+ .toggle-slider:before {
+ position: absolute;
+ content: "";
+ height: 20px;
+ width: 20px;
+ left: 3px;
+ bottom: 3px;
+ background-color: white;
+ transition: .3s;
+ border-radius: 50%;
+ }
 
-        .toggle-switch input:checked + .toggle-slider {
-            background-color: var(--color-positive);
-        }
+ .toggle-switch input:checked + .toggle-slider {
+ background-color: var(--color-positive);
+ }
 
-        .toggle-switch input:checked + .toggle-slider:before {
-            transform: translateX(24px);
-        }
+ .toggle-switch input:checked + .toggle-slider:before {
+ transform: translateX(24px);
+ }
 
-        .notification-granted { color: var(--color-positive); }
-        .notification-denied { color: var(--color-negative); }
-        .notification-default { color: var(--color-text-secondary); }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ .notification-granted { color: var(--color-positive); }
+ .notification-denied { color: var(--color-negative); }
+ .notification-default { color: var(--color-text-secondary); }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>⚙️ <span data-i18n="settings.title">הגדרות</span></h1>
-                <p data-i18n="settings.subtitle">התאמה אישית של האפליקציה</p>
-            </header>
-
-            <!-- Budget Settings -->
-            <div class="settings-section">
-                <h2>💰 <span data-i18n="settings.monthlyBudget">תקציב חודשי</span></h2>
-                <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="settings.budgetDesc">הגדר תקציב להתראות כשחורגים</p>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.totalBudget">תקציב כולל</span>
-                        <span data-i18n="settings.totalBudgetDesc">סה״כ הוצאות מותרות בחודש</span>
-                    </div>
-                    <div class="budget-input">
-                        <span>₪</span>
-                        <input type="number" id="totalBudget" step="100" onchange="saveTotalBudget()">
-                    </div>
-                </div>
-
-                <h3 style="margin: 25px 0 15px; font-size: 1.1rem;">⚠️ <span data-i18n="settings.alertThresholds">סף התראות</span></h3>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.warningAlert">התראת אזהרה (צהוב)</span>
-                        <span data-i18n="settings.warningAlertDesc">הצג התראה כשמגיעים לאחוז זה</span>
-                    </div>
-                    <div class="budget-input">
-                        <input type="number" id="warningThreshold" min="1" max="100" step="5" onchange="saveThresholds()">
-                        <span>%</span>
-                    </div>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.dangerAlert">התראת חריגה (אדום)</span>
-                        <span data-i18n="settings.dangerAlertDesc">הצג התראה כשמגיעים לאחוז זה</span>
-                    </div>
-                    <div class="budget-input">
-                        <input type="number" id="dangerThreshold" min="1" max="150" step="5" onchange="saveThresholds()">
-                        <span>%</span>
-                    </div>
-                </div>
-
-                <h3 style="margin: 25px 0 15px; font-size: 1.1rem;"><span data-i18n="settings.categoryBudget">תקציב לפי קטגוריה</span></h3>
-                <div id="categoryBudgets">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- Custom Categories -->
-            <div class="settings-section">
-                <h2>🏷️ <span data-i18n="settings.customCategories">קטגוריות מותאמות אישית</span></h2>
-                <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="settings.customCategoriesDesc">הוסף קטגוריות משלך להוצאות</p>
-
-                <div id="customCategories">
-                    <!-- Populated by JS -->
-                </div>
-
-                <button class="btn btn-primary" onclick="openCategoryModal()" style="margin-top: 15px;">
-                    <span>➕</span>
-                    <span data-i18n="settings.addCategory">הוסף קטגוריה</span>
-                </button>
-            </div>
-
-            <!-- Notification Settings -->
-            <div class="settings-section" id="notificationSection">
-                <h2>🔔 <span data-i18n="settings.notifications">התראות</span></h2>
-                <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="settings.notificationsDesc">הגדר התראות push לאירועים חשובים</p>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.enableNotifications">הפעל התראות</span>
-                        <span id="notificationStatus" data-i18n="settings.checkingPermissions">בודק הרשאות...</span>
-                    </div>
-                    <button class="btn btn-primary" id="notificationToggle" onclick="toggleNotifications()">
-                        <span data-i18n="settings.enable">הפעל</span>
-                    </button>
-                </div>
-
-                <div id="notificationOptions" style="display: none;">
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="settings.stockAlerts">התראות מניות</span>
-                            <span data-i18n="settings.stockAlertsDesc">קבל התראה כשמניה מגיעה ליעד</span>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="stockAlertsToggle" onchange="saveNotificationSettings()">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="settings.budgetAlerts">התראות תקציב</span>
-                            <span data-i18n="settings.budgetAlertsDesc">קבל התראה כשחורגים מתקציב</span>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="budgetAlertsToggle" onchange="saveNotificationSettings()">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="settings.monthlyReminder">תזכורת חודשית</span>
-                            <span data-i18n="settings.monthlyReminderDesc">תזכורת לעדכון קרנות וקופות</span>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="monthlyReminderToggle" onchange="saveNotificationSettings()">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="settings.reminderDay">יום התזכורת</span>
-                            <span data-i18n="settings.reminderDayDesc">באיזה יום בחודש לשלוח תזכורת</span>
-                        </div>
-                        <div class="budget-input">
-                            <input type="number" id="reminderDay" min="1" max="28" value="1" onchange="saveNotificationSettings()">
-                            <span data-i18n="settings.inMonth">בחודש</span>
-                        </div>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="settings.testNotifications">בדוק התראות</span>
-                            <span data-i18n="settings.testNotificationsDesc">שלח התראת בדיקה</span>
-                        </div>
-                        <button class="btn btn-secondary" onclick="sendTestNotification()">
-                            <span>📤</span>
-                            <span data-i18n="settings.sendTest">שלח בדיקה</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Smart Alerts -->
-                <h3 style="margin: 25px 0 15px; font-size: 1.1rem;">🧠 התראות חכמות</h3>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span>🏦 התראת יתרת בנק נמוכה</span>
-                        <span>קבל התראה כשיתרת הבנק יורדת מתחת לסף</span>
-                    </div>
-                    <input type="number" id="bankBalanceThreshold" placeholder="0" min="0"
-                        style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;"
-                        onchange="saveBankAlertSettings()">
-                </div>
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span>💸 התראת הוצאות מול הכנסה</span>
-                        <span>התראה כשהוצאות עוברות X% מההכנסה החודשית</span>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                        <input type="number" id="incomeExpenseAlert" placeholder="80" min="0" max="200"
-                            style="width:80px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;"
-                            onchange="saveBankAlertSettings()">
-                        <span style="color:var(--color-text-secondary);">%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Management -->
-            <div class="settings-section">
-                <h2>📦 <span data-i18n="settings.dataManagement">ניהול נתונים</span></h2>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.exportData">ייצוא נתונים</span>
-                        <span data-i18n="settings.exportDataDesc">הורד את כל הנתונים כקובץ JSON</span>
-                    </div>
-                    <button class="btn btn-secondary" onclick="App.exportData()">
-                        <span>📤</span>
-                        <span data-i18n="settings.exportBtn">ייצוא</span>
-                    </button>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.importData">ייבוא נתונים</span>
-                        <span data-i18n="settings.importDataDesc">שחזר נתונים מקובץ JSON</span>
-                    </div>
-                    <button class="btn btn-secondary" onclick="App.importData()">
-                        <span>📥</span>
-                        <span data-i18n="settings.importBtn">ייבוא</span>
-                    </button>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.loadSampleData">טען נתוני דוגמה</span>
-                        <span data-i18n="settings.loadSampleDataDesc">מילוי האפליקציה בנתוני הדגמה</span>
-                    </div>
-                    <button class="btn btn-secondary" onclick="loadSampleData()">
-                        <span>📋</span>
-                        <span data-i18n="settings.loadSampleBtn">טען דוגמה</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Credit Card Bookmarklet -->
-            <div class="settings-section">
-                <h2>🔖 ייבוא מאתרי אשראי</h2>
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span>סימניית ייבוא אשראי</span>
-                        <span>גרור לסרגל הסימניות — לחץ עליה בדף העסקאות של האשראי</span>
-                    </div>
-                    <a id="bookmarkletLink" href="#"
-                       style="border: 2px dashed var(--color-border); padding: 8px 16px; border-radius: 8px;
-                              cursor: grab; text-decoration: none; color: var(--color-text); font-size: 14px;
-                              display:inline-flex; align-items:center; gap:6px; user-select:none;">
-                        💳 FinSight אשראי
-                    </a>
-                </div>
-                <div class="setting-row" style="flex-wrap:wrap; gap:8px;">
-                    <span style="color:var(--color-text-secondary); font-size:13px;">נתמך:</span>
-                    <span class="badge">כאל ✅</span>
-                    <span class="badge">מקס ✅</span>
-                    <span class="badge">ישראכרט ✅</span>
-                </div>
-
-                <div class="setting-row" style="margin-top:16px;">
-                    <div class="setting-label">
-                        <span>סימניית ייבוא בנק</span>
-                        <span>גרור לסרגל — לחץ בדף התנועות של הבנק לייבוא יתרה + תנועות</span>
-                    </div>
-                    <a id="bankBookmarkletLink" href="#"
-                       style="border: 2px dashed var(--color-border); padding: 8px 16px; border-radius: 8px;
-                              cursor: grab; text-decoration: none; color: var(--color-text); font-size: 14px;
-                              display:inline-flex; align-items:center; gap:6px; user-select:none;">
-                        🏦 FinSight בנק
-                    </a>
-                </div>
-                <div class="setting-row" style="flex-wrap:wrap; gap:8px;">
-                    <span style="color:var(--color-text-secondary); font-size:13px;">נתמך:</span>
-                    <span class="badge">לאומי ✅</span>
-                    <span class="badge">פועלים ✅</span>
-                    <span class="badge">מזרחי ✅</span>
-                    <span class="badge">דיסקונט ✅</span>
-                </div>
-
-                <details style="margin-top:12px;">
-                    <summary style="cursor:pointer; color:var(--color-text-secondary); font-size:13px;">איך מגדירים?</summary>
-                    <ol style="font-size:13px; color:var(--color-text-secondary); margin-top:8px; padding-right:20px; line-height:2;">
-                        <li>ודא שסרגל הסימניות מוצג בדפדפן (Ctrl+Shift+B)</li>
-                        <li>גרור את הסימניה הרלוונטית לסרגל</li>
-                        <li>כנס לאתר הבנק / האשראי ועבור לדף התנועות</li>
-                        <li>לחץ על הסימניה — תראה הודעת אישור</li>
-                        <li>חזור לפינסייט → הדף המתאים → לחץ "ייבוא מסימניה"</li>
-                    </ol>
-                </details>
-            </div>
-
-            <!-- App Lock (PIN) -->
-            <div class="settings-section" style="border-color: rgba(16, 185, 129, 0.3);">
-                <h2>🔐 <span data-i18n="pinLock.appLock">נעילת אפליקציה</span> <span class="tooltip-btn" data-tooltip="הצפנת AES-256 על כל הנתונים.&#10;PIN נדרש רק בכניסה הראשונה&#10;או לאחר חוסר פעילות.">?</span></h2>
-                <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="pinLock.appLockDesc">הגן על הנתונים שלך עם קוד PIN</p>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="pinLock.enablePin">הפעל קוד PIN</span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="pinToggle" onchange="togglePinLock()">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div id="pinEnabledOptions" style="display: none;">
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="pinLock.changePin">שנה קוד PIN</span>
-                        </div>
-                        <button class="btn btn-secondary" onclick="changePinCode()">
-                            <span>🔑</span>
-                            <span data-i18n="pinLock.changePin">שנה קוד PIN</span>
-                        </button>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="pinLock.autoLockAfter">נעילה אוטומטית אחרי</span>
-                        </div>
-                        <div class="budget-input">
-                            <select id="autoLockTimeout" onchange="saveAutoLockTimeout()" style="padding: 8px 12px; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; color: white;">
-                                <option value="1">1</option>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                            </select>
-                            <span data-i18n="pinLock.minutes">דקות</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Security Status (Live) -->
-            <div class="settings-section" style="border-color: rgba(16, 185, 129, 0.3);">
-                <h2>🛡️ <span data-i18n="security.statusTitle">סטטוס אבטחה</span></h2>
-                <div id="securityStatusPanel">
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="security.encryptionStatus">סטטוס הצפנה</span>
-                        </div>
-                        <span id="secStatusPin" style="font-size: 0.9rem;"></span>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="security.cloudEncryption">הצפנת ענן</span>
-                        </div>
-                        <span id="secStatusCloud" style="font-size: 0.9rem;"></span>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="security.failedAttempts">ניסיונות כושלים (סשן נוכחי)</span>
-                        </div>
-                        <span id="secStatusFails" style="font-size: 0.9rem;">0</span>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span data-i18n="security.lastSync">סנכרון אחרון</span>
-                        </div>
-                        <span id="secStatusLastSync" style="font-size: 0.9rem;">—</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Security & Privacy -->
-            <div class="settings-section" style="border-color: rgba(16, 185, 129, 0.3);">
-                <h2>🔒 <span data-i18n="settings.securityPrivacy">אבטחה ופרטיות</span></h2>
-
-                <div class="setting-row">
-                    <div class="setting-label" style="max-width: 100%; flex: 1;">
-                        <span style="color: #10b981; font-size: 1.05rem;" data-i18n="settings.howDataProtected">איך הנתונים שלך מוגנים</span>
-                    </div>
-                </div>
-
-                <div style="padding: 15px 0; color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.8;">
-                    <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
-                        <span style="font-size: 1.2rem;">💾</span>
-                        <span><strong style="color: var(--color-text-primary);" data-i18n="settings.localStorage">אחסון מקומי</strong> - <span data-i18n="settings.localStorageDesc">הנתונים נשמרים על המכשיר שלך בלבד. אף שרת חיצוני לא מקבל גישה אוטומטית.</span></span>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
-                        <span style="font-size: 1.2rem;">☁️</span>
-                        <span><strong style="color: var(--color-text-primary);" data-i18n="settings.cloudSync">סנכרון ענן (אופציונלי)</strong> - <span data-i18n="settings.cloudSyncDesc">רק אם תתחבר עם Google. הנתונים מוצפנים לפני העלאה לענן ורק אתה יכול לפענח אותם.</span></span>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
-                        <span style="font-size: 1.2rem;">🚫</span>
-                        <span><strong style="color: var(--color-text-primary);" data-i18n="settings.noBankPasswords">ללא סיסמאות בנק</strong> - <span data-i18n="settings.noBankPasswordsDesc">האפליקציה לא שומרת סיסמאות, קודי גישה או פרטי התחברות לבנק.</span></span>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
-                        <span style="font-size: 1.2rem;">🔐</span>
-                        <span><strong style="color: var(--color-text-primary);" data-i18n="settings.aesEncryption">הצפנת AES-256</strong> - <span data-i18n="settings.aesEncryptionDesc">כל הנתונים הרגישים מוצפנים בהצפנה צבאית לפני שליחה לענן.</span></span>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
-                        <span style="font-size: 1.2rem;">⏱️</span>
-                        <span><strong style="color: var(--color-text-primary);" data-i18n="settings.autoLogout">התנתקות אוטומטית</strong> - <span data-i18n="settings.autoLogoutDesc">לאחר 30 דקות ללא פעילות, המערכת מתנתקת אוטומטית.</span></span>
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                        <span style="font-size: 1.2rem;">🗑️</span>
-                        <span><strong style="color: var(--color-text-primary);" data-i18n="settings.fullDeletion">מחיקה מלאה</strong> - <span data-i18n="settings.fullDeletionDesc">בכל רגע תוכל למחוק את כל הנתונים שלך מהמכשיר ומהענן.</span></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Summary Sender -->
-            <div class="settings-section" id="summarySenderSection">
-                <h2>📤 סיכום פיננסי אוטומטי</h2>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span>הפעל שליחה אוטומטית</span>
-                        <span>קבל סיכום שבועי/חודשי של כל הנכסים שלך</span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="summaryEnabled" onchange="saveSummarySettings()">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div id="summaryOptions" style="display:none;">
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span>תדירות</span>
-                        </div>
-                        <select id="summaryFrequency" onchange="onSummaryFreqChange()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
-                            <option value="weekly">שבועי</option>
-                            <option value="monthly">חודשי</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-row" id="summaryDayOfWeekRow">
-                        <div class="setting-label">
-                            <span>יום בשבוע</span>
-                        </div>
-                        <select id="summaryDayOfWeek" onchange="saveSummarySettings()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
-                            <option value="0">ראשון</option>
-                            <option value="1">שני</option>
-                            <option value="2">שלישי</option>
-                            <option value="3">רביעי</option>
-                            <option value="4">חמישי</option>
-                            <option value="5" selected>שישי</option>
-                            <option value="6">שבת</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-row" id="summaryDayOfMonthRow" style="display:none;">
-                        <div class="setting-label">
-                            <span>יום בחודש</span>
-                        </div>
-                        <input type="number" id="summaryDayOfMonth" min="1" max="28" value="1" onchange="saveSummarySettings()" style="width:80px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:center;">
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span>מספר WhatsApp</span>
-                            <span>כולל קידומת מדינה, לדוגמה: 972501234567</span>
-                        </div>
-                        <input type="tel" id="summaryPhone" placeholder="972501234567" onchange="saveSummarySettings()" style="width:160px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;">
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span>כתובת מייל</span>
-                        </div>
-                        <input type="email" id="summaryEmail" placeholder="me@example.com" onchange="saveSummarySettings()" style="width:200px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;">
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-label">
-                            <span>🤖 CallMeBot API Key <span class="tooltip-btn" data-tooltip="שירות חינמי לשליחת WhatsApp.&#10;כנס לcallmebot.com לקבלת&#10;המספר ומפתח ה-API.">?</span></span>
-                            <span>לשליחה אוטומטית לגמרי — FinSight שולח בלי לחיצה</span>
-                        </div>
-                        <input type="text" id="callmebotApiKey" placeholder="1234567" onchange="saveSummarySettings()" style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;font-family:monospace;">
-                    </div>
-
-                    <details style="margin-top:4px;margin-bottom:8px;">
-                        <summary style="cursor:pointer;color:var(--color-text-secondary);font-size:13px;padding:4px 0;">איך מקבלים API Key מ-CallMeBot?</summary>
-                        <ol style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 0;padding-right:20px;line-height:2;">
-                            <li>כנס ל-<a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" style="color:var(--color-primary);">callmebot.com</a> וקבל את המספר העדכני</li>
-                            <li>שמור את המספר באנשי הקשר שלך בשם "CallMeBot"</li>
-                            <li>שלח לו הודעת WhatsApp: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;">I allow callmebot to send me messages</code></li>
-                            <li>תוך דקה תקבל תשובה עם API Key — הזן אותו כאן</li>
-                        </ol>
-                    </details>
-
-                    <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;">
-                        <button class="btn btn-primary" onclick="previewSummaryNow()">👁️ תצוגה מקדימה עכשיו</button>
-                        <button class="btn btn-secondary" onclick="testCallMeBot()">🔔 שלח הודעת בדיקה</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Danger Zone -->
-            <div class="settings-section danger-zone">
-                <h2>⚠️ <span data-i18n="settings.dangerZone">אזור סכנה</span></h2>
-
-                <div class="setting-row">
-                    <div class="setting-label">
-                        <span data-i18n="settings.deleteAllData">מחק את כל הנתונים</span>
-                        <span data-i18n="settings.deleteAllDataDesc">מחיקה מהמכשיר ומהענן - פעולה בלתי הפיכה!</span>
-                    </div>
-                    <button class="btn btn-danger" onclick="Auth.deleteAllData()">
-                        <span>🗑️</span>
-                        <span data-i18n="settings.deleteAllBtn">מחק הכל</span>
-                    </button>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
-
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
-
-    <!-- Add Category Modal -->
-    <div class="modal-overlay" id="categoryModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 data-i18n="settings.addCategory">הוסף קטגוריה</h2>
-                <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="categoryForm">
-                    <div class="form-group">
-                        <label data-i18n="settings.categoryIcon">אייקון</label>
-                        <select class="form-control" id="catIcon">
-                            <option value="🛒" data-i18n="settings.catIcons.shopping">🛒 קניות</option>
-                            <option value="🎁" data-i18n="settings.catIcons.gifts">🎁 מתנות</option>
-                            <option value="🐕" data-i18n="settings.catIcons.pets">🐕 חיות מחמד</option>
-                            <option value="🏋️" data-i18n="settings.catIcons.sports">🏋️ ספורט</option>
-                            <option value="💇" data-i18n="settings.catIcons.grooming">💇 טיפוח</option>
-                            <option value="🏠" data-i18n="settings.catIcons.home">🏠 בית</option>
-                            <option value="👶" data-i18n="settings.catIcons.kids">👶 ילדים</option>
-                            <option value="📱" data-i18n="settings.catIcons.technology">📱 טכנולוגיה</option>
-                            <option value="🎵" data-i18n="settings.catIcons.music">🎵 מוזיקה</option>
-                            <option value="📚" data-i18n="settings.catIcons.books">📚 ספרים</option>
-                            <option value="✈️" data-i18n="settings.catIcons.travel">✈️ נסיעות</option>
-                            <option value="🍷" data-i18n="settings.catIcons.alcohol">🍷 אלכוהול</option>
-                            <option value="☕" data-i18n="settings.catIcons.coffee">☕ קפה</option>
-                            <option value="💊" data-i18n="settings.catIcons.medicine">💊 תרופות</option>
-                            <option value="🔧" data-i18n="settings.catIcons.repairs">🔧 תיקונים</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="settings.categoryNameHe">שם בעברית</label>
-                        <input type="text" class="form-control" id="catNameHe" required placeholder="לדוגמה: חיות מחמד">
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="settings.categoryNameEn">שם באנגלית</label>
-                        <input type="text" class="form-control" id="catNameEn" placeholder="e.g. Pets">
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="settings.categoryColor">צבע</label>
-                        <input type="color" class="form-control" id="catColor" value="#6366f1" style="height: 50px; padding: 5px;">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeCategoryModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveCategory()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/alerts.js"></script>
-    <script src="../js/tags.js"></script>
-    <script src="../js/notifications.js"></script>
-    <script src="../data/sample-data.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script src="../js/summary-sender.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'settings';
-            I18n.init();
-            loadSettings();
-            loadNotificationSettings();
-            loadPinSettings();
-            loadSecurityStatus();
-            loadSummarySettings();
-            // Load smart alert thresholds
-            document.getElementById('bankBalanceThreshold').value = Alerts.getConfig().bankBalanceThreshold || '';
-            document.getElementById('incomeExpenseAlert').value = Alerts.getConfig().incomeExpenseAlert || '';
-        });
-
-        function loadSecurityStatus() {
-            const pinEnabled = PinLock.isEnabled();
-            const pinEl = document.getElementById('secStatusPin');
-            if (pinEl) {
-                if (pinEnabled) {
-                    pinEl.textContent = '✅ ' + I18n.t('security.encryptionEnabled');
-                    pinEl.style.color = '#10b981';
-                } else {
-                    pinEl.textContent = '⚠️ ' + I18n.t('security.encryptionDisabled');
-                    pinEl.style.color = '#f59e0b';
-                }
-            }
-
-            const cloudEl = document.getElementById('secStatusCloud');
-            if (cloudEl) {
-                if (typeof Auth !== 'undefined' && Auth.currentUser) {
-                    cloudEl.textContent = '✅ ' + I18n.t('security.cloudEncryptionActive');
-                    cloudEl.style.color = '#10b981';
-                } else {
-                    cloudEl.textContent = '— ' + I18n.t('security.cloudNotConnected');
-                    cloudEl.style.color = 'var(--color-text-secondary)';
-                }
-            }
-
-            const failsEl = document.getElementById('secStatusFails');
-            if (failsEl) {
-                const fails = parseInt(sessionStorage.getItem('pin_fail_count')) || 0;
-                failsEl.textContent = String(fails);
-                failsEl.style.color = fails > 0 ? '#ef4444' : '#10b981';
-            }
-
-            const syncEl = document.getElementById('secStatusLastSync');
-            if (syncEl) {
-                const lastUpdate = localStorage.getItem('finance_last_update');
-                if (lastUpdate) {
-                    const d = new Date(lastUpdate);
-                    syncEl.textContent = d.toLocaleDateString('he-IL') + ' ' + d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
-                } else {
-                    syncEl.textContent = '—';
-                }
-            }
-        }
-
-        // PIN Lock Settings
-        function loadPinSettings() {
-            const enabled = PinLock.isEnabled();
-            document.getElementById('pinToggle').checked = enabled;
-            document.getElementById('pinEnabledOptions').style.display = enabled ? 'block' : 'none';
-            if (enabled) {
-                document.getElementById('autoLockTimeout').value = PinLock.getTimeout();
-            }
-        }
-
-        function togglePinLock() {
-            const checkbox = document.getElementById('pinToggle');
-            if (checkbox.checked) {
-                // Enable PIN — show setup screen
-                PinLock.showSetupScreen(async (pin) => {
-                    await PinLock.enable(pin);
-                    App.notify(I18n.t('pinLock.pinEnabled'), 'success');
-                    loadPinSettings();
-                });
-                // If user cancels, revert checkbox
-                const checkCancel = setInterval(() => {
-                    const overlay = document.getElementById('pinLockOverlay');
-                    if (!overlay || overlay.style.display === 'none') {
-                        clearInterval(checkCancel);
-                        if (!PinLock.isEnabled()) {
-                            checkbox.checked = false;
-                        }
-                    }
-                }, 300);
-            } else {
-                // Disable PIN — verify current PIN first
-                PinLock.showVerifyScreen(async (pin) => {
-                    await PinLock.disable(pin);
-                    App.notify(I18n.t('pinLock.pinDisabled'), 'success');
-                    loadPinSettings();
-                });
-                // If user cancels, revert checkbox
-                const checkCancel = setInterval(() => {
-                    const overlay = document.getElementById('pinLockOverlay');
-                    if (!overlay || overlay.style.display === 'none') {
-                        clearInterval(checkCancel);
-                        if (PinLock.isEnabled()) {
-                            checkbox.checked = true;
-                        }
-                    }
-                }, 300);
-            }
-        }
-
-        function changePinCode() {
-            PinLock.showVerifyScreen(async (oldPin) => {
-                PinLock.showSetupScreen(async (newPin) => {
-                    await PinLock.changePin(oldPin, newPin);
-                    App.notify(I18n.t('pinLock.pinChanged'), 'success');
-                });
-            });
-        }
-
-        function saveAutoLockTimeout() {
-            const val = parseInt(document.getElementById('autoLockTimeout').value);
-            PinLock.setTimeout(val);
-            PinLock._resetTimer();
-        }
-
-        function loadSettings() {
-            // Load budget settings
-            const budgets = Alerts.getBudgets();
-            document.getElementById('totalBudget').value = budgets.total || '';
-
-            // Load thresholds
-            const thresholds = Alerts.getThresholds();
-            document.getElementById('warningThreshold').value = thresholds.warning || 80;
-            document.getElementById('dangerThreshold').value = thresholds.danger || 100;
-
-            // Render category budgets
-            const categories = Tags.getCategories();
-            document.getElementById('categoryBudgets').innerHTML = categories.map(cat => {
-                const budget = budgets.categories[cat.id] || '';
-                return `
-                    <div class="category-budget">
-                        <span class="category-icon">${cat.icon}</span>
-                        <span class="category-name">${I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn}</span>
-                        <div class="budget-input">
-                            <span>₪</span>
-                            <input type="number" value="${budget}" step="100"
-                                   onchange="saveCategoryBudget('${cat.id}', this.value)"
-                                   placeholder="${I18n.t('settings.noLimit')}">
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Render custom categories
-            const customData = Tags.getCustomData();
-            const customContainer = document.getElementById('customCategories');
-
-            if (customData.categories.length === 0) {
-                customContainer.innerHTML = `<p style="color: var(--color-text-secondary);">${I18n.t('settings.noCustomCategories')}</p>`;
-            } else {
-                customContainer.innerHTML = customData.categories.map(cat => `
-                    <div class="custom-category-item">
-                        <span style="font-size: 1.5rem;">${cat.icon}</span>
-                        <div class="color-preview" style="background: ${cat.color};"></div>
-                        <span style="flex: 1;">${I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn}</span>
-                        <button class="btn btn-danger btn-sm" onclick="deleteCustomCategory('${cat.id}')">🗑️</button>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function saveTotalBudget() {
-            const amount = parseFloat(document.getElementById('totalBudget').value) || 0;
-            Alerts.setTotalBudget(amount);
-            App.notify(I18n.t('settings.budgetSaved'), 'success');
-        }
-
-        function saveThresholds() {
-            const warning = parseInt(document.getElementById('warningThreshold').value) || 80;
-            const danger = parseInt(document.getElementById('dangerThreshold').value) || 100;
-
-            if (warning >= danger) {
-                App.notify(I18n.t('settings.thresholdError'), 'error');
-                return;
-            }
-
-            Alerts.setThresholds(warning, danger);
-            App.notify(I18n.t('settings.thresholdSaved'), 'success');
-        }
-
-        function saveCategoryBudget(category, value) {
-            const amount = parseFloat(value) || 0;
-            Alerts.setCategoryBudget(category, amount);
-            App.notify(I18n.t('settings.budgetSaved'), 'success');
-        }
-
-        function openCategoryModal() {
-            document.getElementById('categoryForm').reset();
-            document.getElementById('categoryModal').classList.add('active');
-        }
-
-        function closeCategoryModal() {
-            document.getElementById('categoryModal').classList.remove('active');
-        }
-
-        function saveCategory() {
-            const icon = document.getElementById('catIcon').value;
-            const nameHe = document.getElementById('catNameHe').value;
-            const nameEn = document.getElementById('catNameEn').value || nameHe;
-            const color = document.getElementById('catColor').value;
-
-            if (!nameHe) {
-                App.notify(I18n.t('settings.enterName'), 'error');
-                return;
-            }
-
-            Tags.addCategory({ icon, nameHe, nameEn, color });
-            closeCategoryModal();
-            loadSettings();
-            App.notify(I18n.t('settings.categoryAdded'), 'success');
-        }
-
-        function deleteCustomCategory(id) {
-            if (confirm(I18n.t('settings.deleteCategory'))) {
-                Tags.deleteCategory(id);
-                loadSettings();
-                App.notify(I18n.t('settings.categoryDeleted'), 'success');
-            }
-        }
-
-        function loadSampleData() {
-            if (confirm(I18n.t('settings.sampleDataConfirm'))) {
-                SampleData.load();
-            }
-        }
-
-        function clearAllData() {
-            if (confirm(I18n.t('settings.deleteAllConfirm'))) {
-                if (confirm(I18n.t('settings.deleteAllConfirm2'))) {
-                    SampleData.clear();
-                }
-            }
-        }
-
-        // Notification Settings
-        function loadNotificationSettings() {
-            const statusEl = document.getElementById('notificationStatus');
-            const toggleBtn = document.getElementById('notificationToggle');
-            const optionsEl = document.getElementById('notificationOptions');
-
-            if (!Notifications.isSupported()) {
-                statusEl.textContent = I18n.t('settings.notificationsNotSupported');
-                statusEl.className = 'notification-denied';
-                toggleBtn.disabled = true;
-                toggleBtn.textContent = I18n.t('settings.notSupported');
-                return;
-            }
-
-            const permission = Notifications.getPermission();
-            const settings = Notifications.getSettings();
-
-            switch (permission) {
-                case 'granted':
-                    statusEl.textContent = I18n.t('settings.notificationsEnabled');
-                    statusEl.className = 'notification-granted';
-                    toggleBtn.textContent = I18n.t('settings.enabled');
-                    toggleBtn.classList.remove('btn-primary');
-                    toggleBtn.classList.add('btn-secondary');
-                    optionsEl.style.display = 'block';
-                    break;
-                case 'denied':
-                    statusEl.textContent = I18n.t('settings.notificationsBlocked');
-                    statusEl.className = 'notification-denied';
-                    toggleBtn.textContent = I18n.t('settings.notificationsBlockedShort');
-                    toggleBtn.disabled = true;
-                    break;
-                default:
-                    statusEl.textContent = I18n.t('settings.clickToEnable');
-                    statusEl.className = 'notification-default';
-                    toggleBtn.textContent = I18n.t('settings.enable');
-            }
-
-            // Load settings
-            document.getElementById('stockAlertsToggle').checked = settings.stockAlerts;
-            document.getElementById('budgetAlertsToggle').checked = settings.budgetWarnings;
-            document.getElementById('monthlyReminderToggle').checked = settings.monthlyReminder;
-            document.getElementById('reminderDay').value = settings.reminderDay || 1;
-        }
-
-        async function toggleNotifications() {
-            const result = await Notifications.requestPermission();
-
-            if (result.success) {
-                App.notify(I18n.t('settings.notificationsEnabledMsg'), 'success');
-            } else if (result.permission === 'denied') {
-                App.notify(I18n.t('settings.notificationsBlockedMsg'), 'error');
-            }
-
-            loadNotificationSettings();
-        }
-
-        function saveNotificationSettings() {
-            const settings = {
-                stockAlerts: document.getElementById('stockAlertsToggle').checked,
-                budgetWarnings: document.getElementById('budgetAlertsToggle').checked,
-                monthlyReminder: document.getElementById('monthlyReminderToggle').checked,
-                reminderDay: parseInt(document.getElementById('reminderDay').value) || 1
-            };
-
-            Notifications.updateSettings(settings);
-            App.notify(I18n.t('settings.settingsSaved'), 'success');
-        }
-
-        function saveBankAlertSettings() {
-            Alerts.setBankBalanceThreshold(parseFloat(document.getElementById('bankBalanceThreshold').value) || 0);
-            Alerts.setIncomeExpenseAlert(parseFloat(document.getElementById('incomeExpenseAlert').value) || 0);
-            App.notify(I18n.t('settings.settingsSaved'), 'success');
-        }
-
-        async function sendTestNotification() {
-            const success = await Notifications.show(I18n.t('settings.testNotificationTitle'), {
-                body: I18n.t('settings.testNotificationBody'),
-                type: 'test'
-            });
-
-            if (success) {
-                App.notify(I18n.t('settings.testSent'), 'success');
-            } else {
-                App.notify(I18n.t('settings.testError'), 'error');
-            }
-        }
-
-        // Summary Sender Settings
-        function loadSummarySettings() {
-            const s = Storage.getSummarySchedule();
-            document.getElementById('summaryEnabled').checked = s.enabled;
-            document.getElementById('summaryFrequency').value = s.frequency || 'weekly';
-            document.getElementById('summaryDayOfWeek').value = s.dayOfWeek !== undefined ? s.dayOfWeek : 5;
-            document.getElementById('summaryDayOfMonth').value = s.dayOfMonth || 1;
-            document.getElementById('summaryPhone').value = s.recipientPhone || '';
-            document.getElementById('summaryEmail').value = s.recipientEmail || '';
-            document.getElementById('callmebotApiKey').value = s.callmebotApiKey || '';
-            document.getElementById('summaryOptions').style.display = s.enabled ? 'block' : 'none';
-            onSummaryFreqChange();
-        }
-
-        function saveSummarySettings() {
-            const s = {
-                enabled: document.getElementById('summaryEnabled').checked,
-                frequency: document.getElementById('summaryFrequency').value,
-                dayOfWeek: parseInt(document.getElementById('summaryDayOfWeek').value),
-                dayOfMonth: parseInt(document.getElementById('summaryDayOfMonth').value) || 1,
-                recipientPhone: document.getElementById('summaryPhone').value.trim(),
-                recipientEmail: document.getElementById('summaryEmail').value.trim(),
-                callmebotApiKey: document.getElementById('callmebotApiKey').value.trim(),
-                lastSentDate: Storage.getSummarySchedule().lastSentDate
-            };
-            Storage.saveSummarySchedule(s);
-            document.getElementById('summaryOptions').style.display = s.enabled ? 'block' : 'none';
-            App.notify('הגדרות נשמרו', 'success');
-        }
-
-        function onSummaryFreqChange() {
-            const freq = document.getElementById('summaryFrequency').value;
-            document.getElementById('summaryDayOfWeekRow').style.display = freq === 'weekly' ? 'flex' : 'none';
-            document.getElementById('summaryDayOfMonthRow').style.display = freq === 'monthly' ? 'flex' : 'none';
-        }
-
-        function previewSummaryNow() {
-            if (typeof SummarySender !== 'undefined') {
-                SummarySender.showPreviewModal();
-            }
-        }
-
-        function testCallMeBot() {
-            const s = Storage.getSummarySchedule();
-            const phone = (s.recipientPhone || '').replace(/\D/g, '');
-            const apiKey = (s.callmebotApiKey || '').trim();
-            if (!phone || !apiKey) {
-                App.notify('הזן מספר טלפון ו-API Key תחילה', 'error');
-                return;
-            }
-            App.notify('שולח הודעת בדיקה...', 'info');
-            const testText = '✅ FinSight — הודעת בדיקה נשלחה בהצלחה!';
-            const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encodeURIComponent(testText)}&apikey=${encodeURIComponent(apiKey)}`;
-            // Use Image trick to bypass CORS — fetch() gets blocked by browser
-            const img = new Image();
-            img.onload = img.onerror = () => App.notify('✅ הבקשה נשלחה — בדוק את WhatsApp תוך שנייה', 'success');
-            img.src = url;
-        }
-
-        // Set bookmarklet href (pre-minified string — avoids toString() length issues)
-        (function() {
-            var bm = `(function(){var h=location.hostname,s=h.indexOf('cal')>-1?'כאל':h.indexOf('max')>-1?'מקס':h.indexOf('isracard')>-1?'ישראכרט':h;function ov(m,e,cat){var d=document.createElement('div');d.setAttribute('style','position:fixed;top:20px;right:20px;z-index:9999;background:#1e293b;color:#fff;padding:16px;border-radius:10px;font-family:Arial;font-size:14px;direction:rtl;max-width:300px');d.textContent=e?'❌ '+m:'✅ הועתקו '+m+' עסקאות! קטג: '+(cat||'לא נמצא')+' | חזור לפינסייט';document.body.appendChild(d);setTimeout(function(){d.remove()},7000)}function pd(v){var m=v.match(/(\\d{1,2})\\D(\\d{1,2})\\D(\\d{2,4})/);if(!m)return null;return(m[3].length==2?'20':'')+m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2)}var tx=[],dbgCells=[];[].forEach.call(document.querySelectorAll('.row.body'),function(r){if(!dbgCells.length){dbgCells=[].map.call(r.querySelectorAll('[class]'),function(c){return c.className+'='+c.textContent.trim().substring(0,20)});}var de=r.querySelector('.cell.date'),ne=r.querySelector('.cell.name'),ae=r.querySelector('.cell.sum'),cu=r.querySelector('.cell.currency');var ca=r.querySelector('.cell.category')||r.querySelector('[class*="categor"]');if(!ca){var al=[].filter.call(r.querySelectorAll('.cell'),function(c){var n=c.className;return n.indexOf('date')<0&&n.indexOf('name')<0&&n.indexOf('sum')<0&&n.indexOf('currency')<0&&n.indexOf('debit')<0&&n.indexOf('credit')<0&&c.textContent.trim().length>1&&isNaN(parseFloat(c.textContent.trim().replace(/[^\\d.]/g,'')));});ca=al[0]||null;}if(!de||!ae)return;var dt=pd(de.textContent);if(!dt)return;var aeText=ae.textContent.trim();var am=parseFloat(aeText.replace(/[^\\d.]/g,''));var cur=cu?cu.textContent.trim():'';if(!cur){if(/₪/.test(aeText)||/\\bILS\\b/.test(r.innerText))cur='ILS';else if(/R\$/.test(aeText)||/\\bBRL\\b/.test(r.innerText))cur='BRL';else{var cm=r.innerText.match(/\\b(USD|EUR|GBP|JPY|AUD|CAD|CHF)\\b/);if(cm)cur=cm[1];}}if(am>0)tx.push({date:dt,description:ne?ne.textContent.trim():dt,amount:am,categoryRaw:ca?ca.textContent.trim():'',currency:cur})});if(!tx.length){var ts=Array.from(document.querySelectorAll('table')),b=null,bs=0;ts.forEach(function(t){var sc=(t.innerText.match(/(\\d{1,2})\\D(\\d{1,2})/g)||[]).length;if(sc>bs){bs=sc;b=t}});if(b&&bs>1){var rw=b.querySelectorAll('tr'),hi=-1,hc=[];for(var i=0;i<rw.length;i++){var cs=[].map.call(rw[i].querySelectorAll('th,td'),function(c){return c.innerText.trim()});if(cs.join(' ').indexOf('תאריך')>-1){hi=i;hc=cs;break}}if(hi>-1){var dc=-1,mc=-1,ac=-1,cc=-1,kc=-1,oc=-1;hc.forEach(function(v,i){if(dc<0&&v.indexOf('תאריך')>-1)dc=i;if(mc<0&&v.indexOf('שם')>-1)mc=i;if(v.indexOf('חיוב')>-1)ac=i;if(oc<0&&v.indexOf('סכום')>-1&&v.indexOf('חיוב')<0)oc=i;if(cc<0&&(v.indexOf('קטגוריה')>-1||v.indexOf('ענף')>-1||v.indexOf('סוג')>-1))cc=i;if(kc<0&&(v.indexOf('מטבע')>-1||v.toLowerCase().indexOf('currency')>-1))kc=i});if(ac<0&&oc>-1){ac=oc;oc=-1;}if(dc>-1&&ac>-1)for(var j=hi+1;j<rw.length;j++){var c2=[].map.call(rw[j].querySelectorAll('td'),function(c){return c.innerText.trim()});var dt2=pd(c2[dc]||'');var am2=parseFloat((c2[ac]||'').replace(/[^\\d.]/g,''));if(dt2&&am2>0){var desc2=c2[mc]||c2[dc];var origCur2=kc>-1?(c2[kc]||'').trim():'';var oam2=oc>-1?parseFloat((c2[oc]||'').replace(/[^\\d.]/g,'')):0;var obj2={date:dt2,description:desc2,amount:am2,categoryRaw:cc>-1?(c2[cc]||''):'',currency:''};if(origCur2&&origCur2!=='ILS'&&origCur2!=='₪'){obj2.originalCurrency=origCur2;if(oam2>0)obj2.originalAmount=oam2;}tx.push(obj2)}}}}}if(!tx.length){ov('לא נמצאו עסקאות',1);return}var p=JSON.stringify({__finsight:1,source:s,sourceName:s,transactions:tx,_dbgCells:dbgCells,_tableHeaders:hc||[],exportedAt:new Date().toISOString()});navigator.clipboard?navigator.clipboard.writeText(p).then(function(){ov(tx.length,0,tx[0]?tx[0].categoryRaw:'')}).catch(function(){prompt('',p)}):prompt('',p)})()`;
-            var link = document.getElementById('bookmarkletLink');
-            if (link) link.href = 'javascript:' + bm;
-        })();
-
-        // Bank bookmarklet v3 – table + SPA-row + inline-text + debug overlay
-        (function() {
-            var bankBm = `(function(){try{var h=location.hostname,src=h.indexOf('leumi')>-1?'לאומי':h.indexOf('poalim')>-1?'פועלים':h.indexOf('mizrahi')>-1?'מזרחי-טפחות':h.indexOf('discount')>-1?'דיסקונט':h;function ov(msg,err){var d=document.createElement('div');d.setAttribute('style','position:fixed;top:20px;right:20px;z-index:9999;background:'+(err?'#7f1d1d':'#1e293b')+';color:#fff;padding:16px 20px 16px 16px;border-radius:10px;font-family:Arial;font-size:13px;direction:rtl;max-width:430px;white-space:pre-wrap;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,0.5);max-height:80vh;overflow-y:auto');d.textContent=msg;var btn=document.createElement('button');btn.textContent='✕';btn.setAttribute('style','float:left;background:none;border:none;color:#fff;cursor:pointer;font-size:18px;margin-right:6px;');btn.onclick=function(){d.remove();};d.prepend(btn);document.body.appendChild(d);if(!err)setTimeout(function(){d.remove();},10000);}function pd(v){var m=(v||'').match(/(\\d{1,2})[.\\/](\\d{1,2})[.\\/](\\d{2,4})/);if(!m)return null;return(m[3].length==2?'20':'')+m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);}function pn(s){return parseFloat((s||'').replace(/[^\\d.]/g,''))||0;}var txs=[],balance=null;var tables=Array.from(document.querySelectorAll('table'));var best=null,bs=0;tables.forEach(function(t){var sc=(t.innerText.match(/\\d{1,2}[.\\/]\\d{1,2}/g)||[]).length;if(sc>bs){bs=sc;best=t;}});if(best&&bs>1){var rows=Array.from(best.querySelectorAll('tr'));var hi=-1,hc=[];for(var i=0;i<rows.length;i++){var cs=Array.from(rows[i].querySelectorAll('th,td')).map(function(c){return c.innerText.trim();});if(cs.join(' ').indexOf('תאריך')>-1){hi=i;hc=cs;break;}}if(hi>-1){var dc=-1,mc=-1,dbc=-1,crc=-1,bc=-1;hc.forEach(function(v,i){if(dc<0&&v.indexOf('תאריך')>-1)dc=i;if(mc<0&&(v.indexOf('פרטים')>-1||v.indexOf('תיאור')>-1||v.indexOf('תנועה')>-1||v.indexOf('שם')>-1))mc=i;if(dbc<0&&v.indexOf('חובה')>-1)dbc=i;if(crc<0&&v.indexOf('זכות')>-1)crc=i;if(bc<0&&(v==='יתרה'||v.indexOf('יתרה')>-1))bc=i;});if(dc>-1){for(var j=hi+1;j<rows.length;j++){var cells=Array.from(rows[j].querySelectorAll('td')).map(function(c){return c.innerText.trim();});var dt=pd(cells[dc]||'');if(!dt)continue;var dbt=dbc>-1?pn(cells[dbc]):0,crt=crc>-1?pn(cells[crc]):0,amt=dbt>0?-dbt:crt>0?crt:0;if(amt===0)continue;var bal=bc>-1?pn(cells[bc])||undefined:undefined;txs.push({date:dt,description:mc>-1?cells[mc]:cells[1]||'',amount:amt,balance:bal});}}}}if(txs.length===0){var bodies=Array.from(document.querySelectorAll('ul,ol,tbody,div,section,main,article'));var bPar=null,bRows=[],bScore=0;bodies.forEach(function(b){var ch=Array.from(b.children);if(ch.length<3||ch.length>400)return;var tags={};ch.forEach(function(c){tags[c.tagName]=(tags[c.tagName]||0)+1;});var dom=Object.keys(tags).sort(function(a,b_){return tags[b_]-tags[a];})[0];if(!dom||tags[dom]/ch.length<0.7)return;var dCnt=ch.filter(function(c){return /\\d{1,2}[.\\/]\\d{1,2}/.test(c.innerText||'');}).length;if(dCnt<2)return;var score=dCnt*10+ch.length;if(score>bScore){bScore=score;bPar=b;bRows=ch;}});if(bPar){bRows.forEach(function(row){var dm=(row.innerText||'').match(/(\\d{1,2})[.\\/](\\d{1,2})[.\\/](\\d{2,4})/);if(!dm)return;var dt=pd(dm[0]);if(!dt)return;var leaves=Array.from(row.querySelectorAll('*')).filter(function(el){return el.children.length===0&&(el.innerText||'').trim().length>0;});var desc='',dbt=0,crt=0,bal;var amRe=/^\\d{1,3}(?:,\\d{3})*(?:\\.\\d{1,2})?$/;leaves.forEach(function(l){var t=(l.innerText||'').trim();if(amRe.test(t)){var v=pn(t);if(v>0.5){if(!dbt)dbt=v;else if(!crt)crt=v;else if(bal===undefined)bal=v;}}else if(t.length>2&&!/\\d{1,2}[.\\/]\\d{1,2}/.test(t)&&!desc)desc=t;});var amt=crt>0&&!dbt?crt:dbt>0?-dbt:0;if(amt!==0)txs.push({date:dt,description:desc,amount:amt,balance:bal});});}}if(txs.length===0){var lines=(document.body.innerText||'').split(/\\n/).map(function(s){return s.trim();}).filter(Boolean);var dtEx=/^\\d{1,2}[.\\/]\\d{1,2}[.\\/]\\d{2,4}$/;var dtIn=/(\\d{1,2}[.\\/]\\d{1,2}[.\\/]\\d{2,4})/;var amRe=/^\\d{1,3}(?:,\\d{3})*(?:\\.\\d{1,2})?$/;var hasEx=lines.some(function(l){return dtEx.test(l);});if(hasEx){for(var i=0;i<lines.length;i++){if(!dtEx.test(lines[i]))continue;var dt=pd(lines[i]);if(!dt)continue;var desc='',dbt=0,crt=0,bal;for(var k=i+1;k<Math.min(i+8,lines.length);k++){var ln=lines[k];if(dtEx.test(ln))break;if(!desc&&ln.length>2&&!amRe.test(ln)&&!/^\\d+$/.test(ln))desc=ln;else if(amRe.test(ln)){var v=pn(ln);if(v>0){if(!dbt)dbt=v;else if(!crt)crt=v;else bal=v;}}}var amt=crt>0&&!dbt?crt:dbt>0?-dbt:0;if(amt!==0)txs.push({date:dt,description:desc,amount:amt,balance:bal});}}else{for(var i=0;i<lines.length;i++){var m=lines[i].match(dtIn);if(!m)continue;var dt=pd(m[1]);if(!dt)continue;var rest=lines[i].replace(m[1],'').trim();var nums=[];rest=rest.replace(/(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{1,2})?)/g,function(n){nums.push(pn(n));return '\\t';});var desc=rest.replace(/[\\t\\s]+/g,' ').trim();if(desc.length<2&&i+1<lines.length&&lines[i+1].length>2)desc=lines[i+1];if(nums.length>=1){var dbt=nums[0]||0,crt=nums.length>1?nums[1]:0,bal=nums.length>2?nums[2]:undefined;var amt=crt>0&&!dbt?crt:dbt>0?-dbt:0;if(amt!==0)txs.push({date:dt,description:desc,amount:amt,balance:bal});}}}}if(balance===null&&txs.length>0&&txs[0].balance)balance=txs[0].balance;if(balance===null){var bEls=Array.from(document.querySelectorAll('*')).slice(0,1500);for(var i=0;i<bEls.length&&balance===null;i++){var el=bEls[i];if(el.children.length>0)continue;var etxt=(el.textContent||'').trim();if(etxt==='יתרה'||/^יתרה/.test(etxt)){var par=el.parentElement;for(var up=0;up<5&&par&&balance===null;up++,par=par.parentElement){var bNums=(par.innerText||'').match(/\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?/g)||[];for(var ni=0;ni<bNums.length;ni++){var vv=pn(bNums[ni]);if(vv>100&&vv<9999999){balance=vv;break;}}}}}}if(txs.length===0){var dbg=(document.body.innerText||'').replace(/\\s+/g,' ').trim().substring(0,600);ov('❌ לא נמצאו תנועות.\\n\\nוודא שאתה בדף שמציג את רשימת התנועות.\\n\\nטקסט שנראה בעמוד:\\n'+dbg,true);return;}var payload=JSON.stringify({__finsight_bank:true,source:src,balance:balance,transactions:txs,exportedAt:new Date().toISOString()});var msg='✅ '+txs.length+' תנועות'+(balance!==null?' | יתרה: ₪'+Math.abs(balance).toLocaleString('he-IL'):'')+' \\nחזור לפינסייט ← חשבונות בנק ← ייבוא מסימניה';navigator.clipboard?navigator.clipboard.writeText(payload).then(function(){ov(msg,false);}).catch(function(){prompt('',payload);}):prompt('',payload);}catch(e){var d=document.createElement('div');d.setAttribute('style','position:fixed;top:20px;right:20px;z-index:9999;background:#7f1d1d;color:#fff;padding:16px;border-radius:10px;font-family:Arial;font-size:13px;max-width:360px;');d.textContent='FinSight error: '+e.message;document.body.appendChild(d);setTimeout(function(){d.remove();},15000);}})()`;
-            var bankLink = document.getElementById('bankBookmarkletLink');
-            if (bankLink) bankLink.href = 'javascript:' + bankBm;
-        })();
-    </script>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
+
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>⚙️ <span data-i18n="settings.title">הגדרות</span></h1>
+ <p data-i18n="settings.subtitle">התאמה אישית של האפליקציה</p>
+ </header>
+
+ <!-- Budget Settings -->
+ <div class="settings-section">
+ <h2>💰 <span data-i18n="settings.monthlyBudget">תקציב חודשי</span></h2>
+ <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="settings.budgetDesc">הגדר תקציב להתראות כשחורגים</p>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.totalBudget">תקציב כולל</span>
+ <span data-i18n="settings.totalBudgetDesc">סה״כ הוצאות מותרות בחודש</span>
+ </div>
+ <div class="budget-input">
+ <span>₪</span>
+ <input type="number" id="totalBudget" step="100" onchange="saveTotalBudget()">
+ </div>
+ </div>
+
+ <h3 style="margin: 25px 0 15px; font-size: 1.1rem;">⚠️ <span data-i18n="settings.alertThresholds">סף התראות</span></h3>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.warningAlert">התראת אזהרה (צהוב)</span>
+ <span data-i18n="settings.warningAlertDesc">הצג התראה כשמגיעים לאחוז זה</span>
+ </div>
+ <div class="budget-input">
+ <input type="number" id="warningThreshold" min="1" max="100" step="5" onchange="saveThresholds()">
+ <span>%</span>
+ </div>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.dangerAlert">התראת חריגה (אדום)</span>
+ <span data-i18n="settings.dangerAlertDesc">הצג התראה כשמגיעים לאחוז זה</span>
+ </div>
+ <div class="budget-input">
+ <input type="number" id="dangerThreshold" min="1" max="150" step="5" onchange="saveThresholds()">
+ <span>%</span>
+ </div>
+ </div>
+
+ <h3 style="margin: 25px 0 15px; font-size: 1.1rem;"><span data-i18n="settings.categoryBudget">תקציב לפי קטגוריה</span></h3>
+ <div id="categoryBudgets">
+ <!-- Populated by JS -->
+ </div>
+ </div>
+
+ <!-- Custom Categories -->
+ <div class="settings-section">
+ <h2>🏷️ <span data-i18n="settings.customCategories">קטגוריות מותאמות אישית</span></h2>
+ <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="settings.customCategoriesDesc">הוסף קטגוריות משלך להוצאות</p>
+
+ <div id="customCategories">
+ <!-- Populated by JS -->
+ </div>
+
+ <button class="btn btn-primary" onclick="openCategoryModal()" style="margin-top: 15px;">
+ <span>➕</span>
+ <span data-i18n="settings.addCategory">הוסף קטגוריה</span>
+ </button>
+ </div>
+
+ <!-- Notification Settings -->
+ <div class="settings-section" id="notificationSection">
+ <h2>🔔 <span data-i18n="settings.notifications">התראות</span></h2>
+ <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="settings.notificationsDesc">הגדר התראות push לאירועים חשובים</p>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.enableNotifications">הפעל התראות</span>
+ <span id="notificationStatus" data-i18n="settings.checkingPermissions">בודק הרשאות...</span>
+ </div>
+ <button class="btn btn-primary" id="notificationToggle" onclick="toggleNotifications()">
+ <span data-i18n="settings.enable">הפעל</span>
+ </button>
+ </div>
+
+ <div id="notificationOptions" style="display: none;">
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.stockAlerts">התראות מניות</span>
+ <span data-i18n="settings.stockAlertsDesc">קבל התראה כשמניה מגיעה ליעד</span>
+ </div>
+ <label class="toggle-switch">
+ <input type="checkbox" id="stockAlertsToggle" onchange="saveNotificationSettings()">
+ <span class="toggle-slider"></span>
+ </label>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.budgetAlerts">התראות תקציב</span>
+ <span data-i18n="settings.budgetAlertsDesc">קבל התראה כשחורגים מתקציב</span>
+ </div>
+ <label class="toggle-switch">
+ <input type="checkbox" id="budgetAlertsToggle" onchange="saveNotificationSettings()">
+ <span class="toggle-slider"></span>
+ </label>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.monthlyReminder">תזכורת חודשית</span>
+ <span data-i18n="settings.monthlyReminderDesc">תזכורת לעדכון קרנות וקופות</span>
+ </div>
+ <label class="toggle-switch">
+ <input type="checkbox" id="monthlyReminderToggle" onchange="saveNotificationSettings()">
+ <span class="toggle-slider"></span>
+ </label>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.reminderDay">יום התזכורת</span>
+ <span data-i18n="settings.reminderDayDesc">באיזה יום בחודש לשלוח תזכורת</span>
+ </div>
+ <div class="budget-input">
+ <input type="number" id="reminderDay" min="1" max="28" value="1" onchange="saveNotificationSettings()">
+ <span data-i18n="settings.inMonth">בחודש</span>
+ </div>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.testNotifications">בדוק התראות</span>
+ <span data-i18n="settings.testNotificationsDesc">שלח התראת בדיקה</span>
+ </div>
+ <button class="btn btn-secondary" onclick="sendTestNotification()">
+ <span>📤</span>
+ <span data-i18n="settings.sendTest">שלח בדיקה</span>
+ </button>
+ </div>
+ </div>
+
+ <!-- Smart Alerts -->
+ <h3 style="margin: 25px 0 15px; font-size: 1.1rem;">🧠 התראות חכמות</h3>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>🏦 התראת יתרת בנק נמוכה</span>
+ <span>קבל התראה כשיתרת הבנק יורדת מתחת לסף</span>
+ </div>
+ <input type="number" id="bankBalanceThreshold" placeholder="0" min="0"
+ style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;"
+ onchange="saveBankAlertSettings()">
+ </div>
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>💸 התראת הוצאות מול הכנסה</span>
+ <span>התראה כשהוצאות עוברות X% מההכנסה החודשית</span>
+ </div>
+ <div style="display:flex;align-items:center;gap:6px;">
+ <input type="number" id="incomeExpenseAlert" placeholder="80" min="0" max="200"
+ style="width:80px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;"
+ onchange="saveBankAlertSettings()">
+ <span style="color:var(--color-text-secondary);">%</span>
+ </div>
+ </div>
+ </div>
+
+ <!-- Data Management -->
+ <div class="settings-section">
+ <h2>📦 <span data-i18n="settings.dataManagement">ניהול נתונים</span></h2>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.exportData">ייצוא נתונים</span>
+ <span data-i18n="settings.exportDataDesc">הורד את כל הנתונים כקובץ JSON</span>
+ </div>
+ <button class="btn btn-secondary" onclick="App.exportData()">
+ <span>📤</span>
+ <span data-i18n="settings.exportBtn">ייצוא</span>
+ </button>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.importData">ייבוא נתונים</span>
+ <span data-i18n="settings.importDataDesc">שחזר נתונים מקובץ JSON</span>
+ </div>
+ <button class="btn btn-secondary" onclick="App.importData()">
+ <span>📥</span>
+ <span data-i18n="settings.importBtn">ייבוא</span>
+ </button>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.loadSampleData">טען נתוני דוגמה</span>
+ <span data-i18n="settings.loadSampleDataDesc">מילוי האפליקציה בנתוני הדגמה</span>
+ </div>
+ <button class="btn btn-secondary" onclick="loadSampleData()">
+ <span>📋</span>
+ <span data-i18n="settings.loadSampleBtn">טען דוגמה</span>
+ </button>
+ </div>
+ </div>
+
+ <!-- Credit Card Bookmarklet -->
+ <div class="settings-section">
+ <h2>🔖 ייבוא מאתרי אשראי</h2>
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>סימניית ייבוא אשראי</span>
+ <span>גרור לסרגל הסימניות — לחץ עליה בדף העסקאות של האשראי</span>
+ </div>
+ <a id="bookmarkletLink" href="#"
+ style="border: 2px dashed var(--color-border); padding: 8px 16px; border-radius: 8px;
+ cursor: grab; text-decoration: none; color: var(--color-text); font-size: 14px;
+ display:inline-flex; align-items:center; gap:6px; user-select:none;">
+ 💳 FinSight אשראי
+ </a>
+ </div>
+ <div class="setting-row" style="flex-wrap:wrap; gap:8px;">
+ <span style="color:var(--color-text-secondary); font-size:13px;">נתמך:</span>
+ <span class="badge">כאל ✅</span>
+ <span class="badge">מקס ✅</span>
+ <span class="badge">ישראכרט ✅</span>
+ </div>
+
+ <div class="setting-row" style="margin-top:16px;">
+ <div class="setting-label">
+ <span>סימניית ייבוא בנק</span>
+ <span>גרור לסרגל — לחץ בדף התנועות של הבנק לייבוא יתרה + תנועות</span>
+ </div>
+ <a id="bankBookmarkletLink" href="#"
+ style="border: 2px dashed var(--color-border); padding: 8px 16px; border-radius: 8px;
+ cursor: grab; text-decoration: none; color: var(--color-text); font-size: 14px;
+ display:inline-flex; align-items:center; gap:6px; user-select:none;">
+ 🏦 FinSight בנק
+ </a>
+ </div>
+ <div class="setting-row" style="flex-wrap:wrap; gap:8px;">
+ <span style="color:var(--color-text-secondary); font-size:13px;">נתמך:</span>
+ <span class="badge">לאומי ✅</span>
+ <span class="badge">פועלים ✅</span>
+ <span class="badge">מזרחי ✅</span>
+ <span class="badge">דיסקונט ✅</span>
+ </div>
+
+ <details style="margin-top:12px;">
+ <summary style="cursor:pointer; color:var(--color-text-secondary); font-size:13px;">איך מגדירים?</summary>
+ <ol style="font-size:13px; color:var(--color-text-secondary); margin-top:8px; padding-right:20px; line-height:2;">
+ <li>ודא שסרגל הסימניות מוצג בדפדפן (Ctrl+Shift+B)</li>
+ <li>גרור את הסימניה הרלוונטית לסרגל</li>
+ <li>כנס לאתר הבנק / האשראי ועבור לדף התנועות</li>
+ <li>לחץ על הסימניה — תראה הודעת אישור</li>
+ <li>חזור לפינסייט → הדף המתאים → לחץ "ייבוא מסימניה"</li>
+ </ol>
+ </details>
+ </div>
+
+ <!-- App Lock (PIN) -->
+ <div class="settings-section" style="border-color: rgba(16, 185, 129, 0.3);">
+ <h2>🔐 <span data-i18n="pinLock.appLock">נעילת אפליקציה</span> <span class="tooltip-btn" data-tooltip="הצפנת AES-256 על כל הנתונים.&#10;PIN נדרש רק בכניסה הראשונה&#10;או לאחר חוסר פעילות.">?</span></h2>
+ <p style="color: var(--color-text-secondary); margin-bottom: 20px;" data-i18n="pinLock.appLockDesc">הגן על הנתונים שלך עם קוד PIN</p>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="pinLock.enablePin">הפעל קוד PIN</span>
+ </div>
+ <label class="toggle-switch">
+ <input type="checkbox" id="pinToggle" onchange="togglePinLock()">
+ <span class="toggle-slider"></span>
+ </label>
+ </div>
+
+ <div id="pinEnabledOptions" style="display: none;">
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="pinLock.changePin">שנה קוד PIN</span>
+ </div>
+ <button class="btn btn-secondary" onclick="changePinCode()">
+ <span>🔑</span>
+ <span data-i18n="pinLock.changePin">שנה קוד PIN</span>
+ </button>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="pinLock.autoLockAfter">נעילה אוטומטית אחרי</span>
+ </div>
+ <div class="budget-input">
+ <select id="autoLockTimeout" onchange="saveAutoLockTimeout()" style="padding: 8px 12px; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 8px; color: white;">
+ <option value="1">1</option>
+ <option value="5">5</option>
+ <option value="10">10</option>
+ <option value="15">15</option>
+ <option value="30">30</option>
+ </select>
+ <span data-i18n="pinLock.minutes">דקות</span>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Security Status (Live) -->
+ <div class="settings-section" style="border-color: rgba(16, 185, 129, 0.3);">
+ <h2>🛡️ <span data-i18n="security.statusTitle">סטטוס אבטחה</span></h2>
+ <div id="securityStatusPanel">
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="security.encryptionStatus">סטטוס הצפנה</span>
+ </div>
+ <span id="secStatusPin" style="font-size: 0.9rem;"></span>
+ </div>
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="security.cloudEncryption">הצפנת ענן</span>
+ </div>
+ <span id="secStatusCloud" style="font-size: 0.9rem;"></span>
+ </div>
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="security.failedAttempts">ניסיונות כושלים (סשן נוכחי)</span>
+ </div>
+ <span id="secStatusFails" style="font-size: 0.9rem;">0</span>
+ </div>
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="security.lastSync">סנכרון אחרון</span>
+ </div>
+ <span id="secStatusLastSync" style="font-size: 0.9rem;">—</span>
+ </div>
+ </div>
+ </div>
+
+ <!-- Security & Privacy -->
+ <div class="settings-section" style="border-color: rgba(16, 185, 129, 0.3);">
+ <h2>🔒 <span data-i18n="settings.securityPrivacy">אבטחה ופרטיות</span></h2>
+
+ <div class="setting-row">
+ <div class="setting-label" style="max-width: 100%; flex: 1;">
+ <span style="color: #10b981; font-size: 1.05rem;" data-i18n="settings.howDataProtected">איך הנתונים שלך מוגנים</span>
+ </div>
+ </div>
+
+ <div style="padding: 15px 0; color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.8;">
+ <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+ <span style="font-size: 1.2rem;">💾</span>
+ <span><strong style="color: var(--color-text-primary);" data-i18n="settings.localStorage">אחסון מקומי</strong> - <span data-i18n="settings.localStorageDesc">הנתונים נשמרים על המכשיר שלך בלבד. אף שרת חיצוני לא מקבל גישה אוטומטית.</span></span>
+ </div>
+ <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+ <span style="font-size: 1.2rem;">☁️</span>
+ <span><strong style="color: var(--color-text-primary);" data-i18n="settings.cloudSync">סנכרון ענן (אופציונלי)</strong> - <span data-i18n="settings.cloudSyncDesc">רק אם תתחבר עם Google. הנתונים מוצפנים לפני העלאה לענן ורק אתה יכול לפענח אותם.</span></span>
+ </div>
+ <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+ <span style="font-size: 1.2rem;">🚫</span>
+ <span><strong style="color: var(--color-text-primary);" data-i18n="settings.noBankPasswords">ללא סיסמאות בנק</strong> - <span data-i18n="settings.noBankPasswordsDesc">האפליקציה לא שומרת סיסמאות, קודי גישה או פרטי התחברות לבנק.</span></span>
+ </div>
+ <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+ <span style="font-size: 1.2rem;">🔐</span>
+ <span><strong style="color: var(--color-text-primary);" data-i18n="settings.aesEncryption">הצפנת AES-256</strong> - <span data-i18n="settings.aesEncryptionDesc">כל הנתונים הרגישים מוצפנים בהצפנה צבאית לפני שליחה לענן.</span></span>
+ </div>
+ <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+ <span style="font-size: 1.2rem;">⏱️</span>
+ <span><strong style="color: var(--color-text-primary);" data-i18n="settings.autoLogout">התנתקות אוטומטית</strong> - <span data-i18n="settings.autoLogoutDesc">לאחר 30 דקות ללא פעילות, המערכת מתנתקת אוטומטית.</span></span>
+ </div>
+ <div style="display: flex; align-items: flex-start; gap: 10px;">
+ <span style="font-size: 1.2rem;">🗑️</span>
+ <span><strong style="color: var(--color-text-primary);" data-i18n="settings.fullDeletion">מחיקה מלאה</strong> - <span data-i18n="settings.fullDeletionDesc">בכל רגע תוכל למחוק את כל הנתונים שלך מהמכשיר ומהענן.</span></span>
+ </div>
+ </div>
+ </div>
+
+ <!-- Summary Sender -->
+ <div class="settings-section" id="summarySenderSection">
+ <h2>📤 סיכום פיננסי אוטומטי</h2>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>הפעל שליחה אוטומטית</span>
+ <span>קבל סיכום שבועי/חודשי של כל הנכסים שלך</span>
+ </div>
+ <label class="toggle-switch">
+ <input type="checkbox" id="summaryEnabled" onchange="saveSummarySettings()">
+ <span class="toggle-slider"></span>
+ </label>
+ </div>
+
+ <div id="summaryOptions" style="display:none;">
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>תדירות</span>
+ </div>
+ <select id="summaryFrequency" onchange="onSummaryFreqChange()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
+ <option value="weekly">שבועי</option>
+ <option value="monthly">חודשי</option>
+ </select>
+ </div>
+
+ <div class="setting-row" id="summaryDayOfWeekRow">
+ <div class="setting-label">
+ <span>יום בשבוע</span>
+ </div>
+ <select id="summaryDayOfWeek" onchange="saveSummarySettings()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
+ <option value="0">ראשון</option>
+ <option value="1">שני</option>
+ <option value="2">שלישי</option>
+ <option value="3">רביעי</option>
+ <option value="4">חמישי</option>
+ <option value="5" selected>שישי</option>
+ <option value="6">שבת</option>
+ </select>
+ </div>
+
+ <div class="setting-row" id="summaryDayOfMonthRow" style="display:none;">
+ <div class="setting-label">
+ <span>יום בחודש</span>
+ </div>
+ <input type="number" id="summaryDayOfMonth" min="1" max="28" value="1" onchange="saveSummarySettings()" style="width:80px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:center;">
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>מספר WhatsApp</span>
+ <span>כולל קידומת מדינה, לדוגמה: 972501234567</span>
+ </div>
+ <input type="tel" id="summaryPhone" placeholder="972501234567" onchange="saveSummarySettings()" style="width:160px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;">
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>כתובת מייל</span>
+ </div>
+ <input type="email" id="summaryEmail" placeholder="me@example.com" onchange="saveSummarySettings()" style="width:200px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;">
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span>🤖 CallMeBot API Key <span class="tooltip-btn" data-tooltip="שירות חינמי לשליחת WhatsApp.&#10;כנס לcallmebot.com לקבלת&#10;המספר ומפתח ה-API.">?</span></span>
+ <span>לשליחה אוטומטית לגמרי — FinSight שולח בלי לחיצה</span>
+ </div>
+ <input type="text" id="callmebotApiKey" placeholder="1234567" onchange="saveSummarySettings()" style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;font-family:monospace;">
+ </div>
+
+ <details style="margin-top:4px;margin-bottom:8px;">
+ <summary style="cursor:pointer;color:var(--color-text-secondary);font-size:13px;padding:4px 0;">איך מקבלים API Key מ-CallMeBot?</summary>
+ <ol style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 0;padding-right:20px;line-height:2;">
+ <li>כנס ל-<a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" style="color:var(--color-primary);">callmebot.com</a> וקבל את המספר העדכני</li>
+ <li>שמור את המספר באנשי הקשר שלך בשם "CallMeBot"</li>
+ <li>שלח לו הודעת WhatsApp: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;">I allow callmebot to send me messages</code></li>
+ <li>תוך דקה תקבל תשובה עם API Key — הזן אותו כאן</li>
+ </ol>
+ </details>
+
+ <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;">
+ <button class="btn btn-primary" onclick="previewSummaryNow()">👁️ תצוגה מקדימה עכשיו</button>
+ <button class="btn btn-secondary" onclick="testCallMeBot()">🔔 שלח הודעת בדיקה</button>
+ </div>
+ </div>
+ </div>
+
+ <!-- Danger Zone -->
+ <div class="settings-section danger-zone">
+ <h2>⚠️ <span data-i18n="settings.dangerZone">אזור סכנה</span></h2>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.deleteAllData">מחק את כל הנתונים</span>
+ <span data-i18n="settings.deleteAllDataDesc">מחיקה מהמכשיר ומהענן - פעולה בלתי הפיכה!</span>
+ </div>
+ <button class="btn btn-danger" onclick="Auth.deleteAllData()">
+ <span>🗑️</span>
+ <span data-i18n="settings.deleteAllBtn">מחק הכל</span>
+ </button>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
+
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
+
+ <!-- Add Category Modal -->
+ <div class="modal-overlay" id="categoryModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 data-i18n="settings.addCategory">הוסף קטגוריה</h2>
+ <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="categoryForm">
+ <div class="form-group">
+ <label data-i18n="settings.categoryIcon">אייקון</label>
+ <select class="form-control" id="catIcon">
+ <option value="🛒" data-i18n="settings.catIcons.shopping">🛒 קניות</option>
+ <option value="🎁" data-i18n="settings.catIcons.gifts">🎁 מתנות</option>
+ <option value="🐕" data-i18n="settings.catIcons.pets">🐕 חיות מחמד</option>
+ <option value="🏋️" data-i18n="settings.catIcons.sports">🏋️ ספורט</option>
+ <option value="💇" data-i18n="settings.catIcons.grooming">💇 טיפוח</option>
+ <option value="🏠" data-i18n="settings.catIcons.home">🏠 בית</option>
+ <option value="👶" data-i18n="settings.catIcons.kids">👶 ילדים</option>
+ <option value="📱" data-i18n="settings.catIcons.technology">📱 טכנולוגיה</option>
+ <option value="🎵" data-i18n="settings.catIcons.music">🎵 מוזיקה</option>
+ <option value="📚" data-i18n="settings.catIcons.books">📚 ספרים</option>
+ <option value="✈️" data-i18n="settings.catIcons.travel">✈️ נסיעות</option>
+ <option value="🍷" data-i18n="settings.catIcons.alcohol">🍷 אלכוהול</option>
+ <option value="☕" data-i18n="settings.catIcons.coffee">☕ קפה</option>
+ <option value="💊" data-i18n="settings.catIcons.medicine">💊 תרופות</option>
+ <option value="🔧" data-i18n="settings.catIcons.repairs">🔧 תיקונים</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="settings.categoryNameHe">שם בעברית</label>
+ <input type="text" class="form-control" id="catNameHe" required placeholder="לדוגמה: חיות מחמד">
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="settings.categoryNameEn">שם באנגלית</label>
+ <input type="text" class="form-control" id="catNameEn" placeholder="e.g. Pets">
+ </div>
+
+ <div class="form-group">
+ <label data-i18n="settings.categoryColor">צבע</label>
+ <input type="color" class="form-control" id="catColor" value="#6366f1" style="height: 50px; padding: 5px;">
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeCategoryModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveCategory()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
+
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/alerts.js"></script>
+ <script src="../js/tags.js"></script>
+ <script src="../js/notifications.js"></script>
+ <script src="../data/sample-data.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script src="../js/summary-sender.js"></script>
+ <script>
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'settings';
+ I18n.init();
+ loadSettings();
+ loadNotificationSettings();
+ loadPinSettings();
+ loadSecurityStatus();
+ loadSummarySettings();
+ // Load smart alert thresholds
+ document.getElementById('bankBalanceThreshold').value = Alerts.getConfig().bankBalanceThreshold || '';
+ document.getElementById('incomeExpenseAlert').value = Alerts.getConfig().incomeExpenseAlert || '';
+ });
+
+ function loadSecurityStatus() {
+ const pinEnabled = PinLock.isEnabled();
+ const pinEl = document.getElementById('secStatusPin');
+ if (pinEl) {
+ if (pinEnabled) {
+ pinEl.textContent = '✅ ' + I18n.t('security.encryptionEnabled');
+ pinEl.style.color = '#10b981';
+ } else {
+ pinEl.textContent = '⚠️ ' + I18n.t('security.encryptionDisabled');
+ pinEl.style.color = '#f59e0b';
+ }
+ }
+
+ const cloudEl = document.getElementById('secStatusCloud');
+ if (cloudEl) {
+ if (typeof Auth !== 'undefined' && Auth.currentUser) {
+ cloudEl.textContent = '✅ ' + I18n.t('security.cloudEncryptionActive');
+ cloudEl.style.color = '#10b981';
+ } else {
+ cloudEl.textContent = '— ' + I18n.t('security.cloudNotConnected');
+ cloudEl.style.color = 'var(--color-text-secondary)';
+ }
+ }
+
+ const failsEl = document.getElementById('secStatusFails');
+ if (failsEl) {
+ const fails = parseInt(sessionStorage.getItem('pin_fail_count')) || 0;
+ failsEl.textContent = String(fails);
+ failsEl.style.color = fails > 0 ? '#ef4444' : '#10b981';
+ }
+
+ const syncEl = document.getElementById('secStatusLastSync');
+ if (syncEl) {
+ const lastUpdate = localStorage.getItem('finance_last_update');
+ if (lastUpdate) {
+ const d = new Date(lastUpdate);
+ syncEl.textContent = d.toLocaleDateString('he-IL') + ' ' + d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+ } else {
+ syncEl.textContent = '—';
+ }
+ }
+ }
+
+ // PIN Lock Settings
+ function loadPinSettings() {
+ const enabled = PinLock.isEnabled();
+ document.getElementById('pinToggle').checked = enabled;
+ document.getElementById('pinEnabledOptions').style.display = enabled ? 'block' : 'none';
+ if (enabled) {
+ document.getElementById('autoLockTimeout').value = PinLock.getTimeout();
+ }
+ }
+
+ function togglePinLock() {
+ const checkbox = document.getElementById('pinToggle');
+ if (checkbox.checked) {
+ // Enable PIN — show setup screen
+ PinLock.showSetupScreen(async (pin) => {
+ await PinLock.enable(pin);
+ App.notify(I18n.t('pinLock.pinEnabled'), 'success');
+ loadPinSettings();
+ });
+ // If user cancels, revert checkbox
+ const checkCancel = setInterval(() => {
+ const overlay = document.getElementById('pinLockOverlay');
+ if (!overlay || overlay.style.display === 'none') {
+ clearInterval(checkCancel);
+ if (!PinLock.isEnabled()) {
+ checkbox.checked = false;
+ }
+ }
+ }, 300);
+ } else {
+ // Disable PIN — verify current PIN first
+ PinLock.showVerifyScreen(async (pin) => {
+ await PinLock.disable(pin);
+ App.notify(I18n.t('pinLock.pinDisabled'), 'success');
+ loadPinSettings();
+ });
+ // If user cancels, revert checkbox
+ const checkCancel = setInterval(() => {
+ const overlay = document.getElementById('pinLockOverlay');
+ if (!overlay || overlay.style.display === 'none') {
+ clearInterval(checkCancel);
+ if (PinLock.isEnabled()) {
+ checkbox.checked = true;
+ }
+ }
+ }, 300);
+ }
+ }
+
+ function changePinCode() {
+ PinLock.showVerifyScreen(async (oldPin) => {
+ PinLock.showSetupScreen(async (newPin) => {
+ await PinLock.changePin(oldPin, newPin);
+ App.notify(I18n.t('pinLock.pinChanged'), 'success');
+ });
+ });
+ }
+
+ function saveAutoLockTimeout() {
+ const val = parseInt(document.getElementById('autoLockTimeout').value);
+ PinLock.setTimeout(val);
+ PinLock._resetTimer();
+ }
+
+ function loadSettings() {
+ // Load budget settings
+ const budgets = Alerts.getBudgets();
+ document.getElementById('totalBudget').value = budgets.total || '';
+
+ // Load thresholds
+ const thresholds = Alerts.getThresholds();
+ document.getElementById('warningThreshold').value = thresholds.warning || 80;
+ document.getElementById('dangerThreshold').value = thresholds.danger || 100;
+
+ // Render category budgets
+ const categories = Tags.getCategories();
+ document.getElementById('categoryBudgets').innerHTML = categories.map(cat => {
+ const budget = budgets.categories[cat.id] || '';
+ return `
+ <div class="category-budget">
+ <span class="category-icon">${cat.icon}</span>
+ <span class="category-name">${I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn}</span>
+ <div class="budget-input">
+ <span>₪</span>
+ <input type="number" value="${budget}" step="100"
+ onchange="saveCategoryBudget('${cat.id}', this.value)"
+ placeholder="${I18n.t('settings.noLimit')}">
+ </div>
+ </div>
+ `;
+ }).join('');
+
+ // Render custom categories
+ const customData = Tags.getCustomData();
+ const customContainer = document.getElementById('customCategories');
+
+ if (customData.categories.length === 0) {
+ customContainer.innerHTML = `<p style="color: var(--color-text-secondary);">${I18n.t('settings.noCustomCategories')}</p>`;
+ } else {
+ customContainer.innerHTML = customData.categories.map(cat => `
+ <div class="custom-category-item">
+ <span style="font-size: 1.5rem;">${cat.icon}</span>
+ <div class="color-preview" style="background: ${cat.color};"></div>
+ <span style="flex: 1;">${I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn}</span>
+ <button class="btn btn-danger btn-sm" onclick="deleteCustomCategory('${cat.id}')">🗑️</button>
+ </div>
+ `).join('');
+ }
+ }
+
+ function saveTotalBudget() {
+ const amount = parseFloat(document.getElementById('totalBudget').value) || 0;
+ Alerts.setTotalBudget(amount);
+ App.notify(I18n.t('settings.budgetSaved'), 'success');
+ }
+
+ function saveThresholds() {
+ const warning = parseInt(document.getElementById('warningThreshold').value) || 80;
+ const danger = parseInt(document.getElementById('dangerThreshold').value) || 100;
+
+ if (warning >= danger) {
+ App.notify(I18n.t('settings.thresholdError'), 'error');
+ return;
+ }
+
+ Alerts.setThresholds(warning, danger);
+ App.notify(I18n.t('settings.thresholdSaved'), 'success');
+ }
+
+ function saveCategoryBudget(category, value) {
+ const amount = parseFloat(value) || 0;
+ Alerts.setCategoryBudget(category, amount);
+ App.notify(I18n.t('settings.budgetSaved'), 'success');
+ }
+
+ function openCategoryModal() {
+ document.getElementById('categoryForm').reset();
+ document.getElementById('categoryModal').classList.add('active');
+ }
+
+ function closeCategoryModal() {
+ document.getElementById('categoryModal').classList.remove('active');
+ }
+
+ function saveCategory() {
+ const icon = document.getElementById('catIcon').value;
+ const nameHe = document.getElementById('catNameHe').value;
+ const nameEn = document.getElementById('catNameEn').value || nameHe;
+ const color = document.getElementById('catColor').value;
+
+ if (!nameHe) {
+ App.notify(I18n.t('settings.enterName'), 'error');
+ return;
+ }
+
+ Tags.addCategory({ icon, nameHe, nameEn, color });
+ closeCategoryModal();
+ loadSettings();
+ App.notify(I18n.t('settings.categoryAdded'), 'success');
+ }
+
+ function deleteCustomCategory(id) {
+ if (confirm(I18n.t('settings.deleteCategory'))) {
+ Tags.deleteCategory(id);
+ loadSettings();
+ App.notify(I18n.t('settings.categoryDeleted'), 'success');
+ }
+ }
+
+ function loadSampleData() {
+ if (confirm(I18n.t('settings.sampleDataConfirm'))) {
+ SampleData.load();
+ }
+ }
+
+ function clearAllData() {
+ if (confirm(I18n.t('settings.deleteAllConfirm'))) {
+ if (confirm(I18n.t('settings.deleteAllConfirm2'))) {
+ SampleData.clear();
+ }
+ }
+ }
+
+ // Notification Settings
+ function loadNotificationSettings() {
+ const statusEl = document.getElementById('notificationStatus');
+ const toggleBtn = document.getElementById('notificationToggle');
+ const optionsEl = document.getElementById('notificationOptions');
+
+ if (!Notifications.isSupported()) {
+ statusEl.textContent = I18n.t('settings.notificationsNotSupported');
+ statusEl.className = 'notification-denied';
+ toggleBtn.disabled = true;
+ toggleBtn.textContent = I18n.t('settings.notSupported');
+ return;
+ }
+
+ const permission = Notifications.getPermission();
+ const settings = Notifications.getSettings();
+
+ switch (permission) {
+ case 'granted':
+ statusEl.textContent = I18n.t('settings.notificationsEnabled');
+ statusEl.className = 'notification-granted';
+ toggleBtn.textContent = I18n.t('settings.enabled');
+ toggleBtn.classList.remove('btn-primary');
+ toggleBtn.classList.add('btn-secondary');
+ optionsEl.style.display = 'block';
+ break;
+ case 'denied':
+ statusEl.textContent = I18n.t('settings.notificationsBlocked');
+ statusEl.className = 'notification-denied';
+ toggleBtn.textContent = I18n.t('settings.notificationsBlockedShort');
+ toggleBtn.disabled = true;
+ break;
+ default:
+ statusEl.textContent = I18n.t('settings.clickToEnable');
+ statusEl.className = 'notification-default';
+ toggleBtn.textContent = I18n.t('settings.enable');
+ }
+
+ // Load settings
+ document.getElementById('stockAlertsToggle').checked = settings.stockAlerts;
+ document.getElementById('budgetAlertsToggle').checked = settings.budgetWarnings;
+ document.getElementById('monthlyReminderToggle').checked = settings.monthlyReminder;
+ document.getElementById('reminderDay').value = settings.reminderDay || 1;
+ }
+
+ async function toggleNotifications() {
+ const result = await Notifications.requestPermission();
+
+ if (result.success) {
+ App.notify(I18n.t('settings.notificationsEnabledMsg'), 'success');
+ } else if (result.permission === 'denied') {
+ App.notify(I18n.t('settings.notificationsBlockedMsg'), 'error');
+ }
+
+ loadNotificationSettings();
+ }
+
+ function saveNotificationSettings() {
+ const settings = {
+ stockAlerts: document.getElementById('stockAlertsToggle').checked,
+ budgetWarnings: document.getElementById('budgetAlertsToggle').checked,
+ monthlyReminder: document.getElementById('monthlyReminderToggle').checked,
+ reminderDay: parseInt(document.getElementById('reminderDay').value) || 1
+ };
+
+ Notifications.updateSettings(settings);
+ App.notify(I18n.t('settings.settingsSaved'), 'success');
+ }
+
+ function saveBankAlertSettings() {
+ Alerts.setBankBalanceThreshold(parseFloat(document.getElementById('bankBalanceThreshold').value) || 0);
+ Alerts.setIncomeExpenseAlert(parseFloat(document.getElementById('incomeExpenseAlert').value) || 0);
+ App.notify(I18n.t('settings.settingsSaved'), 'success');
+ }
+
+ async function sendTestNotification() {
+ const success = await Notifications.show(I18n.t('settings.testNotificationTitle'), {
+ body: I18n.t('settings.testNotificationBody'),
+ type: 'test'
+ });
+
+ if (success) {
+ App.notify(I18n.t('settings.testSent'), 'success');
+ } else {
+ App.notify(I18n.t('settings.testError'), 'error');
+ }
+ }
+
+ // Summary Sender Settings
+ function loadSummarySettings() {
+ const s = Storage.getSummarySchedule();
+ document.getElementById('summaryEnabled').checked = s.enabled;
+ document.getElementById('summaryFrequency').value = s.frequency || 'weekly';
+ document.getElementById('summaryDayOfWeek').value = s.dayOfWeek !== undefined ? s.dayOfWeek : 5;
+ document.getElementById('summaryDayOfMonth').value = s.dayOfMonth || 1;
+ document.getElementById('summaryPhone').value = s.recipientPhone || '';
+ document.getElementById('summaryEmail').value = s.recipientEmail || '';
+ document.getElementById('callmebotApiKey').value = s.callmebotApiKey || '';
+ document.getElementById('summaryOptions').style.display = s.enabled ? 'block' : 'none';
+ onSummaryFreqChange();
+ }
+
+ function saveSummarySettings() {
+ const s = {
+ enabled: document.getElementById('summaryEnabled').checked,
+ frequency: document.getElementById('summaryFrequency').value,
+ dayOfWeek: parseInt(document.getElementById('summaryDayOfWeek').value),
+ dayOfMonth: parseInt(document.getElementById('summaryDayOfMonth').value) || 1,
+ recipientPhone: document.getElementById('summaryPhone').value.trim(),
+ recipientEmail: document.getElementById('summaryEmail').value.trim(),
+ callmebotApiKey: document.getElementById('callmebotApiKey').value.trim(),
+ lastSentDate: Storage.getSummarySchedule().lastSentDate
+ };
+ Storage.saveSummarySchedule(s);
+ document.getElementById('summaryOptions').style.display = s.enabled ? 'block' : 'none';
+ App.notify('הגדרות נשמרו', 'success');
+ }
+
+ function onSummaryFreqChange() {
+ const freq = document.getElementById('summaryFrequency').value;
+ document.getElementById('summaryDayOfWeekRow').style.display = freq === 'weekly' ? 'flex' : 'none';
+ document.getElementById('summaryDayOfMonthRow').style.display = freq === 'monthly' ? 'flex' : 'none';
+ }
+
+ function previewSummaryNow() {
+ if (typeof SummarySender !== 'undefined') {
+ SummarySender.showPreviewModal();
+ }
+ }
+
+ function testCallMeBot() {
+ const s = Storage.getSummarySchedule();
+ const phone = (s.recipientPhone || '').replace(/\D/g, '');
+ const apiKey = (s.callmebotApiKey || '').trim();
+ if (!phone || !apiKey) {
+ App.notify('הזן מספר טלפון ו-API Key תחילה', 'error');
+ return;
+ }
+ App.notify('שולח הודעת בדיקה...', 'info');
+ const testText = '✅ FinSight — הודעת בדיקה נשלחה בהצלחה!';
+ const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encodeURIComponent(testText)}&apikey=${encodeURIComponent(apiKey)}`;
+ // Use Image trick to bypass CORS — fetch() gets blocked by browser
+ const img = new Image();
+ img.onload = img.onerror = () => App.notify('✅ הבקשה נשלחה — בדוק את WhatsApp תוך שנייה', 'success');
+ img.src = url;
+ }
+
+ // Set bookmarklet href (pre-minified string — avoids toString() length issues)
+ (function() {
+ var bm = `(function(){var h=location.hostname,s=h.indexOf('cal')>-1?'כאל':h.indexOf('max')>-1?'מקס':h.indexOf('isracard')>-1?'ישראכרט':h;function ov(m,e,cat){var d=document.createElement('div');d.setAttribute('style','position:fixed;top:20px;right:20px;z-index:9999;background:#1e293b;color:#fff;padding:16px;border-radius:10px;font-family:Arial;font-size:14px;direction:rtl;max-width:300px');d.textContent=e?'❌ '+m:'✅ הועתקו '+m+' עסקאות! קטג: '+(cat||'לא נמצא')+' | חזור לפינסייט';document.body.appendChild(d);setTimeout(function(){d.remove()},7000)}function pd(v){var m=v.match(/(\\d{1,2})\\D(\\d{1,2})\\D(\\d{2,4})/);if(!m)return null;return(m[3].length==2?'20':'')+m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2)}var tx=[],dbgCells=[];[].forEach.call(document.querySelectorAll('.row.body'),function(r){if(!dbgCells.length){dbgCells=[].map.call(r.querySelectorAll('[class]'),function(c){return c.className+'='+c.textContent.trim().substring(0,20)});}var de=r.querySelector('.cell.date'),ne=r.querySelector('.cell.name'),ae=r.querySelector('.cell.sum'),cu=r.querySelector('.cell.currency');var ca=r.querySelector('.cell.category')||r.querySelector('[class*="categor"]');if(!ca){var al=[].filter.call(r.querySelectorAll('.cell'),function(c){var n=c.className;return n.indexOf('date')<0&&n.indexOf('name')<0&&n.indexOf('sum')<0&&n.indexOf('currency')<0&&n.indexOf('debit')<0&&n.indexOf('credit')<0&&c.textContent.trim().length>1&&isNaN(parseFloat(c.textContent.trim().replace(/[^\\d.]/g,'')));});ca=al[0]||null;}if(!de||!ae)return;var dt=pd(de.textContent);if(!dt)return;var aeText=ae.textContent.trim();var am=parseFloat(aeText.replace(/[^\\d.]/g,''));var cur=cu?cu.textContent.trim():'';if(!cur){if(/₪/.test(aeText)||/\\bILS\\b/.test(r.innerText))cur='ILS';else if(/R\$/.test(aeText)||/\\bBRL\\b/.test(r.innerText))cur='BRL';else{var cm=r.innerText.match(/\\b(USD|EUR|GBP|JPY|AUD|CAD|CHF)\\b/);if(cm)cur=cm[1];}}if(am>0)tx.push({date:dt,description:ne?ne.textContent.trim():dt,amount:am,categoryRaw:ca?ca.textContent.trim():'',currency:cur})});if(!tx.length){var ts=Array.from(document.querySelectorAll('table')),b=null,bs=0;ts.forEach(function(t){var sc=(t.innerText.match(/(\\d{1,2})\\D(\\d{1,2})/g)||[]).length;if(sc>bs){bs=sc;b=t}});if(b&&bs>1){var rw=b.querySelectorAll('tr'),hi=-1,hc=[];for(var i=0;i<rw.length;i++){var cs=[].map.call(rw[i].querySelectorAll('th,td'),function(c){return c.innerText.trim()});if(cs.join(' ').indexOf('תאריך')>-1){hi=i;hc=cs;break}}if(hi>-1){var dc=-1,mc=-1,ac=-1,cc=-1,kc=-1,oc=-1;hc.forEach(function(v,i){if(dc<0&&v.indexOf('תאריך')>-1)dc=i;if(mc<0&&v.indexOf('שם')>-1)mc=i;if(v.indexOf('חיוב')>-1)ac=i;if(oc<0&&v.indexOf('סכום')>-1&&v.indexOf('חיוב')<0)oc=i;if(cc<0&&(v.indexOf('קטגוריה')>-1||v.indexOf('ענף')>-1||v.indexOf('סוג')>-1))cc=i;if(kc<0&&(v.indexOf('מטבע')>-1||v.toLowerCase().indexOf('currency')>-1))kc=i});if(ac<0&&oc>-1){ac=oc;oc=-1;}if(dc>-1&&ac>-1)for(var j=hi+1;j<rw.length;j++){var c2=[].map.call(rw[j].querySelectorAll('td'),function(c){return c.innerText.trim()});var dt2=pd(c2[dc]||'');var am2=parseFloat((c2[ac]||'').replace(/[^\\d.]/g,''));if(dt2&&am2>0){var desc2=c2[mc]||c2[dc];var origCur2=kc>-1?(c2[kc]||'').trim():'';var oam2=oc>-1?parseFloat((c2[oc]||'').replace(/[^\\d.]/g,'')):0;var obj2={date:dt2,description:desc2,amount:am2,categoryRaw:cc>-1?(c2[cc]||''):'',currency:''};if(origCur2&&origCur2!=='ILS'&&origCur2!=='₪'){obj2.originalCurrency=origCur2;if(oam2>0)obj2.originalAmount=oam2;}tx.push(obj2)}}}}}if(!tx.length){ov('לא נמצאו עסקאות',1);return}var p=JSON.stringify({__finsight:1,source:s,sourceName:s,transactions:tx,_dbgCells:dbgCells,_tableHeaders:hc||[],exportedAt:new Date().toISOString()});navigator.clipboard?navigator.clipboard.writeText(p).then(function(){ov(tx.length,0,tx[0]?tx[0].categoryRaw:'')}).catch(function(){prompt('',p)}):prompt('',p)})()`;
+ var link = document.getElementById('bookmarkletLink');
+ if (link) link.href = 'javascript:' + bm;
+ })();
+
+ // Bank bookmarklet v3 – table + SPA-row + inline-text + debug overlay
+ (function() {
+ var bankBm = `(function(){try{var h=location.hostname,src=h.indexOf('leumi')>-1?'לאומי':h.indexOf('poalim')>-1?'פועלים':h.indexOf('mizrahi')>-1?'מזרחי-טפחות':h.indexOf('discount')>-1?'דיסקונט':h;function ov(msg,err){var d=document.createElement('div');d.setAttribute('style','position:fixed;top:20px;right:20px;z-index:9999;background:'+(err?'#7f1d1d':'#1e293b')+';color:#fff;padding:16px 20px 16px 16px;border-radius:10px;font-family:Arial;font-size:13px;direction:rtl;max-width:430px;white-space:pre-wrap;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,0.5);max-height:80vh;overflow-y:auto');d.textContent=msg;var btn=document.createElement('button');btn.textContent='✕';btn.setAttribute('style','float:left;background:none;border:none;color:#fff;cursor:pointer;font-size:18px;margin-right:6px;');btn.onclick=function(){d.remove();};d.prepend(btn);document.body.appendChild(d);if(!err)setTimeout(function(){d.remove();},10000);}function pd(v){var m=(v||'').match(/(\\d{1,2})[.\\/](\\d{1,2})[.\\/](\\d{2,4})/);if(!m)return null;return(m[3].length==2?'20':'')+m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);}function pn(s){return parseFloat((s||'').replace(/[^\\d.]/g,''))||0;}var txs=[],balance=null;var tables=Array.from(document.querySelectorAll('table'));var best=null,bs=0;tables.forEach(function(t){var sc=(t.innerText.match(/\\d{1,2}[.\\/]\\d{1,2}/g)||[]).length;if(sc>bs){bs=sc;best=t;}});if(best&&bs>1){var rows=Array.from(best.querySelectorAll('tr'));var hi=-1,hc=[];for(var i=0;i<rows.length;i++){var cs=Array.from(rows[i].querySelectorAll('th,td')).map(function(c){return c.innerText.trim();});if(cs.join(' ').indexOf('תאריך')>-1){hi=i;hc=cs;break;}}if(hi>-1){var dc=-1,mc=-1,dbc=-1,crc=-1,bc=-1;hc.forEach(function(v,i){if(dc<0&&v.indexOf('תאריך')>-1)dc=i;if(mc<0&&(v.indexOf('פרטים')>-1||v.indexOf('תיאור')>-1||v.indexOf('תנועה')>-1||v.indexOf('שם')>-1))mc=i;if(dbc<0&&v.indexOf('חובה')>-1)dbc=i;if(crc<0&&v.indexOf('זכות')>-1)crc=i;if(bc<0&&(v==='יתרה'||v.indexOf('יתרה')>-1))bc=i;});if(dc>-1){for(var j=hi+1;j<rows.length;j++){var cells=Array.from(rows[j].querySelectorAll('td')).map(function(c){return c.innerText.trim();});var dt=pd(cells[dc]||'');if(!dt)continue;var dbt=dbc>-1?pn(cells[dbc]):0,crt=crc>-1?pn(cells[crc]):0,amt=dbt>0?-dbt:crt>0?crt:0;if(amt===0)continue;var bal=bc>-1?pn(cells[bc])||undefined:undefined;txs.push({date:dt,description:mc>-1?cells[mc]:cells[1]||'',amount:amt,balance:bal});}}}}if(txs.length===0){var bodies=Array.from(document.querySelectorAll('ul,ol,tbody,div,section,main,article'));var bPar=null,bRows=[],bScore=0;bodies.forEach(function(b){var ch=Array.from(b.children);if(ch.length<3||ch.length>400)return;var tags={};ch.forEach(function(c){tags[c.tagName]=(tags[c.tagName]||0)+1;});var dom=Object.keys(tags).sort(function(a,b_){return tags[b_]-tags[a];})[0];if(!dom||tags[dom]/ch.length<0.7)return;var dCnt=ch.filter(function(c){return /\\d{1,2}[.\\/]\\d{1,2}/.test(c.innerText||'');}).length;if(dCnt<2)return;var score=dCnt*10+ch.length;if(score>bScore){bScore=score;bPar=b;bRows=ch;}});if(bPar){bRows.forEach(function(row){var dm=(row.innerText||'').match(/(\\d{1,2})[.\\/](\\d{1,2})[.\\/](\\d{2,4})/);if(!dm)return;var dt=pd(dm[0]);if(!dt)return;var leaves=Array.from(row.querySelectorAll('*')).filter(function(el){return el.children.length===0&&(el.innerText||'').trim().length>0;});var desc='',dbt=0,crt=0,bal;var amRe=/^\\d{1,3}(?:,\\d{3})*(?:\\.\\d{1,2})?$/;leaves.forEach(function(l){var t=(l.innerText||'').trim();if(amRe.test(t)){var v=pn(t);if(v>0.5){if(!dbt)dbt=v;else if(!crt)crt=v;else if(bal===undefined)bal=v;}}else if(t.length>2&&!/\\d{1,2}[.\\/]\\d{1,2}/.test(t)&&!desc)desc=t;});var amt=crt>0&&!dbt?crt:dbt>0?-dbt:0;if(amt!==0)txs.push({date:dt,description:desc,amount:amt,balance:bal});});}}if(txs.length===0){var lines=(document.body.innerText||'').split(/\\n/).map(function(s){return s.trim();}).filter(Boolean);var dtEx=/^\\d{1,2}[.\\/]\\d{1,2}[.\\/]\\d{2,4}$/;var dtIn=/(\\d{1,2}[.\\/]\\d{1,2}[.\\/]\\d{2,4})/;var amRe=/^\\d{1,3}(?:,\\d{3})*(?:\\.\\d{1,2})?$/;var hasEx=lines.some(function(l){return dtEx.test(l);});if(hasEx){for(var i=0;i<lines.length;i++){if(!dtEx.test(lines[i]))continue;var dt=pd(lines[i]);if(!dt)continue;var desc='',dbt=0,crt=0,bal;for(var k=i+1;k<Math.min(i+8,lines.length);k++){var ln=lines[k];if(dtEx.test(ln))break;if(!desc&&ln.length>2&&!amRe.test(ln)&&!/^\\d+$/.test(ln))desc=ln;else if(amRe.test(ln)){var v=pn(ln);if(v>0){if(!dbt)dbt=v;else if(!crt)crt=v;else bal=v;}}}var amt=crt>0&&!dbt?crt:dbt>0?-dbt:0;if(amt!==0)txs.push({date:dt,description:desc,amount:amt,balance:bal});}}else{for(var i=0;i<lines.length;i++){var m=lines[i].match(dtIn);if(!m)continue;var dt=pd(m[1]);if(!dt)continue;var rest=lines[i].replace(m[1],'').trim();var nums=[];rest=rest.replace(/(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{1,2})?)/g,function(n){nums.push(pn(n));return '\\t';});var desc=rest.replace(/[\\t\\s]+/g,' ').trim();if(desc.length<2&&i+1<lines.length&&lines[i+1].length>2)desc=lines[i+1];if(nums.length>=1){var dbt=nums[0]||0,crt=nums.length>1?nums[1]:0,bal=nums.length>2?nums[2]:undefined;var amt=crt>0&&!dbt?crt:dbt>0?-dbt:0;if(amt!==0)txs.push({date:dt,description:desc,amount:amt,balance:bal});}}}}if(balance===null&&txs.length>0&&txs[0].balance)balance=txs[0].balance;if(balance===null){var bEls=Array.from(document.querySelectorAll('*')).slice(0,1500);for(var i=0;i<bEls.length&&balance===null;i++){var el=bEls[i];if(el.children.length>0)continue;var etxt=(el.textContent||'').trim();if(etxt==='יתרה'||/^יתרה/.test(etxt)){var par=el.parentElement;for(var up=0;up<5&&par&&balance===null;up++,par=par.parentElement){var bNums=(par.innerText||'').match(/\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?/g)||[];for(var ni=0;ni<bNums.length;ni++){var vv=pn(bNums[ni]);if(vv>100&&vv<9999999){balance=vv;break;}}}}}}if(txs.length===0){var dbg=(document.body.innerText||'').replace(/\\s+/g,' ').trim().substring(0,600);ov('❌ לא נמצאו תנועות.\\n\\nוודא שאתה בדף שמציג את רשימת התנועות.\\n\\nטקסט שנראה בעמוד:\\n'+dbg,true);return;}var payload=JSON.stringify({__finsight_bank:true,source:src,balance:balance,transactions:txs,exportedAt:new Date().toISOString()});var msg='✅ '+txs.length+' תנועות'+(balance!==null?' | יתרה: ₪'+Math.abs(balance).toLocaleString('he-IL'):'')+' \\nחזור לפינסייט ← חשבונות בנק ← ייבוא מסימניה';navigator.clipboard?navigator.clipboard.writeText(payload).then(function(){ov(msg,false);}).catch(function(){prompt('',payload);}):prompt('',payload);}catch(e){var d=document.createElement('div');d.setAttribute('style','position:fixed;top:20px;right:20px;z-index:9999;background:#7f1d1d;color:#fff;padding:16px;border-radius:10px;font-family:Arial;font-size:13px;max-width:360px;');d.textContent='FinSight error: '+e.message;document.body.appendChild(d);setTimeout(function(){d.remove();},15000);}})()`;
+ var bankLink = document.getElementById('bankBookmarkletLink');
+ if (bankLink) bankLink.href = 'javascript:' + bankBm;
+ })();
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

@@ -3,695 +3,687 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <title>WizeMoney - קרנות השתלמות מיי גמל נט</title>
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <title>WizeMoney - קרנות השתלמות מיי גמל נט</title>
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: #fff;
-            padding: 20px;
-        }
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+ background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+ min-height: 100vh;
+ color: #fff;
+ padding: 20px;
+ }
 
-        body.ltr {
-            direction: ltr;
-        }
+ body.ltr {
+ direction: ltr;
+ }
 
-        .dashboard {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+ .dashboard {
+ max-width: 1400px;
+ margin: 0 auto;
+ }
 
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+ header {
+ text-align: center;
+ margin-bottom: 40px;
+ }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+ header h1 {
+ font-size: 2.5rem;
+ margin-bottom: 10px;
+ background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ background-clip: text;
+ }
 
-        header p {
-            color: #8892b0;
-            font-size: 1.1rem;
-        }
+ header p {
+ color: #8892b0;
+ font-size: 1.1rem;
+ }
 
-        .nav-links {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
+ .nav-links {
+ margin-top: 15px;
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: center;
+ gap: 10px;
+ }
 
-        .nav-links a {
-            color: #00d2ff;
-            text-decoration: none;
-            padding: 8px 16px;
-            border: 1px solid #00d2ff;
-            border-radius: 20px;
-            transition: all 0.3s;
-        }
+ .nav-links a {
+ color: #00d2ff;
+ text-decoration: none;
+ padding: 8px 16px;
+ border: 1px solid #00d2ff;
+ border-radius: 20px;
+ transition: all 0.3s;
+ }
 
-        .nav-links a:hover, .nav-links a.active {
-            background: #00d2ff;
-            color: #1a1a2e;
-        }
+ .nav-links a:hover, .nav-links a.active {
+ background: #00d2ff;
+ color: #1a1a2e;
+ }
 
-        .source-badge {
-            display: inline-block;
-            background: #00d2ff;
-            color: #1a1a2e;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-left: 10px;
-        }
+ .source-badge {
+ display: inline-block;
+ background: #00d2ff;
+ color: #1a1a2e;
+ padding: 4px 12px;
+ border-radius: 20px;
+ font-size: 0.75rem;
+ font-weight: bold;
+ margin-left: 10px;
+ }
 
-        .table-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 20px;
-            overflow-x: auto;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 30px;
-        }
+ .table-container {
+ background: rgba(255, 255, 255, 0.05);
+ border-radius: 16px;
+ padding: 20px;
+ overflow-x: auto;
+ backdrop-filter: blur(10px);
+ border: 1px solid rgba(255, 255, 255, 0.1);
+ margin-bottom: 30px;
+ }
 
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .section-title {
+ font-size: 1.5rem;
+ margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .section-title .icon {
-            font-size: 1.8rem;
-        }
+ .section-title .icon {
+ font-size: 1.8rem;
+ }
 
-        .sort-indicator {
-            font-size: 0.9rem;
-            color: #00d2ff;
-            margin-right: auto;
-        }
+ .sort-indicator {
+ font-size: 0.9rem;
+ color: #00d2ff;
+ margin-right: auto;
+ }
 
-        body.ltr .sort-indicator {
-            margin-right: 0;
-            margin-left: auto;
-        }
+ body.ltr .sort-indicator {
+ margin-right: 0;
+ margin-left: auto;
+ }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+ table {
+ width: 100%;
+ border-collapse: collapse;
+ }
 
-        th, td {
-            padding: 15px 12px;
-            text-align: right;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+ th, td {
+ padding: 15px 12px;
+ text-align: right;
+ border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+ }
 
-        body.ltr th, body.ltr td {
-            text-align: left;
-        }
+ body.ltr th, body.ltr td {
+ text-align: left;
+ }
 
-        th {
-            background: rgba(0, 210, 255, 0.1);
-            color: #00d2ff;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
+ th {
+ background: rgba(0, 210, 255, 0.1);
+ color: #00d2ff;
+ font-weight: 600;
+ text-transform: uppercase;
+ font-size: 0.85rem;
+ letter-spacing: 0.5px;
+ }
 
-        th.sorted {
-            background: rgba(0, 210, 255, 0.25);
-        }
+ th.sorted {
+ background: rgba(0, 210, 255, 0.25);
+ }
 
-        tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
+ tr:hover {
+ background: rgba(255, 255, 255, 0.05);
+ }
 
-        .rank {
-            width: 50px;
-            text-align: center;
-        }
+ .rank {
+ width: 50px;
+ text-align: center;
+ }
 
-        .rank-1 { color: #ffd700; font-weight: bold; }
-        .rank-2 { color: #c0c0c0; font-weight: bold; }
-        .rank-3 { color: #cd7f32; font-weight: bold; }
+ .rank-1 { color: #ffd700; font-weight: bold; }
+ .rank-2 { color: #c0c0c0; font-weight: bold; }
+ .rank-3 { color: #cd7f32; font-weight: bold; }
 
-        .positive { color: #00ff88; }
-        .negative { color: #ff4757; }
+ .positive { color: #00ff88; }
+ .negative { color: #ff4757; }
 
-        .fund-name {
-            font-weight: 500;
-        }
+ .fund-name {
+ font-weight: 500;
+ }
 
-        .company {
-            color: #8892b0;
-            font-size: 0.9rem;
-        }
+ .company {
+ color: #8892b0;
+ font-size: 0.9rem;
+ }
 
-        .performance {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
+ .performance {
+ font-weight: 600;
+ font-size: 1.1rem;
+ }
 
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+ .stats-row {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 20px;
+ margin-bottom: 30px;
+ }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+ .stat-card {
+ background: rgba(255, 255, 255, 0.05);
+ border-radius: 12px;
+ padding: 20px;
+ text-align: center;
+ border: 1px solid rgba(255, 255, 255, 0.1);
+ }
 
-        .stat-card h3 {
-            color: #8892b0;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
+ .stat-card h3 {
+ color: #8892b0;
+ font-size: 0.9rem;
+ margin-bottom: 10px;
+ }
 
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+ .stat-card .value {
+ font-size: 2rem;
+ font-weight: bold;
+ background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ background-clip: text;
+ }
 
-        .tables-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
+ .tables-grid {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 20px;
+ }
 
-        .analysis-section {
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(58, 123, 213, 0.1) 100%);
-            border: 2px solid #00d2ff;
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
+ .analysis-section {
+ background: linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(58, 123, 213, 0.1) 100%);
+ border: 2px solid #00d2ff;
+ border-radius: 16px;
+ padding: 25px;
+ margin-bottom: 30px;
+ }
 
-        .analysis-title {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #00d2ff;
-        }
+ .analysis-title {
+ font-size: 1.4rem;
+ margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ color: #00d2ff;
+ }
 
-        .winner-card {
-            background: rgba(0, 210, 255, 0.15);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
+ .winner-card {
+ background: rgba(0, 210, 255, 0.15);
+ border-radius: 12px;
+ padding: 20px;
+ display: flex;
+ align-items: center;
+ gap: 20px;
+ flex-wrap: wrap;
+ }
 
-        .winner-badge {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            color: #1a1a2e;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+ .winner-badge {
+ background: linear-gradient(135deg, #ffd700, #ffaa00);
+ color: #1a1a2e;
+ padding: 8px 16px;
+ border-radius: 25px;
+ font-weight: bold;
+ font-size: 0.9rem;
+ display: flex;
+ align-items: center;
+ gap: 5px;
+ }
 
-        .winner-badge.silver {
-            background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
-        }
+ .winner-badge.silver {
+ background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+ }
 
-        .winner-badge.bronze {
-            background: linear-gradient(135deg, #cd7f32, #b87333);
-        }
+ .winner-badge.bronze {
+ background: linear-gradient(135deg, #cd7f32, #b87333);
+ }
 
-        .winners-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+ .winners-grid {
+ display: flex;
+ flex-direction: column;
+ gap: 15px;
+ }
 
-        .winner-card.second {
-            background: rgba(192, 192, 192, 0.1);
-        }
+ .winner-card.second {
+ background: rgba(192, 192, 192, 0.1);
+ }
 
-        .winner-card.third {
-            background: rgba(205, 127, 50, 0.1);
-        }
+ .winner-card.third {
+ background: rgba(205, 127, 50, 0.1);
+ }
 
-        .winner-info {
-            flex: 1;
-            min-width: 200px;
-        }
+ .winner-info {
+ flex: 1;
+ min-width: 200px;
+ }
 
-        .winner-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 5px;
-        }
+ .winner-name {
+ font-size: 1.3rem;
+ font-weight: bold;
+ color: #fff;
+ margin-bottom: 5px;
+ }
 
-        .winner-company {
-            color: #8892b0;
-            font-size: 0.95rem;
-        }
+ .winner-company {
+ color: #8892b0;
+ font-size: 0.95rem;
+ }
 
-        .winner-stats {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+ .winner-stats {
+ display: flex;
+ gap: 15px;
+ flex-wrap: wrap;
+ }
 
-        .winner-stat {
-            text-align: center;
-            padding: 10px 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-        }
+ .winner-stat {
+ text-align: center;
+ padding: 10px 15px;
+ background: rgba(0, 0, 0, 0.2);
+ border-radius: 8px;
+ }
 
-        .winner-stat-value {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #00ff88;
-        }
+ .winner-stat-value {
+ font-size: 1.2rem;
+ font-weight: bold;
+ color: #00ff88;
+ }
 
-        .winner-stat-label {
-            font-size: 0.75rem;
-            color: #8892b0;
-            margin-top: 3px;
-        }
+ .winner-stat-label {
+ font-size: 0.75rem;
+ color: #8892b0;
+ margin-top: 3px;
+ }
 
-        .analysis-note {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: #8892b0;
-            border-right: 3px solid #00d2ff;
-        }
+ .analysis-note {
+ margin-top: 15px;
+ padding: 12px;
+ background: rgba(255, 255, 255, 0.05);
+ border-radius: 8px;
+ font-size: 0.9rem;
+ color: #8892b0;
+ border-right: 3px solid #00d2ff;
+ }
 
-        body.ltr .analysis-note {
-            border-right: none;
-            border-left: 3px solid #00d2ff;
-        }
+ body.ltr .analysis-note {
+ border-right: none;
+ border-left: 3px solid #00d2ff;
+ }
 
-        .data-source {
-            text-align: center;
-            margin-top: 30px;
-            color: #8892b0;
-            font-size: 0.9rem;
-        }
+ .data-source {
+ text-align: center;
+ margin-top: 30px;
+ color: #8892b0;
+ font-size: 0.9rem;
+ }
 
-        .data-source a {
-            color: #00d2ff;
-            text-decoration: none;
-        }
+ .data-source a {
+ color: #00d2ff;
+ text-decoration: none;
+ }
 
-        @media (max-width: 1200px) {
-            .tables-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+ @media (max-width: 1200px) {
+ .tables-grid {
+ grid-template-columns: 1fr;
+ }
+ }
 
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
+ @media (max-width: 768px) {
+ header h1 {
+ font-size: 1.8rem;
+ }
 
-            th, td {
-                padding: 10px 8px;
-                font-size: 0.85rem;
-            }
-        }
+ th, td {
+ padding: 10px 8px;
+ font-size: 0.85rem;
+ }
+ }
 
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="../js/i18n.js"></script>
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <script src="../js/i18n.js"></script>
 </head>
 <body>
-    <div class="dashboard">
-        <header>
-            <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img" style="display: block; margin: 0 auto 15px; width: 160px; height: auto; border-radius: 12px;">
-            <h1 data-i18n="market.pages.mygemelTrainingTitle">קרנות השתלמות - iGemel-Net</h1>
-            <p data-i18n="market.pages.mygemelTrainingSubtitle">השוואת קרנות השתלמות מובילות - נתונים אמיתיים</p>
-            <span class="source-badge" id="dataDate">iGemel-Net</span>
-            <div class="nav-links">
-                <a href="../index.html" data-i18n="market.nav.dashboard">🏠 דאשבורד ראשי</a>
-                <a href="market-products.html" data-i18n="market.nav.marketProducts">🏪 מוצרים בשוק</a>
-                <a href="mygemel.html" data-i18n="market.nav.mygemel">מיי גמל נט</a>
-                <a href="mygemel-training.html" class="active" data-i18n="market.nav.trainingShort">השתלמות</a>
-                <a href="mygemel-pension.html" data-i18n="market.nav.pensionShort">פנסיה</a>
-                <a href="mygemel-gemel.html" data-i18n="market.nav.gemelShort">גמל</a>
-                <a href="pension-optimizer.html" data-i18n="market.nav.optimizer">🎯 אופטימיזטור</a>
-            </div>
-        </header>
+ <div class="dashboard">
+ <header>
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img" style="display: block; margin: 0 auto 15px; width: 160px; height: auto; border-radius: 12px;">
+ <h1 data-i18n="market.pages.mygemelTrainingTitle">קרנות השתלמות - iGemel-Net</h1>
+ <p data-i18n="market.pages.mygemelTrainingSubtitle">השוואת קרנות השתלמות מובילות - נתונים אמיתיים</p>
+ <span class="source-badge" id="dataDate">iGemel-Net</span>
+ <div class="nav-links">
+ <a href="../index.html" data-i18n="market.nav.dashboard">🏠 דאשבורד ראשי</a>
+ <a href="market-products.html" data-i18n="market.nav.marketProducts">🏪 מוצרים בשוק</a>
+ <a href="mygemel.html" data-i18n="market.nav.mygemel">מיי גמל נט</a>
+ <a href="mygemel-training.html" class="active" data-i18n="market.nav.trainingShort">השתלמות</a>
+ <a href="mygemel-pension.html" data-i18n="market.nav.pensionShort">פנסיה</a>
+ <a href="mygemel-gemel.html" data-i18n="market.nav.gemelShort">גמל</a>
+ <a href="pension-optimizer.html" data-i18n="market.nav.optimizer">🎯 אופטימיזטור</a>
+ </div>
+ </header>
 
-        <div class="stats-row" id="statsRow">
-            <!-- Stats will be populated by JS -->
-        </div>
+ <div class="stats-row" id="statsRow">
+ <!-- Stats will be populated by JS -->
+ </div>
 
-        <div class="analysis-section">
-            <h2 class="analysis-title">
-                <span>🏆</span>
-                <span data-i18n="market.labels.topFundsAnalysis">ניתוח: הקרנות המובילות</span>
-            </h2>
-            <div class="winners-grid" id="winnersGrid">
-                <!-- Winners will be populated by JS -->
-            </div>
-            <div class="analysis-note" id="analysisNote"></div>
-        </div>
+ <div class="analysis-section">
+ <h2 class="analysis-title">
+ <span>🏆</span>
+ <span data-i18n="market.labels.topFundsAnalysis">ניתוח: הקרנות המובילות</span>
+ </h2>
+ <div class="winners-grid" id="winnersGrid">
+ <!-- Winners will be populated by JS -->
+ </div>
+ <div class="analysis-note" id="analysisNote"></div>
+ </div>
 
-        <div class="tables-grid">
-            <div class="table-container">
-                <h2 class="section-title">
-                    <span class="icon">🏆</span>
-                    <span data-i18n="market.labels.sortedBy5y">ממוין לפי 5 שנים</span>
-                    <span class="sort-indicator">▼</span>
-                </h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="rank">#</th>
-                            <th data-i18n="market.labels.fundName">שם הקרן</th>
-                            <th data-i18n="market.labels.company">חברה</th>
-                            <th class="sorted">5 שנים ▼</th>
-                            <th data-i18n="market.labels.y3">3 שנים</th>
-                            <th data-i18n="market.labels.y1">שנה</th>
-                            <th data-i18n="market.labels.month">חודש</th>
-                        </tr>
-                    </thead>
-                    <tbody id="year5-table"></tbody>
-                </table>
-            </div>
+ <div class="tables-grid">
+ <div class="table-container">
+ <h2 class="section-title">
+ <span class="icon">🏆</span>
+ <span data-i18n="market.labels.sortedBy5y">ממוין לפי 5 שנים</span>
+ <span class="sort-indicator">▼</span>
+ </h2>
+ <table>
+ <thead>
+ <tr>
+ <th class="rank">#</th>
+ <th data-i18n="market.labels.fundName">שם הקרן</th>
+ <th data-i18n="market.labels.company">חברה</th>
+ <th class="sorted">5 שנים ▼</th>
+ <th data-i18n="market.labels.y3">3 שנים</th>
+ <th data-i18n="market.labels.y1">שנה</th>
+ <th data-i18n="market.labels.month">חודש</th>
+ </tr>
+ </thead>
+ <tbody id="year5-table"></tbody>
+ </table>
+ </div>
 
-            <div class="table-container">
-                <h2 class="section-title">
-                    <span class="icon">🚀</span>
-                    <span data-i18n="market.labels.sortedBy3y">ממוין לפי 3 שנים</span>
-                    <span class="sort-indicator">▼</span>
-                </h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="rank">#</th>
-                            <th data-i18n="market.labels.fundName">שם הקרן</th>
-                            <th data-i18n="market.labels.company">חברה</th>
-                            <th class="sorted">3 שנים ▼</th>
-                            <th data-i18n="market.labels.y5">5 שנים</th>
-                            <th data-i18n="market.labels.y1">שנה</th>
-                            <th data-i18n="market.labels.month">חודש</th>
-                        </tr>
-                    </thead>
-                    <tbody id="year3-table"></tbody>
-                </table>
-            </div>
+ <div class="table-container">
+ <h2 class="section-title">
+ <span class="icon">🚀</span>
+ <span data-i18n="market.labels.sortedBy3y">ממוין לפי 3 שנים</span>
+ <span class="sort-indicator">▼</span>
+ </h2>
+ <table>
+ <thead>
+ <tr>
+ <th class="rank">#</th>
+ <th data-i18n="market.labels.fundName">שם הקרן</th>
+ <th data-i18n="market.labels.company">חברה</th>
+ <th class="sorted">3 שנים ▼</th>
+ <th data-i18n="market.labels.y5">5 שנים</th>
+ <th data-i18n="market.labels.y1">שנה</th>
+ <th data-i18n="market.labels.month">חודש</th>
+ </tr>
+ </thead>
+ <tbody id="year3-table"></tbody>
+ </table>
+ </div>
 
-            <div class="table-container">
-                <h2 class="section-title">
-                    <span class="icon">📈</span>
-                    <span data-i18n="market.labels.sortedBy1y">ממוין לפי שנה אחרונה</span>
-                    <span class="sort-indicator">▼</span>
-                </h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="rank">#</th>
-                            <th data-i18n="market.labels.fundName">שם הקרן</th>
-                            <th data-i18n="market.labels.company">חברה</th>
-                            <th class="sorted">שנה ▼</th>
-                            <th data-i18n="market.labels.y5">5 שנים</th>
-                            <th data-i18n="market.labels.y3">3 שנים</th>
-                            <th data-i18n="market.labels.month">חודש</th>
-                        </tr>
-                    </thead>
-                    <tbody id="year1-table"></tbody>
-                </table>
-            </div>
+ <div class="table-container">
+ <h2 class="section-title">
+ <span class="icon">📈</span>
+ <span data-i18n="market.labels.sortedBy1y">ממוין לפי שנה אחרונה</span>
+ <span class="sort-indicator">▼</span>
+ </h2>
+ <table>
+ <thead>
+ <tr>
+ <th class="rank">#</th>
+ <th data-i18n="market.labels.fundName">שם הקרן</th>
+ <th data-i18n="market.labels.company">חברה</th>
+ <th class="sorted">שנה ▼</th>
+ <th data-i18n="market.labels.y5">5 שנים</th>
+ <th data-i18n="market.labels.y3">3 שנים</th>
+ <th data-i18n="market.labels.month">חודש</th>
+ </tr>
+ </thead>
+ <tbody id="year1-table"></tbody>
+ </table>
+ </div>
 
-            <div class="table-container">
-                <h2 class="section-title">
-                    <span class="icon">📅</span>
-                    <span data-i18n="market.labels.sortedByMonth">ממוין לפי חודש אחרון</span>
-                    <span class="sort-indicator">▼</span>
-                </h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="rank">#</th>
-                            <th data-i18n="market.labels.fundName">שם הקרן</th>
-                            <th data-i18n="market.labels.company">חברה</th>
-                            <th class="sorted">חודש ▼</th>
-                            <th data-i18n="market.labels.y5">5 שנים</th>
-                            <th data-i18n="market.labels.y3">3 שנים</th>
-                            <th data-i18n="market.labels.y1">שנה</th>
-                        </tr>
-                    </thead>
-                    <tbody id="month-table"></tbody>
-                </table>
-            </div>
-        </div>
+ <div class="table-container">
+ <h2 class="section-title">
+ <span class="icon">📅</span>
+ <span data-i18n="market.labels.sortedByMonth">ממוין לפי חודש אחרון</span>
+ <span class="sort-indicator">▼</span>
+ </h2>
+ <table>
+ <thead>
+ <tr>
+ <th class="rank">#</th>
+ <th data-i18n="market.labels.fundName">שם הקרן</th>
+ <th data-i18n="market.labels.company">חברה</th>
+ <th class="sorted">חודש ▼</th>
+ <th data-i18n="market.labels.y5">5 שנים</th>
+ <th data-i18n="market.labels.y3">3 שנים</th>
+ <th data-i18n="market.labels.y1">שנה</th>
+ </tr>
+ </thead>
+ <tbody id="month-table"></tbody>
+ </table>
+ </div>
+ </div>
 
-        <div class="data-source">
-            <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
-            <a href="https://www.igemel-net.co.il/" target="_blank">iGemel-Net.co.il</a> -
-            <span id="lastUpdate">טוען...</span>
-        </div>
-    </div>
+ <div class="data-source">
+ <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
+ <a href="https://www.igemel-net.co.il/" target="_blank">iGemel-Net.co.il</a> -
+ <span id="lastUpdate">טוען...</span>
+ </div>
+ </div>
 
-    <script src="../data/mygemel-funds.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        let currentLang = 'he';
+ <script src="../data/mygemel-funds.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ let currentLang = 'he';
 
-        function loadLanguage() {
-            const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
-            currentLang = settings.language || 'he';
-            if (typeof I18n !== 'undefined') {
-                I18n.currentLanguage = currentLang;
-                I18n.apply();
-            }
-            document.body.classList.toggle('ltr', currentLang !== 'he');
-            document.documentElement.lang = currentLang;
-            document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-        }
+ function loadLanguage() {
+ const settings = JSON.parse(localStorage.getItem('finance_settings') || '{}');
+ currentLang = settings.language || 'he';
+ if (typeof I18n !== 'undefined') {
+ I18n.currentLanguage = currentLang;
+ I18n.apply();
+ }
+ document.body.classList.toggle('ltr', currentLang !== 'he');
+ document.documentElement.lang = currentLang;
+ document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+ }
 
 
-        function getFundsData() {
-            return MyGemelFunds.getData('training');
-        }
+ function getFundsData() {
+ return MyGemelFunds.getData('training');
+ }
 
-        function updateDataDate() {
-            const lastUpdate = MyGemelFunds.getLastUpdate();
-            const dateEl = document.getElementById('dataDate');
-            const lastUpdateEl = document.getElementById('lastUpdate');
-            if (lastUpdate) {
-                const [year, month] = lastUpdate.split('-');
-                const monthNames = {
-                    he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
-                    en: { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' }
-                };
-                const monthName = monthNames[currentLang][month] || month;
-                dateEl.textContent = `MyGemel.net - ${monthName} ${year}`;
-                lastUpdateEl.textContent = `${monthName} ${year}`;
-            }
-        }
+ function updateDataDate() {
+ const lastUpdate = MyGemelFunds.getLastUpdate();
+ const dateEl = document.getElementById('dataDate');
+ const lastUpdateEl = document.getElementById('lastUpdate');
+ if (lastUpdate) {
+ const [year, month] = lastUpdate.split('-');
+ const monthNames = {
+ he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
+ en: { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' }
+ };
+ const monthName = monthNames[currentLang][month] || month;
+ dateEl.textContent = `MyGemel.net - ${monthName} ${year}`;
+ lastUpdateEl.textContent = `${monthName} ${year}`;
+ }
+ }
 
-        function updateStats() {
-            const fundsData = getFundsData();
-            if (fundsData.length === 0) return;
+ function updateStats() {
+ const fundsData = getFundsData();
+ if (fundsData.length === 0) return;
 
-            const maxMonth = Math.max(...fundsData.map(f => f.month || 0));
-            const maxYear1 = Math.max(...fundsData.map(f => f.year1 || 0));
-            const maxYear5 = Math.max(...fundsData.filter(f => f.year5).map(f => f.year5));
+ const maxMonth = Math.max(...fundsData.map(f => f.month || 0));
+ const maxYear1 = Math.max(...fundsData.map(f => f.year1 || 0));
+ const maxYear5 = Math.max(...fundsData.filter(f => f.year5).map(f => f.year5));
 
-            const stats = [
-                { labelKey: 'market.labels.totalFunds', value: fundsData.length },
-                { labelKey: 'market.labels.bestMonthly', value: maxMonth.toFixed(2) + '%' },
-                { labelKey: 'market.labels.bestYearly', value: maxYear1.toFixed(2) + '%' },
-                { labelKey: 'market.labels.best5y', value: maxYear5.toFixed(2) + '%' }
-            ];
+ const stats = [
+ { labelKey: 'market.labels.totalFunds', value: fundsData.length },
+ { labelKey: 'market.labels.bestMonthly', value: maxMonth.toFixed(2) + '%' },
+ { labelKey: 'market.labels.bestYearly', value: maxYear1.toFixed(2) + '%' },
+ { labelKey: 'market.labels.best5y', value: maxYear5.toFixed(2) + '%' }
+ ];
 
-            const statsRow = document.getElementById('statsRow');
-            statsRow.innerHTML = stats.map(stat => `
-                <div class="stat-card">
-                    <h3>${I18n.t(stat.labelKey)}</h3>
-                    <div class="value">${stat.value}</div>
-                </div>
-            `).join('');
-        }
+ const statsRow = document.getElementById('statsRow');
+ statsRow.innerHTML = stats.map(stat => `
+ <div class="stat-card">
+ <h3>${I18n.t(stat.labelKey)}</h3>
+ <div class="value">${stat.value}</div>
+ </div>
+ `).join('');
+ }
 
-        function updateWinners() {
-            const fundsData = getFundsData();
-            if (fundsData.length === 0) return;
+ function updateWinners() {
+ const fundsData = getFundsData();
+ if (fundsData.length === 0) return;
 
-            const sorted = [...fundsData]
-                .filter(f => f.year5 !== null && f.year5 !== undefined)
-                .sort((a, b) => b.year5 - a.year5)
-                .slice(0, 3);
+ const sorted = [...fundsData]
+ .filter(f => f.year5 !== null && f.year5 !== undefined)
+ .sort((a, b) => b.year5 - a.year5)
+ .slice(0, 3);
 
-            const badges = ['winner-badge', 'winner-badge silver', 'winner-badge bronze'];
-            const icons = ['🥇', '🥈', '🥉'];
-            const placeKeys = ['market.labels.place1', 'market.labels.place2', 'market.labels.place3'];
-            const cardClasses = ['winner-card', 'winner-card second', 'winner-card third'];
+ const badges = ['winner-badge', 'winner-badge silver', 'winner-badge bronze'];
+ const icons = ['🥇', '🥈', '🥉'];
+ const placeKeys = ['market.labels.place1', 'market.labels.place2', 'market.labels.place3'];
+ const cardClasses = ['winner-card', 'winner-card second', 'winner-card third'];
 
-            const winnersGrid = document.getElementById('winnersGrid');
-            winnersGrid.innerHTML = sorted.map((fund, i) => `
-                <div class="${cardClasses[i]}">
-                    <div class="${badges[i]}">
-                        <span>${icons[i]}</span>
-                        <span>${I18n.t(placeKeys[i])}</span>
-                    </div>
-                    <div class="winner-info">
-                        <div class="winner-name">${currentLang === 'he' ? fund.nameHe : fund.nameEn}</div>
-                        <div class="winner-company">${currentLang === 'he' ? fund.companyHe : fund.companyEn}</div>
-                    </div>
-                    <div class="winner-stats">
-                        <div class="winner-stat">
-                            <div class="winner-stat-value">${fund.year5?.toFixed(2) || '-'}%</div>
-                            <div class="winner-stat-label">${I18n.t('market.labels.y5')}</div>
-                        </div>
-                        <div class="winner-stat">
-                            <div class="winner-stat-value">${fund.year3?.toFixed(2) || '-'}%</div>
-                            <div class="winner-stat-label">${I18n.t('market.labels.y3')}</div>
-                        </div>
-                        <div class="winner-stat">
-                            <div class="winner-stat-value">${fund.year1?.toFixed(2) || '-'}%</div>
-                            <div class="winner-stat-label">${I18n.t('market.labels.y1')}</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+ const winnersGrid = document.getElementById('winnersGrid');
+ winnersGrid.innerHTML = sorted.map((fund, i) => `
+ <div class="${cardClasses[i]}">
+ <div class="${badges[i]}">
+ <span>${icons[i]}</span>
+ <span>${I18n.t(placeKeys[i])}</span>
+ </div>
+ <div class="winner-info">
+ <div class="winner-name">${currentLang === 'he' ? fund.nameHe : fund.nameEn}</div>
+ <div class="winner-company">${currentLang === 'he' ? fund.companyHe : fund.companyEn}</div>
+ </div>
+ <div class="winner-stats">
+ <div class="winner-stat">
+ <div class="winner-stat-value">${fund.year5?.toFixed(2) || '-'}%</div>
+ <div class="winner-stat-label">${I18n.t('market.labels.y5')}</div>
+ </div>
+ <div class="winner-stat">
+ <div class="winner-stat-value">${fund.year3?.toFixed(2) || '-'}%</div>
+ <div class="winner-stat-label">${I18n.t('market.labels.y3')}</div>
+ </div>
+ <div class="winner-stat">
+ <div class="winner-stat-value">${fund.year1?.toFixed(2) || '-'}%</div>
+ <div class="winner-stat-label">${I18n.t('market.labels.y1')}</div>
+ </div>
+ </div>
+ </div>
+ `).join('');
 
-            document.getElementById('analysisNote').textContent = I18n.t('market.labels.analysisNote');
-        }
+ document.getElementById('analysisNote').textContent = I18n.t('market.labels.analysisNote');
+ }
 
-        function getRankClass(rank) {
-            if (rank === 1) return 'rank-1';
-            if (rank === 2) return 'rank-2';
-            if (rank === 3) return 'rank-3';
-            return '';
-        }
+ function getRankClass(rank) {
+ if (rank === 1) return 'rank-1';
+ if (rank === 2) return 'rank-2';
+ if (rank === 3) return 'rank-3';
+ return '';
+ }
 
-        function formatPercent(value, isPrimary = false) {
-            if (value === null || value === undefined) {
-                return '<span style="color: #8892b0;">-</span>';
-            }
-            const className = value >= 0 ? 'positive' : 'negative';
-            const boldClass = isPrimary ? ' performance' : '';
-            return `<span class="${className}${boldClass}">${value.toFixed(2)}%</span>`;
-        }
+ function formatPercent(value, isPrimary = false) {
+ if (value === null || value === undefined) {
+ return '<span style="color: #8892b0;">-</span>';
+ }
+ const className = value >= 0 ? 'positive' : 'negative';
+ const boldClass = isPrimary ? ' performance' : '';
+ return `<span class="${className}${boldClass}">${value.toFixed(2)}%</span>`;
+ }
 
-        function populateTable(tableId, data, sortKey, columns) {
-            const tbody = document.getElementById(tableId);
-            tbody.innerHTML = '';
+ function populateTable(tableId, data, sortKey, columns) {
+ const tbody = document.getElementById(tableId);
+ tbody.innerHTML = '';
 
-            const sorted = [...data]
-                .filter(f => f[sortKey] !== null && f[sortKey] !== undefined)
-                .sort((a, b) => b[sortKey] - a[sortKey])
-                .slice(0, 5);
+ const sorted = [...data]
+ .filter(f => f[sortKey] !== null && f[sortKey] !== undefined)
+ .sort((a, b) => b[sortKey] - a[sortKey])
+ .slice(0, 5);
 
-            sorted.forEach((fund, index) => {
-                const rank = index + 1;
-                const row = document.createElement('tr');
+ sorted.forEach((fund, index) => {
+ const rank = index + 1;
+ const row = document.createElement('tr');
 
-                const fundName = currentLang === 'he' ? fund.nameHe : fund.nameEn;
-                const companyName = currentLang === 'he' ? fund.companyHe : fund.companyEn;
+ const fundName = currentLang === 'he' ? fund.nameHe : fund.nameEn;
+ const companyName = currentLang === 'he' ? fund.companyHe : fund.companyEn;
 
-                let columnsHtml = columns.map((col, i) => {
-                    const isPrimary = i === 0;
-                    return `<td>${formatPercent(fund[col], isPrimary)}</td>`;
-                }).join('');
+ let columnsHtml = columns.map((col, i) => {
+ const isPrimary = i === 0;
+ return `<td>${formatPercent(fund[col], isPrimary)}</td>`;
+ }).join('');
 
-                row.innerHTML = `
-                    <td class="rank ${getRankClass(rank)}">${rank}</td>
-                    <td><div class="fund-name">${fundName}</div></td>
-                    <td class="company">${companyName}</td>
-                    ${columnsHtml}
-                `;
-                tbody.appendChild(row);
-            });
-        }
+ row.innerHTML = `
+ <td class="rank ${getRankClass(rank)}">${rank}</td>
+ <td><div class="fund-name">${fundName}</div></td>
+ <td class="company">${companyName}</td>
+ ${columnsHtml}
+ `;
+ tbody.appendChild(row);
+ });
+ }
 
-        function initTables() {
-            const fundsData = getFundsData();
-            populateTable('year5-table', fundsData, 'year5', ['year5', 'year3', 'year1', 'month']);
-            populateTable('year3-table', fundsData, 'year3', ['year3', 'year5', 'year1', 'month']);
-            populateTable('year1-table', fundsData, 'year1', ['year1', 'year5', 'year3', 'month']);
-            populateTable('month-table', fundsData, 'month', ['month', 'year5', 'year3', 'year1']);
-        }
+ function initTables() {
+ const fundsData = getFundsData();
+ populateTable('year5-table', fundsData, 'year5', ['year5', 'year3', 'year1', 'month']);
+ populateTable('year3-table', fundsData, 'year3', ['year3', 'year5', 'year1', 'month']);
+ populateTable('year1-table', fundsData, 'year1', ['year1', 'year5', 'year3', 'month']);
+ populateTable('month-table', fundsData, 'month', ['month', 'year5', 'year3', 'year1']);
+ }
 
-        // Initialize on load
-        loadLanguage();
-        updateDataDate();
-        updateStats();
-        updateWinners();
-        initTables();
-    </script>
+ // Initialize on load
+ loadLanguage();
+ updateDataDate();
+ updateStats();
+ updateWinners();
+ initTables();
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

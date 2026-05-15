@@ -3,130 +3,123 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#8b5cf6">
-    <title data-i18n-title="invest.pageTitle">Investment Advisor – WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://wizelife.ai/js/wize-disclaimer.js"></script>
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#8b5cf6">
+ <title data-i18n-title="invest.pageTitle">Investment Advisor – WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://wizelife.ai/js/wize-disclaimer.js"></script>
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar"></aside>
+ <aside class="sidebar"></aside>
 
-    <main class="main-content" style="padding:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;">
+ <main class="main-content" style="padding:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;">
 
-        <div style="padding:18px 24px 14px;border-bottom:1px solid var(--color-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-            <div>
-                <h1 style="font-size:1.4rem;font-weight:700;margin:0;" id="pageTitle">🌍 ...</h1>
-                <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;" id="pageSubtitle">...</p>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-                <span id="apiStatus" style="font-size:0.78rem;padding:4px 10px;border-radius:99px;background:var(--color-bg-hover);color:var(--color-text-secondary);">...</span>
-                <button id="clearBtn" onclick="clearChat()" style="padding:7px 14px;border-radius:9px;background:var(--color-bg-hover);border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.82rem;cursor:pointer;">🗑 ...</button>
-            </div>
-        </div>
+ <div style="padding:18px 24px 14px;border-bottom:1px solid var(--color-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+ <div>
+ <h1 style="font-size:1.4rem;font-weight:700;margin:0;" id="pageTitle">🌍 ...</h1>
+ <p style="color:var(--color-text-secondary);font-size:0.82rem;margin:3px 0 0;" id="pageSubtitle">...</p>
+ </div>
+ <div style="display:flex;gap:8px;align-items:center;">
+ <span id="apiStatus" style="font-size:0.78rem;padding:4px 10px;border-radius:99px;background:var(--color-bg-hover);color:var(--color-text-secondary);">...</span>
+ <button id="clearBtn" onclick="clearChat()" style="padding:7px 14px;border-radius:9px;background:var(--color-bg-hover);border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.82rem;cursor:pointer;">🗑 ...</button>
+ </div>
+ </div>
 
-        <div id="disclaimer" style="margin:12px 20px 0;padding:10px 14px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.78rem;color:#d97706;line-height:1.5;flex-shrink:0;" id="disclaimer">
-        </div>
+ <div id="disclaimer" style="margin:12px 20px 0;padding:10px 14px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.78rem;color:#d97706;line-height:1.5;flex-shrink:0;" id="disclaimer">
+ </div>
 
-        <!-- Investment amount: auto-calculated, shown compact, editable on click -->
-        <div id="investAmountBox" style="margin:10px 20px 0;padding:9px 14px;background:var(--color-bg-hover);border:1px solid var(--color-border);border-radius:10px;flex-shrink:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:0.82rem;">
-            <span style="color:var(--color-text-secondary);">💰</span>
-            <span id="investAmountSummary" style="color:var(--color-text-primary);">חישוב סכום…</span>
-            <button id="editInvestBtn" style="padding:3px 8px;border-radius:6px;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;font-family:inherit;" title="שנה סכום">✏️</button>
-            <div id="investAmountEditor" style="display:none;align-items:center;gap:6px;">
-                <span style="color:var(--color-text-secondary);">₪</span>
-                <input type="number" id="investAmount" min="0" step="1000" style="width:120px;padding:5px 9px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:6px;color:var(--color-text-primary);font-size:0.85rem;font-weight:700;font-family:inherit;text-align:end;" />
-                <button id="confirmInvestBtn" style="padding:5px 10px;border-radius:6px;background:var(--color-stocks);border:0;color:white;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;">✓</button>
-            </div>
-            <button onclick="autoAnalyze(true)" style="padding:5px 12px;border-radius:6px;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;font-family:inherit;margin-inline-start:auto;" id="reanalyzeBtn">🔄 נתח מחדש</button>
-        </div>
+ <!-- Investment amount: auto-calculated, shown compact, editable on click -->
+ <div id="investAmountBox" style="margin:10px 20px 0;padding:9px 14px;background:var(--color-bg-hover);border:1px solid var(--color-border);border-radius:10px;flex-shrink:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:0.82rem;">
+ <span style="color:var(--color-text-secondary);">💰</span>
+ <span id="investAmountSummary" style="color:var(--color-text-primary);">חישוב סכום…</span>
+ <button id="editInvestBtn" style="padding:3px 8px;border-radius:6px;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;font-family:inherit;" title="שנה סכום">✏️</button>
+ <div id="investAmountEditor" style="display:none;align-items:center;gap:6px;">
+ <span style="color:var(--color-text-secondary);">₪</span>
+ <input type="number" id="investAmount" min="0" step="1000" style="width:120px;padding:5px 9px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:6px;color:var(--color-text-primary);font-size:0.85rem;font-weight:700;font-family:inherit;text-align:end;" />
+ <button id="confirmInvestBtn" style="padding:5px 10px;border-radius:6px;background:var(--color-stocks);border:0;color:white;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;">✓</button>
+ </div>
+ <button onclick="autoAnalyze(true)" style="padding:5px 12px;border-radius:6px;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;font-family:inherit;margin-inline-start:auto;" id="reanalyzeBtn">🔄 נתח מחדש</button>
+ </div>
 
 
-        <div style="padding:12px 20px 0;flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-            <span id="marketLabel" style="font-size:0.78rem;color:var(--color-text-secondary);margin-left:4px;"></span>
-            <button class="mfilter active" data-filter="global" onclick="setFilter(this,'global')">🌍</button>
-            <button class="mfilter" data-filter="us"   onclick="setFilter(this,'us')">🇺🇸</button>
-            <button class="mfilter" data-filter="il"   onclick="setFilter(this,'il')">🇮🇱</button>
-            <button class="mfilter" data-filter="eu"   onclick="setFilter(this,'eu')">🇪🇺</button>
-            <button class="mfilter" data-filter="asia" onclick="setFilter(this,'asia')">🌏</button>
-            <button class="mfilter" data-filter="crypto" onclick="setFilter(this,'crypto')">₿</button>
-            <button class="mfilter" data-filter="bonds" onclick="setFilter(this,'bonds')">📄</button>
-            <button class="mfilter" data-filter="realestate" onclick="setFilter(this,'realestate')">🏠</button>
-        </div>
+ <div style="padding:12px 20px 0;flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+ <span id="marketLabel" style="font-size:0.78rem;color:var(--color-text-secondary);margin-left:4px;"></span>
+ <button class="mfilter active" data-filter="global" onclick="setFilter(this,'global')">🌍</button>
+ <button class="mfilter" data-filter="us" onclick="setFilter(this,'us')">🇺🇸</button>
+ <button class="mfilter" data-filter="il" onclick="setFilter(this,'il')">🇮🇱</button>
+ <button class="mfilter" data-filter="eu" onclick="setFilter(this,'eu')">🇪🇺</button>
+ <button class="mfilter" data-filter="asia" onclick="setFilter(this,'asia')">🌏</button>
+ <button class="mfilter" data-filter="crypto" onclick="setFilter(this,'crypto')">₿</button>
+ <button class="mfilter" data-filter="bonds" onclick="setFilter(this,'bonds')">📄</button>
+ <button class="mfilter" data-filter="realestate" onclick="setFilter(this,'realestate')">🏠</button>
+ </div>
 
-        <div id="suggestions" style="padding:10px 20px 0;flex-shrink:0;">
-            <div id="suggestionChips" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
-        </div>
+ <div id="suggestions" style="padding:10px 20px 0;flex-shrink:0;">
+ <div id="suggestionChips" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
+ </div>
 
-        <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;"></div>
+ <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;"></div>
 
-        <div style="padding:14px 24px 20px;border-top:1px solid var(--color-border);flex-shrink:0;padding-bottom:max(20px,env(safe-area-inset-bottom));">
-            <div style="display:flex;gap:10px;align-items:flex-end;">
-                <textarea id="chatInput" rows="1"
-                    style="flex:1;resize:none;padding:12px 14px;border-radius:14px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;font-family:inherit;line-height:1.4;max-height:160px;overflow-y:auto;outline:none;"
-                    onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-                <button id="sendBtn" onclick="sendMessage()"
-                    style="padding:12px 18px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;border-radius:14px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;">➤</button>
-            </div>
-        </div>
-    </main>
+ <div style="padding:14px 24px 20px;border-top:1px solid var(--color-border);flex-shrink:0;padding-bottom:max(20px,env(safe-area-inset-bottom));">
+ <div style="display:flex;gap:10px;align-items:flex-end;">
+ <textarea id="chatInput" rows="1"
+ style="flex:1;resize:none;padding:12px 14px;border-radius:14px;border:1px solid var(--color-border);background:var(--color-bg-hover);color:var(--color-text-primary);font-size:0.9rem;font-family:inherit;line-height:1.4;max-height:160px;overflow-y:auto;outline:none;"
+ onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+ <button id="sendBtn" onclick="sendMessage()"
+ style="padding:12px 18px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;border-radius:14px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;">➤</button>
+ </div>
+ </div>
+ </main>
 </div>
 
 <style>
-    .chat-bubble{max-width:75%;padding:12px 16px;border-radius:18px;font-size:0.9rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;}
-    .chat-user{align-self:flex-start;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:white;border-radius:18px 18px 4px 18px;}
-    .chat-assistant{align-self:flex-end;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:18px 18px 18px 4px;color:var(--color-text-primary);}
-    .chat-row{display:flex;}.chat-row.user{justify-content:flex-start;}.chat-row.assistant{justify-content:flex-end;}
-    .typing-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-secondary);animation:typingBounce 1.2s infinite ease-in-out;display:inline-block;}
-    .typing-dot:nth-child(2){animation-delay:0.15s;}.typing-dot:nth-child(3){animation-delay:0.3s;}
-    @keyframes typingBounce{0%,80%,100%{transform:scale(0.7);opacity:0.4}40%{transform:scale(1);opacity:1}}
-    .suggestion-chip{padding:7px 13px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-primary);font-size:0.8rem;cursor:pointer;transition:background 0.15s,border-color 0.15s;white-space:nowrap;}
-    .suggestion-chip:hover{background:var(--color-bg-hover);border-color:#8b5cf6;color:#8b5cf6;}
-    .chat-assistant strong{color:#a78bfa;}.chat-assistant em{color:var(--color-text-secondary);}
-    .mfilter{padding:4px 11px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;transition:all 0.15s;}
-    .mfilter.active{background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.5);color:#818cf8;font-weight:700;}
-    .mfilter:hover:not(.active){border-color:#6366f1;color:#818cf8;}
+ .chat-bubble{max-width:75%;padding:12px 16px;border-radius:18px;font-size:0.9rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;}
+ .chat-user{align-self:flex-start;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:white;border-radius:18px 18px 4px 18px;}
+ .chat-assistant{align-self:flex-end;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:18px 18px 18px 4px;color:var(--color-text-primary);}
+ .chat-row{display:flex;}.chat-row.user{justify-content:flex-start;}.chat-row.assistant{justify-content:flex-end;}
+ .typing-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-secondary);animation:typingBounce 1.2s infinite ease-in-out;display:inline-block;}
+ .typing-dot:nth-child(2){animation-delay:0.15s;}.typing-dot:nth-child(3){animation-delay:0.3s;}
+ @keyframes typingBounce{0%,80%,100%{transform:scale(0.7);opacity:0.4}40%{transform:scale(1);opacity:1}}
+ .suggestion-chip{padding:7px 13px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-primary);font-size:0.8rem;cursor:pointer;transition:background 0.15s,border-color 0.15s;white-space:nowrap;}
+ .suggestion-chip:hover{background:var(--color-bg-hover);border-color:#8b5cf6;color:#8b5cf6;}
+ .chat-assistant strong{color:#a78bfa;}.chat-assistant em{color:var(--color-text-secondary);}
+ .mfilter{padding:4px 11px;border-radius:99px;border:1px solid var(--color-border);background:var(--color-bg-card);color:var(--color-text-secondary);font-size:0.78rem;cursor:pointer;transition:all 0.15s;}
+ .mfilter.active{background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.5);color:#818cf8;font-weight:700;}
+ .mfilter:hover:not(.active){border-color:#6366f1;color:#818cf8;}
 
-    /* Mobile fix — the inline style on <main> sets height:100vh + padding:0
-       which ignores the WizeBar (36px) + mobile-header (~56px+safe-area).
-       This override reserves space for them and the bottom-nav. */
-    @media (max-width: 1024px) {
-      main.main-content {
-        height: auto !important;
-        min-height: calc(100vh - 36px - 56px - env(safe-area-inset-top));
-        padding-top: calc(36px + 56px + env(safe-area-inset-top, 0px)) !important;
-        padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
-        overflow: visible !important;
-      }
-      .chat-bubble { max-width: 90%; font-size: 0.88rem; }
-    }
+ /* Mobile fix — the inline style on <main> sets height:100vh + padding:0
+ which ignores the WizeBar (36px) + mobile-header (~56px+safe-area).
+ This override reserves space for them and the bottom-nav. */
+ @media (max-width: 1024px) {
+ main.main-content {
+ height: auto !important;
+ min-height: calc(100vh - 36px - 56px - env(safe-area-inset-top));
+ padding-top: calc(36px + 56px + env(safe-area-inset-top, 0px)) !important;
+ padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+ overflow: visible !important;
+ }
+ .chat-bubble { max-width: 90%; font-size: 0.88rem; }
+ }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -135,10 +128,10 @@
 <script src="../js/firebase-config.js"></script>
 <script src="../js/idb.js"></script>
 <script src="../js/sidebar.js"></script>
-    <script src="../js/app.js"></script>
+ <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
 <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
 
 <script>
@@ -150,32 +143,32 @@ let activeFilter = 'global';
 
 // ── All UI strings in 4 languages ──
 const TX = {
-    he: {
-        title: '🌍 יועץ השקעות',
-        subtitle: 'ניתוח שווקים גלובליים · מניות · ETF · אג"ח · קריפטו · נדל"ן · סחורות',
-        disclaimer: '⚠️ <strong>הצהרת גילוי:</strong> המידע כאן הוא לצורכי מידע בלבד ואינו מהווה ייעוץ השקעות מורשה. אין לראות בתשובות המלצה לקנות או למכור ניירות ערך. כל החלטת השקעה היא באחריות המשתמש.',
-        marketLabel: 'שוק:',
-        placeholder: 'שאל על מניות, ETF, מאקרו, שווקים...',
-        clearBtn: '🗑 נקה',
-        clearConfirm: 'למחוק את כל השיחה?',
-        connected: '✓ מחובר',
-        yolo: '✦ YOLO',
-        loginRequired: '🔒 נדרשת התחברות',
-        loginMsg: '🔒 נדרשת התחברות לשירות.',
-        rateLimit: '⏳ הגעת למכסה היומית. נסה שוב מחר או שדרג תכנית.',
-        error: 'שגיאה בחיבור לשרת. נסה שוב.',
-        filters: { global:'🌍 גלובלי', us:'🇺🇸 ארה"ב', il:'🇮🇱 ישראל', eu:'🇪🇺 אירופה', asia:'🌏 אסיה', crypto:'₿ קריפטו', bonds:'📄 אג"ח', realestate:'🏠 נדל"ן' },
-        suggestions: {
-            global: ['ניתח את מצב השוק הגלובלי כרגע','השוואה: S&P 500 מול MSCI World','אילו סקטורים חזקים ב-2025?','מה ההשפעה של ריבית Fed על המניות?','הסבר מה זה ETF ואיך לבחור?','איך מגדרים תיק בתקופת אי וודאות?'],
-            us:     ['נתח את מניית Apple (AAPL)','מה דעתך על NVIDIA לטווח ארוך?','השוואה: MSFT מול GOOGL מול META','S&P 500 vs NASDAQ — מה עדיף עכשיו?','אילו מניות דיבידנד מומלצות ב-NYSE?','הסבר את הסקטור Magnificent 7'],
-            il:     ['נתח את ת"א 35 לעומת S&P 500','אילו מניות ישראליות מעניינות ב-TASE?','Check Point vs CyberArk — מה עדיף?','השפעת המצב הגיאופוליטי על שוק ישראל','קרנות מחקות בישראל — מה כדאי?','מניות בנקים ישראלים — הזדמנות?'],
-            eu:     ['DAX vs FTSE 100 — מה עדיף?','מניות אירופאיות בתחום אנרגיה ירוקה','LVMH ו-Luxury Goods — ניתוח','השפעת ה-ECB על שוקי אירופה','ETF על EURO STOXX 50 — כדאי?'],
-            asia:   ['מה קורה בשוק הסיני כרגע?','Alibaba vs Tencent — מה עדיף?','יפן — Nikkei 225 הזדמנות או בועה?','השפעת מדיניות ה-PBOC על מניות סין','ETF על אסיה — מה לבחור?'],
-            crypto: ['Bitcoin — ניתוח טכני + פונדמנטלי','Ethereum vs Solana — מה עדיף?','מה אחוז קריפטו מומלץ בתיק?','Staking — איך עובד ומה הסיכונים?','Bitcoin ETF — כדאי לקנות?'],
-            bonds:  ['אג"ח ממשלתי ארה"ב — האם כדאי עכשיו?','Treasury 10Y yield — מה המשמעות?','אג"ח קונצרני vs ממשלתי — הבדלים','Duration Risk — הסבר פשוט','אג"ח ישראלי vs גלי — מה לקנות?'],
-            realestate: ['נדל"ן ישראל vs מניות — מה עדיף?','REITs — איך משקיעים בנדל"ן דרך הבורסה?','מגמות נדל"ן עולמי 2025','REIT ETF — אילו מומלצים?','נדל"ן vs אג"ח בסביבת ריבית גבוהה?'],
-        },
-        systemBase: `אתה יועץ השקעות אישי **רב-שוקי**, עם ידע מעמיק ב-3 שווקים שונים.
+ he: {
+ title: '🌍 יועץ השקעות',
+ subtitle: 'ניתוח שווקים גלובליים · מניות · ETF · אג"ח · קריפטו · נדל"ן · סחורות',
+ disclaimer: '⚠️ <strong>הצהרת גילוי:</strong> המידע כאן הוא לצורכי מידע בלבד ואינו מהווה ייעוץ השקעות מורשה. אין לראות בתשובות המלצה לקנות או למכור ניירות ערך. כל החלטת השקעה היא באחריות המשתמש.',
+ marketLabel: 'שוק:',
+ placeholder: 'שאל על מניות, ETF, מאקרו, שווקים...',
+ clearBtn: '🗑 נקה',
+ clearConfirm: 'למחוק את כל השיחה?',
+ connected: '✓ מחובר',
+ yolo: '✦ YOLO',
+ loginRequired: '🔒 נדרשת התחברות',
+ loginMsg: '🔒 נדרשת התחברות לשירות.',
+ rateLimit: '⏳ הגעת למכסה היומית. נסה שוב מחר או שדרג תכנית.',
+ error: 'שגיאה בחיבור לשרת. נסה שוב.',
+ filters: { global:'🌍 גלובלי', us:'🇺🇸 ארה"ב', il:'🇮🇱 ישראל', eu:'🇪🇺 אירופה', asia:'🌏 אסיה', crypto:'₿ קריפטו', bonds:'📄 אג"ח', realestate:'🏠 נדל"ן' },
+ suggestions: {
+ global: ['ניתח את מצב השוק הגלובלי כרגע','השוואה: S&P 500 מול MSCI World','אילו סקטורים חזקים ב-2025?','מה ההשפעה של ריבית Fed על המניות?','הסבר מה זה ETF ואיך לבחור?','איך מגדרים תיק בתקופת אי וודאות?'],
+ us: ['נתח את מניית Apple (AAPL)','מה דעתך על NVIDIA לטווח ארוך?','השוואה: MSFT מול GOOGL מול META','S&P 500 vs NASDAQ — מה עדיף עכשיו?','אילו מניות דיבידנד מומלצות ב-NYSE?','הסבר את הסקטור Magnificent 7'],
+ il: ['נתח את ת"א 35 לעומת S&P 500','אילו מניות ישראליות מעניינות ב-TASE?','Check Point vs CyberArk — מה עדיף?','השפעת המצב הגיאופוליטי על שוק ישראל','קרנות מחקות בישראל — מה כדאי?','מניות בנקים ישראלים — הזדמנות?'],
+ eu: ['DAX vs FTSE 100 — מה עדיף?','מניות אירופאיות בתחום אנרגיה ירוקה','LVMH ו-Luxury Goods — ניתוח','השפעת ה-ECB על שוקי אירופה','ETF על EURO STOXX 50 — כדאי?'],
+ asia: ['מה קורה בשוק הסיני כרגע?','Alibaba vs Tencent — מה עדיף?','יפן — Nikkei 225 הזדמנות או בועה?','השפעת מדיניות ה-PBOC על מניות סין','ETF על אסיה — מה לבחור?'],
+ crypto: ['Bitcoin — ניתוח טכני + פונדמנטלי','Ethereum vs Solana — מה עדיף?','מה אחוז קריפטו מומלץ בתיק?','Staking — איך עובד ומה הסיכונים?','Bitcoin ETF — כדאי לקנות?'],
+ bonds: ['אג"ח ממשלתי ארה"ב — האם כדאי עכשיו?','Treasury 10Y yield — מה המשמעות?','אג"ח קונצרני vs ממשלתי — הבדלים','Duration Risk — הסבר פשוט','אג"ח ישראלי vs גלי — מה לקנות?'],
+ realestate: ['נדל"ן ישראל vs מניות — מה עדיף?','REITs — איך משקיעים בנדל"ן דרך הבורסה?','מגמות נדל"ן עולמי 2025','REIT ETF — אילו מומלצים?','נדל"ן vs אג"ח בסביבת ריבית גבוהה?'],
+ },
+ systemBase: `אתה יועץ השקעות אישי **רב-שוקי**, עם ידע מעמיק ב-3 שווקים שונים.
 
 🚨 **כללי בטיחות מחייבים — לפני הכל:**
 
@@ -249,182 +242,182 @@ const TX = {
 
 ענה בעברית | פורמט markdown עם כותרות | היה קונקרטי וישיר | אם חסר נתון — תאמר זאת ולא תמציא.
 נתוני מחיר חי מסומנים ב-[מחיר] — מהדף.`,
-        portfolioHeader: '=== תיק ההשקעות הנוכחי של המשתמש ===',
-        portfolioLabel: 'אחזקות, שווי כולל:',
-        fundsHeader: '=== קרנות / מכשירי השקעה ===',
-        feesLabel: 'דמי ניהול',
-        totalLabel: 'סה"כ:',
-        goalsHeader: '=== יעדי חיסכון ===',
-        bankHeader: '=== יתרת בנק כוללת:',
-        deadlineLabel: 'יעד לתאריך',
-        avConnected: '✓ Alpha Vantage מחובר — מחירים חיים + ניתוח טכני',
-        avPlaceholder: 'Alpha Vantage API Key (חינם בalphavantage.co)',
-    },
-    en: {
-        title: '🌍 Investment Advisor',
-        subtitle: 'Global market analysis · Stocks · ETF · Bonds · Crypto · Real Estate · Commodities',
-        disclaimer: '⚠️ <strong>Disclosure:</strong> This information is for informational purposes only and does not constitute licensed investment advice. Nothing here should be considered a recommendation to buy or sell securities. All investment decisions are the user\'s own responsibility.',
-        marketLabel: 'Market:',
-        placeholder: 'Ask about stocks, ETFs, macro, markets...',
-        clearBtn: '🗑 Clear',
-        clearConfirm: 'Delete the entire conversation?',
-        connected: '✓ Connected',
-        yolo: '✦ YOLO',
-        loginRequired: '🔒 Login required',
-        loginMsg: '🔒 Login required.',
-        rateLimit: '⏳ Daily quota reached. Try again tomorrow or upgrade your plan.',
-        error: 'Connection error. Please try again.',
-        filters: { global:'🌍 Global', us:'🇺🇸 USA', il:'🇮🇱 Israel', eu:'🇪🇺 Europe', asia:'🌏 Asia', crypto:'₿ Crypto', bonds:'📄 Bonds', realestate:'🏠 Real Estate' },
-        suggestions: {
-            global: ['Analyze current global market conditions','S&P 500 vs MSCI World comparison','Which sectors are strong in 2025?','How does Fed rate affect stocks?','Explain ETFs and how to choose one','How to hedge a portfolio during uncertainty?'],
-            us:     ['Analyze Apple (AAPL) stock','Your view on NVIDIA long-term?','MSFT vs GOOGL vs META comparison','S&P 500 vs NASDAQ — which is better now?','Best dividend stocks on NYSE?','Explain the Magnificent 7 sector'],
-            il:     ['TA-35 vs S&P 500 analysis','Interesting Israeli stocks on TASE?','Check Point vs CyberArk — which to prefer?','Geopolitical impact on Israeli market','Index-tracking funds in Israel — what\'s good?','Israeli bank stocks — opportunity?'],
-            eu:     ['DAX vs FTSE 100 — which is better?','European stocks in green energy','LVMH & Luxury Goods analysis','ECB policy impact on European markets','EURO STOXX 50 ETF — worth it?'],
-            asia:   ['What\'s happening in the Chinese market?','Alibaba vs Tencent — which is better?','Japan — Nikkei 225 opportunity or bubble?','PBOC policy impact on Chinese stocks','Asia ETF — what to choose?'],
-            crypto: ['Bitcoin — technical + fundamental analysis','Ethereum vs Solana — long term?','What % of portfolio in crypto is recommended?','Staking — how it works and risks?','Bitcoin ETF — worth buying?'],
-            bonds:  ['US government bonds — worth it now?','10Y Treasury yield — what does it mean?','Corporate vs government bonds — differences','Duration Risk — simple explanation','Short vs long bonds — what to buy now?'],
-            realestate: ['Israel real estate vs stocks — which is better?','REITs — how to invest in real estate via stocks?','Global real estate trends 2025','Recommended REIT ETFs?','Real estate vs bonds in a high-rate environment?'],
-        },
-        systemBase: `You are an expert investment advisor with deep knowledge of global stock markets and all investment instruments.
+ portfolioHeader: '=== תיק ההשקעות הנוכחי של המשתמש ===',
+ portfolioLabel: 'אחזקות, שווי כולל:',
+ fundsHeader: '=== קרנות / מכשירי השקעה ===',
+ feesLabel: 'דמי ניהול',
+ totalLabel: 'סה"כ:',
+ goalsHeader: '=== יעדי חיסכון ===',
+ bankHeader: '=== יתרת בנק כוללת:',
+ deadlineLabel: 'יעד לתאריך',
+ avConnected: '✓ Alpha Vantage מחובר — מחירים חיים + ניתוח טכני',
+ avPlaceholder: 'Alpha Vantage API Key (חינם בalphavantage.co)',
+ },
+ en: {
+ title: '🌍 Investment Advisor',
+ subtitle: 'Global market analysis · Stocks · ETF · Bonds · Crypto · Real Estate · Commodities',
+ disclaimer: '⚠️ <strong>Disclosure:</strong> This information is for informational purposes only and does not constitute licensed investment advice. Nothing here should be considered a recommendation to buy or sell securities. All investment decisions are the user\'s own responsibility.',
+ marketLabel: 'Market:',
+ placeholder: 'Ask about stocks, ETFs, macro, markets...',
+ clearBtn: '🗑 Clear',
+ clearConfirm: 'Delete the entire conversation?',
+ connected: '✓ Connected',
+ yolo: '✦ YOLO',
+ loginRequired: '🔒 Login required',
+ loginMsg: '🔒 Login required.',
+ rateLimit: '⏳ Daily quota reached. Try again tomorrow or upgrade your plan.',
+ error: 'Connection error. Please try again.',
+ filters: { global:'🌍 Global', us:'🇺🇸 USA', il:'🇮🇱 Israel', eu:'🇪🇺 Europe', asia:'🌏 Asia', crypto:'₿ Crypto', bonds:'📄 Bonds', realestate:'🏠 Real Estate' },
+ suggestions: {
+ global: ['Analyze current global market conditions','S&P 500 vs MSCI World comparison','Which sectors are strong in 2025?','How does Fed rate affect stocks?','Explain ETFs and how to choose one','How to hedge a portfolio during uncertainty?'],
+ us: ['Analyze Apple (AAPL) stock','Your view on NVIDIA long-term?','MSFT vs GOOGL vs META comparison','S&P 500 vs NASDAQ — which is better now?','Best dividend stocks on NYSE?','Explain the Magnificent 7 sector'],
+ il: ['TA-35 vs S&P 500 analysis','Interesting Israeli stocks on TASE?','Check Point vs CyberArk — which to prefer?','Geopolitical impact on Israeli market','Index-tracking funds in Israel — what\'s good?','Israeli bank stocks — opportunity?'],
+ eu: ['DAX vs FTSE 100 — which is better?','European stocks in green energy','LVMH & Luxury Goods analysis','ECB policy impact on European markets','EURO STOXX 50 ETF — worth it?'],
+ asia: ['What\'s happening in the Chinese market?','Alibaba vs Tencent — which is better?','Japan — Nikkei 225 opportunity or bubble?','PBOC policy impact on Chinese stocks','Asia ETF — what to choose?'],
+ crypto: ['Bitcoin — technical + fundamental analysis','Ethereum vs Solana — long term?','What % of portfolio in crypto is recommended?','Staking — how it works and risks?','Bitcoin ETF — worth buying?'],
+ bonds: ['US government bonds — worth it now?','10Y Treasury yield — what does it mean?','Corporate vs government bonds — differences','Duration Risk — simple explanation','Short vs long bonds — what to buy now?'],
+ realestate: ['Israel real estate vs stocks — which is better?','REITs — how to invest in real estate via stocks?','Global real estate trends 2025','Recommended REIT ETFs?','Real estate vs bonds in a high-rate environment?'],
+ },
+ systemBase: `You are an expert investment advisor with deep knowledge of global stock markets and all investment instruments.
 Specialties: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Bonds | Crypto | Real Estate/REITs | Commodities | Technical & Fundamental analysis
 Guidelines: Always respond in English | Give specific, in-depth analysis | Include bullish and bearish thesis | Note "not licensed advice" on buy/sell recommendations | Format with headers and lists | Be direct
 Live price data is marked with [price] — these are the latest prices from the user's stocks page.`,
-        portfolioHeader: '=== User\'s current investment portfolio ===',
-        portfolioLabel: 'holdings, total value:',
-        fundsHeader: '=== Funds / investment instruments ===',
-        feesLabel: 'management fee',
-        totalLabel: 'Total:',
-        goalsHeader: '=== Savings Goals ===',
-        bankHeader: '=== Total bank balance:',
-        deadlineLabel: 'Target date',
-        avConnected: '✓ Alpha Vantage connected — live prices + technical analysis',
-        avPlaceholder: 'Alpha Vantage API Key (free at alphavantage.co)',
-    },
-    pt: {
-        title: '🌍 Consultor de Investimentos',
-        subtitle: 'Análise de mercados globais · Ações · ETF · Títulos · Cripto · Imóveis · Commodities',
-        disclaimer: '⚠️ <strong>Divulgação:</strong> As informações aqui são apenas para fins informativos e não constituem consultoria de investimentos licenciada. Nada aqui deve ser considerado uma recomendação para comprar ou vender valores mobiliários. Todas as decisões de investimento são de responsabilidade do usuário.',
-        marketLabel: 'Mercado:',
-        placeholder: 'Pergunte sobre ações, ETFs, macro, mercados...',
-        clearBtn: '🗑 Limpar',
-        clearConfirm: 'Deletar toda a conversa?',
-        connected: '✓ Conectado',
-        yolo: '✦ YOLO',
-        loginRequired: '🔒 Login necessário',
-        loginMsg: '🔒 Login necessário.',
-        rateLimit: '⏳ Cota diária atingida. Tente amanhã ou faça upgrade.',
-        error: 'Erro de conexão. Tente novamente.',
-        filters: { global:'🌍 Global', us:'🇺🇸 EUA', il:'🇮🇱 Israel', eu:'🇪🇺 Europa', asia:'🌏 Ásia', crypto:'₿ Cripto', bonds:'📄 Títulos', realestate:'🏠 Imóveis' },
-        suggestions: {
-            global: ['Analise as condições atuais do mercado global','S&P 500 vs MSCI World — comparação','Quais setores estão fortes em 2025?','Como a taxa do Fed afeta as ações?','Explique ETFs e como escolher um','Como proteger carteira em períodos de incerteza?'],
-            us:     ['Analise a ação da Apple (AAPL)','Sua visão sobre NVIDIA no longo prazo?','MSFT vs GOOGL vs META — comparação','S&P 500 vs NASDAQ — qual é melhor agora?','Melhores ações de dividendos na NYSE?','Explique o setor Magnificent 7'],
-            il:     ['TA-35 vs S&P 500 análise','Ações israelenses interessantes na TASE?','Check Point vs CyberArk — qual preferir?','Impacto geopolítico no mercado israelense','Fundos de índice em Israel — o que é bom?','Ações de bancos israelenses — oportunidade?'],
-            eu:     ['DAX vs FTSE 100 — qual é melhor?','Ações europeias em energia verde','Análise LVMH & Luxury Goods','Impacto do BCE nos mercados europeus','ETF EURO STOXX 50 — vale a pena?'],
-            asia:   ['O que está acontecendo no mercado chinês?','Alibaba vs Tencent — qual é melhor?','Japão — Nikkei 225 oportunidade ou bolha?','Impacto da política do PBOC nas ações chinesas','ETF Ásia — o que escolher?'],
-            crypto: ['Bitcoin — análise técnica + fundamental','Ethereum vs Solana — longo prazo?','Qual % da carteira em cripto é recomendado?','Staking — como funciona e riscos?','ETF de Bitcoin — vale comprar?'],
-            bonds:  ['Títulos do governo dos EUA — vale a pena agora?','Rendimento do Treasury 10Y — o que significa?','Títulos corporativos vs governamentais — diferenças','Duration Risk — explicação simples','Títulos curtos vs longos — o que comprar agora?'],
-            realestate: ['Imóveis Israel vs ações — qual é melhor?','REITs — como investir em imóveis pela bolsa?','Tendências imobiliárias globais 2025','ETFs de REIT recomendados?','Imóveis vs títulos em ambiente de juros altos?'],
-        },
-        systemBase: `Você é um consultor de investimentos especialista com profundo conhecimento dos mercados financeiros globais e todos os instrumentos de investimento.
+ portfolioHeader: '=== User\'s current investment portfolio ===',
+ portfolioLabel: 'holdings, total value:',
+ fundsHeader: '=== Funds / investment instruments ===',
+ feesLabel: 'management fee',
+ totalLabel: 'Total:',
+ goalsHeader: '=== Savings Goals ===',
+ bankHeader: '=== Total bank balance:',
+ deadlineLabel: 'Target date',
+ avConnected: '✓ Alpha Vantage connected — live prices + technical analysis',
+ avPlaceholder: 'Alpha Vantage API Key (free at alphavantage.co)',
+ },
+ pt: {
+ title: '🌍 Consultor de Investimentos',
+ subtitle: 'Análise de mercados globais · Ações · ETF · Títulos · Cripto · Imóveis · Commodities',
+ disclaimer: '⚠️ <strong>Divulgação:</strong> As informações aqui são apenas para fins informativos e não constituem consultoria de investimentos licenciada. Nada aqui deve ser considerado uma recomendação para comprar ou vender valores mobiliários. Todas as decisões de investimento são de responsabilidade do usuário.',
+ marketLabel: 'Mercado:',
+ placeholder: 'Pergunte sobre ações, ETFs, macro, mercados...',
+ clearBtn: '🗑 Limpar',
+ clearConfirm: 'Deletar toda a conversa?',
+ connected: '✓ Conectado',
+ yolo: '✦ YOLO',
+ loginRequired: '🔒 Login necessário',
+ loginMsg: '🔒 Login necessário.',
+ rateLimit: '⏳ Cota diária atingida. Tente amanhã ou faça upgrade.',
+ error: 'Erro de conexão. Tente novamente.',
+ filters: { global:'🌍 Global', us:'🇺🇸 EUA', il:'🇮🇱 Israel', eu:'🇪🇺 Europa', asia:'🌏 Ásia', crypto:'₿ Cripto', bonds:'📄 Títulos', realestate:'🏠 Imóveis' },
+ suggestions: {
+ global: ['Analise as condições atuais do mercado global','S&P 500 vs MSCI World — comparação','Quais setores estão fortes em 2025?','Como a taxa do Fed afeta as ações?','Explique ETFs e como escolher um','Como proteger carteira em períodos de incerteza?'],
+ us: ['Analise a ação da Apple (AAPL)','Sua visão sobre NVIDIA no longo prazo?','MSFT vs GOOGL vs META — comparação','S&P 500 vs NASDAQ — qual é melhor agora?','Melhores ações de dividendos na NYSE?','Explique o setor Magnificent 7'],
+ il: ['TA-35 vs S&P 500 análise','Ações israelenses interessantes na TASE?','Check Point vs CyberArk — qual preferir?','Impacto geopolítico no mercado israelense','Fundos de índice em Israel — o que é bom?','Ações de bancos israelenses — oportunidade?'],
+ eu: ['DAX vs FTSE 100 — qual é melhor?','Ações europeias em energia verde','Análise LVMH & Luxury Goods','Impacto do BCE nos mercados europeus','ETF EURO STOXX 50 — vale a pena?'],
+ asia: ['O que está acontecendo no mercado chinês?','Alibaba vs Tencent — qual é melhor?','Japão — Nikkei 225 oportunidade ou bolha?','Impacto da política do PBOC nas ações chinesas','ETF Ásia — o que escolher?'],
+ crypto: ['Bitcoin — análise técnica + fundamental','Ethereum vs Solana — longo prazo?','Qual % da carteira em cripto é recomendado?','Staking — como funciona e riscos?','ETF de Bitcoin — vale comprar?'],
+ bonds: ['Títulos do governo dos EUA — vale a pena agora?','Rendimento do Treasury 10Y — o que significa?','Títulos corporativos vs governamentais — diferenças','Duration Risk — explicação simples','Títulos curtos vs longos — o que comprar agora?'],
+ realestate: ['Imóveis Israel vs ações — qual é melhor?','REITs — como investir em imóveis pela bolsa?','Tendências imobiliárias globais 2025','ETFs de REIT recomendados?','Imóveis vs títulos em ambiente de juros altos?'],
+ },
+ systemBase: `Você é um consultor de investimentos especialista com profundo conhecimento dos mercados financeiros globais e todos os instrumentos de investimento.
 Especialidades: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Títulos | Cripto | Imóveis/REITs | Commodities | Análise técnica e fundamental
 Diretrizes: Responda sempre em português brasileiro | Dê análise específica e aprofundada | Inclua tese bullish e bearish | Note "não é consultoria licenciada" em recomendações | Formate com títulos e listas | Seja direto
 Dados de preço ao vivo são marcados com [preço] — estes são os preços mais recentes da página de ações do usuário.`,
-        portfolioHeader: '=== Carteira de investimentos atual do usuário ===',
-        portfolioLabel: 'posições, valor total:',
-        fundsHeader: '=== Fundos / instrumentos de investimento ===',
-        feesLabel: 'taxa de administração',
-        totalLabel: 'Total:',
-        goalsHeader: '=== Metas de Poupança ===',
-        bankHeader: '=== Saldo bancário total:',
-        deadlineLabel: 'Data alvo',
-        avConnected: '✓ Alpha Vantage conectado — preços ao vivo + análise técnica',
-        avPlaceholder: 'Alpha Vantage API Key (grátis em alphavantage.co)',
-    },
-    es: {
-        title: '🌍 Asesor de Inversiones',
-        subtitle: 'Análisis de mercados globales · Acciones · ETF · Bonos · Cripto · Inmuebles · Materias primas',
-        disclaimer: '⚠️ <strong>Divulgación:</strong> La información aquí es solo con fines informativos y no constituye asesoramiento de inversión licenciado. Nada aquí debe considerarse una recomendación para comprar o vender valores. Todas las decisiones de inversión son responsabilidad del usuario.',
-        marketLabel: 'Mercado:',
-        placeholder: 'Pregunta sobre acciones, ETFs, macro, mercados...',
-        clearBtn: '🗑 Limpiar',
-        clearConfirm: '¿Eliminar toda la conversación?',
-        connected: '✓ Conectado',
-        yolo: '✦ YOLO',
-        loginRequired: '🔒 Inicio de sesión requerido',
-        loginMsg: '🔒 Inicio de sesión requerido.',
-        rateLimit: '⏳ Cuota diaria alcanzada. Intenta mañana o actualiza tu plan.',
-        error: 'Error de conexión. Inténtalo de nuevo.',
-        filters: { global:'🌍 Global', us:'🇺🇸 EE.UU.', il:'🇮🇱 Israel', eu:'🇪🇺 Europa', asia:'🌏 Asia', crypto:'₿ Cripto', bonds:'📄 Bonos', realestate:'🏠 Inmuebles' },
-        suggestions: {
-            global: ['Analiza las condiciones actuales del mercado global','S&P 500 vs MSCI World — comparación','¿Qué sectores son fuertes en 2025?','¿Cómo afecta la tasa Fed a las acciones?','Explica los ETFs y cómo elegir uno','¿Cómo cubrir una cartera en períodos de incertidumbre?'],
-            us:     ['Analiza la acción de Apple (AAPL)','¿Tu opinión sobre NVIDIA a largo plazo?','MSFT vs GOOGL vs META — comparación','S&P 500 vs NASDAQ — ¿cuál es mejor ahora?','¿Mejores acciones de dividendos en NYSE?','Explica el sector Magnificent 7'],
-            il:     ['TA-35 vs S&P 500 análisis','¿Acciones israelíes interesantes en TASE?','Check Point vs CyberArk — ¿cuál preferir?','Impacto geopolítico en el mercado israelí','Fondos indexados en Israel — ¿qué es bueno?','¿Acciones de bancos israelíes — oportunidad?'],
-            eu:     ['DAX vs FTSE 100 — ¿cuál es mejor?','Acciones europeas en energía verde','Análisis LVMH & Luxury Goods','Impacto del BCE en los mercados europeos','ETF EURO STOXX 50 — ¿vale la pena?'],
-            asia:   ['¿Qué pasa en el mercado chino ahora?','Alibaba vs Tencent — ¿cuál es mejor?','Japón — Nikkei 225 ¿oportunidad o burbuja?','Impacto de la política del PBOC en acciones chinas','ETF Asia — ¿qué elegir?'],
-            crypto: ['Bitcoin — análisis técnico + fundamental','Ethereum vs Solana — ¿largo plazo?','¿Qué % de cartera en cripto se recomienda?','Staking — ¿cómo funciona y cuáles son los riesgos?','ETF de Bitcoin — ¿vale comprar?'],
-            bonds:  ['Bonos del gobierno de EE.UU. — ¿vale la pena ahora?','Rendimiento Treasury 10Y — ¿qué significa?','Bonos corporativos vs gubernamentales — diferencias','Duration Risk — explicación simple','¿Bonos cortos vs largos — qué comprar ahora?'],
-            realestate: ['Inmuebles Israel vs acciones — ¿cuál es mejor?','REITs — ¿cómo invertir en inmuebles por bolsa?','Tendencias inmobiliarias globales 2025','¿ETFs de REIT recomendados?','¿Inmuebles vs bonos en entorno de tasas altas?'],
-        },
-        systemBase: `Eres un asesor de inversiones experto con profundo conocimiento de los mercados financieros globales y todos los instrumentos de inversión.
+ portfolioHeader: '=== Carteira de investimentos atual do usuário ===',
+ portfolioLabel: 'posições, valor total:',
+ fundsHeader: '=== Fundos / instrumentos de investimento ===',
+ feesLabel: 'taxa de administração',
+ totalLabel: 'Total:',
+ goalsHeader: '=== Metas de Poupança ===',
+ bankHeader: '=== Saldo bancário total:',
+ deadlineLabel: 'Data alvo',
+ avConnected: '✓ Alpha Vantage conectado — preços ao vivo + análise técnica',
+ avPlaceholder: 'Alpha Vantage API Key (grátis em alphavantage.co)',
+ },
+ es: {
+ title: '🌍 Asesor de Inversiones',
+ subtitle: 'Análisis de mercados globales · Acciones · ETF · Bonos · Cripto · Inmuebles · Materias primas',
+ disclaimer: '⚠️ <strong>Divulgación:</strong> La información aquí es solo con fines informativos y no constituye asesoramiento de inversión licenciado. Nada aquí debe considerarse una recomendación para comprar o vender valores. Todas las decisiones de inversión son responsabilidad del usuario.',
+ marketLabel: 'Mercado:',
+ placeholder: 'Pregunta sobre acciones, ETFs, macro, mercados...',
+ clearBtn: '🗑 Limpiar',
+ clearConfirm: '¿Eliminar toda la conversación?',
+ connected: '✓ Conectado',
+ yolo: '✦ YOLO',
+ loginRequired: '🔒 Inicio de sesión requerido',
+ loginMsg: '🔒 Inicio de sesión requerido.',
+ rateLimit: '⏳ Cuota diaria alcanzada. Intenta mañana o actualiza tu plan.',
+ error: 'Error de conexión. Inténtalo de nuevo.',
+ filters: { global:'🌍 Global', us:'🇺🇸 EE.UU.', il:'🇮🇱 Israel', eu:'🇪🇺 Europa', asia:'🌏 Asia', crypto:'₿ Cripto', bonds:'📄 Bonos', realestate:'🏠 Inmuebles' },
+ suggestions: {
+ global: ['Analiza las condiciones actuales del mercado global','S&P 500 vs MSCI World — comparación','¿Qué sectores son fuertes en 2025?','¿Cómo afecta la tasa Fed a las acciones?','Explica los ETFs y cómo elegir uno','¿Cómo cubrir una cartera en períodos de incertidumbre?'],
+ us: ['Analiza la acción de Apple (AAPL)','¿Tu opinión sobre NVIDIA a largo plazo?','MSFT vs GOOGL vs META — comparación','S&P 500 vs NASDAQ — ¿cuál es mejor ahora?','¿Mejores acciones de dividendos en NYSE?','Explica el sector Magnificent 7'],
+ il: ['TA-35 vs S&P 500 análisis','¿Acciones israelíes interesantes en TASE?','Check Point vs CyberArk — ¿cuál preferir?','Impacto geopolítico en el mercado israelí','Fondos indexados en Israel — ¿qué es bueno?','¿Acciones de bancos israelíes — oportunidad?'],
+ eu: ['DAX vs FTSE 100 — ¿cuál es mejor?','Acciones europeas en energía verde','Análisis LVMH & Luxury Goods','Impacto del BCE en los mercados europeos','ETF EURO STOXX 50 — ¿vale la pena?'],
+ asia: ['¿Qué pasa en el mercado chino ahora?','Alibaba vs Tencent — ¿cuál es mejor?','Japón — Nikkei 225 ¿oportunidad o burbuja?','Impacto de la política del PBOC en acciones chinas','ETF Asia — ¿qué elegir?'],
+ crypto: ['Bitcoin — análisis técnico + fundamental','Ethereum vs Solana — ¿largo plazo?','¿Qué % de cartera en cripto se recomienda?','Staking — ¿cómo funciona y cuáles son los riesgos?','ETF de Bitcoin — ¿vale comprar?'],
+ bonds: ['Bonos del gobierno de EE.UU. — ¿vale la pena ahora?','Rendimiento Treasury 10Y — ¿qué significa?','Bonos corporativos vs gubernamentales — diferencias','Duration Risk — explicación simple','¿Bonos cortos vs largos — qué comprar ahora?'],
+ realestate: ['Inmuebles Israel vs acciones — ¿cuál es mejor?','REITs — ¿cómo invertir en inmuebles por bolsa?','Tendencias inmobiliarias globales 2025','¿ETFs de REIT recomendados?','¿Inmuebles vs bonos en entorno de tasas altas?'],
+ },
+ systemBase: `Eres un asesor de inversiones experto con profundo conocimiento de los mercados financieros globales y todos los instrumentos de inversión.
 Especialidades: NYSE, NASDAQ, S&P 500, TASE, DAX, FTSE, Nikkei, Hang Seng, Shanghai | ETFs | Bonos | Cripto | Inmuebles/REITs | Materias primas | Análisis técnico y fundamental
 Directrices: Responde siempre en español | Da análisis específico y detallado | Incluye tesis bullish y bearish | Nota "no es asesoramiento licenciado" en recomendaciones | Formatea con títulos y listas | Sé directo
 Los datos de precio en vivo están marcados con [precio] — estos son los precios más recientes de la página de acciones del usuario.`,
-        portfolioHeader: '=== Cartera de inversiones actual del usuario ===',
-        portfolioLabel: 'posiciones, valor total:',
-        fundsHeader: '=== Fondos / instrumentos de inversión ===',
-        feesLabel: 'comisión de gestión',
-        totalLabel: 'Total:',
-        goalsHeader: '=== Metas de Ahorro ===',
-        bankHeader: '=== Saldo bancario total:',
-        deadlineLabel: 'Fecha objetivo',
-        avConnected: '✓ Alpha Vantage conectado — precios en vivo + análisis técnico',
-        avPlaceholder: 'Alpha Vantage API Key (gratis en alphavantage.co)',
-    },
+ portfolioHeader: '=== Cartera de inversiones actual del usuario ===',
+ portfolioLabel: 'posiciones, valor total:',
+ fundsHeader: '=== Fondos / instrumentos de inversión ===',
+ feesLabel: 'comisión de gestión',
+ totalLabel: 'Total:',
+ goalsHeader: '=== Metas de Ahorro ===',
+ bankHeader: '=== Saldo bancario total:',
+ deadlineLabel: 'Fecha objetivo',
+ avConnected: '✓ Alpha Vantage conectado — precios en vivo + análisis técnico',
+ avPlaceholder: 'Alpha Vantage API Key (gratis en alphavantage.co)',
+ },
 };
 
 function getLang() {
-    return (typeof I18n !== 'undefined' && I18n.current) || localStorage.getItem('wl_lang') || 'he';
+ return (typeof I18n !== 'undefined' && I18n.current) || localStorage.getItem('wl_lang') || 'he';
 }
 function t() { return TX[getLang()] || TX.he; }
 
 function applyLang() {
-    const tx = t();
-    const dir = getLang() === 'he' ? 'rtl' : 'ltr';
-    document.documentElement.lang = getLang() === 'he' ? 'he' : getLang() === 'pt' ? 'pt' : getLang() === 'es' ? 'es' : 'en';
-    document.documentElement.dir = dir;
-    document.getElementById('pageTitle').textContent = tx.title;
-    document.getElementById('pageSubtitle').textContent = tx.subtitle;
-    document.getElementById('disclaimer').innerHTML = tx.disclaimer;
-    document.getElementById('marketLabel').textContent = tx.marketLabel;
-    document.getElementById('chatInput').placeholder = tx.placeholder;
-    document.getElementById('clearBtn').textContent = tx.clearBtn;
-    // Update filter button labels
-    document.querySelectorAll('.mfilter').forEach(btn => {
-        const key = btn.dataset.filter;
-        if (tx.filters[key]) btn.textContent = tx.filters[key];
-    });
-    buildSuggestions();
-    updateApiStatus(currentUser);
+ const tx = t();
+ const dir = getLang() === 'he' ? 'rtl' : 'ltr';
+ document.documentElement.lang = getLang() === 'he' ? 'he' : getLang() === 'pt' ? 'pt' : getLang() === 'es' ? 'es' : 'en';
+ document.documentElement.dir = dir;
+ document.getElementById('pageTitle').textContent = tx.title;
+ document.getElementById('pageSubtitle').textContent = tx.subtitle;
+ document.getElementById('disclaimer').innerHTML = tx.disclaimer;
+ document.getElementById('marketLabel').textContent = tx.marketLabel;
+ document.getElementById('chatInput').placeholder = tx.placeholder;
+ document.getElementById('clearBtn').textContent = tx.clearBtn;
+ // Update filter button labels
+ document.querySelectorAll('.mfilter').forEach(btn => {
+ const key = btn.dataset.filter;
+ if (tx.filters[key]) btn.textContent = tx.filters[key];
+ });
+ buildSuggestions();
+ updateApiStatus(currentUser);
 }
 
 function setFilter(el, filter) {
-    activeFilter = filter;
-    document.querySelectorAll('.mfilter').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    buildSuggestions();
+ activeFilter = filter;
+ document.querySelectorAll('.mfilter').forEach(b => b.classList.remove('active'));
+ el.classList.add('active');
+ buildSuggestions();
 }
 
 function buildSuggestions() {
-    const wrap = document.getElementById('suggestionChips');
-    wrap.innerHTML = '';
-    const list = (t().suggestions[activeFilter] || t().suggestions.global);
-    list.forEach(q => {
-        const btn = document.createElement('button');
-        btn.className = 'suggestion-chip';
-        btn.textContent = q;
-        btn.onclick = () => { document.getElementById('chatInput').value = q; sendMessage(); };
-        wrap.appendChild(btn);
-    });
+ const wrap = document.getElementById('suggestionChips');
+ wrap.innerHTML = '';
+ const list = (t().suggestions[activeFilter] || t().suggestions.global);
+ list.forEach(q => {
+ const btn = document.createElement('button');
+ btn.className = 'suggestion-chip';
+ btn.textContent = q;
+ btn.onclick = () => { document.getElementById('chatInput').value = q; sendMessage(); };
+ wrap.appendChild(btn);
+ });
 }
 
 // ─── Market Data via Firebase Function (server-side, Firestore cached) ──────
@@ -432,101 +425,101 @@ const marketDataFn = firebase.functions().httpsCallable('marketData');
 const _mdLocalCache = {}; // in-memory cache within this session
 
 async function fetchMarketData(ticker) {
-    const key = ticker.toUpperCase();
-    // Check in-memory cache (TTL: 1h)
-    if (_mdLocalCache[key] && Date.now() - _mdLocalCache[key].ts < 3600000) {
-        return _mdLocalCache[key].data;
-    }
-    try {
-        const res = await marketDataFn({ ticker: key });
-        const d = res.data;
-        if (d?.price) {
-            _mdLocalCache[key] = { ts: Date.now(), data: d };
-            return d;
-        }
-    } catch(e) { console.warn('marketData failed for', key, e.message); }
-    return null;
+ const key = ticker.toUpperCase();
+ // Check in-memory cache (TTL: 1h)
+ if (_mdLocalCache[key] && Date.now() - _mdLocalCache[key].ts < 3600000) {
+ return _mdLocalCache[key].data;
+ }
+ try {
+ const res = await marketDataFn({ ticker: key });
+ const d = res.data;
+ if (d?.price) {
+ _mdLocalCache[key] = { ts: Date.now(), data: d };
+ return d;
+ }
+ } catch(e) { console.warn('marketData failed for', key, e.message); }
+ return null;
 }
 
 // Extract ticker symbols mentioned in user message
 function extractTickers(text) {
-    const matches = text.match(/\b([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\b/g) || [];
-    const skip = new Set(['AI','ETF','RSI','MACD','SMA','EMA','IPO','CEO','PE','EPS','GDP','CPI','FED','ECB','USA','EU','US','OK','PM','AM','MA','BB','IV']);
-    return [...new Set(matches.filter(m => !skip.has(m) && m.length >= 2))].slice(0, 3);
+ const matches = text.match(/\b([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\b/g) || [];
+ const skip = new Set(['AI','ETF','RSI','MACD','SMA','EMA','IPO','CEO','PE','EPS','GDP','CPI','FED','ECB','USA','EU','US','OK','PM','AM','MA','BB','IV']);
+ return [...new Set(matches.filter(m => !skip.has(m) && m.length >= 2))].slice(0, 3);
 }
 
 function formatMarketContext(d) {
-    if (!d?.price) return '';
-    const isHe = getLang() === 'he';
-    const lines = [`\n=== ${isHe ? 'נתוני שוק חיים' : 'Live Market Data'}: ${d.name || d.ticker} (${d.ticker}) ===`];
+ if (!d?.price) return '';
+ const isHe = getLang() === 'he';
+ const lines = [`\n=== ${isHe ? 'נתוני שוק חיים' : 'Live Market Data'}: ${d.name || d.ticker} (${d.ticker}) ===`];
 
-    lines.push(`${isHe ? 'מחיר' : 'Price'}: $${d.price}  ${d.changePct >= 0 ? '+' : ''}${d.changePct}% ${isHe ? 'היום' : 'today'}`);
-    if (d.high) lines.push(`${isHe ? 'טווח יומי' : 'Range'}: $${d.low}–$${d.high}${d.volume ? '  |  Vol: ' + d.volume : ''}`);
+ lines.push(`${isHe ? 'מחיר' : 'Price'}: $${d.price} ${d.changePct >= 0 ? '+' : ''}${d.changePct}% ${isHe ? 'היום' : 'today'}`);
+ if (d.high) lines.push(`${isHe ? 'טווח יומי' : 'Range'}: $${d.low}–$${d.high}${d.volume ? ' | Vol: ' + d.volume : ''}`);
 
-    // Fundamentals
-    if (d.fundamentals) {
-        const f = d.fundamentals;
-        lines.push('\n' + (isHe ? 'פונדמנטאלי:' : 'Fundamentals:'));
-        if (f.marketCap)    lines.push(`  Market Cap: $${(f.marketCap / 1000).toFixed(1)}B`);
-        if (f.pe)           lines.push(`  P/E: ${f.pe}`);
-        if (f.eps)          lines.push(`  EPS: $${f.eps}`);
-        if (f.revenueGrowth)lines.push(`  ${isHe ? 'צמיחת הכנסות' : 'Revenue Growth'} (YoY): ${f.revenueGrowth}`);
-        if (f.grossMargin)  lines.push(`  ${isHe ? 'מרווח גולמי' : 'Gross Margin'}: ${f.grossMargin}`);
-        if (f.netMargin)    lines.push(`  ${isHe ? 'מרווח נקי' : 'Net Margin'}: ${f.netMargin}`);
-        if (f.roe)          lines.push(`  ROE: ${f.roe}`);
-        if (f.debtEquity)   lines.push(`  Debt/Equity: ${f.debtEquity}`);
-        if (f.beta)         lines.push(`  Beta: ${f.beta}`);
-        if (f.dividendYield)lines.push(`  ${isHe ? 'תשואת דיבידנד' : 'Dividend Yield'}: ${f.dividendYield}`);
-        if (f.week52High)   lines.push(`  52W: $${f.week52Low}–$${f.week52High}`);
-    }
+ // Fundamentals
+ if (d.fundamentals) {
+ const f = d.fundamentals;
+ lines.push('\n' + (isHe ? 'פונדמנטאלי:' : 'Fundamentals:'));
+ if (f.marketCap) lines.push(` Market Cap: $${(f.marketCap / 1000).toFixed(1)}B`);
+ if (f.pe) lines.push(` P/E: ${f.pe}`);
+ if (f.eps) lines.push(` EPS: $${f.eps}`);
+ if (f.revenueGrowth)lines.push(` ${isHe ? 'צמיחת הכנסות' : 'Revenue Growth'} (YoY): ${f.revenueGrowth}`);
+ if (f.grossMargin) lines.push(` ${isHe ? 'מרווח גולמי' : 'Gross Margin'}: ${f.grossMargin}`);
+ if (f.netMargin) lines.push(` ${isHe ? 'מרווח נקי' : 'Net Margin'}: ${f.netMargin}`);
+ if (f.roe) lines.push(` ROE: ${f.roe}`);
+ if (f.debtEquity) lines.push(` Debt/Equity: ${f.debtEquity}`);
+ if (f.beta) lines.push(` Beta: ${f.beta}`);
+ if (f.dividendYield)lines.push(` ${isHe ? 'תשואת דיבידנד' : 'Dividend Yield'}: ${f.dividendYield}`);
+ if (f.week52High) lines.push(` 52W: $${f.week52Low}–$${f.week52High}`);
+ }
 
-    // Technical analysis
-    const ta = [];
-    if (d.rsi != null) {
-        const r = parseFloat(d.rsi);
-        const tag = r > 70 ? (isHe ? 'קנוי יתר ⚠️' : 'Overbought ⚠️') : r < 30 ? (isHe ? 'מכור יתר ⚠️' : 'Oversold ⚠️') : (isHe ? 'נייטרלי' : 'Neutral');
-        ta.push(`RSI(14): ${d.rsi} (${tag})`);
-    }
-    if (d.macd != null) {
-        const bull = parseFloat(d.macdHist) > 0;
-        ta.push(`MACD: ${d.macd} | Signal: ${d.macdSig} | Hist: ${d.macdHist} → ${bull ? (isHe ? 'מומנטום חיובי 📈' : 'Bullish 📈') : (isHe ? 'מומנטום שלילי 📉' : 'Bearish 📉')}`);
-    }
-    if (d.sma50 && d.price) {
-        const abv = parseFloat(d.price) > parseFloat(d.sma50);
-        ta.push(`SMA50: $${d.sma50} → ${isHe ? 'מחיר' : 'Price'} ${abv ? (isHe ? 'מעל' : 'above') : (isHe ? 'מתחת' : 'below')} SMA50`);
-    }
-    if (d.sma200 && d.price && d.sma50) {
-        const gc = parseFloat(d.sma50) > parseFloat(d.sma200);
-        ta.push(`SMA200: $${d.sma200} → ${gc ? 'Golden Cross ✨' : (isHe ? 'Death Cross ⚠️' : 'Death Cross ⚠️')}`);
-    }
-    if (ta.length) lines.push('\n' + (isHe ? 'ניתוח טכני:' : 'Technical Analysis:'), ...ta.map(l => '  ' + l));
+ // Technical analysis
+ const ta = [];
+ if (d.rsi != null) {
+ const r = parseFloat(d.rsi);
+ const tag = r > 70 ? (isHe ? 'קנוי יתר ⚠️' : 'Overbought ⚠️') : r < 30 ? (isHe ? 'מכור יתר ⚠️' : 'Oversold ⚠️') : (isHe ? 'נייטרלי' : 'Neutral');
+ ta.push(`RSI(14): ${d.rsi} (${tag})`);
+ }
+ if (d.macd != null) {
+ const bull = parseFloat(d.macdHist) > 0;
+ ta.push(`MACD: ${d.macd} | Signal: ${d.macdSig} | Hist: ${d.macdHist} → ${bull ? (isHe ? 'מומנטום חיובי 📈' : 'Bullish 📈') : (isHe ? 'מומנטום שלילי 📉' : 'Bearish 📉')}`);
+ }
+ if (d.sma50 && d.price) {
+ const abv = parseFloat(d.price) > parseFloat(d.sma50);
+ ta.push(`SMA50: $${d.sma50} → ${isHe ? 'מחיר' : 'Price'} ${abv ? (isHe ? 'מעל' : 'above') : (isHe ? 'מתחת' : 'below')} SMA50`);
+ }
+ if (d.sma200 && d.price && d.sma50) {
+ const gc = parseFloat(d.sma50) > parseFloat(d.sma200);
+ ta.push(`SMA200: $${d.sma200} → ${gc ? 'Golden Cross ✨' : (isHe ? 'Death Cross ⚠️' : 'Death Cross ⚠️')}`);
+ }
+ if (ta.length) lines.push('\n' + (isHe ? 'ניתוח טכני:' : 'Technical Analysis:'), ...ta.map(l => ' ' + l));
 
-    // Peers
-    if (d.peers?.length) {
-        lines.push(`\n${isHe ? 'מתחרים באותו סקטור' : 'Sector peers'}: ${d.peers.join(', ')}`);
-    }
+ // Peers
+ if (d.peers?.length) {
+ lines.push(`\n${isHe ? 'מתחרים באותו סקטור' : 'Sector peers'}: ${d.peers.join(', ')}`);
+ }
 
-    // News
-    if (d.news?.length) {
-        lines.push('\n' + (isHe ? 'חדשות אחרונות (3 ימים):' : 'Recent news (3 days):'));
-        d.news.forEach(n => lines.push(`  • [${n.source}] ${n.headline}`));
-    }
-    return lines.join('\n');
+ // News
+ if (d.news?.length) {
+ lines.push('\n' + (isHe ? 'חדשות אחרונות (3 ימים):' : 'Recent news (3 days):'));
+ d.news.forEach(n => lines.push(` • [${n.source}] ${n.headline}`));
+ }
+ return lines.join('\n');
 }
 
 
 function getLivePrice(symbol) {
-    // Read from StockAPI localStorage cache (sp_SYMBOL)
-    const variants = [symbol, symbol.replace(':', '-'), symbol.split(':').pop()];
-    for (const s of variants) {
-        try {
-            const raw = localStorage.getItem('sp_' + s);
-            if (!raw) continue;
-            const { ts, data } = JSON.parse(raw);
-            if (Date.now() - ts < 24 * 60 * 60 * 1000) return data; // fresh within 24h
-        } catch(e) {}
-    }
-    return null;
+ // Read from StockAPI localStorage cache (sp_SYMBOL)
+ const variants = [symbol, symbol.replace(':', '-'), symbol.split(':').pop()];
+ for (const s of variants) {
+ try {
+ const raw = localStorage.getItem('sp_' + s);
+ if (!raw) continue;
+ const { ts, data } = JSON.parse(raw);
+ if (Date.now() - ts < 24 * 60 * 60 * 1000) return data; // fresh within 24h
+ } catch(e) {}
+ }
+ return null;
 }
 
 // Aggregates ALL of the user's financial data into a structured prompt block
@@ -534,289 +527,289 @@ function getLivePrice(symbol) {
 // portfolio return, asset allocation %, and goals. The advisor uses these
 // numbers to generate concrete recommendations.
 function getPortfolioContext() {
-    const tx = t();
-    const lines = [];
-    let totalStocks = 0, totalFunds = 0, totalCash = 0;
-    let totalCostBasis = 0, totalCurrentValue = 0;
+ const tx = t();
+ const lines = [];
+ let totalStocks = 0, totalFunds = 0, totalCash = 0;
+ let totalCostBasis = 0, totalCurrentValue = 0;
 
-    try {
-        const stockData = Storage.getStocks?.() || { holdings: [] };
-        const stocks = stockData.holdings || stockData || [];
-        if (stocks.length) {
-            stocks.forEach(x => {
-                const live = getLivePrice(x.symbol);
-                const currentP = live?.currentPrice || x.currentPrice || x.avgPrice;
-                const qty = x.quantity || 1;
-                const val = currentP ? currentP * qty : (parseFloat(x.currentValue) || parseFloat(x.value) || 0);
-                const cost = (x.avgPrice || 0) * qty || val;
-                totalStocks += val;
-                totalCostBasis += cost;
-                totalCurrentValue += val;
-            });
-            lines.push('\n' + tx.portfolioHeader);
-            lines.push(`${stocks.length} ${tx.portfolioLabel} ₪${Math.round(totalStocks).toLocaleString()}`);
-            stocks.forEach(x => {
-                const live = getLivePrice(x.symbol);
-                const currentP = live?.currentPrice || x.currentPrice || x.avgPrice;
-                const val = currentP ? currentP * (x.quantity || 1) : (parseFloat(x.currentValue) || parseFloat(x.value) || 0);
-                const dailyChg = live?.priceChangePercent != null ? ` יומי:${live.priceChangePercent >= 0 ? '+' : ''}${live.priceChangePercent.toFixed(1)}%` : '';
-                const gainPct = x.avgPrice && currentP ? (((currentP - x.avgPrice) / x.avgPrice) * 100).toFixed(1) : null;
-                const gainStr = gainPct ? ` רווח:${gainPct >= 0 ? '+' : ''}${gainPct}%` : '';
-                const liveTag = live ? ` [${currentP?.toFixed(2)}]` : '';
-                lines.push(`  • ${x.symbol || x.name}${liveTag}: ₪${Math.round(val).toLocaleString()}${gainStr}${dailyChg}`);
-            });
-        }
-        const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
-        if (funds.length) {
-            totalFunds = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
-            const monthsElapsed = new Date().getMonth() + 1;  // Jan=1 ... Dec=12
-            lines.push('\n' + tx.fundsHeader);
-            funds.forEach(f => {
-                const val = parseFloat(f.currentValue) || parseFloat(f.balance) || 0;
-                const initial = parseFloat(f.initialValue) || parseFloat(f.deposits) || 0;
-                const ret = (initial > 0 && val > 0) ? (((val - initial) / initial) * 100).toFixed(1) : null;
-                const retStr = ret ? `, תשואה: ${ret >= 0 ? '+' : ''}${ret}%` : '';
-                const monthly = parseFloat(f.monthlyDeposit) || 0;
-                const ytd = monthly * monthsElapsed;
-                const monthlyStr = monthly > 0 ? `, הפקדה חודשית: ₪${Math.round(monthly).toLocaleString()}, הופקד YTD: ₪${Math.round(ytd).toLocaleString()}` : '';
-                lines.push(`  • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%${retStr}${monthlyStr}`);
-            });
-            lines.push(`${tx.totalLabel} ₪${Math.round(totalFunds).toLocaleString()}`);
-        }
-        const goals = Storage.get('finance_goals') || [];
-        if (goals.length) {
-            lines.push('\n' + tx.goalsHeader);
-            goals.forEach(g => {
-                const pct = g.targetAmount > 0 ? Math.round(((g.currentAmount||0)/g.targetAmount)*100) : 0;
-                lines.push(`  • ${g.name}: ₪${Math.round(g.currentAmount||0).toLocaleString()} / ₪${Math.round(g.targetAmount||0).toLocaleString()} (${pct}%)${g.deadline ? ', ' + tx.deadlineLabel + ': ' + g.deadline : ''}`);
-            });
-        }
-        const bank = Storage.getBankAccounts?.() || [];
-        if (bank.length) {
-            totalCash = bank.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
-            lines.push('\n' + tx.bankHeader + ` ₪${Math.round(totalCash).toLocaleString()}`);
-        }
+ try {
+ const stockData = Storage.getStocks?.() || { holdings: [] };
+ const stocks = stockData.holdings || stockData || [];
+ if (stocks.length) {
+ stocks.forEach(x => {
+ const live = getLivePrice(x.symbol);
+ const currentP = live?.currentPrice || x.currentPrice || x.avgPrice;
+ const qty = x.quantity || 1;
+ const val = currentP ? currentP * qty : (parseFloat(x.currentValue) || parseFloat(x.value) || 0);
+ const cost = (x.avgPrice || 0) * qty || val;
+ totalStocks += val;
+ totalCostBasis += cost;
+ totalCurrentValue += val;
+ });
+ lines.push('\n' + tx.portfolioHeader);
+ lines.push(`${stocks.length} ${tx.portfolioLabel} ₪${Math.round(totalStocks).toLocaleString()}`);
+ stocks.forEach(x => {
+ const live = getLivePrice(x.symbol);
+ const currentP = live?.currentPrice || x.currentPrice || x.avgPrice;
+ const val = currentP ? currentP * (x.quantity || 1) : (parseFloat(x.currentValue) || parseFloat(x.value) || 0);
+ const dailyChg = live?.priceChangePercent != null ? ` יומי:${live.priceChangePercent >= 0 ? '+' : ''}${live.priceChangePercent.toFixed(1)}%` : '';
+ const gainPct = x.avgPrice && currentP ? (((currentP - x.avgPrice) / x.avgPrice) * 100).toFixed(1) : null;
+ const gainStr = gainPct ? ` רווח:${gainPct >= 0 ? '+' : ''}${gainPct}%` : '';
+ const liveTag = live ? ` [${currentP?.toFixed(2)}]` : '';
+ lines.push(` • ${x.symbol || x.name}${liveTag}: ₪${Math.round(val).toLocaleString()}${gainStr}${dailyChg}`);
+ });
+ }
+ const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
+ if (funds.length) {
+ totalFunds = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
+ const monthsElapsed = new Date().getMonth() + 1; // Jan=1 ... Dec=12
+ lines.push('\n' + tx.fundsHeader);
+ funds.forEach(f => {
+ const val = parseFloat(f.currentValue) || parseFloat(f.balance) || 0;
+ const initial = parseFloat(f.initialValue) || parseFloat(f.deposits) || 0;
+ const ret = (initial > 0 && val > 0) ? (((val - initial) / initial) * 100).toFixed(1) : null;
+ const retStr = ret ? `, תשואה: ${ret >= 0 ? '+' : ''}${ret}%` : '';
+ const monthly = parseFloat(f.monthlyDeposit) || 0;
+ const ytd = monthly * monthsElapsed;
+ const monthlyStr = monthly > 0 ? `, הפקדה חודשית: ₪${Math.round(monthly).toLocaleString()}, הופקד YTD: ₪${Math.round(ytd).toLocaleString()}` : '';
+ lines.push(` • ${f.name} (${f.type || ''}): ₪${Math.round(val).toLocaleString()}, ${tx.feesLabel} ${f.fee || '?'}%${retStr}${monthlyStr}`);
+ });
+ lines.push(`${tx.totalLabel} ₪${Math.round(totalFunds).toLocaleString()}`);
+ }
+ const goals = Storage.get('finance_goals') || [];
+ if (goals.length) {
+ lines.push('\n' + tx.goalsHeader);
+ goals.forEach(g => {
+ const pct = g.targetAmount > 0 ? Math.round(((g.currentAmount||0)/g.targetAmount)*100) : 0;
+ lines.push(` • ${g.name}: ₪${Math.round(g.currentAmount||0).toLocaleString()} / ₪${Math.round(g.targetAmount||0).toLocaleString()} (${pct}%)${g.deadline ? ', ' + tx.deadlineLabel + ': ' + g.deadline : ''}`);
+ });
+ }
+ const bank = Storage.getBankAccounts?.() || [];
+ if (bank.length) {
+ totalCash = bank.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+ lines.push('\n' + tx.bankHeader + ` ₪${Math.round(totalCash).toLocaleString()}`);
+ }
 
-        // ── Roll-up summary so the AI doesn't have to compute aggregates ──
-        const totalNetWorth = totalStocks + totalFunds + totalCash;
-        if (totalNetWorth > 0) {
-            const totalReturn = totalCostBasis > 0
-                ? (((totalCurrentValue - totalCostBasis) / totalCostBasis) * 100).toFixed(1)
-                : null;
-            const allocStocks = ((totalStocks / totalNetWorth) * 100).toFixed(0);
-            const allocFunds = ((totalFunds / totalNetWorth) * 100).toFixed(0);
-            const allocCash = ((totalCash / totalNetWorth) * 100).toFixed(0);
-            lines.push(`\n=== סיכום (אגרגציה) ===`);
-            lines.push(`שווי נטו כולל: ₪${Math.round(totalNetWorth).toLocaleString()}`);
-            lines.push(`חלוקת נכסים: מניות ${allocStocks}% | קרנות ${allocFunds}% | מזומן ${allocCash}%`);
-            if (totalReturn != null) lines.push(`תשואה כוללת על תיק המניות: ${totalReturn >= 0 ? '+' : ''}${totalReturn}%`);
-            // Available cash to deploy: assume 3-month emergency fund stays put.
-            // Heuristic: if user has goals, subtract sum of upcoming targets within 12mo.
-            const liquidExcess = Math.max(0, totalCash - 30000); // tunable: leave 30k as emergency
-            if (liquidExcess > 1000) {
-                lines.push(`כסף פנוי להשקעה (אחרי שמירה על קרן חירום ~₪30K): כ-₪${Math.round(liquidExcess).toLocaleString()}`);
-            }
-        }
-    } catch(e) {}
-    return lines.join('\n');
+ // ── Roll-up summary so the AI doesn't have to compute aggregates ──
+ const totalNetWorth = totalStocks + totalFunds + totalCash;
+ if (totalNetWorth > 0) {
+ const totalReturn = totalCostBasis > 0
+ ? (((totalCurrentValue - totalCostBasis) / totalCostBasis) * 100).toFixed(1)
+ : null;
+ const allocStocks = ((totalStocks / totalNetWorth) * 100).toFixed(0);
+ const allocFunds = ((totalFunds / totalNetWorth) * 100).toFixed(0);
+ const allocCash = ((totalCash / totalNetWorth) * 100).toFixed(0);
+ lines.push(`\n=== סיכום (אגרגציה) ===`);
+ lines.push(`שווי נטו כולל: ₪${Math.round(totalNetWorth).toLocaleString()}`);
+ lines.push(`חלוקת נכסים: מניות ${allocStocks}% | קרנות ${allocFunds}% | מזומן ${allocCash}%`);
+ if (totalReturn != null) lines.push(`תשואה כוללת על תיק המניות: ${totalReturn >= 0 ? '+' : ''}${totalReturn}%`);
+ // Available cash to deploy: assume 3-month emergency fund stays put.
+ // Heuristic: if user has goals, subtract sum of upcoming targets within 12mo.
+ const liquidExcess = Math.max(0, totalCash - 30000); // tunable: leave 30k as emergency
+ if (liquidExcess > 1000) {
+ lines.push(`כסף פנוי להשקעה (אחרי שמירה על קרן חירום ~₪30K): כ-₪${Math.round(liquidExcess).toLocaleString()}`);
+ }
+ }
+ } catch(e) {}
+ return lines.join('\n');
 }
 
 // State: how much the user wants to invest. Initialized from free cash but
 // editable by the user. Stored in localStorage so it persists across visits.
 const INVEST_AMOUNT_KEY = 'wl_invest_amount';
 function getInvestAmount() {
-    const stored = parseFloat(localStorage.getItem(INVEST_AMOUNT_KEY));
-    if (stored > 0) return stored;
-    // Default: free cash (bank - 30k emergency) if available, else 0.
-    try {
-        const bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
-        return Math.max(0, bank - 30000);
-    } catch { return 0; }
+ const stored = parseFloat(localStorage.getItem(INVEST_AMOUNT_KEY));
+ if (stored > 0) return stored;
+ // Default: free cash (bank - 30k emergency) if available, else 0.
+ try {
+ const bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+ return Math.max(0, bank - 30000);
+ } catch { return 0; }
 }
 function setInvestAmount(n) {
-    if (n > 0) localStorage.setItem(INVEST_AMOUNT_KEY, String(n));
+ if (n > 0) localStorage.setItem(INVEST_AMOUNT_KEY, String(n));
 }
 
 function buildSystemPrompt() {
-    const tx = t();
-    const portfolioCtx = getPortfolioContext();
-    const amount = getInvestAmount();
-    // Crystal-clear hard constraint at the TOP of the system prompt — not buried
-    // in the long context block. AI is told explicitly the budget cap.
-    const budgetBlock = amount > 0 ? `
+ const tx = t();
+ const portfolioCtx = getPortfolioContext();
+ const amount = getInvestAmount();
+ // Crystal-clear hard constraint at the TOP of the system prompt — not buried
+ // in the long context block. AI is told explicitly the budget cap.
+ const budgetBlock = amount > 0 ? `
 
 ⚡ אילוץ קשיח (חובה): המשתמש מוכן להשקיע **בדיוק ₪${Math.round(amount).toLocaleString()}** עכשיו. סך כל ההמלצות שלך חייב להיות **שווה או פחות** מהסכום הזה. לא להציע סכום גבוה יותר. להפיץ את הסכום בין 3 המלצות.
 
 ` : '';
-    return tx.systemBase + budgetBlock + (portfolioCtx ? '\n' + portfolioCtx : '');
+ return tx.systemBase + budgetBlock + (portfolioCtx ? '\n' + portfolioCtx : '');
 }
 
 // ── Recommendation validation: parse AI response and flag obvious issues ──
 // Runs on every assistant message. Returns array of {level, msg} warnings.
 function validateRecommendation(text) {
-    const warnings = [];
-    if (!text || typeof text !== 'string') return warnings;
+ const warnings = [];
+ if (!text || typeof text !== 'string') return warnings;
 
-    // Extract ₪ amounts mentioned in the recommendation
-    const amounts = [...text.matchAll(/₪\s*([\d,]+(?:\.\d+)?)/g)]
-        .map(m => parseFloat(m[1].replace(/,/g, '')))
-        .filter(n => !isNaN(n) && n > 0);
+ // Extract ₪ amounts mentioned in the recommendation
+ const amounts = [...text.matchAll(/₪\s*([\d,]+(?:\.\d+)?)/g)]
+ .map(m => parseFloat(m[1].replace(/,/g, '')))
+ .filter(n => !isNaN(n) && n > 0);
 
-    // 1. Sum of recommendations vs free cash budget
-    const budget = getInvestAmount();
-    if (budget > 0 && amounts.length >= 2) {
-        // Heuristic: pick the 3 LARGEST distinct amounts as "recommendation amounts"
-        const sorted = [...amounts].sort((a, b) => b - a).slice(0, 3);
-        const total = sorted.reduce((s, n) => s + n, 0);
-        if (total > budget * 1.1) {
-            warnings.push({ level: 'error',
-                msg: `סך ההמלצות (₪${Math.round(total).toLocaleString()}) חורג מהתקציב שהקצבת (₪${Math.round(budget).toLocaleString()}). תפחית בהתאם לפני ביצוע.` });
-        }
-        // Single recommendation > budget
-        if (sorted[0] > budget * 1.05) {
-            warnings.push({ level: 'error',
-                msg: `המלצה בודדת בגובה ₪${Math.round(sorted[0]).toLocaleString()} גדולה מהתקציב הפנוי (₪${Math.round(budget).toLocaleString()}).` });
-        }
-    }
+ // 1. Sum of recommendations vs free cash budget
+ const budget = getInvestAmount();
+ if (budget > 0 && amounts.length >= 2) {
+ // Heuristic: pick the 3 LARGEST distinct amounts as "recommendation amounts"
+ const sorted = [...amounts].sort((a, b) => b - a).slice(0, 3);
+ const total = sorted.reduce((s, n) => s + n, 0);
+ if (total > budget * 1.1) {
+ warnings.push({ level: 'error',
+ msg: `סך ההמלצות (₪${Math.round(total).toLocaleString()}) חורג מהתקציב שהקצבת (₪${Math.round(budget).toLocaleString()}). תפחית בהתאם לפני ביצוע.` });
+ }
+ // Single recommendation > budget
+ if (sorted[0] > budget * 1.05) {
+ warnings.push({ level: 'error',
+ msg: `המלצה בודדת בגובה ₪${Math.round(sorted[0]).toLocaleString()} גדולה מהתקציב הפנוי (₪${Math.round(budget).toLocaleString()}).` });
+ }
+ }
 
-    // 2. Tiny amounts (< ₪500) — likely AI miscount
-    const tiny = amounts.filter(n => n > 0 && n < 500).length;
-    if (tiny >= 2) {
-        warnings.push({ level: 'info',
-            msg: `כמה המלצות בסכומים זעירים (פחות מ-₪500). זה בדרך כלל לא יעיל בגלל עמלות. ETFs דורשים מינימום ~₪1,000-2,000.` });
-    }
+ // 2. Tiny amounts (< ₪500) — likely AI miscount
+ const tiny = amounts.filter(n => n > 0 && n < 500).length;
+ if (tiny >= 2) {
+ warnings.push({ level: 'info',
+ msg: `כמה המלצות בסכומים זעירים (פחות מ-₪500). זה בדרך כלל לא יעיל בגלל עמלות. ETFs דורשים מינימום ~₪1,000-2,000.` });
+ }
 
-    // 3. Unrealistic returns — anything > 30% annual is a red flag
-    // Match patterns like "תשואה: 50%" or "expected return: 60%" or "X-Y% שנתי"
-    const returnMatches = [...text.matchAll(/(?:תשואה(?:[^%]{0,40})?|return[^%]{0,40}?)(\d{2,3})\s*%/gi)];
-    for (const m of returnMatches) {
-        const pct = parseInt(m[1], 10);
-        if (pct >= 30) {
-            warnings.push({ level: 'error',
-                msg: `המודל הציע תשואה צפויה של ${pct}% שנתי — זה לא ריאלי. ETFs רחבים: 7-10%/שנה היסטורית. מניה בודדת: 10-25% (לא מובטח).` });
-            break;
-        }
-    }
+ // 3. Unrealistic returns — anything > 30% annual is a red flag
+ // Match patterns like "תשואה: 50%" or "expected return: 60%" or "X-Y% שנתי"
+ const returnMatches = [...text.matchAll(/(?:תשואה(?:[^%]{0,40})?|return[^%]{0,40}?)(\d{2,3})\s*%/gi)];
+ for (const m of returnMatches) {
+ const pct = parseInt(m[1], 10);
+ if (pct >= 30) {
+ warnings.push({ level: 'error',
+ msg: `המודל הציע תשואה צפויה של ${pct}% שנתי — זה לא ריאלי. ETFs רחבים: 7-10%/שנה היסטורית. מניה בודדת: 10-25% (לא מובטח).` });
+ break;
+ }
+ }
 
-    // 4. Allocation conflict — if user is already heavy in stocks, flag stock-heavy recs
-    try {
-        const stockData = Storage.getStocks?.() || { holdings: [] };
-        const stocks = stockData.holdings || stockData || [];
-        const totalStocks = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
-        const funds = Storage.getMyFunds?.() || [];
-        const totalFunds = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
-        const bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
-        const total = totalStocks + totalFunds + bank;
-        if (total > 0) {
-            const stockPct = (totalStocks / total) * 100;
-            // Count stock/ETF mentions in the recommendation
-            const stockMentions = (text.match(/\b(ETF|מניה|מניות|VTI|VOO|QQQ|S&P|נאסד[ק"]?|stocks?|equities?)\b/gi) || []).length;
-            if (stockPct > 75 && stockMentions >= 3) {
-                warnings.push({ level: 'warn',
-                    msg: `התיק שלך כבר ${stockPct.toFixed(0)}% במניות. ההמלצה עם הרבה מניות תעמיק את חוסר האיזון. שקול אג"ח/REITs/קופת גמל לאיזון.` });
-            }
-        }
-    } catch {}
+ // 4. Allocation conflict — if user is already heavy in stocks, flag stock-heavy recs
+ try {
+ const stockData = Storage.getStocks?.() || { holdings: [] };
+ const stocks = stockData.holdings || stockData || [];
+ const totalStocks = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
+ const funds = Storage.getMyFunds?.() || [];
+ const totalFunds = funds.reduce((s, f) => s + (parseFloat(f.currentValue) || parseFloat(f.balance) || 0), 0);
+ const bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+ const total = totalStocks + totalFunds + bank;
+ if (total > 0) {
+ const stockPct = (totalStocks / total) * 100;
+ // Count stock/ETF mentions in the recommendation
+ const stockMentions = (text.match(/\b(ETF|מניה|מניות|VTI|VOO|QQQ|S&P|נאסד[ק"]?|stocks?|equities?)\b/gi) || []).length;
+ if (stockPct > 75 && stockMentions >= 3) {
+ warnings.push({ level: 'warn',
+ msg: `התיק שלך כבר ${stockPct.toFixed(0)}% במניות. ההמלצה עם הרבה מניות תעמיק את חוסר האיזון. שקול אג"ח/REITs/קופת גמל לאיזון.` });
+ }
+ }
+ } catch {}
 
-    return warnings;
+ return warnings;
 }
 
 // Validate tickers mentioned in recommendation against Yahoo Finance
 async function validateTickers(text) {
-    const tickers = [...new Set(
-        (text.match(/\b[A-Z]{2,5}(?:\.TA)?\b/g) || [])
-            // exclude common false positives
-            .filter(t => !['ETF', 'AI', 'TA', 'IL', 'US', 'EU', 'YTD', 'EOF', 'API', 'JSON', 'IRA', 'NYSE', 'NASDAQ', 'SP500', 'CDB', 'LCI', 'LCA', 'FII', 'PGBL', 'VGBL'].includes(t))
-    )];
-    const results = {};
-    for (const sym of tickers.slice(0, 10)) {  // cap at 10 to avoid spam
-        try {
-            // Cheap probe: Yahoo summary API redirects on bad ticker
-            const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=5d&interval=1d`);
-            results[sym] = r.ok;
-        } catch { results[sym] = null; }
-    }
-    return results;
+ const tickers = [...new Set(
+ (text.match(/\b[A-Z]{2,5}(?:\.TA)?\b/g) || [])
+ // exclude common false positives
+ .filter(t => !['ETF', 'AI', 'TA', 'IL', 'US', 'EU', 'YTD', 'EOF', 'API', 'JSON', 'IRA', 'NYSE', 'NASDAQ', 'SP500', 'CDB', 'LCI', 'LCA', 'FII', 'PGBL', 'VGBL'].includes(t))
+ )];
+ const results = {};
+ for (const sym of tickers.slice(0, 10)) { // cap at 10 to avoid spam
+ try {
+ // Cheap probe: Yahoo summary API redirects on bad ticker
+ const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=5d&interval=1d`);
+ results[sym] = r.ok;
+ } catch { results[sym] = null; }
+ }
+ return results;
 }
 
 function renderMessage(role, text, sources = null) {
-    const container = document.getElementById('chatMessages');
-    const row = document.createElement('div');
-    row.className = `chat-row ${role}`;
-    const bubble = document.createElement('div');
-    bubble.className = `chat-bubble chat-${role}`;
+ const container = document.getElementById('chatMessages');
+ const row = document.createElement('div');
+ row.className = `chat-row ${role}`;
+ const bubble = document.createElement('div');
+ bubble.className = `chat-bubble chat-${role}`;
 
-    // For assistant messages — run validation and prepend warnings
-    if (role === 'assistant') {
-        const warnings = validateRecommendation(text);
-        if (warnings.length) {
-            const colors = {
-                error: { bg: 'rgba(239,68,68,0.1)',  border: 'rgba(239,68,68,0.35)',  text: '#fca5a5', icon: '🚨' },
-                warn:  { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.3)',  text: '#fcd34d', icon: '⚠️' },
-                info:  { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.3)',  text: '#93c5fd', icon: 'ℹ️' },
-            };
-            const wrapper = document.createElement('div');
-            wrapper.style.cssText = 'margin-bottom:10px;display:flex;flex-direction:column;gap:6px;';
-            warnings.forEach(w => {
-                const c = colors[w.level] || colors.info;
-                const div = document.createElement('div');
-                div.style.cssText = `padding:9px 13px;background:${c.bg};border:1px solid ${c.border};border-radius:9px;font-size:0.85rem;color:${c.text};line-height:1.4;`;
-                div.textContent = `${c.icon} ${w.msg}`;
-                wrapper.appendChild(div);
-            });
-            row.appendChild(wrapper);
-        }
-        // Async ticker validation — runs after render and updates badges
-        validateTickers(text).then(results => {
-            const invalid = Object.entries(results).filter(([k, v]) => v === false).map(([k]) => k);
-            if (invalid.length) {
-                const div = document.createElement('div');
-                div.style.cssText = 'margin-top:8px;padding:9px 13px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);border-radius:9px;font-size:0.85rem;color:#fca5a5;line-height:1.4;';
-                div.textContent = `🚨 הטיקרים הבאים לא נמצאו ב-Yahoo Finance — אמת לפני ביצוע: ${invalid.join(', ')}`;
-                row.appendChild(div);
-            }
-        }).catch(() => {});
-    }
+ // For assistant messages — run validation and prepend warnings
+ if (role === 'assistant') {
+ const warnings = validateRecommendation(text);
+ if (warnings.length) {
+ const colors = {
+ error: { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.35)', text: '#fca5a5', icon: '🚨' },
+ warn: { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.3)', text: '#fcd34d', icon: '⚠️' },
+ info: { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.3)', text: '#93c5fd', icon: 'ℹ️' },
+ };
+ const wrapper = document.createElement('div');
+ wrapper.style.cssText = 'margin-bottom:10px;display:flex;flex-direction:column;gap:6px;';
+ warnings.forEach(w => {
+ const c = colors[w.level] || colors.info;
+ const div = document.createElement('div');
+ div.style.cssText = `padding:9px 13px;background:${c.bg};border:1px solid ${c.border};border-radius:9px;font-size:0.85rem;color:${c.text};line-height:1.4;`;
+ div.textContent = `${c.icon} ${w.msg}`;
+ wrapper.appendChild(div);
+ });
+ row.appendChild(wrapper);
+ }
+ // Async ticker validation — runs after render and updates badges
+ validateTickers(text).then(results => {
+ const invalid = Object.entries(results).filter(([k, v]) => v === false).map(([k]) => k);
+ if (invalid.length) {
+ const div = document.createElement('div');
+ div.style.cssText = 'margin-top:8px;padding:9px 13px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);border-radius:9px;font-size:0.85rem;color:#fca5a5;line-height:1.4;';
+ div.textContent = `🚨 הטיקרים הבאים לא נמצאו ב-Yahoo Finance — אמת לפני ביצוע: ${invalid.join(', ')}`;
+ row.appendChild(div);
+ }
+ }).catch(() => {});
+ }
 
-    bubble.innerHTML = markdownToHtml(text);
-    row.appendChild(bubble);
+ bubble.innerHTML = markdownToHtml(text);
+ row.appendChild(bubble);
 
-    // Render web search citations (Tavily) under the assistant bubble
-    if (role === 'assistant' && sources && sources.length) {
-        const citations = document.createElement('div');
-        citations.style.cssText = 'margin-top:8px;padding:10px 12px;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:8px;font-size:11.5px;line-height:1.55';
-        citations.innerHTML = '<div style="color:var(--color-text-secondary);font-weight:600;margin-bottom:6px">📚 מקורות עדכניים (web):</div>' +
-            sources.map((s, i) => {
-                const safeUrl = (s.url || '').replace(/"/g, '&quot;');
-                const safeTitle = (s.title || s.url || '').replace(/[<>]/g, '');
-                const dateStr = s.published ? ` · ${s.published.slice(0,10)}` : '';
-                return `<div style="margin:3px 0"><a href="${safeUrl}" target="_blank" rel="noopener" style="color:#a5b4fc;text-decoration:none">${i+1}. ${safeTitle}</a><span style="color:var(--color-text-secondary);font-size:10.5px">${dateStr}</span></div>`;
-            }).join('');
-        row.appendChild(citations);
-    }
+ // Render web search citations (Tavily) under the assistant bubble
+ if (role === 'assistant' && sources && sources.length) {
+ const citations = document.createElement('div');
+ citations.style.cssText = 'margin-top:8px;padding:10px 12px;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:8px;font-size:11.5px;line-height:1.55';
+ citations.innerHTML = '<div style="color:var(--color-text-secondary);font-weight:600;margin-bottom:6px">📚 מקורות עדכניים (web):</div>' +
+ sources.map((s, i) => {
+ const safeUrl = (s.url || '').replace(/"/g, '&quot;');
+ const safeTitle = (s.title || s.url || '').replace(/[<>]/g, '');
+ const dateStr = s.published ? ` · ${s.published.slice(0,10)}` : '';
+ return `<div style="margin:3px 0"><a href="${safeUrl}" target="_blank" rel="noopener" style="color:#a5b4fc;text-decoration:none">${i+1}. ${safeTitle}</a><span style="color:var(--color-text-secondary);font-size:10.5px">${dateStr}</span></div>`;
+ }).join('');
+ row.appendChild(citations);
+ }
 
-    container.appendChild(row);
-    container.scrollTop = container.scrollHeight;
+ container.appendChild(row);
+ container.scrollTop = container.scrollHeight;
 }
 
 function markdownToHtml(text) {
-    return text
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g,'<em>$1</em>')
-        .replace(/^#{1,3}\s+(.+)$/gm,'<strong>$1</strong>')
-        .replace(/^[-•]\s+(.+)$/gm,'• $1')
-        .replace(/\n/g,'<br>');
+ return text
+ .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+ .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+ .replace(/\*(.+?)\*/g,'<em>$1</em>')
+ .replace(/^#{1,3}\s+(.+)$/gm,'<strong>$1</strong>')
+ .replace(/^[-•]\s+(.+)$/gm,'• $1')
+ .replace(/\n/g,'<br>');
 }
 
 function showTyping() {
-    const container = document.getElementById('chatMessages');
-    const row = document.createElement('div');
-    row.className = 'chat-row assistant';
-    row.id = 'typingIndicator';
-    row.innerHTML = '<div class="chat-bubble chat-assistant" style="padding:14px 18px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
-    container.appendChild(row);
-    container.scrollTop = container.scrollHeight;
+ const container = document.getElementById('chatMessages');
+ const row = document.createElement('div');
+ row.className = 'chat-row assistant';
+ row.id = 'typingIndicator';
+ row.innerHTML = '<div class="chat-bubble chat-assistant" style="padding:14px 18px;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+ container.appendChild(row);
+ container.scrollTop = container.scrollHeight;
 }
 function removeTyping() { document.getElementById('typingIndicator')?.remove(); }
 
@@ -824,254 +817,254 @@ const AI_PROXY_URL = 'https://master-backend-79jx.onrender.com/api/ai-proxy';
 const AI_HEALTH_URL = 'https://master-backend-79jx.onrender.com/health';
 
 async function _postAI(body) {
-    return fetch(AI_PROXY_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-    });
+ return fetch(AI_PROXY_URL, {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify(body),
+ });
 }
 
 async function aiProxy({ messages, system, maxTokens = 2048, search = false, searchTopic = 'finance' }) {
-    const body = { messages, system, maxTokens };
-    if (search) { body.search = true; body.searchTopic = searchTopic; }
-    let res = await _postAI(body);
+ const body = { messages, system, maxTokens };
+ if (search) { body.search = true; body.searchTopic = searchTopic; }
+ let res = await _postAI(body);
 
-    // Render free tier sleeps after 15 min — auto-retry on 502/503/504 with
-    // a /health warm-up so the user doesn't see a cold-start error.
-    if ([502, 503, 504].includes(res.status)) {
-        const typingEl = document.getElementById('typingIndicator');
-        if (typingEl) {
-            const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
-            const msg = ({
-                he: '⏳ רגע אחד, מכין את התשובה…',
-                en: '⏳ One moment, getting your answer…',
-                pt: '⏳ Um momento, preparando a resposta…',
-                es: '⏳ Un momento, preparando la respuesta…',
-            })[lang] || '⏳ One moment…';
-            typingEl.querySelector('.chat-bubble').innerHTML =
-                `<span style="font-size:0.8rem;color:var(--color-text-secondary)">${msg}</span>`;
-        }
-        try { await fetch(AI_HEALTH_URL, { cache: 'no-store' }); } catch {}
-        await new Promise(r => setTimeout(r, 8000));
-        res = await _postAI(body);
-        if ([502, 503, 504].includes(res.status)) {
-            await new Promise(r => setTimeout(r, 12000));
-            res = await _postAI(body);
-        }
-    }
+ // Render free tier sleeps after 15 min — auto-retry on 502/503/504 with
+ // a /health warm-up so the user doesn't see a cold-start error.
+ if ([502, 503, 504].includes(res.status)) {
+ const typingEl = document.getElementById('typingIndicator');
+ if (typingEl) {
+ const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
+ const msg = ({
+ he: '⏳ רגע אחד, מכין את התשובה…',
+ en: '⏳ One moment, getting your answer…',
+ pt: '⏳ Um momento, preparando a resposta…',
+ es: '⏳ Un momento, preparando la respuesta…',
+ })[lang] || '⏳ One moment…';
+ typingEl.querySelector('.chat-bubble').innerHTML =
+ `<span style="font-size:0.8rem;color:var(--color-text-secondary)">${msg}</span>`;
+ }
+ try { await fetch(AI_HEALTH_URL, { cache: 'no-store' }); } catch {}
+ await new Promise(r => setTimeout(r, 8000));
+ res = await _postAI(body);
+ if ([502, 503, 504].includes(res.status)) {
+ await new Promise(r => setTimeout(r, 12000));
+ res = await _postAI(body);
+ }
+ }
 
-    if (!res.ok) {
-        if (res.status === 429) { const e = new Error('rate'); e.code = 'functions/resource-exhausted'; throw e; }
-        throw new Error('AI error: ' + res.status);
-    }
-    const json = await res.json();
-    if (json.error) throw new Error(json.error);
-    return { data: { text: json.text, sources: json.sources || [], searchUsed: !!json.searchUsed } };
+ if (!res.ok) {
+ if (res.status === 429) { const e = new Error('rate'); e.code = 'functions/resource-exhausted'; throw e; }
+ throw new Error('AI error: ' + res.status);
+ }
+ const json = await res.json();
+ if (json.error) throw new Error(json.error);
+ return { data: { text: json.text, sources: json.sources || [], searchUsed: !!json.searchUsed } };
 }
 
 async function sendMessage() {
-    if (isLoading) return;
-    const input = document.getElementById('chatInput');
-    const text = input.value.trim();
-    if (!text) return;
-    if (!currentUser) { renderMessage('assistant', t().loginMsg); return; }
+ if (isLoading) return;
+ const input = document.getElementById('chatInput');
+ const text = input.value.trim();
+ if (!text) return;
+ if (!currentUser) { renderMessage('assistant', t().loginMsg); return; }
 
-    document.getElementById('suggestions').style.display = 'none';
-    input.value = '';
-    autoResize(input);
-    isLoading = true;
-    document.getElementById('sendBtn').style.opacity = '0.5';
+ document.getElementById('suggestions').style.display = 'none';
+ input.value = '';
+ autoResize(input);
+ isLoading = true;
+ document.getElementById('sendBtn').style.opacity = '0.5';
 
-    renderMessage('user', text);
-    conversationHistory.push({ role: 'user', parts: [{ text }] });
-    showTyping();
+ renderMessage('user', text);
+ conversationHistory.push({ role: 'user', parts: [{ text }] });
+ showTyping();
 
-    try {
-        // Fetch live market data for any tickers mentioned
-        const tickers = extractTickers(text);
-        let marketCtx = '';
-        if (tickers.length) {
-            const typingEl = document.getElementById('typingIndicator');
-            if (typingEl) typingEl.querySelector('.chat-bubble').innerHTML =
-                `<span style="font-size:0.8rem;color:var(--color-text-secondary)">📡 טוען נתוני שוק: ${tickers.join(', ')}...</span>`;
-            const mdResults = await Promise.allSettled(tickers.map(fetchMarketData));
-            mdResults.forEach(r => { if (r.status === 'fulfilled' && r.value) marketCtx += formatMarketContext(r.value); });
-            if (typingEl) typingEl.querySelector('.chat-bubble').innerHTML =
-                '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
-        }
-        const system = buildSystemPrompt() + marketCtx;
+ try {
+ // Fetch live market data for any tickers mentioned
+ const tickers = extractTickers(text);
+ let marketCtx = '';
+ if (tickers.length) {
+ const typingEl = document.getElementById('typingIndicator');
+ if (typingEl) typingEl.querySelector('.chat-bubble').innerHTML =
+ `<span style="font-size:0.8rem;color:var(--color-text-secondary)">📡 טוען נתוני שוק: ${tickers.join(', ')}...</span>`;
+ const mdResults = await Promise.allSettled(tickers.map(fetchMarketData));
+ mdResults.forEach(r => { if (r.status === 'fulfilled' && r.value) marketCtx += formatMarketContext(r.value); });
+ if (typingEl) typingEl.querySelector('.chat-bubble').innerHTML =
+ '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+ }
+ const system = buildSystemPrompt() + marketCtx;
 
-        // Use Tavily web search for the auto-analysis (first message) — gets
-        // real-time fund returns, interest rates, current market state. After
-        // that, follow-up chat uses cheaper Gemini-only.
-        const isFirstAnalysis = conversationHistory.filter(m => m.role === 'user').length <= 1;
-        const result = await aiProxy({
-            messages: conversationHistory, system,
-            search: isFirstAnalysis,
-            searchTopic: 'finance',
-        });
-        removeTyping();
-        const reply = result.data.text;
-        conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
-        renderMessage('assistant', reply, result.data.sources);
-        saveHistory();
-    } catch(e) {
-        removeTyping();
-        renderMessage('assistant', e.code === 'functions/resource-exhausted' ? t().rateLimit : t().error);
-    }
+ // Use Tavily web search for the auto-analysis (first message) — gets
+ // real-time fund returns, interest rates, current market state. After
+ // that, follow-up chat uses cheaper Gemini-only.
+ const isFirstAnalysis = conversationHistory.filter(m => m.role === 'user').length <= 1;
+ const result = await aiProxy({
+ messages: conversationHistory, system,
+ search: isFirstAnalysis,
+ searchTopic: 'finance',
+ });
+ removeTyping();
+ const reply = result.data.text;
+ conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+ renderMessage('assistant', reply, result.data.sources);
+ saveHistory();
+ } catch(e) {
+ removeTyping();
+ renderMessage('assistant', e.code === 'functions/resource-exhausted' ? t().rateLimit : t().error);
+ }
 
-    isLoading = false;
-    document.getElementById('sendBtn').style.opacity = '1';
-    input.focus();
+ isLoading = false;
+ document.getElementById('sendBtn').style.opacity = '1';
+ input.focus();
 }
 
 function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 160) + 'px'; }
 
 function clearChat() {
-    if (!confirm(t().clearConfirm)) return;
-    conversationHistory = [];
-    document.getElementById('chatMessages').innerHTML = '';
-    document.getElementById('suggestions').style.display = 'block';
-    localStorage.removeItem(CHAT_HISTORY_KEY);
+ if (!confirm(t().clearConfirm)) return;
+ conversationHistory = [];
+ document.getElementById('chatMessages').innerHTML = '';
+ document.getElementById('suggestions').style.display = 'block';
+ localStorage.removeItem(CHAT_HISTORY_KEY);
 }
 function saveHistory() { try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(conversationHistory.slice(-40))); } catch(e) {} }
 function loadHistory() {
-    try {
-        const saved = localStorage.getItem(CHAT_HISTORY_KEY);
-        if (saved) {
-            conversationHistory = JSON.parse(saved);
-            conversationHistory.forEach(m => renderMessage(m.role === 'model' ? 'assistant' : m.role, m.parts?.[0]?.text || ''));
-            if (conversationHistory.length > 0) document.getElementById('suggestions').style.display = 'none';
-        }
-    } catch(e) {}
+ try {
+ const saved = localStorage.getItem(CHAT_HISTORY_KEY);
+ if (saved) {
+ conversationHistory = JSON.parse(saved);
+ conversationHistory.forEach(m => renderMessage(m.role === 'model' ? 'assistant' : m.role, m.parts?.[0]?.text || ''));
+ if (conversationHistory.length > 0) document.getElementById('suggestions').style.display = 'none';
+ }
+ } catch(e) {}
 }
 
 function updateApiStatus(user) {
-    const el = document.getElementById('apiStatus');
-    const tx = t();
-    if (user) {
-        const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
-        el.textContent = isYolo ? tx.yolo : tx.connected;
-        el.style.background = isYolo ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.12)';
-        el.style.color = isYolo ? '#f59e0b' : '#10b981';
-    } else {
-        el.textContent = tx.loginRequired;
-        el.style.background = 'rgba(245,158,11,0.1)';
-        el.style.color = '#f59e0b';
-    }
+ const el = document.getElementById('apiStatus');
+ const tx = t();
+ if (user) {
+ const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
+ el.textContent = isYolo ? tx.yolo : tx.connected;
+ el.style.background = isYolo ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.12)';
+ el.style.color = isYolo ? '#f59e0b' : '#10b981';
+ } else {
+ el.textContent = tx.loginRequired;
+ el.style.background = 'rgba(245,158,11,0.1)';
+ el.style.color = '#f59e0b';
+ }
 }
 
 firebase.auth().onAuthStateChanged(async user => {
-    currentUser = user;
-    if (user && typeof Plan !== 'undefined') await Plan.load();
-    updateApiStatus(user);
+ currentUser = user;
+ if (user && typeof Plan !== 'undefined') await Plan.load();
+ updateApiStatus(user);
 });
 
 // Auto-recommendation: as soon as the user lands on the page, the advisor
 // looks at their portfolio + free cash + goals + holding returns and gives
 // 3 concrete recommendations without the user typing anything.
 async function autoAnalyze(force = false) {
-    if (!currentUser) return;                         // need to be logged in
-    if (!force && conversationHistory.length > 0) return; // already mid-chat (unless forced via 🔄)
-    const portfolio = getPortfolioContext();
-    if (!portfolio.trim()) {
-        renderMessage('assistant',
-            '👋 שלום! אני היועץ ההשקעות שלך.\n\n' +
-            'כדי שאוכל להמליץ לך **באמת** איך להשקיע, אני צריך נתונים על המצב הפיננסי שלך:\n\n' +
-            '1. **חשבונות בנק** — עבור לכרטיסיית "🏦 בנק" והוסף את היתרות\n' +
-            '2. **השקעות קיימות** — בכרטיסייה "📊 קרנות שלי" + "📈 מניות"\n' +
-            '3. **יעדים** — בכרטיסייה "🎯 יעדים"\n\n' +
-            'ברגע שיש נתונים — חזור לכאן ואקבל המלצות מותאמות אישית עבורך.');
-        return;
-    }
-    if (force) {
-        // Re-analyze: clear previous chat first
-        conversationHistory = [];
-        document.getElementById('chatMessages').innerHTML = '';
-        saveHistory();
-    }
-    const amount = getInvestAmount();
-    const lang = getLang();
-    const auto = ({
-        he: amount > 0
-            ? `אני רוצה להשקיע ₪${Math.round(amount).toLocaleString()}. נתח את התיק שלי והמלץ לי איך להשקיע את הסכום הזה — 3 המלצות ספציפיות שמסתכמות בדיוק לסכום הזה, בהתאם לחלוקה הקיימת והתשואות.`
-            : 'נתח את התיק שלי והמלץ איך להשקיע — 3 המלצות ספציפיות לפי החלוקה הקיימת.',
-        en: amount > 0
-            ? `I want to invest ₪${Math.round(amount).toLocaleString()}. Analyse my portfolio and give 3 specific recommendations summing to exactly this amount, based on my existing allocation and returns.`
-            : 'Analyse my portfolio and recommend 3 specific allocations based on my existing mix and returns.',
-        pt: amount > 0 ? `Quero investir ₪${Math.round(amount).toLocaleString()}. Dê 3 recomendações somando exatamente este valor.` : 'Analise minha carteira e dê 3 recomendações.',
-        es: amount > 0 ? `Quiero invertir ₪${Math.round(amount).toLocaleString()}. Da 3 recomendaciones que sumen exactamente ese monto.` : 'Analiza mi cartera y da 3 recomendaciones.',
-    })[lang] || 'Recommend 3 allocations.';
-    document.getElementById('chatInput').value = auto;
-    setTimeout(() => { sendMessage(); }, 150);
+ if (!currentUser) return; // need to be logged in
+ if (!force && conversationHistory.length > 0) return; // already mid-chat (unless forced via 🔄)
+ const portfolio = getPortfolioContext();
+ if (!portfolio.trim()) {
+ renderMessage('assistant',
+ '👋 שלום! אני היועץ ההשקעות שלך.\n\n' +
+ 'כדי שאוכל להמליץ לך **באמת** איך להשקיע, אני צריך נתונים על המצב הפיננסי שלך:\n\n' +
+ '1. **חשבונות בנק** — עבור לכרטיסיית "🏦 בנק" והוסף את היתרות\n' +
+ '2. **השקעות קיימות** — בכרטיסייה "📊 קרנות שלי" + "📈 מניות"\n' +
+ '3. **יעדים** — בכרטיסייה "🎯 יעדים"\n\n' +
+ 'ברגע שיש נתונים — חזור לכאן ואקבל המלצות מותאמות אישית עבורך.');
+ return;
+ }
+ if (force) {
+ // Re-analyze: clear previous chat first
+ conversationHistory = [];
+ document.getElementById('chatMessages').innerHTML = '';
+ saveHistory();
+ }
+ const amount = getInvestAmount();
+ const lang = getLang();
+ const auto = ({
+ he: amount > 0
+ ? `אני רוצה להשקיע ₪${Math.round(amount).toLocaleString()}. נתח את התיק שלי והמלץ לי איך להשקיע את הסכום הזה — 3 המלצות ספציפיות שמסתכמות בדיוק לסכום הזה, בהתאם לחלוקה הקיימת והתשואות.`
+ : 'נתח את התיק שלי והמלץ איך להשקיע — 3 המלצות ספציפיות לפי החלוקה הקיימת.',
+ en: amount > 0
+ ? `I want to invest ₪${Math.round(amount).toLocaleString()}. Analyse my portfolio and give 3 specific recommendations summing to exactly this amount, based on my existing allocation and returns.`
+ : 'Analyse my portfolio and recommend 3 specific allocations based on my existing mix and returns.',
+ pt: amount > 0 ? `Quero investir ₪${Math.round(amount).toLocaleString()}. Dê 3 recomendações somando exatamente este valor.` : 'Analise minha carteira e dê 3 recomendações.',
+ es: amount > 0 ? `Quiero invertir ₪${Math.round(amount).toLocaleString()}. Da 3 recomendaciones que sumen exactamente ese monto.` : 'Analiza mi cartera y da 3 recomendaciones.',
+ })[lang] || 'Recommend 3 allocations.';
+ document.getElementById('chatInput').value = auto;
+ setTimeout(() => { sendMessage(); }, 150);
 }
 
 // Compact amount display: "Investing ₪X (auto: bank ₪Y minus ₪30K emergency)"
 // with a pencil button that reveals the editable input. AI is given the
 // final amount as a hard constraint either way.
 function initInvestAmountInput() {
-    const summary = document.getElementById('investAmountSummary');
-    const editor = document.getElementById('investAmountEditor');
-    const editBtn = document.getElementById('editInvestBtn');
-    const confirmBtn = document.getElementById('confirmInvestBtn');
-    const el = document.getElementById('investAmount');
-    if (!summary || !el) return;
+ const summary = document.getElementById('investAmountSummary');
+ const editor = document.getElementById('investAmountEditor');
+ const editBtn = document.getElementById('editInvestBtn');
+ const confirmBtn = document.getElementById('confirmInvestBtn');
+ const el = document.getElementById('investAmount');
+ if (!summary || !el) return;
 
-    const refresh = () => {
-        const amount = getInvestAmount();
-        let bank = 0;
-        try { bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0); } catch {}
-        const overridden = parseFloat(localStorage.getItem(INVEST_AMOUNT_KEY)) > 0;
-        if (amount > 0) {
-            summary.textContent = `משקיע ₪${Math.round(amount).toLocaleString()}` +
-                (overridden ? ' (נקבע ידנית)' : (bank > 0 ? ` (אוטו׳: בנק ₪${Math.round(bank).toLocaleString()} פחות ₪30K קרן חירום)` : ''));
-        } else {
-            summary.textContent = bank > 0
-                ? `יש לך ₪${Math.round(bank).toLocaleString()} בבנק. אין כסף פנוי אחרי קרן חירום ₪30K — תוכל לערוך ידנית.`
-                : 'אין נתוני בנק. הוסף יתרות בכרטיסיית בנק או ערוך כאן ידנית.';
-        }
-        el.value = amount > 0 ? Math.round(amount) : '';
-    };
+ const refresh = () => {
+ const amount = getInvestAmount();
+ let bank = 0;
+ try { bank = (Storage.getBankAccounts?.() || []).reduce((s, a) => s + (parseFloat(a.balance) || 0), 0); } catch {}
+ const overridden = parseFloat(localStorage.getItem(INVEST_AMOUNT_KEY)) > 0;
+ if (amount > 0) {
+ summary.textContent = `משקיע ₪${Math.round(amount).toLocaleString()}` +
+ (overridden ? ' (נקבע ידנית)' : (bank > 0 ? ` (אוטו׳: בנק ₪${Math.round(bank).toLocaleString()} פחות ₪30K קרן חירום)` : ''));
+ } else {
+ summary.textContent = bank > 0
+ ? `יש לך ₪${Math.round(bank).toLocaleString()} בבנק. אין כסף פנוי אחרי קרן חירום ₪30K — תוכל לערוך ידנית.`
+ : 'אין נתוני בנק. הוסף יתרות בכרטיסיית בנק או ערוך כאן ידנית.';
+ }
+ el.value = amount > 0 ? Math.round(amount) : '';
+ };
 
-    if (editBtn) editBtn.addEventListener('click', () => {
-        editor.style.display = 'inline-flex';
-        editBtn.style.display = 'none';
-        el.focus();
-        el.select();
-    });
-    const closeEditor = () => {
-        const v = parseFloat(el.value);
-        if (v > 0) setInvestAmount(v);
-        editor.style.display = 'none';
-        editBtn.style.display = '';
-        refresh();
-    };
-    if (confirmBtn) confirmBtn.addEventListener('click', closeEditor);
-    if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); closeEditor(); } });
+ if (editBtn) editBtn.addEventListener('click', () => {
+ editor.style.display = 'inline-flex';
+ editBtn.style.display = 'none';
+ el.focus();
+ el.select();
+ });
+ const closeEditor = () => {
+ const v = parseFloat(el.value);
+ if (v > 0) setInvestAmount(v);
+ editor.style.display = 'none';
+ editBtn.style.display = '';
+ refresh();
+ };
+ if (confirmBtn) confirmBtn.addEventListener('click', closeEditor);
+ if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); closeEditor(); } });
 
-    refresh();
-    // Re-render summary if Storage updates (account balance changes)
-    setInterval(refresh, 5000);
+ refresh();
+ // Re-render summary if Storage updates (account balance changes)
+ setInterval(refresh, 5000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof I18n !== 'undefined') {
-        I18n.init();
-        const origSet = I18n.setLanguage?.bind(I18n);
-        if (origSet) I18n.setLanguage = lang => { origSet(lang); applyLang(); };
-    }
-    applyLang();
-    loadHistory();
-    initInvestAmountInput();
-    // First-use disclaimer for the investment advisor — gates auto-analysis until accepted
-    if (window.WizeDisclaimer) {
-        WizeDisclaimer.gate({ app: 'money' })
-            .then(() => setTimeout(() => autoAnalyze(), 800))
-            .catch(() => {});
-    } else {
-        setTimeout(() => autoAnalyze(), 800);
-    }
+ if (typeof I18n !== 'undefined') {
+ I18n.init();
+ const origSet = I18n.setLanguage?.bind(I18n);
+ if (origSet) I18n.setLanguage = lang => { origSet(lang); applyLang(); };
+ }
+ applyLang();
+ loadHistory();
+ initInvestAmountInput();
+ // First-use disclaimer for the investment advisor — gates auto-analysis until accepted
+ if (window.WizeDisclaimer) {
+ WizeDisclaimer.gate({ app: 'money' })
+ .then(() => setTimeout(() => autoAnalyze(), 800))
+ .catch(() => {});
+ } else {
+ setTimeout(() => autoAnalyze(), 800);
+ }
 });
 </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>

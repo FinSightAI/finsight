@@ -3,597 +3,589 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <title>אופטימיזטור פנסיה - WizeMoney</title>
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .optimizer-container { max-width: 1100px; margin: 0 auto; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <title>אופטימיזטור פנסיה - WizeMoney</title>
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <style>
+ .optimizer-container { max-width: 1100px; margin: 0 auto; }
 
-        .top-grid {
-            display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 24px;
-            align-items: start;
-        }
-        @media (max-width: 900px) { .top-grid { grid-template-columns: 1fr; } }
+ .top-grid {
+ display: grid;
+ grid-template-columns: 380px 1fr;
+ gap: 24px;
+ align-items: start;
+ }
+ @media (max-width: 900px) { .top-grid { grid-template-columns: 1fr; } }
 
-        .card {
-            background: var(--color-bg-card);
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid var(--color-border);
-        }
+ .card {
+ background: var(--color-bg-card);
+ border-radius: 16px;
+ padding: 24px;
+ border: 1px solid var(--color-border);
+ }
 
-        .card h2 {
-            font-size: 1.1rem;
-            color: var(--color-primary);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+ .card h2 {
+ font-size: 1.1rem;
+ color: var(--color-primary);
+ margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
 
-        .input-group { margin-bottom: 16px; }
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--color-text-secondary);
-            font-size: 0.85rem;
-        }
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            background: var(--color-bg);
-            color: var(--color-text-primary);
-            font-size: 0.95rem;
-            box-sizing: border-box;
-        }
-        .input-group input:focus, .input-group select:focus {
-            outline: none;
-            border-color: var(--color-primary);
-        }
+ .input-group { margin-bottom: 16px; }
+ .input-group label {
+ display: block;
+ margin-bottom: 6px;
+ color: var(--color-text-secondary);
+ font-size: 0.85rem;
+ }
+ .input-group input, .input-group select {
+ width: 100%;
+ padding: 10px 14px;
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ background: var(--color-bg);
+ color: var(--color-text-primary);
+ font-size: 0.95rem;
+ box-sizing: border-box;
+ }
+ .input-group input:focus, .input-group select:focus {
+ outline: none;
+ border-color: var(--color-primary);
+ }
 
-        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+ .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        .fee-section {
-            background: var(--color-bg);
-            border-radius: 10px;
-            padding: 14px;
-            margin-top: 4px;
-            border: 1px solid var(--color-border);
-        }
-        .fee-section h3 {
-            font-size: 0.8rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
+ .fee-section {
+ background: var(--color-bg);
+ border-radius: 10px;
+ padding: 14px;
+ margin-top: 4px;
+ border: 1px solid var(--color-border);
+ }
+ .fee-section h3 {
+ font-size: 0.8rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 10px;
+ font-weight: 600;
+ }
 
-        /* Summary boxes */
-        .summary-boxes {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        @media (max-width: 600px) { .summary-boxes { grid-template-columns: 1fr 1fr; } }
+ /* Summary boxes */
+ .summary-boxes {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 12px;
+ margin-bottom: 20px;
+ }
+ @media (max-width: 600px) { .summary-boxes { grid-template-columns: 1fr 1fr; } }
 
-        .summary-box {
-            background: var(--color-bg);
-            border-radius: 12px;
-            padding: 14px;
-            border: 1px solid var(--color-border);
-            text-align: center;
-        }
-        .summary-box.highlight {
-            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(139,92,246,0.1));
-            border-color: var(--color-primary);
-        }
-        .summary-box .label { font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 4px; }
-        .summary-box .value { font-size: 1.2rem; font-weight: 700; color: var(--color-text-primary); }
-        .summary-box .sub { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px; }
-        .summary-box.highlight .value { color: var(--color-primary); font-size: 1.4rem; }
+ .summary-box {
+ background: var(--color-bg);
+ border-radius: 12px;
+ padding: 14px;
+ border: 1px solid var(--color-border);
+ text-align: center;
+ }
+ .summary-box.highlight {
+ background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(139,92,246,0.1));
+ border-color: var(--color-primary);
+ }
+ .summary-box .label { font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 4px; }
+ .summary-box .value { font-size: 1.2rem; font-weight: 700; color: var(--color-text-primary); }
+ .summary-box .sub { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px; }
+ .summary-box.highlight .value { color: var(--color-primary); font-size: 1.4rem; }
 
-        /* Tracks table */
-        .tracks-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-        .tracks-table th {
-            text-align: right;
-            padding: 10px 12px;
-            background: var(--color-bg);
-            color: var(--color-text-secondary);
-            font-weight: 600;
-            border-bottom: 1px solid var(--color-border);
-            font-size: 0.8rem;
-        }
-        .tracks-table td { padding: 12px 12px; border-bottom: 1px solid var(--color-border); }
-        .tracks-table tr:last-child td { border-bottom: none; }
-        .tracks-table tr.current-track { background: rgba(16,185,129,0.06); }
-        .tracks-table tr.best-track { background: rgba(139,92,246,0.06); }
-        .tracks-table tr:hover { background: var(--color-bg-hover); cursor: pointer; }
+ /* Tracks table */
+ .tracks-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+ .tracks-table th {
+ text-align: right;
+ padding: 10px 12px;
+ background: var(--color-bg);
+ color: var(--color-text-secondary);
+ font-weight: 600;
+ border-bottom: 1px solid var(--color-border);
+ font-size: 0.8rem;
+ }
+ .tracks-table td { padding: 12px 12px; border-bottom: 1px solid var(--color-border); }
+ .tracks-table tr:last-child td { border-bottom: none; }
+ .tracks-table tr.current-track { background: rgba(16,185,129,0.06); }
+ .tracks-table tr.best-track { background: rgba(139,92,246,0.06); }
+ .tracks-table tr:hover { background: var(--color-bg-hover); cursor: pointer; }
 
-        .track-name { font-weight: 600; color: var(--color-text-primary); }
-        .track-badge {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 2px 7px;
-            border-radius: 10px;
-            margin-right: 6px;
-            font-weight: 600;
-        }
-        .badge-current { background: rgba(16,185,129,0.15); color: var(--color-primary); }
-        .badge-best { background: rgba(139,92,246,0.15); color: #8b5cf6; }
-        .badge-low { background: rgba(239,68,68,0.12); color: #ef4444; }
+ .track-name { font-weight: 600; color: var(--color-text-primary); }
+ .track-badge {
+ display: inline-block;
+ font-size: 0.7rem;
+ padding: 2px 7px;
+ border-radius: 10px;
+ margin-right: 6px;
+ font-weight: 600;
+ }
+ .badge-current { background: rgba(16,185,129,0.15); color: var(--color-primary); }
+ .badge-best { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+ .badge-low { background: rgba(239,68,68,0.12); color: #ef4444; }
 
-        .delta-positive { color: var(--color-positive); font-weight: 600; }
-        .delta-negative { color: var(--color-negative); }
-        .delta-zero { color: var(--color-text-secondary); }
+ .delta-positive { color: var(--color-positive); font-weight: 600; }
+ .delta-negative { color: var(--color-negative); }
+ .delta-zero { color: var(--color-text-secondary); }
 
-        .return-bar-wrap { display: flex; align-items: center; gap: 8px; }
-        .return-bar {
-            flex: 1;
-            height: 6px;
-            background: var(--color-border);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .return-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+ .return-bar-wrap { display: flex; align-items: center; gap: 8px; }
+ .return-bar {
+ flex: 1;
+ height: 6px;
+ background: var(--color-border);
+ border-radius: 3px;
+ overflow: hidden;
+ }
+ .return-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
 
-        /* Insight box */
-        .insight-box {
-            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08));
-            border: 1px solid var(--color-primary);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-top: 20px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        .insight-box strong { color: var(--color-primary); }
+ /* Insight box */
+ .insight-box {
+ background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08));
+ border: 1px solid var(--color-primary);
+ border-radius: 12px;
+ padding: 16px 20px;
+ margin-top: 20px;
+ font-size: 0.95rem;
+ line-height: 1.6;
+ }
+ .insight-box strong { color: var(--color-primary); }
 
-        /* Fee impact */
-        .fee-impact {
-            background: rgba(245,158,11,0.08);
-            border: 1px solid rgba(245,158,11,0.3);
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-top: 16px;
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-        }
-        .fee-impact strong { color: #f59e0b; }
+ /* Fee impact */
+ .fee-impact {
+ background: rgba(245,158,11,0.08);
+ border: 1px solid rgba(245,158,11,0.3);
+ border-radius: 10px;
+ padding: 12px 16px;
+ margin-top: 16px;
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ }
+ .fee-impact strong { color: #f59e0b; }
 
-        .chart-wrap { position: relative; height: 280px; }
+ .chart-wrap { position: relative; height: 280px; }
 
-        .monthly-pension {
-            font-size: 0.75rem;
-            color: var(--color-text-secondary);
-        }
-    </style>
+ .monthly-pension {
+ font-size: 0.75rem;
+ color: var(--color-text-secondary);
+ }
+ </style>
 </head>
 <body>
 <div class="app-container">
-    <header class="app-header">
-        <button class="btn-back" onclick="history.back()">→</button>
-        <h1>🎯 אופטימיזטור פנסיה</h1>
-        <div></div>
-    </header>
+ <header class="app-header">
+ <button class="btn-back" onclick="history.back()">→</button>
+ <h1>🎯 אופטימיזטור פנסיה</h1>
+ <div></div>
+ </header>
 
-    <main class="main-content">
-        <div class="optimizer-container">
+ <main class="main-content">
+ <div class="optimizer-container">
 
-            <div class="top-grid">
-                <!-- Inputs -->
-                <div class="card">
-                    <h2>⚙️ <span data-i18n="pensionOptimizer.yourDetails">הפרטים שלך</span></h2>
+ <div class="top-grid">
+ <!-- Inputs -->
+ <div class="card">
+ <h2>⚙️ <span data-i18n="pensionOptimizer.yourDetails">הפרטים שלך</span></h2>
 
-                    <!-- Real-data sync banner (populated by JS) -->
-                    <div id="syncBanner" style="display:none; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:12px 14px; margin-bottom:18px; font-size:0.85rem; color:var(--color-text-primary);">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
-                            <div id="syncBannerText"></div>
-                            <button onclick="syncFromStorage(true)" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:8px; color:#10b981; font-size:0.8rem; padding:4px 10px; cursor:pointer; white-space:nowrap;">🔄 רענן</button>
-                        </div>
-                    </div>
+ <!-- Real-data sync banner (populated by JS) -->
+ <div id="syncBanner" style="display:none; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:12px 14px; margin-bottom:18px; font-size:0.85rem; color:var(--color-text-primary);">
+ <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+ <div id="syncBannerText"></div>
+ <button onclick="syncFromStorage(true)" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:8px; color:#10b981; font-size:0.8rem; padding:4px 10px; cursor:pointer; white-space:nowrap;">🔄 רענן</button>
+ </div>
+ </div>
 
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label data-i18n="pensionOptimizer.currentAge">גיל נוכחי</label>
-                            <input type="number" id="currentAge" value="35" min="18" max="66" oninput="recalc()">
-                        </div>
-                        <div class="input-group">
-                            <label data-i18n="pensionOptimizer.retirementAge">גיל פרישה</label>
-                            <input type="number" id="retirementAge" value="67" min="60" max="75" oninput="recalc()">
-                        </div>
-                    </div>
+ <div class="input-row">
+ <div class="input-group">
+ <label data-i18n="pensionOptimizer.currentAge">גיל נוכחי</label>
+ <input type="number" id="currentAge" value="35" min="18" max="66" oninput="recalc()">
+ </div>
+ <div class="input-group">
+ <label data-i18n="pensionOptimizer.retirementAge">גיל פרישה</label>
+ <input type="number" id="retirementAge" value="67" min="60" max="75" oninput="recalc()">
+ </div>
+ </div>
 
-                    <div class="input-group">
-                        <label data-i18n="pensionOptimizer.currentSavings">חיסכון פנסיוני נוכחי (₪)</label>
-                        <input type="number" id="currentSavings" value="150000" min="0" oninput="recalc()">
-                    </div>
+ <div class="input-group">
+ <label data-i18n="pensionOptimizer.currentSavings">חיסכון פנסיוני נוכחי (₪)</label>
+ <input type="number" id="currentSavings" value="150000" min="0" oninput="recalc()">
+ </div>
 
-                    <div class="input-group">
-                        <label data-i18n="pensionOptimizer.monthlyContrib">הפקדה חודשית כוללת (עובד + מעסיק + פיצויים) (₪)</label>
-                        <input type="number" id="monthlyContrib" value="3500" min="0" oninput="recalc()">
-                    </div>
+ <div class="input-group">
+ <label data-i18n="pensionOptimizer.monthlyContrib">הפקדה חודשית כוללת (עובד + מעסיק + פיצויים) (₪)</label>
+ <input type="number" id="monthlyContrib" value="3500" min="0" oninput="recalc()">
+ </div>
 
-                    <div class="input-group">
-                        <label data-i18n="pensionOptimizer.currentTrack">מסלול השקעה נוכחי</label>
-                        <select id="currentTrack" onchange="recalc()">
-                            <option value="general" data-i18n="pensionOptimizer.trackGeneral">מסלול כללי</option>
-                            <option value="stocks"  data-i18n="pensionOptimizer.trackStocks">מסלול מניות</option>
-                            <option value="bonds"   data-i18n="pensionOptimizer.trackBonds">מסלול אגרות חוב</option>
-                            <option value="gov"     data-i18n="pensionOptimizer.trackGov">מסלול ממשלתי</option>
-                            <option value="passive" data-i18n="pensionOptimizer.trackPassive">מסלול פאסיבי / מחקה</option>
-                            <option value="halakha" data-i18n="pensionOptimizer.trackHalakha">מסלול הלכה</option>
-                        </select>
-                    </div>
+ <div class="input-group">
+ <label data-i18n="pensionOptimizer.currentTrack">מסלול השקעה נוכחי</label>
+ <select id="currentTrack" onchange="recalc()">
+ <option value="general" data-i18n="pensionOptimizer.trackGeneral">מסלול כללי</option>
+ <option value="stocks" data-i18n="pensionOptimizer.trackStocks">מסלול מניות</option>
+ <option value="bonds" data-i18n="pensionOptimizer.trackBonds">מסלול אגרות חוב</option>
+ <option value="gov" data-i18n="pensionOptimizer.trackGov">מסלול ממשלתי</option>
+ <option value="passive" data-i18n="pensionOptimizer.trackPassive">מסלול פאסיבי / מחקה</option>
+ <option value="halakha" data-i18n="pensionOptimizer.trackHalakha">מסלול הלכה</option>
+ </select>
+ </div>
 
-                    <div class="fee-section">
-                        <h3 data-i18n="pensionOptimizer.fees">דמי ניהול נוכחיים</h3>
-                        <div class="input-row">
-                            <div class="input-group" style="margin-bottom:0">
-                                <label data-i18n="pensionOptimizer.feeDeposit">מהפקדה (%)</label>
-                                <input type="number" id="feeDeposit" value="1.5" min="0" max="6" step="0.1" oninput="recalc()">
-                            </div>
-                            <div class="input-group" style="margin-bottom:0">
-                                <label data-i18n="pensionOptimizer.feeAccum">מצבירה (% לשנה)</label>
-                                <input type="number" id="feeAccum" value="0.5" min="0" max="1.05" step="0.05" oninput="recalc()">
-                            </div>
-                        </div>
-                    </div>
+ <div class="fee-section">
+ <h3 data-i18n="pensionOptimizer.fees">דמי ניהול נוכחיים</h3>
+ <div class="input-row">
+ <div class="input-group" style="margin-bottom:0">
+ <label data-i18n="pensionOptimizer.feeDeposit">מהפקדה (%)</label>
+ <input type="number" id="feeDeposit" value="1.5" min="0" max="6" step="0.1" oninput="recalc()">
+ </div>
+ <div class="input-group" style="margin-bottom:0">
+ <label data-i18n="pensionOptimizer.feeAccum">מצבירה (% לשנה)</label>
+ <input type="number" id="feeAccum" value="0.5" min="0" max="1.05" step="0.05" oninput="recalc()">
+ </div>
+ </div>
+ </div>
 
-                    <div class="input-row" style="margin-top:16px;">
-                        <div class="input-group" style="margin-bottom:0">
-                            <label data-i18n="pensionOptimizer.inflation">התאמה לאינפלציה</label>
-                            <select id="inflation" onchange="recalc()">
-                                <option value="0" data-i18n="pensionOptimizer.inflationNone">ללא (ערכים נומינליים)</option>
-                                <option value="3" data-i18n="pensionOptimizer.inflation3">3% אינפלציה שנתית</option>
-                            </select>
-                        </div>
-                        <div class="input-group" style="margin-bottom:0">
-                            <label data-i18n="pensionOptimizer.convFactor" data-i18n-title="pensionOptimizer.convFactorTip" title="מספר החודשים שהפנסיה מחולקת לפיו. ממוצע ישראלי: 200–230">מקדם המרה (חודשים) ℹ️</label>
-                            <input type="number" id="convFactor" value="210" min="150" max="300" step="5" oninput="recalc()">
-                        </div>
-                    </div>
-                </div>
+ <div class="input-row" style="margin-top:16px;">
+ <div class="input-group" style="margin-bottom:0">
+ <label data-i18n="pensionOptimizer.inflation">התאמה לאינפלציה</label>
+ <select id="inflation" onchange="recalc()">
+ <option value="0" data-i18n="pensionOptimizer.inflationNone">ללא (ערכים נומינליים)</option>
+ <option value="3" data-i18n="pensionOptimizer.inflation3">3% אינפלציה שנתית</option>
+ </select>
+ </div>
+ <div class="input-group" style="margin-bottom:0">
+ <label data-i18n="pensionOptimizer.convFactor" data-i18n-title="pensionOptimizer.convFactorTip" title="מספר החודשים שהפנסיה מחולקת לפיו. ממוצע ישראלי: 200–230">מקדם המרה (חודשים) ℹ️</label>
+ <input type="number" id="convFactor" value="210" min="150" max="300" step="5" oninput="recalc()">
+ </div>
+ </div>
+ </div>
 
-                <!-- Chart -->
-                <div class="card">
-                    <h2>📈 <span data-i18n="pensionOptimizer.growthChart">צמיחה צפויה לפרישה</span></h2>
-                    <div class="chart-wrap">
-                        <canvas id="growthChart"></canvas>
-                    </div>
-                </div>
-            </div>
+ <!-- Chart -->
+ <div class="card">
+ <h2>📈 <span data-i18n="pensionOptimizer.growthChart">צמיחה צפויה לפרישה</span></h2>
+ <div class="chart-wrap">
+ <canvas id="growthChart"></canvas>
+ </div>
+ </div>
+ </div>
 
-            <!-- Summary -->
-            <div class="card" style="margin-top: 20px;">
-                <h2>💰 <span data-i18n="pensionOptimizer.compareTitle">השוואת מסלולים</span></h2>
+ <!-- Summary -->
+ <div class="card" style="margin-top: 20px;">
+ <h2>💰 <span data-i18n="pensionOptimizer.compareTitle">השוואת מסלולים</span></h2>
 
-                <div class="summary-boxes" id="summaryBoxes"></div>
+ <div class="summary-boxes" id="summaryBoxes"></div>
 
-                <div style="overflow-x: auto;">
-                    <table class="tracks-table">
-                        <thead>
-                            <tr>
-                                <th data-i18n="pensionOptimizer.colTrack">מסלול</th>
-                                <th data-i18n="pensionOptimizer.colReturn">תשואה ממוצעת</th>
-                                <th data-i18n="pensionOptimizer.colAccum">צבירה בפרישה</th>
-                                <th data-i18n="pensionOptimizer.colMonthly">פנסיה חודשית משוערת</th>
-                                <th data-i18n="pensionOptimizer.colDelta">הפרש ממסלול הנוכחי</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tracksTableBody"></tbody>
-                    </table>
-                </div>
+ <div style="overflow-x: auto;">
+ <table class="tracks-table">
+ <thead>
+ <tr>
+ <th data-i18n="pensionOptimizer.colTrack">מסלול</th>
+ <th data-i18n="pensionOptimizer.colReturn">תשואה ממוצעת</th>
+ <th data-i18n="pensionOptimizer.colAccum">צבירה בפרישה</th>
+ <th data-i18n="pensionOptimizer.colMonthly">פנסיה חודשית משוערת</th>
+ <th data-i18n="pensionOptimizer.colDelta">הפרש ממסלול הנוכחי</th>
+ </tr>
+ </thead>
+ <tbody id="tracksTableBody"></tbody>
+ </table>
+ </div>
 
-                <div class="insight-box" id="insightBox"></div>
-                <div class="fee-impact" id="feeImpact"></div>
-            </div>
+ <div class="insight-box" id="insightBox"></div>
+ <div class="fee-impact" id="feeImpact"></div>
+ </div>
 
-        </div>
-    </main>
+ </div>
+ </main>
 </div>
 
 <script src="../js/app.js"></script>
 <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
 <script src="../js/i18n.js"></script>
 <script>
 function getTracks() {
-    const pt = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
-    return [
-        { id: 'gov',      name: pt('trackNameGov'),     return: 3.0,  color: '#94a3b8', desc: pt('trackDescGov') },
-        { id: 'bonds',    name: pt('trackNameBonds'),   return: 4.5,  color: '#60a5fa', desc: pt('trackDescBonds') },
-        { id: 'halakha',  name: pt('trackNameHalakha'), return: 5.8,  color: '#fbbf24', desc: pt('trackDescHalakha') },
-        { id: 'general',  name: pt('trackNameGeneral'), return: 7.5,  color: '#34d399', desc: pt('trackDescGeneral') },
-        { id: 'stocks',   name: pt('trackNameStocks'),  return: 9.2,  color: '#f97316', desc: pt('trackDescStocks') },
-        { id: 'passive',  name: pt('trackNamePassive'), return: 9.8,  color: '#a78bfa', desc: pt('trackDescPassive') },
-    ];
+ const pt = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
+ return [
+ { id: 'gov', name: pt('trackNameGov'), return: 3.0, color: '#94a3b8', desc: pt('trackDescGov') },
+ { id: 'bonds', name: pt('trackNameBonds'), return: 4.5, color: '#60a5fa', desc: pt('trackDescBonds') },
+ { id: 'halakha', name: pt('trackNameHalakha'), return: 5.8, color: '#fbbf24', desc: pt('trackDescHalakha') },
+ { id: 'general', name: pt('trackNameGeneral'), return: 7.5, color: '#34d399', desc: pt('trackDescGeneral') },
+ { id: 'stocks', name: pt('trackNameStocks'), return: 9.2, color: '#f97316', desc: pt('trackDescStocks') },
+ { id: 'passive', name: pt('trackNamePassive'), return: 9.8, color: '#a78bfa', desc: pt('trackDescPassive') },
+ ];
 }
 
 let chart = null;
 
 /* ── Settings persistence ── */
 const SETTINGS_KEY = 'finance_pension_optimizer_settings';
-const SETTINGS_IDS  = ['currentAge','retirementAge','currentSavings','monthlyContrib',
-                        'feeDeposit','feeAccum','currentTrack','inflation','convFactor'];
+const SETTINGS_IDS = ['currentAge','retirementAge','currentSavings','monthlyContrib',
+ 'feeDeposit','feeAccum','currentTrack','inflation','convFactor'];
 
 function saveSettings() {
-    const s = {};
-    SETTINGS_IDS.forEach(id => { const el = document.getElementById(id); if (el) s[id] = el.value; });
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+ const s = {};
+ SETTINGS_IDS.forEach(id => { const el = document.getElementById(id); if (el) s[id] = el.value; });
+ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
 }
 
 function loadSettings() {
-    try {
-        const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null');
-        if (!s) return false;
-        SETTINGS_IDS.forEach(id => { const el = document.getElementById(id); if (el && s[id] != null) el.value = s[id]; });
-        return true;
-    } catch(e) { return false; }
+ try {
+ const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null');
+ if (!s) return false;
+ SETTINGS_IDS.forEach(id => { const el = document.getElementById(id); if (el && s[id] != null) el.value = s[id]; });
+ return true;
+ } catch(e) { return false; }
 }
 
 /* ── Sync from finance_my_funds ── */
 function syncFromStorage(force) {
-    try {
-        const funds = JSON.parse(localStorage.getItem('finance_my_funds') || '[]');
-        const pension = funds.filter(f => f.type === 'pension');
-        if (pension.length === 0) return;
+ try {
+ const funds = JSON.parse(localStorage.getItem('finance_my_funds') || '[]');
+ const pension = funds.filter(f => f.type === 'pension');
+ if (pension.length === 0) return;
 
-        const totalValue   = pension.reduce((s, f) => s + (f.value || f.currentValue || 0), 0);
-        const totalMonthly = pension.reduce((s, f) => s + (f.monthlyDeposit || 0), 0);
+ const totalValue = pension.reduce((s, f) => s + (f.value || f.currentValue || 0), 0);
+ const totalMonthly = pension.reduce((s, f) => s + (f.monthlyDeposit || 0), 0);
 
-        // Only auto-fill if no saved settings, or force=true
-        if (force || !localStorage.getItem(SETTINGS_KEY)) {
-            if (totalValue   > 0) document.getElementById('currentSavings').value = Math.round(totalValue);
-            if (totalMonthly > 0) document.getElementById('monthlyContrib').value  = Math.round(totalMonthly);
-            if (force) recalc();
-        }
+ // Only auto-fill if no saved settings, or force=true
+ if (force || !localStorage.getItem(SETTINGS_KEY)) {
+ if (totalValue > 0) document.getElementById('currentSavings').value = Math.round(totalValue);
+ if (totalMonthly > 0) document.getElementById('monthlyContrib').value = Math.round(totalMonthly);
+ if (force) recalc();
+ }
 
-        // Show banner
-        const po2 = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
-        const banner = document.getElementById('syncBanner');
-        const text   = document.getElementById('syncBannerText');
-        const names  = pension.slice(0, 2).map(f => f.name || f.company || po2('syncFunds')).join(', ');
-        const suffix = pension.length > 2 ? ` +${pension.length - 2}` : '';
-        text.innerHTML =
-            `📊 <strong>${po2('syncLoaded')}:</strong> ${pension.length} ${po2('syncFunds')} (${names}${suffix})<br>` +
-            `${po2('syncSavings')}: <strong>₪${Math.round(totalValue).toLocaleString('he-IL')}</strong>` +
-            (totalMonthly > 0 ? ` · ${po2('syncMonthly')}: <strong>₪${Math.round(totalMonthly).toLocaleString('he-IL')}</strong>` : '');
-        document.querySelector('#syncBanner button').textContent = po2('syncRefresh');
-        banner.style.display = 'block';
-    } catch(e) { /* ignore */ }
+ // Show banner
+ const po2 = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
+ const banner = document.getElementById('syncBanner');
+ const text = document.getElementById('syncBannerText');
+ const names = pension.slice(0, 2).map(f => f.name || f.company || po2('syncFunds')).join(', ');
+ const suffix = pension.length > 2 ? ` +${pension.length - 2}` : '';
+ text.innerHTML =
+ `📊 <strong>${po2('syncLoaded')}:</strong> ${pension.length} ${po2('syncFunds')} (${names}${suffix})<br>` +
+ `${po2('syncSavings')}: <strong>₪${Math.round(totalValue).toLocaleString('he-IL')}</strong>` +
+ (totalMonthly > 0 ? ` · ${po2('syncMonthly')}: <strong>₪${Math.round(totalMonthly).toLocaleString('he-IL')}</strong>` : '');
+ document.querySelector('#syncBanner button').textContent = po2('syncRefresh');
+ banner.style.display = 'block';
+ } catch(e) { /* ignore */ }
 }
 
 function projectSavings(pv, monthlyDeposit, annualReturnPct, depositFeePct, accumFeePct, months) {
-    const netDeposit = monthlyDeposit * (1 - depositFeePct / 100);
-    const netAnnualRate = (annualReturnPct - accumFeePct) / 100;
-    const r = netAnnualRate / 12;
-    if (Math.abs(r) < 1e-9) {
-        return pv + netDeposit * months;
-    }
-    return pv * Math.pow(1 + r, months) + netDeposit * ((Math.pow(1 + r, months) - 1) / r);
+ const netDeposit = monthlyDeposit * (1 - depositFeePct / 100);
+ const netAnnualRate = (annualReturnPct - accumFeePct) / 100;
+ const r = netAnnualRate / 12;
+ if (Math.abs(r) < 1e-9) {
+ return pv + netDeposit * months;
+ }
+ return pv * Math.pow(1 + r, months) + netDeposit * ((Math.pow(1 + r, months) - 1) / r);
 }
 
 function fmt(n) {
-    if (n >= 1e6) return '₪' + (n / 1e6).toFixed(2) + 'M';
-    return '₪' + Math.round(n).toLocaleString('he-IL');
+ if (n >= 1e6) return '₪' + (n / 1e6).toFixed(2) + 'M';
+ return '₪' + Math.round(n).toLocaleString('he-IL');
 }
 
 function fmtFull(n) {
-    return '₪' + Math.round(n).toLocaleString('he-IL');
+ return '₪' + Math.round(n).toLocaleString('he-IL');
 }
 
 function recalc() {
-    saveSettings();
-    const currentAge    = parseInt(document.getElementById('currentAge').value) || 35;
-    const retireAge     = parseInt(document.getElementById('retirementAge').value) || 67;
-    const pv            = parseFloat(document.getElementById('currentSavings').value) || 0;
-    const monthlyDep    = parseFloat(document.getElementById('monthlyContrib').value) || 0;
-    const feeDeposit    = parseFloat(document.getElementById('feeDeposit').value) || 0;
-    const feeAccum      = parseFloat(document.getElementById('feeAccum').value) || 0;
-    const currentTrack  = document.getElementById('currentTrack').value;
-    const inflationRate = parseFloat(document.getElementById('inflation').value) || 0;
-    const convFactor    = parseFloat(document.getElementById('convFactor').value) || 210;
+ saveSettings();
+ const currentAge = parseInt(document.getElementById('currentAge').value) || 35;
+ const retireAge = parseInt(document.getElementById('retirementAge').value) || 67;
+ const pv = parseFloat(document.getElementById('currentSavings').value) || 0;
+ const monthlyDep = parseFloat(document.getElementById('monthlyContrib').value) || 0;
+ const feeDeposit = parseFloat(document.getElementById('feeDeposit').value) || 0;
+ const feeAccum = parseFloat(document.getElementById('feeAccum').value) || 0;
+ const currentTrack = document.getElementById('currentTrack').value;
+ const inflationRate = parseFloat(document.getElementById('inflation').value) || 0;
+ const convFactor = parseFloat(document.getElementById('convFactor').value) || 210;
 
-    const yearsLeft = Math.max(retireAge - currentAge, 1);
-    const months = yearsLeft * 12;
+ const yearsLeft = Math.max(retireAge - currentAge, 1);
+ const months = yearsLeft * 12;
 
-    // Compute projections
-    const TRACKS = getTracks();
-    const results = TRACKS.map(t => {
-        const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, months);
-        // Inflation-adjusted real value
-        const real = inflationRate > 0 ? gross / Math.pow(1 + inflationRate / 100, yearsLeft) : gross;
-        return { ...t, gross, real, display: inflationRate > 0 ? real : gross };
-    });
+ // Compute projections
+ const TRACKS = getTracks();
+ const results = TRACKS.map(t => {
+ const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, months);
+ // Inflation-adjusted real value
+ const real = inflationRate > 0 ? gross / Math.pow(1 + inflationRate / 100, yearsLeft) : gross;
+ return { ...t, gross, real, display: inflationRate > 0 ? real : gross };
+ });
 
-    const currentResult = results.find(r => r.id === currentTrack) || results[3];
-    const bestResult = [...results].sort((a, b) => b.display - a.display)[0];
+ const currentResult = results.find(r => r.id === currentTrack) || results[3];
+ const bestResult = [...results].sort((a, b) => b.display - a.display)[0];
 
-    // Chart
-    buildChart(results, currentTrack, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate);
+ // Chart
+ buildChart(results, currentTrack, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate);
 
-    // i18n helper
-    const po = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
+ // i18n helper
+ const po = k => (typeof I18n !== 'undefined') ? I18n.t('pensionOptimizer.' + k) : k;
 
-    // Summary boxes
-    const monthlyPension = (amount) => Math.round(amount / convFactor);
-    const boxes = document.getElementById('summaryBoxes');
-    const gainVsBest = bestResult.display - currentResult.display;
-    boxes.innerHTML = `
-        <div class="summary-box">
-            <div class="label">${po('currentBox')} (${currentResult.name})</div>
-            <div class="value">${fmt(currentResult.display)}</div>
-            <div class="sub">~${fmtFull(monthlyPension(currentResult.display))} ${po('perMonth')}</div>
-        </div>
-        <div class="summary-box highlight">
-            <div class="label">🏆 ${po('bestBox')} (${bestResult.name})</div>
-            <div class="value">${fmt(bestResult.display)}</div>
-            <div class="sub">~${fmtFull(monthlyPension(bestResult.display))} ${po('perMonth')}</div>
-        </div>
-        <div class="summary-box">
-            <div class="label">${po('gainBox')}</div>
-            <div class="value" style="color: ${gainVsBest > 0 ? 'var(--color-positive)' : 'var(--color-text-secondary)'}">
-                ${gainVsBest > 0 ? '+' + fmt(gainVsBest) : po('alreadyBest')}
-            </div>
-            <div class="sub">${gainVsBest > 0 ? po('gainSuffix') : ''}${currentResult.id === bestResult.id ? po('alreadyBestCheck') : ''}</div>
-        </div>
-    `;
+ // Summary boxes
+ const monthlyPension = (amount) => Math.round(amount / convFactor);
+ const boxes = document.getElementById('summaryBoxes');
+ const gainVsBest = bestResult.display - currentResult.display;
+ boxes.innerHTML = `
+ <div class="summary-box">
+ <div class="label">${po('currentBox')} (${currentResult.name})</div>
+ <div class="value">${fmt(currentResult.display)}</div>
+ <div class="sub">~${fmtFull(monthlyPension(currentResult.display))} ${po('perMonth')}</div>
+ </div>
+ <div class="summary-box highlight">
+ <div class="label">🏆 ${po('bestBox')} (${bestResult.name})</div>
+ <div class="value">${fmt(bestResult.display)}</div>
+ <div class="sub">~${fmtFull(monthlyPension(bestResult.display))} ${po('perMonth')}</div>
+ </div>
+ <div class="summary-box">
+ <div class="label">${po('gainBox')}</div>
+ <div class="value" style="color: ${gainVsBest > 0 ? 'var(--color-positive)' : 'var(--color-text-secondary)'}">
+ ${gainVsBest > 0 ? '+' + fmt(gainVsBest) : po('alreadyBest')}
+ </div>
+ <div class="sub">${gainVsBest > 0 ? po('gainSuffix') : ''}${currentResult.id === bestResult.id ? po('alreadyBestCheck') : ''}</div>
+ </div>
+ `;
 
-    // Table
-    const maxReturn = Math.max(...TRACKS.map(t => t.return));
-    const tbody = document.getElementById('tracksTableBody');
-    const sorted = [...results].sort((a, b) => b.display - a.display);
-    tbody.innerHTML = sorted.map(r => {
-        const isCurrent = r.id === currentTrack;
-        const isBest = r.id === bestResult.id;
-        const delta = r.display - currentResult.display;
-        const deltaStr = isCurrent ? `<span class="delta-zero">— ${po('badgeCurrent')}</span>` :
-            delta > 0 ? `<span class="delta-positive">+${fmt(delta)}</span>` :
-            `<span class="delta-negative">${fmt(delta)}</span>`;
-        const barW = Math.round((r.return / maxReturn) * 100);
-        return `<tr class="${isCurrent ? 'current-track' : ''} ${isBest && !isCurrent ? 'best-track' : ''}" onclick="selectTrack('${r.id}')">
-            <td>
-                ${isCurrent ? `<span class="track-badge badge-current">${po('badgeCurrent')}</span>` : ''}
-                ${isBest && !isCurrent ? `<span class="track-badge badge-best">${po('badgeBest')}</span>` : ''}
-                <span class="track-name">${r.name}</span><br>
-                <span style="font-size:0.75rem;color:var(--color-text-secondary)">${r.desc}</span>
-            </td>
-            <td>
-                <div class="return-bar-wrap">
-                    <span style="min-width:36px;font-weight:600">${r.return}%</span>
-                    <div class="return-bar"><div class="return-bar-fill" style="width:${barW}%;background:${r.color}"></div></div>
-                </div>
-            </td>
-            <td style="font-weight:600">${fmtFull(r.display)}</td>
-            <td class="monthly-pension">~${fmtFull(monthlyPension(r.display))} ${po('perMonth')}</td>
-            <td>${deltaStr}</td>
-        </tr>`;
-    }).join('');
+ // Table
+ const maxReturn = Math.max(...TRACKS.map(t => t.return));
+ const tbody = document.getElementById('tracksTableBody');
+ const sorted = [...results].sort((a, b) => b.display - a.display);
+ tbody.innerHTML = sorted.map(r => {
+ const isCurrent = r.id === currentTrack;
+ const isBest = r.id === bestResult.id;
+ const delta = r.display - currentResult.display;
+ const deltaStr = isCurrent ? `<span class="delta-zero">— ${po('badgeCurrent')}</span>` :
+ delta > 0 ? `<span class="delta-positive">+${fmt(delta)}</span>` :
+ `<span class="delta-negative">${fmt(delta)}</span>`;
+ const barW = Math.round((r.return / maxReturn) * 100);
+ return `<tr class="${isCurrent ? 'current-track' : ''} ${isBest && !isCurrent ? 'best-track' : ''}" onclick="selectTrack('${r.id}')">
+ <td>
+ ${isCurrent ? `<span class="track-badge badge-current">${po('badgeCurrent')}</span>` : ''}
+ ${isBest && !isCurrent ? `<span class="track-badge badge-best">${po('badgeBest')}</span>` : ''}
+ <span class="track-name">${r.name}</span><br>
+ <span style="font-size:0.75rem;color:var(--color-text-secondary)">${r.desc}</span>
+ </td>
+ <td>
+ <div class="return-bar-wrap">
+ <span style="min-width:36px;font-weight:600">${r.return}%</span>
+ <div class="return-bar"><div class="return-bar-fill" style="width:${barW}%;background:${r.color}"></div></div>
+ </div>
+ </td>
+ <td style="font-weight:600">${fmtFull(r.display)}</td>
+ <td class="monthly-pension">~${fmtFull(monthlyPension(r.display))} ${po('perMonth')}</td>
+ <td>${deltaStr}</td>
+ </tr>`;
+ }).join('');
 
-    // Insight
-    const insight = document.getElementById('insightBox');
-    if (currentResult.id === bestResult.id) {
-        insight.innerHTML = `${po('insightGood')} — ${bestResult.name}. ${po('insightContinue')}`;
-    } else {
-        const extraMonthly = monthlyPension(bestResult.display) - monthlyPension(currentResult.display);
-        insight.innerHTML = `💡 ${po('insightSwitch')} <strong>${currentResult.name}</strong> ${po('insightTo')} <strong>${bestResult.name}</strong> ${po('insightAdd')} <strong>${fmt(gainVsBest)}</strong> ${po('insightAt')} ${retireAge} — <strong>${fmtFull(extraMonthly)} ${po('insightExtra')}</strong> ${po('insightInRetirement')} ${po('insightConsult')}`;
-    }
+ // Insight
+ const insight = document.getElementById('insightBox');
+ if (currentResult.id === bestResult.id) {
+ insight.innerHTML = `${po('insightGood')} — ${bestResult.name}. ${po('insightContinue')}`;
+ } else {
+ const extraMonthly = monthlyPension(bestResult.display) - monthlyPension(currentResult.display);
+ insight.innerHTML = `💡 ${po('insightSwitch')} <strong>${currentResult.name}</strong> ${po('insightTo')} <strong>${bestResult.name}</strong> ${po('insightAdd')} <strong>${fmt(gainVsBest)}</strong> ${po('insightAt')} ${retireAge} — <strong>${fmtFull(extraMonthly)} ${po('insightExtra')}</strong> ${po('insightInRetirement')} ${po('insightConsult')}`;
+ }
 
-    // Fee impact
-    const feeImpact = document.getElementById('feeImpact');
-    const withLowFee = projectSavings(pv, monthlyDep, currentResult.return, 0, 0.1, months);
-    const feeWaste = (inflationRate > 0 ? withLowFee / Math.pow(1 + inflationRate / 100, yearsLeft) : withLowFee) - currentResult.display;
-    if (feeWaste > 5000) {
-        feeImpact.innerHTML = `${po('feeBurn')} (${feeDeposit}% ${po('feeDash')} ${feeAccum}% ${po('feeAccumLabel')}) ${po('feeBurnMid')} <strong>${fmt(feeWaste)}</strong> ${po('feeBurnYears')} ${yearsLeft} ${po('feeBurnYearsLabel')} ${po('feePassive')}`;
-    } else {
-        feeImpact.innerHTML = `${po('feeGood')} — ${feeDeposit}% ${po('feeDash')} ${feeAccum}% ${po('feeAccumLabel')}`;
-    }
+ // Fee impact
+ const feeImpact = document.getElementById('feeImpact');
+ const withLowFee = projectSavings(pv, monthlyDep, currentResult.return, 0, 0.1, months);
+ const feeWaste = (inflationRate > 0 ? withLowFee / Math.pow(1 + inflationRate / 100, yearsLeft) : withLowFee) - currentResult.display;
+ if (feeWaste > 5000) {
+ feeImpact.innerHTML = `${po('feeBurn')} (${feeDeposit}% ${po('feeDash')} ${feeAccum}% ${po('feeAccumLabel')}) ${po('feeBurnMid')} <strong>${fmt(feeWaste)}</strong> ${po('feeBurnYears')} ${yearsLeft} ${po('feeBurnYearsLabel')} ${po('feePassive')}`;
+ } else {
+ feeImpact.innerHTML = `${po('feeGood')} — ${feeDeposit}% ${po('feeDash')} ${feeAccum}% ${po('feeAccumLabel')}`;
+ }
 }
 
 function selectTrack(id) {
-    document.getElementById('currentTrack').value = id;
-    recalc();
+ document.getElementById('currentTrack').value = id;
+ recalc();
 }
 
 function buildChart(results, currentTrackId, yearsLeft, pv, monthlyDep, feeDeposit, feeAccum, inflationRate) {
-    const yearLabel = (typeof I18n !== 'undefined' && I18n.currentLanguage !== 'he') ? 'Year ' : 'שנה ';
-    const labels = [];
-    for (let y = 0; y <= yearsLeft; y += Math.max(1, Math.floor(yearsLeft / 10))) labels.push(yearLabel + y);
-    if (labels[labels.length - 1] !== yearLabel + yearsLeft) labels.push(yearLabel + yearsLeft);
+ const yearLabel = (typeof I18n !== 'undefined' && I18n.currentLanguage !== 'he') ? 'Year ' : 'שנה ';
+ const labels = [];
+ for (let y = 0; y <= yearsLeft; y += Math.max(1, Math.floor(yearsLeft / 10))) labels.push(yearLabel + y);
+ if (labels[labels.length - 1] !== yearLabel + yearsLeft) labels.push(yearLabel + yearsLeft);
 
-    const datasets = results.map(t => {
-        const data = labels.map(l => {
-            const y = parseInt(l.replace(yearLabel, ''));
-            const m = y * 12;
-            const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, m);
-            return inflationRate > 0 ? gross / Math.pow(1 + inflationRate / 100, y) : gross;
-        });
-        const isCurrent = t.id === currentTrackId;
-        return {
-            label: t.name,
-            data,
-            borderColor: t.color,
-            backgroundColor: 'transparent',
-            borderWidth: isCurrent ? 3 : 1.5,
-            borderDash: isCurrent ? [] : [4, 3],
-            pointRadius: isCurrent ? 3 : 0,
-            tension: 0.4,
-        };
-    });
+ const datasets = results.map(t => {
+ const data = labels.map(l => {
+ const y = parseInt(l.replace(yearLabel, ''));
+ const m = y * 12;
+ const gross = projectSavings(pv, monthlyDep, t.return, feeDeposit, feeAccum, m);
+ return inflationRate > 0 ? gross / Math.pow(1 + inflationRate / 100, y) : gross;
+ });
+ const isCurrent = t.id === currentTrackId;
+ return {
+ label: t.name,
+ data,
+ borderColor: t.color,
+ backgroundColor: 'transparent',
+ borderWidth: isCurrent ? 3 : 1.5,
+ borderDash: isCurrent ? [] : [4, 3],
+ pointRadius: isCurrent ? 3 : 0,
+ tension: 0.4,
+ };
+ });
 
-    if (chart) chart.destroy();
-    chart = new Chart(document.getElementById('growthChart'), {
-        type: 'line',
-        data: { labels, datasets },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#888',
-                        font: { size: 11 },
-                        boxWidth: 14,
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => ' ' + ctx.dataset.label + ': ₪' + Math.round(ctx.raw).toLocaleString('he-IL'),
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    ticks: {
-                        color: '#888',
-                        callback: v => v >= 1e6 ? '₪' + (v / 1e6).toFixed(1) + 'M' : '₪' + (v / 1000).toFixed(0) + 'K',
-                        font: { size: 10 },
-                    },
-                    grid: { color: 'rgba(128,128,128,0.1)' }
-                },
-                x: {
-                    ticks: { color: '#888', font: { size: 10 } },
-                    grid: { display: false }
-                }
-            }
-        }
-    });
+ if (chart) chart.destroy();
+ chart = new Chart(document.getElementById('growthChart'), {
+ type: 'line',
+ data: { labels, datasets },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false,
+ interaction: { mode: 'index', intersect: false },
+ plugins: {
+ legend: {
+ labels: {
+ color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary') || '#888',
+ font: { size: 11 },
+ boxWidth: 14,
+ }
+ },
+ tooltip: {
+ callbacks: {
+ label: ctx => ' ' + ctx.dataset.label + ': ₪' + Math.round(ctx.raw).toLocaleString('he-IL'),
+ }
+ }
+ },
+ scales: {
+ y: {
+ ticks: {
+ color: '#888',
+ callback: v => v >= 1e6 ? '₪' + (v / 1e6).toFixed(1) + 'M' : '₪' + (v / 1000).toFixed(0) + 'K',
+ font: { size: 10 },
+ },
+ grid: { color: 'rgba(128,128,128,0.1)' }
+ },
+ x: {
+ ticks: { color: '#888', font: { size: 10 } },
+ grid: { display: false }
+ }
+ }
+ }
+ });
 }
 
 // Init

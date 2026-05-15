@@ -3,483 +3,475 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#06b6d4">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>לוח שנה פיננסי - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <style>
-        :root { --cal: #06b6d4; }
-        .nav-link.active { background: var(--cal) !important; color: #0f172a !important; }
-        .page-header h1 { color: var(--cal); }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#06b6d4">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>לוח שנה פיננסי - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ <style>
+ :root { --cal: #06b6d4; }
+ .nav-link.active { background: var(--cal) !important; color: #0f172a !important; }
+ .page-header h1 { color: var(--cal); }
 
-        /* ── Month nav ── */
-        .month-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 12px;
-        }
-        .month-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            text-align: center;
-            flex: 1;
-        }
-        .month-btn {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            color: var(--color-text-primary);
-            font-size: 1.1rem;
-            width: 40px; height: 40px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .month-btn:hover { border-color: var(--cal); color: var(--cal); }
+ /* ── Month nav ── */
+ .month-nav {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ margin-bottom: 20px;
+ gap: 12px;
+ }
+ .month-title {
+ font-size: 1.3rem;
+ font-weight: 700;
+ text-align: center;
+ flex: 1;
+ }
+ .month-btn {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 10px;
+ color: var(--color-text-primary);
+ font-size: 1.1rem;
+ width: 40px; height: 40px;
+ cursor: pointer;
+ transition: all 0.2s;
+ display: flex; align-items: center; justify-content: center;
+ }
+ .month-btn:hover { border-color: var(--cal); color: var(--cal); }
 
-        /* ── Calendar grid ── */
-        .cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            margin-bottom: 24px;
-        }
-        .cal-day-header {
-            text-align: center;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--color-text-secondary);
-            padding: 6px 2px;
-        }
-        .cal-cell {
-            min-height: 80px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            padding: 6px 5px;
-            cursor: default;
-            transition: border-color 0.15s;
-            position: relative;
-        }
-        .cal-cell:hover { border-color: rgba(6,182,212,0.4); }
-        .cal-cell.other-month { opacity: 0.3; }
-        .cal-cell.today {
-            border-color: var(--cal);
-            background: rgba(6,182,212,0.06);
-        }
-        .cal-cell.has-events { cursor: pointer; }
-        .cal-cell.has-events:hover { background: rgba(6,182,212,0.04); }
+ /* ── Calendar grid ── */
+ .cal-grid {
+ display: grid;
+ grid-template-columns: repeat(7, 1fr);
+ gap: 4px;
+ margin-bottom: 24px;
+ }
+ .cal-day-header {
+ text-align: center;
+ font-size: 0.72rem;
+ font-weight: 600;
+ color: var(--color-text-secondary);
+ padding: 6px 2px;
+ }
+ .cal-cell {
+ min-height: 80px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 10px;
+ padding: 6px 5px;
+ cursor: default;
+ transition: border-color 0.15s;
+ position: relative;
+ }
+ .cal-cell:hover { border-color: rgba(6,182,212,0.4); }
+ .cal-cell.other-month { opacity: 0.3; }
+ .cal-cell.today {
+ border-color: var(--cal);
+ background: rgba(6,182,212,0.06);
+ }
+ .cal-cell.has-events { cursor: pointer; }
+ .cal-cell.has-events:hover { background: rgba(6,182,212,0.04); }
 
-        .cal-date {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--color-text-secondary);
-            margin-bottom: 4px;
-            line-height: 1;
-        }
-        .cal-cell.today .cal-date {
-            color: var(--cal);
-            font-size: 0.85rem;
-        }
-        .today-dot {
-            display: inline-block;
-            width: 6px; height: 6px;
-            background: var(--cal);
-            border-radius: 50%;
-            margin-right: 3px;
-            vertical-align: middle;
-        }
+ .cal-date {
+ font-size: 0.78rem;
+ font-weight: 600;
+ color: var(--color-text-secondary);
+ margin-bottom: 4px;
+ line-height: 1;
+ }
+ .cal-cell.today .cal-date {
+ color: var(--cal);
+ font-size: 0.85rem;
+ }
+ .today-dot {
+ display: inline-block;
+ width: 6px; height: 6px;
+ background: var(--cal);
+ border-radius: 50%;
+ margin-right: 3px;
+ vertical-align: middle;
+ }
 
-        /* Event chips */
-        .cal-events { display: flex; flex-direction: column; gap: 2px; }
-        .cal-event {
-            font-size: 0.62rem;
-            padding: 2px 5px;
-            border-radius: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.4;
-            font-weight: 500;
-        }
-        .cal-event.type-subscription { background: rgba(6,182,212,0.18); color: #06b6d4; }
-        .cal-event.type-loan        { background: rgba(239,68,68,0.18);  color: #ef4444; }
-        .cal-event.type-goal        { background: rgba(16,185,129,0.18); color: #10b981; }
-        .cal-event.type-salary      { background: rgba(245,158,11,0.18); color: #f59e0b; }
-        .cal-event.type-custom      { background: rgba(139,92,246,0.18); color: #8b5cf6; }
-        .cal-more {
-            font-size: 0.58rem;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
-        }
+ /* Event chips */
+ .cal-events { display: flex; flex-direction: column; gap: 2px; }
+ .cal-event {
+ font-size: 0.62rem;
+ padding: 2px 5px;
+ border-radius: 4px;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ line-height: 1.4;
+ font-weight: 500;
+ }
+ .cal-event.type-subscription { background: rgba(6,182,212,0.18); color: #06b6d4; }
+ .cal-event.type-loan { background: rgba(239,68,68,0.18); color: #ef4444; }
+ .cal-event.type-goal { background: rgba(16,185,129,0.18); color: #10b981; }
+ .cal-event.type-salary { background: rgba(245,158,11,0.18); color: #f59e0b; }
+ .cal-event.type-custom { background: rgba(139,92,246,0.18); color: #8b5cf6; }
+ .cal-more {
+ font-size: 0.58rem;
+ color: var(--color-text-secondary);
+ margin-top: 2px;
+ }
 
-        /* ── Sidebar: upcoming & summary ── */
-        .cal-layout {
-            display: grid;
-            grid-template-columns: 1fr 280px;
-            gap: 24px;
-            align-items: start;
-        }
-        @media (max-width: 900px) {
-            .cal-layout { grid-template-columns: 1fr; }
-            .cal-sidebar { order: -1; }
-        }
+ /* ── Sidebar: upcoming & summary ── */
+ .cal-layout {
+ display: grid;
+ grid-template-columns: 1fr 280px;
+ gap: 24px;
+ align-items: start;
+ }
+ @media (max-width: 900px) {
+ .cal-layout { grid-template-columns: 1fr; }
+ .cal-sidebar { order: -1; }
+ }
 
-        /* Month summary card */
-        .month-summary {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 16px;
-        }
-        .month-summary h3 {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 14px;
-            font-weight: 600;
-        }
-        .ms-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 7px 0;
-            border-bottom: 1px solid var(--color-border);
-            font-size: 0.85rem;
-        }
-        .ms-row:last-child { border-bottom: none; }
-        .ms-label { color: var(--color-text-secondary); }
-        .ms-val { font-weight: 600; }
-        .ms-val.red { color: #ef4444; }
-        .ms-val.green { color: #10b981; }
-        .ms-val.yellow { color: #f59e0b; }
-        .ms-total {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0 0;
-            font-size: 1rem;
-            font-weight: 700;
-        }
+ /* Month summary card */
+ .month-summary {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 18px;
+ margin-bottom: 16px;
+ }
+ .month-summary h3 {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 14px;
+ font-weight: 600;
+ }
+ .ms-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 7px 0;
+ border-bottom: 1px solid var(--color-border);
+ font-size: 0.85rem;
+ }
+ .ms-row:last-child { border-bottom: none; }
+ .ms-label { color: var(--color-text-secondary); }
+ .ms-val { font-weight: 600; }
+ .ms-val.red { color: #ef4444; }
+ .ms-val.green { color: #10b981; }
+ .ms-val.yellow { color: #f59e0b; }
+ .ms-total {
+ display: flex;
+ justify-content: space-between;
+ padding: 10px 0 0;
+ font-size: 1rem;
+ font-weight: 700;
+ }
 
-        /* Upcoming events list */
-        .upcoming-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 16px;
-        }
-        .upcoming-card h3 {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 14px;
-            font-weight: 600;
-        }
-        .upcoming-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 0;
-            border-bottom: 1px solid var(--color-border);
-            font-size: 0.83rem;
-        }
-        .upcoming-item:last-child { border-bottom: none; }
-        .upcoming-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .upcoming-info { flex: 1; }
-        .upcoming-name { font-weight: 500; }
-        .upcoming-date { font-size: 0.72rem; color: var(--color-text-secondary); }
-        .upcoming-amount { font-weight: 600; white-space: nowrap; }
-        .upcoming-soon { color: #ef4444; font-size: 0.7rem; font-weight: 600; margin-right: 4px; }
+ /* Upcoming events list */
+ .upcoming-card {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 18px;
+ margin-bottom: 16px;
+ }
+ .upcoming-card h3 {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 14px;
+ font-weight: 600;
+ }
+ .upcoming-item {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ padding: 9px 0;
+ border-bottom: 1px solid var(--color-border);
+ font-size: 0.83rem;
+ }
+ .upcoming-item:last-child { border-bottom: none; }
+ .upcoming-dot {
+ width: 8px; height: 8px;
+ border-radius: 50%;
+ flex-shrink: 0;
+ }
+ .upcoming-info { flex: 1; }
+ .upcoming-name { font-weight: 500; }
+ .upcoming-date { font-size: 0.72rem; color: var(--color-text-secondary); }
+ .upcoming-amount { font-weight: 600; white-space: nowrap; }
+ .upcoming-soon { color: #ef4444; font-size: 0.7rem; font-weight: 600; margin-right: 4px; }
 
-        /* Add event button */
-        .add-event-btn {
-            width: 100%;
-            padding: 11px;
-            background: rgba(6,182,212,0.1);
-            border: 1.5px dashed rgba(6,182,212,0.4);
-            border-radius: 10px;
-            color: var(--cal);
-            font-size: 0.88rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-        .add-event-btn:hover { background: rgba(6,182,212,0.16); border-style: solid; }
+ /* Add event button */
+ .add-event-btn {
+ width: 100%;
+ padding: 11px;
+ background: rgba(6,182,212,0.1);
+ border: 1.5px dashed rgba(6,182,212,0.4);
+ border-radius: 10px;
+ color: var(--cal);
+ font-size: 0.88rem;
+ cursor: pointer;
+ transition: all 0.2s;
+ font-weight: 500;
+ }
+ .add-event-btn:hover { background: rgba(6,182,212,0.16); border-style: solid; }
 
-        /* Day detail modal */
-        .day-modal-overlay {
-            display: none;
-            position: fixed; inset: 0; z-index: 999;
-            background: rgba(0,0,0,0.6);
-            align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        .day-modal-overlay.active { display: flex; }
-        .day-modal {
-            background: var(--color-bg-secondary);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 420px; width: 100%;
-            max-height: 85vh; overflow-y: auto;
-            border: 1px solid var(--color-border);
-        }
-        .day-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-        }
-        .day-modal-header h3 { font-size: 1.1rem; }
-        .day-modal-close {
-            background: none; border: none;
-            color: var(--color-text-secondary);
-            font-size: 1.5rem; cursor: pointer;
-        }
-        .day-event-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--color-border);
-        }
-        .day-event-item:last-child { border-bottom: none; }
-        .day-event-icon { font-size: 1.4rem; flex-shrink: 0; }
-        .day-event-name { font-weight: 600; font-size: 0.92rem; }
-        .day-event-detail { font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 2px; }
-        .day-event-amount { font-weight: 700; font-size: 1rem; white-space: nowrap; }
+ /* Day detail modal */
+ .day-modal-overlay {
+ display: none;
+ position: fixed; inset: 0; z-index: 999;
+ background: rgba(0,0,0,0.6);
+ align-items: center; justify-content: center;
+ padding: 20px;
+ }
+ .day-modal-overlay.active { display: flex; }
+ .day-modal {
+ background: var(--color-bg-secondary);
+ border-radius: 20px;
+ padding: 24px;
+ max-width: 420px; width: 100%;
+ max-height: 85vh; overflow-y: auto;
+ border: 1px solid var(--color-border);
+ }
+ .day-modal-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 18px;
+ }
+ .day-modal-header h3 { font-size: 1.1rem; }
+ .day-modal-close {
+ background: none; border: none;
+ color: var(--color-text-secondary);
+ font-size: 1.5rem; cursor: pointer;
+ }
+ .day-event-item {
+ display: flex;
+ align-items: flex-start;
+ gap: 12px;
+ padding: 12px 0;
+ border-bottom: 1px solid var(--color-border);
+ }
+ .day-event-item:last-child { border-bottom: none; }
+ .day-event-icon { font-size: 1.4rem; flex-shrink: 0; }
+ .day-event-name { font-weight: 600; font-size: 0.92rem; }
+ .day-event-detail { font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 2px; }
+ .day-event-amount { font-weight: 700; font-size: 1rem; white-space: nowrap; }
 
-        /* Add custom event modal */
-        .add-modal-overlay {
-            display: none;
-            position: fixed; inset: 0; z-index: 1000;
-            background: rgba(0,0,0,0.65);
-            align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        .add-modal-overlay.active { display: flex; }
-        .add-modal {
-            background: var(--color-bg-secondary);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 400px; width: 100%;
-            border: 1px solid var(--color-border);
-        }
-        .add-modal h3 { margin-bottom: 18px; }
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 0.82rem; color: var(--color-text-secondary); margin-bottom: 5px; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px 13px;
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            background: var(--color-bg);
-            color: var(--color-text-primary);
-            font-size: 0.92rem;
-            box-sizing: border-box;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none; border-color: var(--cal);
-        }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-        .modal-actions .btn { flex: 1; padding: 11px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; font-size: 0.9rem; }
-        .btn-cal-primary { background: var(--cal); color: #0f172a; }
-        .btn-cal-secondary { background: var(--color-bg-card); border: 1px solid var(--color-border) !important; color: var(--color-text-primary); }
+ /* Add custom event modal */
+ .add-modal-overlay {
+ display: none;
+ position: fixed; inset: 0; z-index: 1000;
+ background: rgba(0,0,0,0.65);
+ align-items: center; justify-content: center;
+ padding: 20px;
+ }
+ .add-modal-overlay.active { display: flex; }
+ .add-modal {
+ background: var(--color-bg-secondary);
+ border-radius: 20px;
+ padding: 24px;
+ max-width: 400px; width: 100%;
+ border: 1px solid var(--color-border);
+ }
+ .add-modal h3 { margin-bottom: 18px; }
+ .form-group { margin-bottom: 14px; }
+ .form-group label { display: block; font-size: 0.82rem; color: var(--color-text-secondary); margin-bottom: 5px; }
+ .form-group input, .form-group select, .form-group textarea {
+ width: 100%; padding: 10px 13px;
+ border: 1px solid var(--color-border);
+ border-radius: 10px;
+ background: var(--color-bg);
+ color: var(--color-text-primary);
+ font-size: 0.92rem;
+ box-sizing: border-box;
+ }
+ .form-group input:focus, .form-group select:focus {
+ outline: none; border-color: var(--cal);
+ }
+ .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+ .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+ .modal-actions .btn { flex: 1; padding: 11px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; font-size: 0.9rem; }
+ .btn-cal-primary { background: var(--cal); color: #0f172a; }
+ .btn-cal-secondary { background: var(--color-bg-card); border: 1px solid var(--color-border) !important; color: var(--color-text-primary); }
 
-        /* Color legend */
-        .legend {
-            display: flex; gap: 14px; flex-wrap: wrap;
-            margin-bottom: 16px;
-            font-size: 0.78rem;
-            color: var(--color-text-secondary);
-        }
-        .legend-item { display: flex; align-items: center; gap: 5px; }
-        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+ /* Color legend */
+ .legend {
+ display: flex; gap: 14px; flex-wrap: wrap;
+ margin-bottom: 16px;
+ font-size: 0.78rem;
+ color: var(--color-text-secondary);
+ }
+ .legend-item { display: flex; align-items: center; gap: 5px; }
+ .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-        @media (max-width: 600px) {
-            .cal-cell { min-height: 55px; padding: 4px 3px; }
-            .cal-date { font-size: 0.68rem; }
-            .cal-event { font-size: 0.55rem; }
-        }
-    </style>
+ @media (max-width: 600px) {
+ .cal-cell { min-height: 55px; padding: 4px 3px; }
+ .cal-date { font-size: 0.68rem; }
+ .cal-event { font-size: 0.55rem; }
+ }
+ </style>
 </head>
 <body>
 <div class="app-container">
-    <header class="app-header">
-        <button class="btn-back" onclick="history.back()">→</button>
-        <h1 data-i18n="cal.title">📅 לוח שנה פיננסי</h1>
-        <button onclick="openAddModal()" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);border-radius:8px;color:#06b6d4;padding:6px 12px;font-size:0.82rem;cursor:pointer;font-weight:600;" data-i18n="cal.addEventBtn">+ אירוע</button>
-    </header>
+ <header class="app-header">
+ <button class="btn-back" onclick="history.back()">→</button>
+ <h1 data-i18n="cal.title">📅 לוח שנה פיננסי</h1>
+ <button onclick="openAddModal()" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);border-radius:8px;color:#06b6d4;padding:6px 12px;font-size:0.82rem;cursor:pointer;font-weight:600;" data-i18n="cal.addEventBtn">+ אירוע</button>
+ </header>
 
-    <main class="main-content">
+ <main class="main-content">
 
-        <!-- Day detail modal -->
-        <div class="day-modal-overlay" id="dayModal" onclick="closeDayModal(event)">
-            <div class="day-modal">
-                <div class="day-modal-header">
-                    <h3 id="dayModalTitle">1 ינואר</h3>
-                    <button class="day-modal-close" onclick="closeDayModal()">&times;</button>
-                </div>
-                <div id="dayModalEvents"></div>
-            </div>
-        </div>
+ <!-- Day detail modal -->
+ <div class="day-modal-overlay" id="dayModal" onclick="closeDayModal(event)">
+ <div class="day-modal">
+ <div class="day-modal-header">
+ <h3 id="dayModalTitle">1 ינואר</h3>
+ <button class="day-modal-close" onclick="closeDayModal()">&times;</button>
+ </div>
+ <div id="dayModalEvents"></div>
+ </div>
+ </div>
 
-        <!-- Add custom event modal -->
-        <div class="add-modal-overlay" id="addModal" onclick="closeAddModal(event)">
-            <div class="add-modal">
-                <h3 data-i18n="cal.addModalTitle">➕ הוסף אירוע פיננסי</h3>
-                <div class="form-group">
-                    <label data-i18n="cal.evtNameLabel">שם האירוע</label>
-                    <input type="text" id="evtName" placeholder="לדוגמה: תשלום ביטוח" data-i18n-placeholder="cal.evtNamePlaceholder">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label data-i18n="cal.evtDateLabel">תאריך</label>
-                        <input type="date" id="evtDate">
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="cal.evtAmountLabel">סכום (₪)</label>
-                        <input type="number" id="evtAmount" placeholder="0" min="0">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label data-i18n="cal.evtTypeLabel">סוג</label>
-                        <select id="evtType">
-                            <option value="custom" data-i18n="cal.typeGeneral">📌 כללי</option>
-                            <option value="salary" data-i18n="cal.typeSalary">💰 משכורת</option>
-                            <option value="subscription" data-i18n="cal.typeSubscription">🔄 תשלום קבוע</option>
-                            <option value="loan" data-i18n="cal.typeLoan">🏦 הלוואה</option>
-                            <option value="goal" data-i18n="cal.typeGoal">🎯 יעד חיסכון</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="cal.evtRecurLabel">חזרה</label>
-                        <select id="evtRecur">
-                            <option value="none" data-i18n="cal.recurNone">חד פעמי</option>
-                            <option value="monthly" data-i18n="cal.recurMonthly">חודשי</option>
-                            <option value="annual" data-i18n="cal.recurAnnual">שנתי</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label data-i18n="cal.evtNoteLabel">הערה (אופציונלי)</label>
-                    <input type="text" id="evtNote" placeholder="">
-                </div>
-                <div class="modal-actions">
-                    <button class="btn btn-cal-secondary" onclick="closeAddModal()" data-i18n="cal.cancelBtn">ביטול</button>
-                    <button class="btn btn-cal-primary" onclick="saveCustomEvent()" data-i18n="cal.saveBtn">שמור</button>
-                </div>
-            </div>
-        </div>
+ <!-- Add custom event modal -->
+ <div class="add-modal-overlay" id="addModal" onclick="closeAddModal(event)">
+ <div class="add-modal">
+ <h3 data-i18n="cal.addModalTitle">➕ הוסף אירוע פיננסי</h3>
+ <div class="form-group">
+ <label data-i18n="cal.evtNameLabel">שם האירוע</label>
+ <input type="text" id="evtName" placeholder="לדוגמה: תשלום ביטוח" data-i18n-placeholder="cal.evtNamePlaceholder">
+ </div>
+ <div class="form-row">
+ <div class="form-group">
+ <label data-i18n="cal.evtDateLabel">תאריך</label>
+ <input type="date" id="evtDate">
+ </div>
+ <div class="form-group">
+ <label data-i18n="cal.evtAmountLabel">סכום (₪)</label>
+ <input type="number" id="evtAmount" placeholder="0" min="0">
+ </div>
+ </div>
+ <div class="form-row">
+ <div class="form-group">
+ <label data-i18n="cal.evtTypeLabel">סוג</label>
+ <select id="evtType">
+ <option value="custom" data-i18n="cal.typeGeneral">📌 כללי</option>
+ <option value="salary" data-i18n="cal.typeSalary">💰 משכורת</option>
+ <option value="subscription" data-i18n="cal.typeSubscription">🔄 תשלום קבוע</option>
+ <option value="loan" data-i18n="cal.typeLoan">🏦 הלוואה</option>
+ <option value="goal" data-i18n="cal.typeGoal">🎯 יעד חיסכון</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label data-i18n="cal.evtRecurLabel">חזרה</label>
+ <select id="evtRecur">
+ <option value="none" data-i18n="cal.recurNone">חד פעמי</option>
+ <option value="monthly" data-i18n="cal.recurMonthly">חודשי</option>
+ <option value="annual" data-i18n="cal.recurAnnual">שנתי</option>
+ </select>
+ </div>
+ </div>
+ <div class="form-group">
+ <label data-i18n="cal.evtNoteLabel">הערה (אופציונלי)</label>
+ <input type="text" id="evtNote" placeholder="">
+ </div>
+ <div class="modal-actions">
+ <button class="btn btn-cal-secondary" onclick="closeAddModal()" data-i18n="cal.cancelBtn">ביטול</button>
+ <button class="btn btn-cal-primary" onclick="saveCustomEvent()" data-i18n="cal.saveBtn">שמור</button>
+ </div>
+ </div>
+ </div>
 
-        <div class="cal-layout">
-            <!-- LEFT: Calendar -->
-            <div>
-                <!-- Month nav -->
-                <div class="month-nav">
-                    <button class="month-btn" onclick="changeMonth(-1)">›</button>
-                    <div class="month-title" id="monthTitle"></div>
-                    <button class="month-btn" onclick="changeMonth(1)">‹</button>
-                </div>
+ <div class="cal-layout">
+ <!-- LEFT: Calendar -->
+ <div>
+ <!-- Month nav -->
+ <div class="month-nav">
+ <button class="month-btn" onclick="changeMonth(-1)">›</button>
+ <div class="month-title" id="monthTitle"></div>
+ <button class="month-btn" onclick="changeMonth(1)">‹</button>
+ </div>
 
-                <!-- Legend -->
-                <div class="legend">
-                    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> <span data-i18n="cal.legendSubs">מנויים</span></div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> <span data-i18n="cal.legendLoans">הלוואות</span></div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> <span data-i18n="cal.legendGoals">יעדים</span></div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> <span data-i18n="cal.legendSalary">משכורת</span></div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> <span data-i18n="cal.legendEvents">אירועים</span></div>
-                </div>
+ <!-- Legend -->
+ <div class="legend">
+ <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> <span data-i18n="cal.legendSubs">מנויים</span></div>
+ <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> <span data-i18n="cal.legendLoans">הלוואות</span></div>
+ <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> <span data-i18n="cal.legendGoals">יעדים</span></div>
+ <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> <span data-i18n="cal.legendSalary">משכורת</span></div>
+ <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> <span data-i18n="cal.legendEvents">אירועים</span></div>
+ </div>
 
-                <!-- Day headers -->
-                <div class="cal-grid" id="calGrid">
-                    <!-- populated by JS -->
-                </div>
-            </div>
+ <!-- Day headers -->
+ <div class="cal-grid" id="calGrid">
+ <!-- populated by JS -->
+ </div>
+ </div>
 
-            <!-- RIGHT: Sidebar -->
-            <div class="cal-sidebar">
-                <!-- Month totals -->
-                <div class="month-summary">
-                    <h3 data-i18n="cal.monthSummaryTitle">💸 סיכום חודש</h3>
-                    <div class="ms-row">
-                        <span class="ms-label" data-i18n="cal.sumSubsLabel">🔄 מנויים</span>
-                        <span class="ms-val red" id="sumSubscriptions">₪0</span>
-                    </div>
-                    <div class="ms-row">
-                        <span class="ms-label" data-i18n="cal.sumLoansLabel">🏦 הלוואות</span>
-                        <span class="ms-val red" id="sumLoans">₪0</span>
-                    </div>
-                    <div class="ms-row">
-                        <span class="ms-label" data-i18n="cal.sumEventsLabel">📌 אירועים</span>
-                        <span class="ms-val yellow" id="sumCustom">₪0</span>
-                    </div>
-                    <div class="ms-row">
-                        <span class="ms-label" data-i18n="cal.sumIncomeLabel">💰 הכנסות</span>
-                        <span class="ms-val green" id="sumIncome">₪0</span>
-                    </div>
-                    <div class="ms-total">
-                        <span data-i18n="cal.sumTotalLabel">סה"כ הוצאות קבועות</span>
-                        <span id="sumTotal" style="color:#ef4444">₪0</span>
-                    </div>
-                </div>
+ <!-- RIGHT: Sidebar -->
+ <div class="cal-sidebar">
+ <!-- Month totals -->
+ <div class="month-summary">
+ <h3 data-i18n="cal.monthSummaryTitle">💸 סיכום חודש</h3>
+ <div class="ms-row">
+ <span class="ms-label" data-i18n="cal.sumSubsLabel">🔄 מנויים</span>
+ <span class="ms-val red" id="sumSubscriptions">₪0</span>
+ </div>
+ <div class="ms-row">
+ <span class="ms-label" data-i18n="cal.sumLoansLabel">🏦 הלוואות</span>
+ <span class="ms-val red" id="sumLoans">₪0</span>
+ </div>
+ <div class="ms-row">
+ <span class="ms-label" data-i18n="cal.sumEventsLabel">📌 אירועים</span>
+ <span class="ms-val yellow" id="sumCustom">₪0</span>
+ </div>
+ <div class="ms-row">
+ <span class="ms-label" data-i18n="cal.sumIncomeLabel">💰 הכנסות</span>
+ <span class="ms-val green" id="sumIncome">₪0</span>
+ </div>
+ <div class="ms-total">
+ <span data-i18n="cal.sumTotalLabel">סה"כ הוצאות קבועות</span>
+ <span id="sumTotal" style="color:#ef4444">₪0</span>
+ </div>
+ </div>
 
-                <!-- Upcoming events -->
-                <div class="upcoming-card">
-                    <h3 data-i18n="cal.upcomingTitle">⏰ קרוב</h3>
-                    <div id="upcomingList"></div>
-                </div>
+ <!-- Upcoming events -->
+ <div class="upcoming-card">
+ <h3 data-i18n="cal.upcomingTitle">⏰ קרוב</h3>
+ <div id="upcomingList"></div>
+ </div>
 
-                <button class="add-event-btn" onclick="openAddModal()" data-i18n="cal.addEventFullBtn">+ הוסף אירוע פיננסי</button>
-            </div>
-        </div>
+ <button class="add-event-btn" onclick="openAddModal()" data-i18n="cal.addEventFullBtn">+ הוסף אירוע פיננסי</button>
+ </div>
+ </div>
 
-    </main>
+ </main>
 </div>
 
 <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
 <script src="../js/pin-lock.js"></script>
 <script src="../js/i18n.js"></script>
 <script src="../js/app.js"></script>
@@ -487,336 +479,336 @@
 <script src="../js/crypto.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-    const CUSTOM_EVENTS_KEY = 'finance_calendar_events';
-    const MONTH_NAMES = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
-    const DAY_NAMES   = ['א','ב','ג','ד','ה','ו','ש']; // Sun-Sat
+ const CUSTOM_EVENTS_KEY = 'finance_calendar_events';
+ const MONTH_NAMES = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+ const DAY_NAMES = ['א','ב','ג','ד','ה','ו','ש']; // Sun-Sat
 
-    let viewYear  = new Date().getFullYear();
-    let viewMonth = new Date().getMonth(); // 0-indexed
-    const today   = new Date();
+ let viewYear = new Date().getFullYear();
+ let viewMonth = new Date().getMonth(); // 0-indexed
+ const today = new Date();
 
-    // ── Custom events ─────────────────────────────────────────────────
-    function getCustomEvents() {
-        try { return JSON.parse(localStorage.getItem(CUSTOM_EVENTS_KEY)) || []; }
-        catch { return []; }
-    }
-    function saveCustomEvents(events) {
-        localStorage.setItem(CUSTOM_EVENTS_KEY, JSON.stringify(events));
-    }
+ // ── Custom events ─────────────────────────────────────────────────
+ function getCustomEvents() {
+ try { return JSON.parse(localStorage.getItem(CUSTOM_EVENTS_KEY)) || []; }
+ catch { return []; }
+ }
+ function saveCustomEvents(events) {
+ localStorage.setItem(CUSTOM_EVENTS_KEY, JSON.stringify(events));
+ }
 
-    // ── Build events for a given year/month ──────────────────────────
-    function buildEvents(year, month) {
-        const events = {}; // day (1-31) → [{type, icon, name, amount, detail}]
-        const add = (day, ev) => {
-            if (!events[day]) events[day] = [];
-            events[day].push(ev);
-        };
+ // ── Build events for a given year/month ──────────────────────────
+ function buildEvents(year, month) {
+ const events = {}; // day (1-31) → [{type, icon, name, amount, detail}]
+ const add = (day, ev) => {
+ if (!events[day]) events[day] = [];
+ events[day].push(ev);
+ };
 
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+ const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        // 1. Subscriptions
-        const subs = Storage.getSubscriptions().filter(s => s.active !== false);
-        const multipliers = { weekly: 52/12, monthly:1, bimonthly:0.5, quarterly:1/3, semi_annual:1/6, annual:1/12 };
-        subs.forEach(s => {
-            if (!s.renewalDate) {
-                // No specific date — show on the 1st as estimate
-                add(1, { type:'subscription', icon:'🔄', name: s.name, amount: s.amount,
-                    detail: 'חידוש חודשי (תאריך לא ידוע)' });
-                return;
-            }
-            const renewal = new Date(s.renewalDate + 'T00:00:00');
-            const freq = s.frequency || 'monthly';
+ // 1. Subscriptions
+ const subs = Storage.getSubscriptions().filter(s => s.active !== false);
+ const multipliers = { weekly: 52/12, monthly:1, bimonthly:0.5, quarterly:1/3, semi_annual:1/6, annual:1/12 };
+ subs.forEach(s => {
+ if (!s.renewalDate) {
+ // No specific date — show on the 1st as estimate
+ add(1, { type:'subscription', icon:'🔄', name: s.name, amount: s.amount,
+ detail: 'חידוש חודשי (תאריך לא ידוע)' });
+ return;
+ }
+ const renewal = new Date(s.renewalDate + 'T00:00:00');
+ const freq = s.frequency || 'monthly';
 
-            // Figure out if this sub hits in the current month
-            let hits = [];
-            if (freq === 'monthly' || freq === 'weekly') {
-                const day = renewal.getDate();
-                if (day <= daysInMonth) hits.push(day);
-                if (freq === 'weekly') {
-                    // Add every ~7 days
-                    for (let d = day + 7; d <= daysInMonth; d += 7) hits.push(d);
-                    // Also add days before if first hit > 7
-                    for (let d = day - 7; d >= 1; d -= 7) hits.push(d);
-                }
-            } else if (freq === 'bimonthly') {
-                const day = renewal.getDate();
-                if (day <= daysInMonth) hits.push(day);
-                hits.push(Math.min(day + 15, daysInMonth));
-            } else if (freq === 'quarterly' || freq === 'semi_annual' || freq === 'annual') {
-                // Check if renewal month matches
-                const renewMonth = renewal.getMonth();
-                const renewDay   = renewal.getDate();
-                const monthsDiff = freq === 'quarterly' ? 3 : freq === 'semi_annual' ? 6 : 12;
-                // If (viewMonth - renewMonth) % monthsDiff === 0
-                const diff = ((month - renewMonth) % monthsDiff + monthsDiff) % monthsDiff;
-                if (diff === 0 && renewDay <= daysInMonth) hits.push(renewDay);
-            }
+ // Figure out if this sub hits in the current month
+ let hits = [];
+ if (freq === 'monthly' || freq === 'weekly') {
+ const day = renewal.getDate();
+ if (day <= daysInMonth) hits.push(day);
+ if (freq === 'weekly') {
+ // Add every ~7 days
+ for (let d = day + 7; d <= daysInMonth; d += 7) hits.push(d);
+ // Also add days before if first hit > 7
+ for (let d = day - 7; d >= 1; d -= 7) hits.push(d);
+ }
+ } else if (freq === 'bimonthly') {
+ const day = renewal.getDate();
+ if (day <= daysInMonth) hits.push(day);
+ hits.push(Math.min(day + 15, daysInMonth));
+ } else if (freq === 'quarterly' || freq === 'semi_annual' || freq === 'annual') {
+ // Check if renewal month matches
+ const renewMonth = renewal.getMonth();
+ const renewDay = renewal.getDate();
+ const monthsDiff = freq === 'quarterly' ? 3 : freq === 'semi_annual' ? 6 : 12;
+ // If (viewMonth - renewMonth) % monthsDiff === 0
+ const diff = ((month - renewMonth) % monthsDiff + monthsDiff) % monthsDiff;
+ if (diff === 0 && renewDay <= daysInMonth) hits.push(renewDay);
+ }
 
-            hits.forEach(day => {
-                add(day, { type:'subscription', icon:'🔄', name: s.name, amount: s.amount,
-                    detail: I18n.t('subscriptions.frequencies.' + freq) || freq });
-            });
-        });
+ hits.forEach(day => {
+ add(day, { type:'subscription', icon:'🔄', name: s.name, amount: s.amount,
+ detail: I18n.t('subscriptions.frequencies.' + freq) || freq });
+ });
+ });
 
-        // 2. Loans — show payment day (default: 1st of month)
-        const loans = Storage.getLoans();
-        loans.forEach(l => {
-            const day = l.paymentDay || 1;
-            if (day <= daysInMonth) {
-                add(day, { type:'loan', icon:'🏦', name: l.name || l.type || 'הלוואה',
-                    amount: l.monthlyPayment || 0,
-                    detail: l.remainingBalance ? 'יתרה: ₪' + Math.round(l.remainingBalance).toLocaleString('he-IL') : '' });
-            }
-        });
+ // 2. Loans — show payment day (default: 1st of month)
+ const loans = Storage.getLoans();
+ loans.forEach(l => {
+ const day = l.paymentDay || 1;
+ if (day <= daysInMonth) {
+ add(day, { type:'loan', icon:'🏦', name: l.name || l.type || 'הלוואה',
+ amount: l.monthlyPayment || 0,
+ detail: l.remainingBalance ? 'יתרה: ₪' + Math.round(l.remainingBalance).toLocaleString('he-IL') : '' });
+ }
+ });
 
-        // 3. Goals with deadline
-        const goals = Storage.get('finance_goals') || [];
-        goals.forEach(g => {
-            if (!g.deadline) return;
-            const d = new Date(g.deadline + 'T00:00:00');
-            if (d.getFullYear() === year && d.getMonth() === month) {
-                add(d.getDate(), { type:'goal', icon: g.icon || '🎯', name: g.name,
-                    amount: g.targetAmount - (g.currentAmount || 0),
-                    detail: 'יעד חיסכון — נדרש עוד ₪' + Math.round(g.targetAmount - (g.currentAmount||0)).toLocaleString('he-IL') });
-            }
-        });
+ // 3. Goals with deadline
+ const goals = Storage.get('finance_goals') || [];
+ goals.forEach(g => {
+ if (!g.deadline) return;
+ const d = new Date(g.deadline + 'T00:00:00');
+ if (d.getFullYear() === year && d.getMonth() === month) {
+ add(d.getDate(), { type:'goal', icon: g.icon || '🎯', name: g.name,
+ amount: g.targetAmount - (g.currentAmount || 0),
+ detail: 'יעד חיסכון — נדרש עוד ₪' + Math.round(g.targetAmount - (g.currentAmount||0)).toLocaleString('he-IL') });
+ }
+ });
 
-        // 4. Custom events
-        const customs = getCustomEvents();
-        customs.forEach(ev => {
-            const d = new Date(ev.date + 'T00:00:00');
-            // Recurring
-            let matches = false;
-            if (ev.recur === 'monthly') {
-                if (d.getDate() <= daysInMonth) { matches = true; }
-            } else if (ev.recur === 'annual') {
-                if (d.getMonth() === month) { matches = true; }
-            } else {
-                // one-time
-                matches = d.getFullYear() === year && d.getMonth() === month;
-            }
-            if (matches) {
-                const day = ev.recur === 'annual' ? d.getDate() : (ev.recur === 'monthly' ? d.getDate() : d.getDate());
-                if (day <= daysInMonth) {
-                    const typeMap = { salary:'salary', custom:'custom', subscription:'subscription', loan:'loan', goal:'goal' };
-                    const iconMap = { salary:'💰', custom:'📌', subscription:'🔄', loan:'🏦', goal:'🎯' };
-                    add(day, { type: typeMap[ev.type] || 'custom', icon: iconMap[ev.type] || '📌',
-                        name: ev.name, amount: ev.amount || 0, detail: ev.note || '',
-                        customId: ev.id });
-                }
-            }
-        });
+ // 4. Custom events
+ const customs = getCustomEvents();
+ customs.forEach(ev => {
+ const d = new Date(ev.date + 'T00:00:00');
+ // Recurring
+ let matches = false;
+ if (ev.recur === 'monthly') {
+ if (d.getDate() <= daysInMonth) { matches = true; }
+ } else if (ev.recur === 'annual') {
+ if (d.getMonth() === month) { matches = true; }
+ } else {
+ // one-time
+ matches = d.getFullYear() === year && d.getMonth() === month;
+ }
+ if (matches) {
+ const day = ev.recur === 'annual' ? d.getDate() : (ev.recur === 'monthly' ? d.getDate() : d.getDate());
+ if (day <= daysInMonth) {
+ const typeMap = { salary:'salary', custom:'custom', subscription:'subscription', loan:'loan', goal:'goal' };
+ const iconMap = { salary:'💰', custom:'📌', subscription:'🔄', loan:'🏦', goal:'🎯' };
+ add(day, { type: typeMap[ev.type] || 'custom', icon: iconMap[ev.type] || '📌',
+ name: ev.name, amount: ev.amount || 0, detail: ev.note || '',
+ customId: ev.id });
+ }
+ }
+ });
 
-        return events;
-    }
+ return events;
+ }
 
-    // ── Render calendar ───────────────────────────────────────────────
-    function render() {
-        document.getElementById('monthTitle').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+ // ── Render calendar ───────────────────────────────────────────────
+ function render() {
+ document.getElementById('monthTitle').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
 
-        const events = buildEvents(viewYear, viewMonth);
-        const grid   = document.getElementById('calGrid');
+ const events = buildEvents(viewYear, viewMonth);
+ const grid = document.getElementById('calGrid');
 
-        // Day headers (Sun=0 … Sat=6, but display RTL: ש to א)
-        // Israeli week: ראשון to שבת
-        const headers = DAY_NAMES.map(d => `<div class="cal-day-header">${d}'</div>`).join('');
+ // Day headers (Sun=0 … Sat=6, but display RTL: ש to א)
+ // Israeli week: ראשון to שבת
+ const headers = DAY_NAMES.map(d => `<div class="cal-day-header">${d}'</div>`).join('');
 
-        // First day of month (0=Sun)
-        const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-        const daysInPrev  = new Date(viewYear, viewMonth, 0).getDate();
+ // First day of month (0=Sun)
+ const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+ const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+ const daysInPrev = new Date(viewYear, viewMonth, 0).getDate();
 
-        let cells = '';
+ let cells = '';
 
-        // Prev month filler
-        for (let i = 0; i < firstDay; i++) {
-            const d = daysInPrev - firstDay + 1 + i;
-            cells += `<div class="cal-cell other-month"><div class="cal-date">${d}</div></div>`;
-        }
+ // Prev month filler
+ for (let i = 0; i < firstDay; i++) {
+ const d = daysInPrev - firstDay + 1 + i;
+ cells += `<div class="cal-cell other-month"><div class="cal-date">${d}</div></div>`;
+ }
 
-        // Current month
-        for (let day = 1; day <= daysInMonth; day++) {
-            const isToday = day === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
-            const dayEvents = events[day] || [];
-            const hasEvents = dayEvents.length > 0;
-            const show = dayEvents.slice(0, 3);
-            const more = dayEvents.length - show.length;
+ // Current month
+ for (let day = 1; day <= daysInMonth; day++) {
+ const isToday = day === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+ const dayEvents = events[day] || [];
+ const hasEvents = dayEvents.length > 0;
+ const show = dayEvents.slice(0, 3);
+ const more = dayEvents.length - show.length;
 
-            const chips = show.map(ev =>
-                `<div class="cal-event type-${ev.type}" title="${ev.name}${ev.amount ? ' · ₪'+Math.round(ev.amount).toLocaleString('he-IL') : ''}">${ev.icon} ${ev.name}</div>`
-            ).join('');
+ const chips = show.map(ev =>
+ `<div class="cal-event type-${ev.type}" title="${ev.name}${ev.amount ? ' · ₪'+Math.round(ev.amount).toLocaleString('he-IL') : ''}">${ev.icon} ${ev.name}</div>`
+ ).join('');
 
-            const moreEl = more > 0 ? `<div class="cal-more">+${more} נוספים</div>` : '';
+ const moreEl = more > 0 ? `<div class="cal-more">+${more} נוספים</div>` : '';
 
-            cells += `<div class="cal-cell${isToday ? ' today' : ''}${hasEvents ? ' has-events' : ''}"
-                           onclick="${hasEvents ? `openDayModal(${day})` : ''}">
-                <div class="cal-date">${isToday ? '<span class="today-dot"></span>' : ''}${day}</div>
-                <div class="cal-events">${chips}${moreEl}</div>
-            </div>`;
-        }
+ cells += `<div class="cal-cell${isToday ? ' today' : ''}${hasEvents ? ' has-events' : ''}"
+ onclick="${hasEvents ? `openDayModal(${day})` : ''}">
+ <div class="cal-date">${isToday ? '<span class="today-dot"></span>' : ''}${day}</div>
+ <div class="cal-events">${chips}${moreEl}</div>
+ </div>`;
+ }
 
-        // Next month filler
-        const total = firstDay + daysInMonth;
-        const nextFiller = total % 7 === 0 ? 0 : 7 - (total % 7);
-        for (let i = 1; i <= nextFiller; i++) {
-            cells += `<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;
-        }
+ // Next month filler
+ const total = firstDay + daysInMonth;
+ const nextFiller = total % 7 === 0 ? 0 : 7 - (total % 7);
+ for (let i = 1; i <= nextFiller; i++) {
+ cells += `<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;
+ }
 
-        grid.innerHTML = headers + cells;
+ grid.innerHTML = headers + cells;
 
-        renderSummary(events);
-        renderUpcoming();
-    }
+ renderSummary(events);
+ renderUpcoming();
+ }
 
-    // ── Sidebar: month summary ────────────────────────────────────────
-    function renderSummary(events) {
-        let subTotal = 0, loanTotal = 0, customTotal = 0, incomeTotal = 0;
+ // ── Sidebar: month summary ────────────────────────────────────────
+ function renderSummary(events) {
+ let subTotal = 0, loanTotal = 0, customTotal = 0, incomeTotal = 0;
 
-        Object.values(events).forEach(dayEvs => {
-            dayEvs.forEach(ev => {
-                if (ev.type === 'subscription') subTotal   += ev.amount || 0;
-                else if (ev.type === 'loan')    loanTotal  += ev.amount || 0;
-                else if (ev.type === 'salary')  incomeTotal+= ev.amount || 0;
-                else                            customTotal += ev.amount || 0;
-            });
-        });
+ Object.values(events).forEach(dayEvs => {
+ dayEvs.forEach(ev => {
+ if (ev.type === 'subscription') subTotal += ev.amount || 0;
+ else if (ev.type === 'loan') loanTotal += ev.amount || 0;
+ else if (ev.type === 'salary') incomeTotal+= ev.amount || 0;
+ else customTotal += ev.amount || 0;
+ });
+ });
 
-        const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
-        document.getElementById('sumSubscriptions').textContent = fmt(subTotal);
-        document.getElementById('sumLoans').textContent         = fmt(loanTotal);
-        document.getElementById('sumCustom').textContent        = fmt(customTotal);
-        document.getElementById('sumIncome').textContent        = fmt(incomeTotal);
-        document.getElementById('sumTotal').textContent         = fmt(subTotal + loanTotal + customTotal);
-    }
+ const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
+ document.getElementById('sumSubscriptions').textContent = fmt(subTotal);
+ document.getElementById('sumLoans').textContent = fmt(loanTotal);
+ document.getElementById('sumCustom').textContent = fmt(customTotal);
+ document.getElementById('sumIncome').textContent = fmt(incomeTotal);
+ document.getElementById('sumTotal').textContent = fmt(subTotal + loanTotal + customTotal);
+ }
 
-    // ── Sidebar: upcoming events (next 14 days) ───────────────────────
-    function renderUpcoming() {
-        const list = document.getElementById('upcomingList');
-        const now  = new Date();
-        const upcoming = [];
+ // ── Sidebar: upcoming events (next 14 days) ───────────────────────
+ function renderUpcoming() {
+ const list = document.getElementById('upcomingList');
+ const now = new Date();
+ const upcoming = [];
 
-        // Build events for this month AND next month to catch near-future events
-        for (let m = 0; m <= 1; m++) {
-            let y = now.getFullYear(), mo = now.getMonth() + m;
-            if (mo > 11) { mo -= 12; y++; }
-            const evs = buildEvents(y, mo);
-            Object.entries(evs).forEach(([day, dayEvs]) => {
-                const d = new Date(y, mo, parseInt(day));
-                const diff = Math.ceil((d - now) / 86400000);
-                if (diff >= 0 && diff <= 30) {
-                    dayEvs.forEach(ev => {
-                        upcoming.push({ ...ev, date: d, diff });
-                    });
-                }
-            });
-        }
+ // Build events for this month AND next month to catch near-future events
+ for (let m = 0; m <= 1; m++) {
+ let y = now.getFullYear(), mo = now.getMonth() + m;
+ if (mo > 11) { mo -= 12; y++; }
+ const evs = buildEvents(y, mo);
+ Object.entries(evs).forEach(([day, dayEvs]) => {
+ const d = new Date(y, mo, parseInt(day));
+ const diff = Math.ceil((d - now) / 86400000);
+ if (diff >= 0 && diff <= 30) {
+ dayEvs.forEach(ev => {
+ upcoming.push({ ...ev, date: d, diff });
+ });
+ }
+ });
+ }
 
-        upcoming.sort((a, b) => a.diff - b.diff);
-        const shown = upcoming.slice(0, 8);
+ upcoming.sort((a, b) => a.diff - b.diff);
+ const shown = upcoming.slice(0, 8);
 
-        if (shown.length === 0) {
-            list.innerHTML = `<div style="color:var(--color-text-secondary);font-size:0.82rem;padding:8px 0;">${I18n.t('cal.noUpcoming')}</div>`;
-            return;
-        }
+ if (shown.length === 0) {
+ list.innerHTML = `<div style="color:var(--color-text-secondary);font-size:0.82rem;padding:8px 0;">${I18n.t('cal.noUpcoming')}</div>`;
+ return;
+ }
 
-        const colorMap = { subscription:'#06b6d4', loan:'#ef4444', goal:'#10b981', salary:'#f59e0b', custom:'#8b5cf6' };
+ const colorMap = { subscription:'#06b6d4', loan:'#ef4444', goal:'#10b981', salary:'#f59e0b', custom:'#8b5cf6' };
 
-        list.innerHTML = shown.map(ev => {
-            const dateStr = ev.diff === 0 ? I18n.t('cal.today') : ev.diff === 1 ? I18n.t('cal.tomorrow') : `${I18n.t('cal.inDays1')}${ev.diff}${I18n.t('cal.inDays2')}`;
-            const isUrgent = ev.diff <= 3;
-            const day = ev.date.getDate();
-            const mon = MONTH_NAMES[ev.date.getMonth()];
-            return `<div class="upcoming-item">
-                <div class="upcoming-dot" style="background:${colorMap[ev.type] || '#8b5cf6'}"></div>
-                <div class="upcoming-info">
-                    <div class="upcoming-name">${ev.icon} ${ev.name}</div>
-                    <div class="upcoming-date">${day} ${mon} ${ev.date.getFullYear()}</div>
-                </div>
-                <div style="text-align:left;">
-                    ${isUrgent ? `<div class="upcoming-soon">⚡ ${dateStr}</div>` : `<div style="font-size:0.7rem;color:var(--color-text-secondary);">${dateStr}</div>`}
-                    ${ev.amount ? `<div class="upcoming-amount" style="color:${colorMap[ev.type]}">₪${Math.round(ev.amount).toLocaleString('he-IL')}</div>` : ''}
-                </div>
-            </div>`;
-        }).join('');
-    }
+ list.innerHTML = shown.map(ev => {
+ const dateStr = ev.diff === 0 ? I18n.t('cal.today') : ev.diff === 1 ? I18n.t('cal.tomorrow') : `${I18n.t('cal.inDays1')}${ev.diff}${I18n.t('cal.inDays2')}`;
+ const isUrgent = ev.diff <= 3;
+ const day = ev.date.getDate();
+ const mon = MONTH_NAMES[ev.date.getMonth()];
+ return `<div class="upcoming-item">
+ <div class="upcoming-dot" style="background:${colorMap[ev.type] || '#8b5cf6'}"></div>
+ <div class="upcoming-info">
+ <div class="upcoming-name">${ev.icon} ${ev.name}</div>
+ <div class="upcoming-date">${day} ${mon} ${ev.date.getFullYear()}</div>
+ </div>
+ <div style="text-align:left;">
+ ${isUrgent ? `<div class="upcoming-soon">⚡ ${dateStr}</div>` : `<div style="font-size:0.7rem;color:var(--color-text-secondary);">${dateStr}</div>`}
+ ${ev.amount ? `<div class="upcoming-amount" style="color:${colorMap[ev.type]}">₪${Math.round(ev.amount).toLocaleString('he-IL')}</div>` : ''}
+ </div>
+ </div>`;
+ }).join('');
+ }
 
-    // ── Day modal ────────────────────────────────────────────────────
-    function openDayModal(day) {
-        const events = buildEvents(viewYear, viewMonth);
-        const dayEvs = events[day] || [];
-        const dateStr = `${day} ${MONTH_NAMES[viewMonth]} ${viewYear}`;
+ // ── Day modal ────────────────────────────────────────────────────
+ function openDayModal(day) {
+ const events = buildEvents(viewYear, viewMonth);
+ const dayEvs = events[day] || [];
+ const dateStr = `${day} ${MONTH_NAMES[viewMonth]} ${viewYear}`;
 
-        document.getElementById('dayModalTitle').textContent = '📅 ' + dateStr;
+ document.getElementById('dayModalTitle').textContent = '📅 ' + dateStr;
 
-        const colorMap = { subscription:'#06b6d4', loan:'#ef4444', goal:'#10b981', salary:'#f59e0b', custom:'#8b5cf6' };
+ const colorMap = { subscription:'#06b6d4', loan:'#ef4444', goal:'#10b981', salary:'#f59e0b', custom:'#8b5cf6' };
 
-        document.getElementById('dayModalEvents').innerHTML = dayEvs.map(ev => `
-            <div class="day-event-item">
-                <div class="day-event-icon">${ev.icon}</div>
-                <div style="flex:1">
-                    <div class="day-event-name">${ev.name}</div>
-                    ${ev.detail ? `<div class="day-event-detail">${ev.detail}</div>` : ''}
-                </div>
-                ${ev.amount ? `<div class="day-event-amount" style="color:${colorMap[ev.type]}">₪${Math.round(ev.amount).toLocaleString('he-IL')}</div>` : ''}
-            </div>
-        `).join('');
+ document.getElementById('dayModalEvents').innerHTML = dayEvs.map(ev => `
+ <div class="day-event-item">
+ <div class="day-event-icon">${ev.icon}</div>
+ <div style="flex:1">
+ <div class="day-event-name">${ev.name}</div>
+ ${ev.detail ? `<div class="day-event-detail">${ev.detail}</div>` : ''}
+ </div>
+ ${ev.amount ? `<div class="day-event-amount" style="color:${colorMap[ev.type]}">₪${Math.round(ev.amount).toLocaleString('he-IL')}</div>` : ''}
+ </div>
+ `).join('');
 
-        document.getElementById('dayModal').classList.add('active');
-    }
+ document.getElementById('dayModal').classList.add('active');
+ }
 
-    function closeDayModal(e) {
-        if (e && e.target !== document.getElementById('dayModal')) return;
-        document.getElementById('dayModal').classList.remove('active');
-    }
+ function closeDayModal(e) {
+ if (e && e.target !== document.getElementById('dayModal')) return;
+ document.getElementById('dayModal').classList.remove('active');
+ }
 
-    // ── Add custom event modal ────────────────────────────────────────
-    function openAddModal() {
-        const todayStr = new Date().toISOString().split('T')[0];
-        document.getElementById('evtDate').value = todayStr;
-        document.getElementById('evtName').value = '';
-        document.getElementById('evtAmount').value = '';
-        document.getElementById('evtNote').value = '';
-        document.getElementById('addModal').classList.add('active');
-    }
+ // ── Add custom event modal ────────────────────────────────────────
+ function openAddModal() {
+ const todayStr = new Date().toISOString().split('T')[0];
+ document.getElementById('evtDate').value = todayStr;
+ document.getElementById('evtName').value = '';
+ document.getElementById('evtAmount').value = '';
+ document.getElementById('evtNote').value = '';
+ document.getElementById('addModal').classList.add('active');
+ }
 
-    function closeAddModal(e) {
-        if (e && e.target !== document.getElementById('addModal')) return;
-        document.getElementById('addModal').classList.remove('active');
-    }
+ function closeAddModal(e) {
+ if (e && e.target !== document.getElementById('addModal')) return;
+ document.getElementById('addModal').classList.remove('active');
+ }
 
-    function saveCustomEvent() {
-        const name   = document.getElementById('evtName').value.trim();
-        const date   = document.getElementById('evtDate').value;
-        const amount = parseFloat(document.getElementById('evtAmount').value) || 0;
-        const type   = document.getElementById('evtType').value;
-        const recur  = document.getElementById('evtRecur').value;
-        const note   = document.getElementById('evtNote').value.trim();
+ function saveCustomEvent() {
+ const name = document.getElementById('evtName').value.trim();
+ const date = document.getElementById('evtDate').value;
+ const amount = parseFloat(document.getElementById('evtAmount').value) || 0;
+ const type = document.getElementById('evtType').value;
+ const recur = document.getElementById('evtRecur').value;
+ const note = document.getElementById('evtNote').value.trim();
 
-        if (!name || !date) { alert(I18n.t('cal.fillNameDate')); return; }
+ if (!name || !date) { alert(I18n.t('cal.fillNameDate')); return; }
 
-        const events = getCustomEvents();
-        events.push({ id: 'ev_' + Date.now(), name, date, amount, type, recur, note });
-        saveCustomEvents(events);
-        closeAddModal();
-        render();
+ const events = getCustomEvents();
+ events.push({ id: 'ev_' + Date.now(), name, date, amount, type, recur, note });
+ saveCustomEvents(events);
+ closeAddModal();
+ render();
 
-        if (typeof App !== 'undefined' && App.notify) App.notify(I18n.t('cal.eventSaved'), 'success');
-    }
+ if (typeof App !== 'undefined' && App.notify) App.notify(I18n.t('cal.eventSaved'), 'success');
+ }
 
-    // ── Month navigation ──────────────────────────────────────────────
-    function changeMonth(delta) {
-        viewMonth += delta;
-        if (viewMonth > 11) { viewMonth = 0;  viewYear++; }
-        if (viewMonth <  0) { viewMonth = 11; viewYear--; }
-        render();
-    }
+ // ── Month navigation ──────────────────────────────────────────────
+ function changeMonth(delta) {
+ viewMonth += delta;
+ if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+ if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+ render();
+ }
 
-    // ── Init ──────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-        App.currentPage = 'calendar';
-        I18n.init();
-        render();
-    });
+ // ── Init ──────────────────────────────────────────────────────────
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'calendar';
+ I18n.init();
+ render();
+ });
 </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>

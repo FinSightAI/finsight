@@ -3,46 +3,38 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
 <meta charset="UTF-8">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-<script>
-  // 1. Unregister all stale service workers (fixes old PWA installs with wrong scope)
-  // 2. Redirect to correct URL
-  function redirect() {
-    var path = window.location.pathname;
-    var fixed = path.replace(/\/FinSight/gi, '/finsight');
-    var target = (fixed !== path) ? fixed : '/finsight/';
-    window.location.replace(target + window.location.search + window.location.hash);
-  }
+ <script>
+ // 1. Unregister all stale service workers (fixes old PWA installs with wrong scope)
+ // 2. Redirect to correct URL
+ function redirect() {
+ var path = window.location.pathname;
+ var fixed = path.replace(/\/FinSight/gi, '/finsight');
+ var target = (fixed !== path) ? fixed : '/finsight/';
+ window.location.replace(target + window.location.search + window.location.hash);
+ }
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      var unregisterAll = registrations.map(function(r) { return r.unregister(); });
-      Promise.all(unregisterAll).then(redirect);
-    }).catch(redirect);
-  } else {
-    redirect();
-  }
+ if ('serviceWorker' in navigator) {
+ navigator.serviceWorker.getRegistrations().then(function(registrations) {
+ var unregisterAll = registrations.map(function(r) { return r.unregister(); });
+ Promise.all(unregisterAll).then(redirect);
+ }).catch(redirect);
+ } else {
+ redirect();
+ }
 </script>
 </head>
 <body></body>

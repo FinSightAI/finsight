@@ -3,479 +3,471 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#10b981">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>יעדי חיסכון - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <style>
-        .nav-link.active { background: var(--color-dashboard) !important; }
-        .page-header h1 { color: var(--color-dashboard); }
-        .btn-primary { background: var(--color-dashboard); }
-        .btn-primary:hover { background: #059669; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#10b981">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>יעדי חיסכון - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <style>
+ .nav-link.active { background: var(--color-dashboard) !important; }
+ .page-header h1 { color: var(--color-dashboard); }
+ .btn-primary { background: var(--color-dashboard); }
+ .btn-primary:hover { background: #059669; }
 
-        .goal-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+ .goal-card {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 20px;
+ margin-bottom: 20px;
+ }
 
-        .goal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
+ .goal-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ margin-bottom: 15px;
+ }
 
-        .goal-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .goal-title {
+ font-size: 1.3rem;
+ font-weight: bold;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .goal-icon {
-            font-size: 2rem;
-        }
+ .goal-icon {
+ font-size: 2rem;
+ }
 
-        .goal-deadline {
-            color: var(--color-text-secondary);
-            font-size: 0.9rem;
-        }
+ .goal-deadline {
+ color: var(--color-text-secondary);
+ font-size: 0.9rem;
+ }
 
-        .progress-bar-container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            height: 20px;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
+ .progress-bar-container {
+ background: rgba(255, 255, 255, 0.1);
+ border-radius: 10px;
+ height: 20px;
+ overflow: hidden;
+ margin-bottom: 15px;
+ }
 
-        .progress-bar {
-            height: 100%;
-            border-radius: 10px;
-            background: linear-gradient(90deg, var(--color-dashboard), #34d399);
-            transition: width 0.5s ease;
-        }
+ .progress-bar {
+ height: 100%;
+ border-radius: 10px;
+ background: linear-gradient(90deg, var(--color-dashboard), #34d399);
+ transition: width 0.5s ease;
+ }
 
-        .progress-bar.warning {
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-        }
+ .progress-bar.warning {
+ background: linear-gradient(90deg, #f59e0b, #fbbf24);
+ }
 
-        .progress-bar.complete {
-            background: linear-gradient(90deg, #10b981, #34d399);
-        }
+ .progress-bar.complete {
+ background: linear-gradient(90deg, #10b981, #34d399);
+ }
 
-        .goal-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            text-align: center;
-        }
+ .goal-stats {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 15px;
+ text-align: center;
+ }
 
-        .goal-stat .label {
-            color: var(--color-text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-        }
+ .goal-stat .label {
+ color: var(--color-text-secondary);
+ font-size: 0.85rem;
+ margin-bottom: 5px;
+ }
 
-        .goal-stat .value {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
+ .goal-stat .value {
+ font-size: 1.2rem;
+ font-weight: bold;
+ }
 
-        .goal-stat .value.positive { color: var(--color-positive); }
+ .goal-stat .value.positive { color: var(--color-positive); }
 
-        .goals-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+ .goals-summary {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+ gap: 15px;
+ margin-bottom: 30px;
+ }
 
-        .summary-item {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
+ .summary-item {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 15px;
+ text-align: center;
+ }
 
-        .summary-item .icon { font-size: 2rem; margin-bottom: 5px; }
-        .summary-item .value { font-size: 1.5rem; font-weight: bold; color: var(--color-dashboard); }
-        .summary-item .label { color: var(--color-text-secondary); font-size: 0.85rem; }
+ .summary-item .icon { font-size: 2rem; margin-bottom: 5px; }
+ .summary-item .value { font-size: 1.5rem; font-weight: bold; color: var(--color-dashboard); }
+ .summary-item .label { color: var(--color-text-secondary); font-size: 0.85rem; }
 
-        .add-amount-btn {
-            background: var(--color-dashboard);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
+ .add-amount-btn {
+ background: var(--color-dashboard);
+ color: white;
+ border: none;
+ padding: 8px 15px;
+ border-radius: 8px;
+ cursor: pointer;
+ font-size: 0.9rem;
+ }
 
-        .empty-goals {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--color-text-secondary);
-        }
+ .empty-goals {
+ text-align: center;
+ padding: 60px 20px;
+ color: var(--color-text-secondary);
+ }
 
-        .empty-goals .icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ .empty-goals .icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>🎯 <span data-i18n="goals.title">יעדי חיסכון</span></h1>
-                <p data-i18n="goals.subtitle">עקוב אחר ההתקדמות שלך ליעדים פיננסיים</p>
-            </header>
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>🎯 <span data-i18n="goals.title">יעדי חיסכון</span></h1>
+ <p data-i18n="goals.subtitle">עקוב אחר ההתקדמות שלך ליעדים פיננסיים</p>
+ </header>
 
-            <!-- Summary -->
-            <div class="goals-summary" id="goalsSummary">
-                <!-- Populated by JS -->
-            </div>
+ <!-- Summary -->
+ <div class="goals-summary" id="goalsSummary">
+ <!-- Populated by JS -->
+ </div>
 
-            <!-- Add Goal Button -->
-            <div style="margin-bottom: 20px;">
-                <button class="btn btn-primary" onclick="openGoalModal()">
-                    <span>➕</span>
-                    <span data-i18n="goals.addGoal">הוסף יעד חדש</span>
-                </button>
-            </div>
+ <!-- Add Goal Button -->
+ <div style="margin-bottom: 20px;">
+ <button class="btn btn-primary" onclick="openGoalModal()">
+ <span>➕</span>
+ <span data-i18n="goals.addGoal">הוסף יעד חדש</span>
+ </button>
+ </div>
 
-            <!-- Goals List -->
-            <div id="goalsList">
-                <!-- Populated by JS -->
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
+ <!-- Goals List -->
+ <div id="goalsList">
+ <!-- Populated by JS -->
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
 
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
 
-    <!-- Add/Edit Goal Modal -->
-    <div class="modal-overlay" id="goalModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="modalTitle" data-i18n="goals.addGoal">הוסף יעד חדש</h2>
-                <button class="modal-close" onclick="closeGoalModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="goalForm">
-                    <input type="hidden" id="goalId">
+ <!-- Add/Edit Goal Modal -->
+ <div class="modal-overlay" id="goalModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 id="modalTitle" data-i18n="goals.addGoal">הוסף יעד חדש</h2>
+ <button class="modal-close" onclick="closeGoalModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="goalForm">
+ <input type="hidden" id="goalId">
 
-                    <div class="form-group">
-                        <label data-i18n="goals.goalIcon">אייקון</label>
-                        <select class="form-control" id="goalIcon">
-                            <option value="🏠" data-i18n="goals.goalIcons.home">🏠 בית</option>
-                            <option value="🚗" data-i18n="goals.goalIcons.car">🚗 רכב</option>
-                            <option value="✈️" data-i18n="goals.goalIcons.trip">✈️ טיול</option>
-                            <option value="💍" data-i18n="goals.goalIcons.wedding">💍 חתונה</option>
-                            <option value="🎓" data-i18n="goals.goalIcons.education">🎓 לימודים</option>
-                            <option value="💻" data-i18n="goals.goalIcons.technology">💻 טכנולוגיה</option>
-                            <option value="🏖️" data-i18n="goals.goalIcons.vacation">🏖️ חופשה</option>
-                            <option value="👶" data-i18n="goals.goalIcons.baby">👶 תינוק</option>
-                            <option value="💰" data-i18n="goals.goalIcons.savings">💰 חיסכון</option>
-                            <option value="🎯" data-i18n="goals.goalIcons.goal">🎯 יעד</option>
-                        </select>
-                    </div>
+ <div class="form-group">
+ <label data-i18n="goals.goalIcon">אייקון</label>
+ <select class="form-control" id="goalIcon">
+ <option value="🏠" data-i18n="goals.goalIcons.home">🏠 בית</option>
+ <option value="🚗" data-i18n="goals.goalIcons.car">🚗 רכב</option>
+ <option value="✈️" data-i18n="goals.goalIcons.trip">✈️ טיול</option>
+ <option value="💍" data-i18n="goals.goalIcons.wedding">💍 חתונה</option>
+ <option value="🎓" data-i18n="goals.goalIcons.education">🎓 לימודים</option>
+ <option value="💻" data-i18n="goals.goalIcons.technology">💻 טכנולוגיה</option>
+ <option value="🏖️" data-i18n="goals.goalIcons.vacation">🏖️ חופשה</option>
+ <option value="👶" data-i18n="goals.goalIcons.baby">👶 תינוק</option>
+ <option value="💰" data-i18n="goals.goalIcons.savings">💰 חיסכון</option>
+ <option value="🎯" data-i18n="goals.goalIcons.goal">🎯 יעד</option>
+ </select>
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="goals.goalName">שם היעד</label>
-                        <input type="text" class="form-control" id="goalName" required data-i18n-placeholder="goals.goalNamePlaceholder" placeholder="לדוגמה: מקדמה לדירה">
-                    </div>
+ <div class="form-group">
+ <label data-i18n="goals.goalName">שם היעד</label>
+ <input type="text" class="form-control" id="goalName" required data-i18n-placeholder="goals.goalNamePlaceholder" placeholder="לדוגמה: מקדמה לדירה">
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="goals.targetAmount">סכום יעד</label>
-                        <input type="number" class="form-control" id="goalTarget" required min="1" step="100">
-                    </div>
+ <div class="form-group">
+ <label data-i18n="goals.targetAmount">סכום יעד</label>
+ <input type="number" class="form-control" id="goalTarget" required min="1" step="100">
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="goals.currentAmount">סכום נוכחי (אופציונלי)</label>
-                        <input type="number" class="form-control" id="goalCurrent" min="0" step="100" value="0">
-                    </div>
+ <div class="form-group">
+ <label data-i18n="goals.currentAmount">סכום נוכחי (אופציונלי)</label>
+ <input type="number" class="form-control" id="goalCurrent" min="0" step="100" value="0">
+ </div>
 
-                    <div class="form-group">
-                        <label data-i18n="goals.goalDeadline">תאריך יעד (אופציונלי)</label>
-                        <input type="date" class="form-control" id="goalDeadline">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeGoalModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="saveGoal()" data-i18n="common.save">שמור</button>
-            </div>
-        </div>
-    </div>
+ <div class="form-group">
+ <label data-i18n="goals.goalDeadline">תאריך יעד (אופציונלי)</label>
+ <input type="date" class="form-control" id="goalDeadline">
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeGoalModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="saveGoal()" data-i18n="common.save">שמור</button>
+ </div>
+ </div>
+ </div>
 
-    <!-- Add Amount Modal -->
-    <div class="modal-overlay" id="addAmountModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 data-i18n="goals.addAmountTitle">הוסף סכום ליעד</h2>
-                <button class="modal-close" onclick="closeAddAmountModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addAmountForm">
-                    <input type="hidden" id="addAmountGoalId">
-                    <div class="form-group">
-                        <label data-i18n="goals.amountToAdd">סכום להוספה</label>
-                        <input type="number" class="form-control" id="amountToAdd" required min="1" step="100">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeAddAmountModal()" data-i18n="common.cancel">ביטול</button>
-                <button class="btn btn-primary" onclick="addAmount()" data-i18n="common.add">הוסף</button>
-            </div>
-        </div>
-    </div>
+ <!-- Add Amount Modal -->
+ <div class="modal-overlay" id="addAmountModal">
+ <div class="modal">
+ <div class="modal-header">
+ <h2 data-i18n="goals.addAmountTitle">הוסף סכום ליעד</h2>
+ <button class="modal-close" onclick="closeAddAmountModal()">&times;</button>
+ </div>
+ <div class="modal-body">
+ <form id="addAmountForm">
+ <input type="hidden" id="addAmountGoalId">
+ <div class="form-group">
+ <label data-i18n="goals.amountToAdd">סכום להוספה</label>
+ <input type="number" class="form-control" id="amountToAdd" required min="1" step="100">
+ </div>
+ </form>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-secondary" onclick="closeAddAmountModal()" data-i18n="common.cancel">ביטול</button>
+ <button class="btn btn-primary" onclick="addAmount()" data-i18n="common.add">הוסף</button>
+ </div>
+ </div>
+ </div>
 
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/goals.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'goals';
-            I18n.init();
-            loadGoals();
-        });
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/goals.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'goals';
+ I18n.init();
+ loadGoals();
+ });
 
-        function loadGoals() {
-            const goals = Goals.getAll();
-            const summary = Goals.getSummary();
+ function loadGoals() {
+ const goals = Goals.getAll();
+ const summary = Goals.getSummary();
 
-            // Render summary
-            document.getElementById('goalsSummary').innerHTML = `
-                <div class="summary-item">
-                    <div class="icon">🎯</div>
-                    <div class="value">${summary.total}</div>
-                    <div class="label">${I18n.t('goals.totalGoals')}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="icon">⏳</div>
-                    <div class="value">${summary.active}</div>
-                    <div class="label">${I18n.t('goals.inProgress')}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="icon">✅</div>
-                    <div class="value">${summary.completed}</div>
-                    <div class="label">${I18n.t('goals.completed')}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="icon">💰</div>
-                    <div class="value">${I18n.formatCurrency(summary.totalCurrent)}</div>
-                    <div class="label">${I18n.t('goals.savedSoFar')}</div>
-                </div>
-            `;
+ // Render summary
+ document.getElementById('goalsSummary').innerHTML = `
+ <div class="summary-item">
+ <div class="icon">🎯</div>
+ <div class="value">${summary.total}</div>
+ <div class="label">${I18n.t('goals.totalGoals')}</div>
+ </div>
+ <div class="summary-item">
+ <div class="icon">⏳</div>
+ <div class="value">${summary.active}</div>
+ <div class="label">${I18n.t('goals.inProgress')}</div>
+ </div>
+ <div class="summary-item">
+ <div class="icon">✅</div>
+ <div class="value">${summary.completed}</div>
+ <div class="label">${I18n.t('goals.completed')}</div>
+ </div>
+ <div class="summary-item">
+ <div class="icon">💰</div>
+ <div class="value">${I18n.formatCurrency(summary.totalCurrent)}</div>
+ <div class="label">${I18n.t('goals.savedSoFar')}</div>
+ </div>
+ `;
 
-            // Render goals
-            const container = document.getElementById('goalsList');
+ // Render goals
+ const container = document.getElementById('goalsList');
 
-            if (goals.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-goals">
-                        <div class="icon">🎯</div>
-                        <h3>${I18n.t('goals.noGoalsYet')}</h3>
-                        <p>${I18n.t('goals.noGoalsDesc')}</p>
-                    </div>
-                `;
-                return;
-            }
+ if (goals.length === 0) {
+ container.innerHTML = `
+ <div class="empty-goals">
+ <div class="icon">🎯</div>
+ <h3>${I18n.t('goals.noGoalsYet')}</h3>
+ <p>${I18n.t('goals.noGoalsDesc')}</p>
+ </div>
+ `;
+ return;
+ }
 
-            container.innerHTML = goals.map(goal => {
-                const progress = Goals.getProgress(goal);
-                const progressClass = progress.isComplete ? 'complete' : (progress.percentage >= 80 ? 'warning' : '');
+ container.innerHTML = goals.map(goal => {
+ const progress = Goals.getProgress(goal);
+ const progressClass = progress.isComplete ? 'complete' : (progress.percentage >= 80 ? 'warning' : '');
 
-                return `
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <div>
-                                <div class="goal-title">
-                                    <span class="goal-icon">${goal.icon || '🎯'}</span>
-                                    <span>${goal.name}</span>
-                                    ${progress.isComplete ? `<span class="badge badge-success">${I18n.t('goals.goalComplete')}</span>` : ''}
-                                </div>
-                                ${goal.deadline ? `<div class="goal-deadline">${I18n.t('goals.deadline')}: ${I18n.formatDate(goal.deadline)}</div>` : ''}
-                            </div>
-                            <div class="action-buttons">
-                                <button class="add-amount-btn" onclick="openAddAmountModal('${goal.id}')">➕ ${I18n.t('goals.addBtn')}</button>
-                                <button class="btn btn-secondary btn-sm" onclick="editGoal('${goal.id}')">✏️</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteGoal('${goal.id}')">🗑️</button>
-                            </div>
-                        </div>
+ return `
+ <div class="goal-card">
+ <div class="goal-header">
+ <div>
+ <div class="goal-title">
+ <span class="goal-icon">${goal.icon || '🎯'}</span>
+ <span>${goal.name}</span>
+ ${progress.isComplete ? `<span class="badge badge-success">${I18n.t('goals.goalComplete')}</span>` : ''}
+ </div>
+ ${goal.deadline ? `<div class="goal-deadline">${I18n.t('goals.deadline')}: ${I18n.formatDate(goal.deadline)}</div>` : ''}
+ </div>
+ <div class="action-buttons">
+ <button class="add-amount-btn" onclick="openAddAmountModal('${goal.id}')">➕ ${I18n.t('goals.addBtn')}</button>
+ <button class="btn btn-secondary btn-sm" onclick="editGoal('${goal.id}')">✏️</button>
+ <button class="btn btn-danger btn-sm" onclick="deleteGoal('${goal.id}')">🗑️</button>
+ </div>
+ </div>
 
-                        <div class="progress-bar-container">
-                            <div class="progress-bar ${progressClass}" style="width: ${progress.percentage}%"></div>
-                        </div>
+ <div class="progress-bar-container">
+ <div class="progress-bar ${progressClass}" style="width: ${progress.percentage}%"></div>
+ </div>
 
-                        <div class="goal-stats">
-                            <div class="goal-stat">
-                                <div class="label">${I18n.t('goals.saved')}</div>
-                                <div class="value positive">${I18n.formatCurrency(goal.currentAmount)}</div>
-                            </div>
-                            <div class="goal-stat">
-                                <div class="label">${I18n.t('goals.target')}</div>
-                                <div class="value">${I18n.formatCurrency(goal.targetAmount)}</div>
-                            </div>
-                            <div class="goal-stat">
-                                <div class="label">${I18n.t('goals.remaining')}</div>
-                                <div class="value">${I18n.formatCurrency(progress.remaining)}</div>
-                            </div>
-                        </div>
+ <div class="goal-stats">
+ <div class="goal-stat">
+ <div class="label">${I18n.t('goals.saved')}</div>
+ <div class="value positive">${I18n.formatCurrency(goal.currentAmount)}</div>
+ </div>
+ <div class="goal-stat">
+ <div class="label">${I18n.t('goals.target')}</div>
+ <div class="value">${I18n.formatCurrency(goal.targetAmount)}</div>
+ </div>
+ <div class="goal-stat">
+ <div class="label">${I18n.t('goals.remaining')}</div>
+ <div class="value">${I18n.formatCurrency(progress.remaining)}</div>
+ </div>
+ </div>
 
-                        ${progress.monthlyNeeded > 0 ? `
-                            <div style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center; color: var(--color-text-secondary);">
-                                ${I18n.t('goals.monthlyNeeded')} <strong style="color: var(--color-dashboard);">${I18n.formatCurrency(progress.monthlyNeeded)}</strong> ${I18n.t('goals.perMonth')}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
+ ${progress.monthlyNeeded > 0 ? `
+ <div style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center; color: var(--color-text-secondary);">
+ ${I18n.t('goals.monthlyNeeded')} <strong style="color: var(--color-dashboard);">${I18n.formatCurrency(progress.monthlyNeeded)}</strong> ${I18n.t('goals.perMonth')}
+ </div>
+ ` : ''}
+ </div>
+ `;
+ }).join('');
+ }
 
-        function openGoalModal() {
-            document.getElementById('modalTitle').textContent = I18n.t('goals.addGoal');
-            document.getElementById('goalForm').reset();
-            document.getElementById('goalId').value = '';
-            document.getElementById('goalCurrent').value = '0';
-            document.getElementById('goalModal').classList.add('active');
-        }
+ function openGoalModal() {
+ document.getElementById('modalTitle').textContent = I18n.t('goals.addGoal');
+ document.getElementById('goalForm').reset();
+ document.getElementById('goalId').value = '';
+ document.getElementById('goalCurrent').value = '0';
+ document.getElementById('goalModal').classList.add('active');
+ }
 
-        function closeGoalModal() {
-            document.getElementById('goalModal').classList.remove('active');
-        }
+ function closeGoalModal() {
+ document.getElementById('goalModal').classList.remove('active');
+ }
 
-        function editGoal(id) {
-            const goals = Goals.getAll();
-            const goal = goals.find(g => g.id === id);
-            if (!goal) return;
+ function editGoal(id) {
+ const goals = Goals.getAll();
+ const goal = goals.find(g => g.id === id);
+ if (!goal) return;
 
-            document.getElementById('modalTitle').textContent = I18n.t('goals.editGoal');
-            document.getElementById('goalId').value = goal.id;
-            document.getElementById('goalIcon').value = goal.icon || '🎯';
-            document.getElementById('goalName').value = goal.name;
-            document.getElementById('goalTarget').value = goal.targetAmount;
-            document.getElementById('goalCurrent').value = goal.currentAmount || 0;
-            document.getElementById('goalDeadline').value = goal.deadline || '';
-            document.getElementById('goalModal').classList.add('active');
-        }
+ document.getElementById('modalTitle').textContent = I18n.t('goals.editGoal');
+ document.getElementById('goalId').value = goal.id;
+ document.getElementById('goalIcon').value = goal.icon || '🎯';
+ document.getElementById('goalName').value = goal.name;
+ document.getElementById('goalTarget').value = goal.targetAmount;
+ document.getElementById('goalCurrent').value = goal.currentAmount || 0;
+ document.getElementById('goalDeadline').value = goal.deadline || '';
+ document.getElementById('goalModal').classList.add('active');
+ }
 
-        function saveGoal() {
-            const id = document.getElementById('goalId').value;
-            const icon = document.getElementById('goalIcon').value;
-            const name = document.getElementById('goalName').value;
-            const targetAmount = parseFloat(document.getElementById('goalTarget').value);
-            const currentAmount = parseFloat(document.getElementById('goalCurrent').value) || 0;
-            const deadline = document.getElementById('goalDeadline').value || null;
+ function saveGoal() {
+ const id = document.getElementById('goalId').value;
+ const icon = document.getElementById('goalIcon').value;
+ const name = document.getElementById('goalName').value;
+ const targetAmount = parseFloat(document.getElementById('goalTarget').value);
+ const currentAmount = parseFloat(document.getElementById('goalCurrent').value) || 0;
+ const deadline = document.getElementById('goalDeadline').value || null;
 
-            if (!name || !targetAmount) {
-                App.notify(I18n.t('goals.fillAllFields'), 'error');
-                return;
-            }
+ if (!name || !targetAmount) {
+ App.notify(I18n.t('goals.fillAllFields'), 'error');
+ return;
+ }
 
-            if (id) {
-                Goals.update(id, { icon, name, targetAmount, currentAmount, deadline });
-            } else {
-                Goals.add({ icon, name, targetAmount, currentAmount, deadline });
-            }
+ if (id) {
+ Goals.update(id, { icon, name, targetAmount, currentAmount, deadline });
+ } else {
+ Goals.add({ icon, name, targetAmount, currentAmount, deadline });
+ }
 
-            closeGoalModal();
-            loadGoals();
-            App.notify(I18n.t('goals.goalSaved'), 'success');
-        }
+ closeGoalModal();
+ loadGoals();
+ App.notify(I18n.t('goals.goalSaved'), 'success');
+ }
 
-        function deleteGoal(id) {
-            if (confirm(I18n.t('goals.deleteGoalConfirm'))) {
-                Goals.delete(id);
-                loadGoals();
-                App.notify(I18n.t('goals.goalDeleted'), 'success');
-            }
-        }
+ function deleteGoal(id) {
+ if (confirm(I18n.t('goals.deleteGoalConfirm'))) {
+ Goals.delete(id);
+ loadGoals();
+ App.notify(I18n.t('goals.goalDeleted'), 'success');
+ }
+ }
 
-        function openAddAmountModal(id) {
-            document.getElementById('addAmountGoalId').value = id;
-            document.getElementById('amountToAdd').value = '';
-            document.getElementById('addAmountModal').classList.add('active');
-        }
+ function openAddAmountModal(id) {
+ document.getElementById('addAmountGoalId').value = id;
+ document.getElementById('amountToAdd').value = '';
+ document.getElementById('addAmountModal').classList.add('active');
+ }
 
-        function closeAddAmountModal() {
-            document.getElementById('addAmountModal').classList.remove('active');
-        }
+ function closeAddAmountModal() {
+ document.getElementById('addAmountModal').classList.remove('active');
+ }
 
-        function addAmount() {
-            const id = document.getElementById('addAmountGoalId').value;
-            const amount = parseFloat(document.getElementById('amountToAdd').value);
+ function addAmount() {
+ const id = document.getElementById('addAmountGoalId').value;
+ const amount = parseFloat(document.getElementById('amountToAdd').value);
 
-            if (!amount || amount <= 0) {
-                App.notify(I18n.t('goals.enterValidAmount'), 'error');
-                return;
-            }
+ if (!amount || amount <= 0) {
+ App.notify(I18n.t('goals.enterValidAmount'), 'error');
+ return;
+ }
 
-            Goals.addAmount(id, amount);
-            closeAddAmountModal();
-            loadGoals();
-            App.notify(I18n.t('goals.amountAdded').replace('{amount}', I18n.formatCurrency(amount)), 'success');
-        }
-    </script>
+ Goals.addAmount(id, amount);
+ closeAddAmountModal();
+ loadGoals();
+ App.notify(I18n.t('goals.amountAdded').replace('{amount}', I18n.formatCurrency(amount)), 'success');
+ }
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

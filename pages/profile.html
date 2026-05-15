@@ -3,1130 +3,1122 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#10b981">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>פרופיל פיננסי - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <style>
-        .nav-link.active { background: #10b981 !important; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#10b981">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>פרופיל פיננסי - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <style>
+ .nav-link.active { background: #10b981 !important; }
 
-        .profile-section, .tips-section {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 25px;
-        }
+ .profile-section, .tips-section {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 25px;
+ margin-bottom: 25px;
+ }
 
-        .profile-section h2, .tips-header h2 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .profile-section h2, .tips-header h2 {
+ font-size: 1.3rem;
+ margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .form-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--color-border);
-        }
-        .form-row:last-of-type { border-bottom: none; }
-        .form-row > label:first-child { font-weight: 500; min-width: 140px; }
+ .form-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 15px 0;
+ border-bottom: 1px solid var(--color-border);
+ }
+ .form-row:last-of-type { border-bottom: none; }
+ .form-row > label:first-child { font-weight: 500; min-width: 140px; }
 
-        .form-row .form-control {
-            width: 200px;
-            padding: 8px 12px;
-            background: var(--color-bg-primary);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.95rem;
-        }
+ .form-row .form-control {
+ width: 200px;
+ padding: 8px 12px;
+ background: var(--color-bg-primary);
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ color: white;
+ font-size: 0.95rem;
+ }
 
-        .input-with-currency {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+ .input-with-currency {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
 
-        /* Toggle switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--color-border);
-            transition: .3s;
-            border-radius: 26px;
-        }
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px; width: 20px;
-            left: 3px; bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-        .toggle-switch input:checked + .toggle-slider { background-color: var(--color-positive); }
-        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
+ /* Toggle switch */
+ .toggle-switch {
+ position: relative;
+ display: inline-block;
+ width: 50px;
+ height: 26px;
+ }
+ .toggle-switch input { opacity: 0; width: 0; height: 0; }
+ .toggle-slider {
+ position: absolute;
+ cursor: pointer;
+ top: 0; left: 0; right: 0; bottom: 0;
+ background-color: var(--color-border);
+ transition: .3s;
+ border-radius: 26px;
+ }
+ .toggle-slider:before {
+ position: absolute;
+ content: "";
+ height: 20px; width: 20px;
+ left: 3px; bottom: 3px;
+ background-color: white;
+ transition: .3s;
+ border-radius: 50%;
+ }
+ .toggle-switch input:checked + .toggle-slider { background-color: var(--color-positive); }
+ .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
 
-        /* Risk selector */
-        .risk-selector { display: flex; gap: 8px; }
-        .risk-btn {
-            padding: 8px 18px;
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            background: transparent;
-            color: var(--color-text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        .risk-btn:hover { border-color: var(--color-primary); color: white; }
-        .risk-btn.active {
-            background: var(--color-primary);
-            color: white;
-            border-color: var(--color-primary);
-        }
+ /* Risk selector */
+ .risk-selector { display: flex; gap: 8px; }
+ .risk-btn {
+ padding: 8px 18px;
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ background: transparent;
+ color: var(--color-text-secondary);
+ cursor: pointer;
+ transition: all 0.2s;
+ font-size: 0.9rem;
+ }
+ .risk-btn:hover { border-color: var(--color-primary); color: white; }
+ .risk-btn.active {
+ background: var(--color-primary);
+ color: white;
+ border-color: var(--color-primary);
+ }
 
-        /* Tips */
-        .tips-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .tips-header h2 { margin-bottom: 0; }
+ /* Tips */
+ .tips-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 20px;
+ }
+ .tips-header h2 { margin-bottom: 0; }
 
-        .tip-card {
-            background: var(--color-bg-primary);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            border-right: 4px solid transparent;
-        }
-        .tip-card.severity-green  { border-right-color: var(--color-positive); }
-        .tip-card.severity-yellow { border-right-color: #f59e0b; }
-        .tip-card.severity-red    { border-right-color: var(--color-negative); }
-        .tip-card.severity-blue   { border-right-color: #3b82f6; }
+ .tip-card {
+ background: var(--color-bg-primary);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 16px 20px;
+ margin-bottom: 12px;
+ display: flex;
+ align-items: flex-start;
+ gap: 15px;
+ border-right: 4px solid transparent;
+ }
+ .tip-card.severity-green { border-right-color: var(--color-positive); }
+ .tip-card.severity-yellow { border-right-color: #f59e0b; }
+ .tip-card.severity-red { border-right-color: var(--color-negative); }
+ .tip-card.severity-blue { border-right-color: #3b82f6; }
 
-        .tip-icon { font-size: 1.8rem; flex-shrink: 0; }
-        .tip-content { flex: 1; }
-        .tip-title { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
-        .tip-description { color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.5; }
+ .tip-icon { font-size: 1.8rem; flex-shrink: 0; }
+ .tip-content { flex: 1; }
+ .tip-title { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+ .tip-description { color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.5; }
 
-        .tip-badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-bottom: 6px;
-        }
-        .tip-badge.spending    { background: rgba(245,158,11,0.15); color: #f59e0b; }
-        .tip-badge.savings     { background: rgba(16,185,129,0.15); color: var(--color-positive); }
-        .tip-badge.investment  { background: rgba(139,92,246,0.15); color: #8b5cf6; }
-        .tip-badge.pension     { background: rgba(59,130,246,0.15); color: #3b82f6; }
-        .tip-badge.family      { background: rgba(236,72,153,0.15); color: #ec4899; }
-        .tip-badge.general     { background: rgba(107,114,128,0.15); color: #9ca3af; }
+ .tip-badge {
+ display: inline-block;
+ padding: 2px 10px;
+ border-radius: 10px;
+ font-size: 0.75rem;
+ font-weight: 500;
+ margin-bottom: 6px;
+ }
+ .tip-badge.spending { background: rgba(245,158,11,0.15); color: #f59e0b; }
+ .tip-badge.savings { background: rgba(16,185,129,0.15); color: var(--color-positive); }
+ .tip-badge.investment { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+ .tip-badge.pension { background: rgba(59,130,246,0.15); color: #3b82f6; }
+ .tip-badge.family { background: rgba(236,72,153,0.15); color: #ec4899; }
+ .tip-badge.general { background: rgba(107,114,128,0.15); color: #9ca3af; }
 
-        .tip-dismiss {
-            background: none;
-            border: none;
-            color: var(--color-text-secondary);
-            cursor: pointer;
-            font-size: 1.3rem;
-            padding: 4px;
-            opacity: 0.4;
-            transition: opacity 0.2s;
-            flex-shrink: 0;
-        }
-        .tip-dismiss:hover { opacity: 1; }
+ .tip-dismiss {
+ background: none;
+ border: none;
+ color: var(--color-text-secondary);
+ cursor: pointer;
+ font-size: 1.3rem;
+ padding: 4px;
+ opacity: 0.4;
+ transition: opacity 0.2s;
+ flex-shrink: 0;
+ }
+ .tip-dismiss:hover { opacity: 1; }
 
-        .no-tips {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--color-text-secondary);
-        }
-        .no-tips .emoji { font-size: 3rem; margin-bottom: 15px; }
+ .no-tips {
+ text-align: center;
+ padding: 40px 20px;
+ color: var(--color-text-secondary);
+ }
+ .no-tips .emoji { font-size: 3rem; margin-bottom: 15px; }
 
-        .payslip-summary {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 25px;
-            display: none;
-        }
-        .payslip-summary.visible { display: block; }
-        .payslip-summary h2 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .payslip-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .payslip-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 14px;
-            background: var(--color-bg-primary);
-            border-radius: 10px;
-            border: 1px solid var(--color-border);
-        }
-        .payslip-item .label { color: var(--color-text-secondary); font-size: 0.9rem; }
-        .payslip-item .value { font-weight: 600; font-size: 1rem; }
-        .payslip-item.highlight { border-color: var(--color-positive); }
-        .payslip-item.highlight .value { color: var(--color-positive); }
-        .payslip-item.deduction .value { color: var(--color-negative); }
+ .payslip-summary {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 25px;
+ margin-bottom: 25px;
+ display: none;
+ }
+ .payslip-summary.visible { display: block; }
+ .payslip-summary h2 {
+ font-size: 1.3rem;
+ margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
+ .payslip-grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 12px;
+ }
+ .payslip-item {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 10px 14px;
+ background: var(--color-bg-primary);
+ border-radius: 10px;
+ border: 1px solid var(--color-border);
+ }
+ .payslip-item .label { color: var(--color-text-secondary); font-size: 0.9rem; }
+ .payslip-item .value { font-weight: 600; font-size: 1rem; }
+ .payslip-item.highlight { border-color: var(--color-positive); }
+ .payslip-item.highlight .value { color: var(--color-positive); }
+ .payslip-item.deduction .value { color: var(--color-negative); }
 
-        .btn-scan {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: var(--color-bg-primary);
-            border: 1px dashed var(--color-border);
-            border-radius: 10px;
-            color: var(--color-text-secondary);
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-        .btn-scan:hover {
-            border-color: var(--color-primary);
-            color: white;
-            background: rgba(59,130,246,0.1);
-        }
+ .btn-scan {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 10px 20px;
+ background: var(--color-bg-primary);
+ border: 1px dashed var(--color-border);
+ border-radius: 10px;
+ color: var(--color-text-secondary);
+ cursor: pointer;
+ font-size: 0.95rem;
+ transition: all 0.2s;
+ }
+ .btn-scan:hover {
+ border-color: var(--color-primary);
+ color: white;
+ background: rgba(59,130,246,0.1);
+ }
 
-        /* Credit Score Section */
-        .credit-score-section {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-        .credit-score-section h2 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ /* Credit Score Section */
+ .credit-score-section {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 16px;
+ padding: 25px;
+ margin-bottom: 25px;
+ }
+ .credit-score-section h2 {
+ font-size: 1.3rem;
+ margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .gauge-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .gauge-svg { overflow: visible; }
-        .gauge-labels {
-            display: flex;
-            justify-content: space-between;
-            width: 260px;
-            margin-top: 6px;
-            font-size: 0.75rem;
-            color: var(--color-text-secondary);
-        }
+ .gauge-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ margin-bottom: 24px;
+ }
+ .gauge-svg { overflow: visible; }
+ .gauge-labels {
+ display: flex;
+ justify-content: space-between;
+ width: 260px;
+ margin-top: 6px;
+ font-size: 0.75rem;
+ color: var(--color-text-secondary);
+ }
 
-        .score-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .score-card {
-            background: var(--color-bg-primary);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 18px;
-            text-align: center;
-        }
-        .score-card .score-label {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 8px;
-        }
-        .score-card .score-value {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        .score-card .score-max {
-            font-size: 1rem;
-            color: var(--color-text-secondary);
-            font-weight: 400;
-        }
+ .score-cards {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 16px;
+ margin-bottom: 24px;
+ }
+ .score-card {
+ background: var(--color-bg-primary);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 18px;
+ text-align: center;
+ }
+ .score-card .score-label {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 8px;
+ }
+ .score-card .score-value {
+ font-size: 2rem;
+ font-weight: 700;
+ }
+ .score-card .score-max {
+ font-size: 1rem;
+ color: var(--color-text-secondary);
+ font-weight: 400;
+ }
 
-        .factors-breakdown { margin-bottom: 24px; }
-        .factor-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .factor-name {
-            min-width: 130px;
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
-        }
-        .factor-bar-bg {
-            flex: 1;
-            height: 10px;
-            background: var(--color-bg-primary);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .factor-bar {
-            height: 100%;
-            border-radius: 5px;
-            transition: width 0.6s ease;
-        }
-        .factor-score {
-            min-width: 36px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+ .factors-breakdown { margin-bottom: 24px; }
+ .factor-row {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ margin-bottom: 12px;
+ }
+ .factor-name {
+ min-width: 130px;
+ font-size: 0.9rem;
+ color: var(--color-text-secondary);
+ }
+ .factor-bar-bg {
+ flex: 1;
+ height: 10px;
+ background: var(--color-bg-primary);
+ border-radius: 5px;
+ overflow: hidden;
+ }
+ .factor-bar {
+ height: 100%;
+ border-radius: 5px;
+ transition: width 0.6s ease;
+ }
+ .factor-score {
+ min-width: 36px;
+ text-align: left;
+ font-weight: 600;
+ font-size: 0.9rem;
+ }
 
-        .external-score-form {
-            background: var(--color-bg-primary);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 24px;
-        }
-        .external-score-form h3 {
-            font-size: 1rem;
-            margin-bottom: 14px;
-            color: var(--color-text);
-        }
-        .external-form-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-        .external-form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .external-form-group label {
-            font-size: 0.8rem;
-            color: var(--color-text-secondary);
-        }
-        .external-form-group input,
-        .external-form-group select {
-            padding: 8px 12px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.9rem;
-        }
+ .external-score-form {
+ background: var(--color-bg-primary);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 18px;
+ margin-bottom: 24px;
+ }
+ .external-score-form h3 {
+ font-size: 1rem;
+ margin-bottom: 14px;
+ color: var(--color-text);
+ }
+ .external-form-row {
+ display: flex;
+ gap: 12px;
+ flex-wrap: wrap;
+ align-items: flex-end;
+ }
+ .external-form-group {
+ display: flex;
+ flex-direction: column;
+ gap: 4px;
+ }
+ .external-form-group label {
+ font-size: 0.8rem;
+ color: var(--color-text-secondary);
+ }
+ .external-form-group input,
+ .external-form-group select {
+ padding: 8px 12px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ color: white;
+ font-size: 0.9rem;
+ }
 
-        .improvement-tips { margin-top: 20px; }
-        .improvement-tips h3 {
-            font-size: 1rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .improvement-tip {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            background: var(--color-bg-primary);
-            border-radius: 10px;
-            border: 1px solid var(--color-border);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        .improvement-tip .priority-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .priority-red { background: var(--color-negative); }
-        .priority-yellow { background: #f59e0b; }
-        .priority-green { background: var(--color-positive); }
+ .improvement-tips { margin-top: 20px; }
+ .improvement-tips h3 {
+ font-size: 1rem;
+ margin-bottom: 12px;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
+ .improvement-tip {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ padding: 10px 14px;
+ background: var(--color-bg-primary);
+ border-radius: 10px;
+ border: 1px solid var(--color-border);
+ margin-bottom: 8px;
+ font-size: 0.9rem;
+ }
+ .improvement-tip .priority-dot {
+ width: 10px;
+ height: 10px;
+ border-radius: 50%;
+ flex-shrink: 0;
+ }
+ .priority-red { background: var(--color-negative); }
+ .priority-yellow { background: #f59e0b; }
+ .priority-green { background: var(--color-positive); }
 
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .form-row .form-control { width: 100%; }
-            .risk-selector { flex-wrap: wrap; }
-            .payslip-grid { grid-template-columns: 1fr; }
-            .score-cards { grid-template-columns: 1fr; }
-            .factor-name { min-width: 100px; font-size: 0.8rem; }
-            .external-form-row { flex-direction: column; }
-            .external-form-group { width: 100%; }
-            .external-form-group input,
-            .external-form-group select { width: 100%; }
-        }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ @media (max-width: 768px) {
+ .form-row {
+ flex-direction: column;
+ align-items: flex-start;
+ gap: 8px;
+ }
+ .form-row .form-control { width: 100%; }
+ .risk-selector { flex-wrap: wrap; }
+ .payslip-grid { grid-template-columns: 1fr; }
+ .score-cards { grid-template-columns: 1fr; }
+ .factor-name { min-width: 100px; font-size: 0.8rem; }
+ .external-form-row { flex-direction: column; }
+ .external-form-group { width: 100%; }
+ .external-form-group input,
+ .external-form-group select { width: 100%; }
+ }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>👤 <span data-i18n="profile.title">פרופיל פיננסי</span></h1>
-                <p data-i18n="profile.subtitle">מלא את הפרטים שלך לקבלת טיפים מותאמים אישית</p>
-            </header>
-
-            <!-- Profile Form -->
-            <div class="profile-section">
-                <h2>📋 <span data-i18n="profile.personalInfo">פרטים אישיים</span></h2>
-
-                <div class="form-row">
-                    <label data-i18n="profile.age">גיל</label>
-                    <input type="number" id="profileAge" min="18" max="120" class="form-control" placeholder="30">
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.familyStatus">מצב משפחתי</label>
-                    <select id="profileFamilyStatus" class="form-control">
-                        <option value="single" data-i18n="profile.single">רווק/ה</option>
-                        <option value="married" data-i18n="profile.married">נשוי/אה</option>
-                        <option value="divorced" data-i18n="profile.divorced">גרוש/ה</option>
-                    </select>
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.numChildren">מספר ילדים</label>
-                    <input type="number" id="profileChildren" min="0" max="20" value="0" class="form-control">
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.monthlyIncome">הכנסה חודשית נטו</label>
-                    <div class="input-with-currency">
-                        <span>₪</span>
-                        <input type="number" id="profileIncome" min="0" step="500" class="form-control" placeholder="15,000">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.employmentType">סוג תעסוקה</label>
-                    <select id="profileEmployment" class="form-control">
-                        <option value="employee" data-i18n="profile.employee">שכיר/ה</option>
-                        <option value="selfEmployed" data-i18n="profile.selfEmployed">עצמאי/ת</option>
-                        <option value="both" data-i18n="profile.both">שכיר+עצמאי</option>
-                    </select>
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.hasPension">יש פנסיה?</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="profilePension">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.hasTrainingFund">יש קרן השתלמות?</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="profileTrainingFund">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.riskTolerance">סבילות לסיכון</label>
-                    <div class="risk-selector" id="riskSelector">
-                        <button type="button" class="risk-btn" data-risk="conservative" data-i18n="profile.conservative">שמרני</button>
-                        <button type="button" class="risk-btn active" data-risk="balanced" data-i18n="profile.balanced">מאוזן</button>
-                        <button type="button" class="risk-btn" data-risk="aggressive" data-i18n="profile.aggressive">אגרסיבי</button>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label data-i18n="profile.financialGoal">יעד פיננסי</label>
-                    <select id="profileGoal" class="form-control">
-                        <option value="none" data-i18n="profile.goalNone">אין ספציפי</option>
-                        <option value="apartment" data-i18n="profile.goalApartment">חיסכון לדירה</option>
-                        <option value="earlyRetirement" data-i18n="profile.goalRetirement">פרישה מוקדמת</option>
-                        <option value="childrenSavings" data-i18n="profile.goalChildren">חיסכון לילדים</option>
-                        <option value="wealthBuilding" data-i18n="profile.goalWealth">בניית הון</option>
-                    </select>
-                </div>
-
-                <div style="margin-top: 20px; text-align: center; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-                    <button class="btn-scan" onclick="scanPayslip()">
-                        <span>📷</span>
-                        <span data-i18n="profile.scanPayslip">סרוק תלוש משכורת</span>
-                    </button>
-                    <button class="btn btn-primary" onclick="saveProfile()" style="min-width: 200px;">
-                        <span>💾</span>
-                        <span data-i18n="common.save">שמור</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Payslip Summary -->
-            <div class="payslip-summary" id="payslipSummary">
-                <h2>📄 <span data-i18n="profile.payslipSummary">סיכום תלוש</span></h2>
-                <div class="payslip-grid" id="payslipGrid">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- Credit Score -->
-            <div class="credit-score-section" id="creditScoreSection">
-                <h2>📊 <span data-i18n="profile.creditScore">דירוג אשראי</span></h2>
-
-                <!-- Gauge -->
-                <div class="gauge-container">
-                    <svg class="gauge-svg" width="260" height="150" viewBox="0 0 260 150">
-                        <defs>
-                            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#ef4444"/>
-                                <stop offset="35%" style="stop-color:#f59e0b"/>
-                                <stop offset="65%" style="stop-color:#eab308"/>
-                                <stop offset="100%" style="stop-color:#10b981"/>
-                            </linearGradient>
-                        </defs>
-                        <!-- Background arc -->
-                        <path d="M 25 135 A 105 105 0 0 1 235 135" fill="none" stroke="var(--color-border)" stroke-width="18" stroke-linecap="round"/>
-                        <!-- Colored arc -->
-                        <path d="M 25 135 A 105 105 0 0 1 235 135" fill="none" stroke="url(#gaugeGrad)" stroke-width="18" stroke-linecap="round"/>
-                        <!-- Needle -->
-                        <line id="gaugeNeedle" x1="130" y1="135" x2="130" y2="40" stroke="white" stroke-width="3" stroke-linecap="round" transform="rotate(-90, 130, 135)"/>
-                        <circle cx="130" cy="135" r="8" fill="white"/>
-                        <!-- Score text -->
-                        <text id="gaugeScoreText" x="130" y="120" text-anchor="middle" fill="white" font-size="32" font-weight="700">--</text>
-                    </svg>
-                    <div class="gauge-labels">
-                        <span data-i18n="profile.weak">חלש</span>
-                        <span data-i18n="profile.fair">בינוני</span>
-                        <span data-i18n="profile.good">טוב</span>
-                        <span data-i18n="profile.excellent">מצוין</span>
-                    </div>
-                </div>
-
-                <!-- Score Cards -->
-                <div class="score-cards">
-                    <div class="score-card">
-                        <div class="score-label" data-i18n="profile.finsightScore">ציון FinSight</div>
-                        <div class="score-value" id="internalScoreValue">--<span class="score-max">/100</span></div>
-                    </div>
-                    <div class="score-card">
-                        <div class="score-label" data-i18n="profile.externalScore">ציון חיצוני</div>
-                        <div class="score-value" id="externalScoreValue">--<span class="score-max">/100</span></div>
-                    </div>
-                </div>
-
-                <!-- Factor Breakdown -->
-                <div class="factors-breakdown" id="factorsBreakdown">
-                    <!-- Populated by JS -->
-                </div>
-
-                <!-- External Score Form -->
-                <div class="external-score-form">
-                    <h3>📝 <span data-i18n="profile.enterExternalScore">הזן ציון חיצוני</span></h3>
-                    <div class="external-form-row">
-                        <div class="external-form-group">
-                            <label data-i18n="profile.externalScore">ציון</label>
-                            <input type="number" id="extScoreInput" min="1" max="100" placeholder="85">
-                        </div>
-                        <div class="external-form-group">
-                            <label data-i18n="profile.scoreSource">מקור</label>
-                            <select id="extScoreSource">
-                                <option value="BDI">BDI</option>
-                                <option value="CreditInfo">CreditInfo</option>
-                                <option value="DataCheck">DataCheck</option>
-                                <option value="other">אחר</option>
-                            </select>
-                        </div>
-                        <div class="external-form-group">
-                            <label data-i18n="profile.checkDate">תאריך בדיקה</label>
-                            <input type="date" id="extScoreDate">
-                        </div>
-                        <button class="btn btn-primary btn-sm" onclick="saveExternalScore()" style="height: 38px; align-self: flex-end;">
-                            <span data-i18n="profile.saveScore">שמור ציון</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Improvement Tips -->
-                <div class="improvement-tips" id="improvementTips">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- Smart Tips -->
-            <div class="tips-section">
-                <div class="tips-header">
-                    <h2>💡 <span data-i18n="profile.smartTips">טיפים חכמים</span></h2>
-                    <button class="btn btn-secondary btn-sm" onclick="resetDismissedTips()" data-i18n="profile.showAllTips">הצג הכל</button>
-                </div>
-                <div id="tipsList">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
-
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-    <script>
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-        }
-    </script>
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/alerts.js"></script>
-    <script src="../js/goals.js"></script>
-    <script src="../js/smart-tips.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/image-import.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        // ─── Credit Score Calculator ─────────────────────────
-        const CreditScoreCalculator = {
-            DEFAULT_SCORE: 70,
-
-            calculate() {
-                const profile = Storage.getUserProfile();
-                const loans = Storage.getLoans();
-                const creditData = Storage.getCreditCards();
-                const bankBalance = Storage.getTotalBankBalance();
-                const funds = Storage.getMyFunds();
-                const monthExpenses = SmartTips.getMonthlyExpenses(SmartTips.getCurrentMonth());
-
-                // Only include factors that have real data
-                const allFactors = {
-                    paymentDiscipline: this.calcPaymentDiscipline(loans),
-                    creditUtilization: this.calcCreditUtilization(creditData, profile, monthExpenses),
-                    debtToIncome: this.calcDebtToIncome(loans, profile, monthExpenses),
-                    financialStability: this.calcFinancialStability(bankBalance, funds, profile, monthExpenses)
-                };
-
-                const baseWeights = {
-                    paymentDiscipline: 0.30,
-                    creditUtilization: 0.30,
-                    debtToIncome: 0.25,
-                    financialStability: 0.15
-                };
-
-                // Separate factors with real data from those without
-                const factors = {};
-                const noData = {};
-                for (const [key, val] of Object.entries(allFactors)) {
-                    if (val === null) {
-                        noData[key] = null;
-                    } else {
-                        factors[key] = val;
-                    }
-                }
-
-                // Redistribute weights among factors that have data
-                let totalWeight = 0;
-                for (const key of Object.keys(factors)) {
-                    totalWeight += baseWeights[key];
-                }
-
-                let totalScore = 0;
-                if (totalWeight > 0) {
-                    for (const [key, val] of Object.entries(factors)) {
-                        totalScore += val * (baseWeights[key] / totalWeight);
-                    }
-                }
-
-                return { score: Math.round(totalScore), factors, noData };
-            },
-
-            calcPaymentDiscipline(loans) {
-                // No loans = no data to assess payment discipline
-                const loansWithData = loans.filter(l => l.originalAmount && l.remainingBalance && l.totalMonths && l.startDate);
-                if (loansWithData.length === 0) return null;
-                let score = 85;
-                for (const loan of loansWithData) {
-                    const start = new Date(loan.startDate);
-                    const monthsElapsed = Math.max(1, Math.floor((Date.now() - start.getTime()) / (1000*60*60*24*30)));
-                    const expectedProgress = monthsElapsed / loan.totalMonths;
-                    const actualProgress = 1 - (loan.remainingBalance / loan.originalAmount);
-                    if (actualProgress >= expectedProgress * 0.9) {
-                        score = Math.min(100, score + 3);
-                    } else {
-                        score = Math.max(0, score - 15);
-                    }
-                }
-                return Math.max(0, Math.min(100, score));
-            },
-
-            calcCreditUtilization(creditData, profile, monthExpenses) {
-                const income = profile?.monthlyIncome;
-                if (!income || monthExpenses === 0) return null;
-                const ratio = monthExpenses / income;
-                if (ratio <= 0.3) return 95;
-                if (ratio <= 0.5) return 80;
-                if (ratio <= 0.7) return 60;
-                if (ratio <= 0.9) return 40;
-                return 20;
-            },
-
-            calcDebtToIncome(loans, profile, monthExpenses) {
-                const income = profile?.monthlyIncome;
-                if (!income) return null;
-                const loanPayments = Storage.getTotalMonthlyLoanPayments();
-                if (loanPayments === 0 && monthExpenses === 0) return null;
-                const totalObligations = loanPayments + monthExpenses;
-                const ratio = totalObligations / income;
-                if (ratio <= 0.4) return 95;
-                if (ratio <= 0.6) return 75;
-                if (ratio <= 0.8) return 50;
-                return 25;
-            },
-
-            calcFinancialStability(bankBalance, funds, profile, monthExpenses) {
-                let score = 50;
-                // Emergency fund check
-                if (monthExpenses > 0) {
-                    const months = bankBalance / monthExpenses;
-                    if (months >= 6) score += 20;
-                    else if (months >= 3) score += 10;
-                    else score -= 10;
-                }
-                // Has pension/funds
-                if (profile?.hasPension) score += 10;
-                if (profile?.hasTrainingFund) score += 5;
-                // Fund diversification
-                if (funds.length >= 2) score += 10;
-                else if (funds.length === 1) score += 5;
-
-                return Math.max(0, Math.min(100, score));
-            },
-
-            // Credit history length removed — requires credit bureau data not available via API
-        };
-
-        function getScoreColor(score) {
-            if (score >= 80) return '#10b981';
-            if (score >= 60) return '#eab308';
-            if (score >= 40) return '#f59e0b';
-            return '#ef4444';
-        }
-
-        function renderCreditScore() {
-            const lang = I18n?.currentLanguage || 'he';
-            const t = (key, fallback) => {
-                try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
-            };
-
-            const { score, factors, noData } = CreditScoreCalculator.calculate();
-
-            // Only save to history if we have real data
-            if (Object.keys(factors).length > 0) {
-                Storage.addScoreToHistory(score, factors);
-            }
-
-            // Update gauge needle: rotate from -90 (0 score) to +90 (100 score)
-            const angle = -90 + (score / 100) * 180;
-            const needle = document.getElementById('gaugeNeedle');
-            if (needle) needle.setAttribute('transform', `rotate(${angle}, 130, 135)`);
-
-            const scoreText = document.getElementById('gaugeScoreText');
-            if (scoreText) scoreText.textContent = score;
-
-            // Internal score card
-            const internalEl = document.getElementById('internalScoreValue');
-            if (internalEl) {
-                internalEl.innerHTML = `<span style="color:${getScoreColor(score)}">${score}</span><span class="score-max">/100</span>`;
-            }
-
-            // External score card
-            const externalEl = document.getElementById('externalScoreValue');
-            const scoreData = Storage.getCreditScore();
-            if (externalEl) {
-                if (scoreData.external && scoreData.external.score) {
-                    const es = scoreData.external.score;
-                    externalEl.innerHTML = `<span style="color:${getScoreColor(es)}">${es}</span><span class="score-max">/100</span>`;
-                } else {
-                    externalEl.innerHTML = `<span style="color:var(--color-text-secondary)">--</span><span class="score-max">/100</span>`;
-                }
-            }
-
-            // Pre-fill external form if data exists
-            if (scoreData.external) {
-                const inp = document.getElementById('extScoreInput');
-                const src = document.getElementById('extScoreSource');
-                const dt = document.getElementById('extScoreDate');
-                if (inp && scoreData.external.score) inp.value = scoreData.external.score;
-                if (src && scoreData.external.source) src.value = scoreData.external.source;
-                if (dt && scoreData.external.date) dt.value = scoreData.external.date;
-            }
-            // Default date to today
-            const dtEl = document.getElementById('extScoreDate');
-            if (dtEl && !dtEl.value) dtEl.value = new Date().toISOString().split('T')[0];
-
-            // Factor breakdown
-            const factorLabels = {
-                paymentDiscipline: t('paymentDiscipline', 'משמעת תשלום'),
-                creditUtilization: t('creditUtilization', 'ניצול אשראי'),
-                debtToIncome: t('debtToIncome', 'חוב מול הכנסה'),
-                financialStability: t('financialStability', 'יציבות פיננסית')
-            };
-
-            const breakdownEl = document.getElementById('factorsBreakdown');
-            if (breakdownEl) {
-                const noDataLabel = lang === 'he' ? 'אין נתונים' : 'No data';
-                // Show factors with data first, then no-data factors
-                const allKeys = [...Object.keys(factors), ...Object.keys(noData)];
-                breakdownEl.innerHTML = allKeys.map(key => {
-                    const val = factors[key];
-                    const hasData = val !== undefined;
-                    if (hasData) {
-                        return `
-                            <div class="factor-row">
-                                <span class="factor-name">${factorLabels[key]}</span>
-                                <div class="factor-bar-bg">
-                                    <div class="factor-bar" style="width:${val}%; background:${getScoreColor(val)};"></div>
-                                </div>
-                                <span class="factor-score" style="color:${getScoreColor(val)}">${val}</span>
-                            </div>
-                        `;
-                    } else {
-                        return `
-                            <div class="factor-row" style="opacity: 0.5;">
-                                <span class="factor-name">${factorLabels[key]}</span>
-                                <div class="factor-bar-bg">
-                                    <div class="factor-bar" style="width:0%;"></div>
-                                </div>
-                                <span class="factor-score" style="color:var(--color-text-secondary); font-size:0.8rem;">${noDataLabel}</span>
-                            </div>
-                        `;
-                    }
-                }).join('');
-            }
-
-            // Improvement tips (top 3 weakest, only from factors with data)
-            renderImprovementTips(factors, factorLabels, lang);
-        }
-
-        function renderImprovementTips(factors, labels, lang) {
-            const container = document.getElementById('improvementTips');
-            if (!container) return;
-
-            const t = (key, fallback) => {
-                try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
-            };
-
-            const sorted = Object.entries(factors).sort((a, b) => a[1] - b[1]);
-            const weakest = sorted.slice(0, 3).filter(([, val]) => val < 80);
-
-            if (weakest.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-
-            const tipMessages = {
-                paymentDiscipline: {
-                    he: 'שמור על תשלומי הלוואות בזמן. פיגורים משפיעים מאוד על הדירוג',
-                    en: 'Keep loan payments on time. Late payments significantly affect your score'
-                },
-                creditUtilization: {
-                    he: 'נסה להוריד את ניצול האשראי מתחת ל-30% מההכנסה',
-                    en: 'Try to keep credit utilization below 30% of income'
-                },
-                debtToIncome: {
-                    he: 'שקול להקטין חובות או להגדיל הכנסה כדי לשפר יחס חוב-הכנסה',
-                    en: 'Consider reducing debts or increasing income to improve debt-to-income ratio'
-                },
-                financialStability: {
-                    he: 'בנה חיסכון חירום ופזר השקעות לשיפור היציבות הפיננסית',
-                    en: 'Build an emergency fund and diversify investments to improve stability'
-                }
-            };
-
-            container.innerHTML = `
-                <h3>💡 ${t('improvementTips', 'טיפים לשיפור')}</h3>
-                ${weakest.map(([key, val]) => {
-                    const priority = val < 50 ? 'red' : val < 70 ? 'yellow' : 'green';
-                    const msg = tipMessages[key]?.[lang] || tipMessages[key]?.he || '';
-                    return `
-                        <div class="improvement-tip">
-                            <span class="priority-dot priority-${priority}"></span>
-                            <span><strong>${labels[key]}</strong> (${val}/100) — ${msg}</span>
-                        </div>
-                    `;
-                }).join('')}
-            `;
-        }
-
-        function saveExternalScore() {
-            const scoreInput = document.getElementById('extScoreInput');
-            const sourceInput = document.getElementById('extScoreSource');
-            const dateInput = document.getElementById('extScoreDate');
-
-            const score = parseInt(scoreInput?.value);
-            if (!score || score < 1 || score > 100) {
-                App.notify(I18n?.currentLanguage === 'en' ? 'Enter a score between 1-100' : 'הזן ציון בין 1-100', 'warning');
-                return;
-            }
-
-            const source = sourceInput?.value || 'BDI';
-            const date = dateInput?.value || new Date().toISOString().split('T')[0];
-
-            Storage.saveExternalCreditScore(score, source, date);
-            const lang = I18n?.currentLanguage || 'he';
-            const t = (key, fallback) => {
-                try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
-            };
-            App.notify(t('scoreSaved', 'הציון נשמר בהצלחה'), 'success');
-            renderCreditScore();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'profile';
-            I18n.init();
-            loadProfile();
-            renderTips();
-            renderCreditScore();
-
-            // Risk selector click handlers
-            document.querySelectorAll('.risk-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.risk-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
-            });
-
-            // Render payslip summary if data exists
-            const profile = Storage.getUserProfile();
-            if (profile && profile.payslipData) {
-                renderPayslipSummary(profile.payslipData);
-            }
-        });
-
-        function loadProfile() {
-            const profile = Storage.getUserProfile();
-            if (!profile) return;
-
-            document.getElementById('profileAge').value = profile.age || '';
-            document.getElementById('profileFamilyStatus').value = profile.familyStatus || 'single';
-            document.getElementById('profileChildren').value = profile.numChildren || 0;
-            document.getElementById('profileIncome').value = profile.monthlyIncome || '';
-            document.getElementById('profileEmployment').value = profile.employmentType || 'employee';
-            document.getElementById('profilePension').checked = profile.hasPension || false;
-            document.getElementById('profileTrainingFund').checked = profile.hasTrainingFund || false;
-            document.getElementById('profileGoal').value = profile.financialGoal || 'none';
-
-            // Set risk tolerance
-            document.querySelectorAll('.risk-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.risk === (profile.riskTolerance || 'balanced'));
-            });
-        }
-
-        function saveProfile() {
-            const existing = Storage.getUserProfile() || {};
-            const profile = {
-                age: parseInt(document.getElementById('profileAge').value) || null,
-                familyStatus: document.getElementById('profileFamilyStatus').value,
-                numChildren: parseInt(document.getElementById('profileChildren').value) || 0,
-                monthlyIncome: parseFloat(document.getElementById('profileIncome').value) || null,
-                employmentType: document.getElementById('profileEmployment').value,
-                hasPension: document.getElementById('profilePension').checked,
-                hasTrainingFund: document.getElementById('profileTrainingFund').checked,
-                riskTolerance: document.querySelector('.risk-btn.active')?.dataset.risk || 'balanced',
-                financialGoal: document.getElementById('profileGoal').value,
-                updatedAt: new Date().toISOString()
-            };
-
-            // Preserve payslip data
-            if (existing.payslipData) {
-                profile.payslipData = existing.payslipData;
-            }
-
-            Storage.saveUserProfile(profile);
-            const lang = I18n?.currentLanguage || 'he';
-            App.notify(lang === 'he' ? 'הפרופיל נשמר בהצלחה' : 'Profile saved successfully', 'success');
-            renderTips();
-        }
-
-        function renderTips() {
-            const tips = SmartTips.generateTips();
-            const lang = I18n?.currentLanguage || 'he';
-            const container = document.getElementById('tipsList');
-
-            if (tips.length === 0) {
-                container.innerHTML = `<div class="no-tips">
-                    <div class="emoji">✨</div>
-                    <p>${lang === 'he' ? 'אין טיפים כרגע. מלא את הפרופיל והנתונים הפיננסיים שלך' : 'No tips right now. Fill in your profile and financial data'}</p>
-                </div>`;
-                return;
-            }
-
-            tips.sort((a, b) => a.priority - b.priority);
-
-            const categoryLabels = {
-                spending: { he: 'הוצאות', en: 'Spending' },
-                savings: { he: 'חיסכון', en: 'Savings' },
-                investment: { he: 'השקעות', en: 'Investment' },
-                pension: { he: 'פנסיה', en: 'Pension' },
-                family: { he: 'משפחה', en: 'Family' },
-                general: { he: 'כללי', en: 'General' }
-            };
-
-            container.innerHTML = tips.map(tip => {
-                const badgeLabel = categoryLabels[tip.category]?.[lang] || tip.category;
-                const title = tip.title[lang] || tip.title.he;
-                const desc = tip.description[lang] || tip.description.he;
-                return `
-                    <div class="tip-card severity-${tip.severity}">
-                        <div class="tip-icon">${tip.icon}</div>
-                        <div class="tip-content">
-                            <div class="tip-badge ${tip.category}">${badgeLabel}</div>
-                            <div class="tip-title">${escapeHtml(title)}</div>
-                            <div class="tip-description">${escapeHtml(desc)}</div>
-                        </div>
-                        <button class="tip-dismiss" onclick="dismissTip('${tip.id}')" title="${lang === 'he' ? 'הסתר' : 'Dismiss'}">&times;</button>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function dismissTip(tipId) {
-            Storage.dismissTip(tipId);
-            renderTips();
-        }
-
-        function resetDismissedTips() {
-            Storage.resetDismissedTips();
-            renderTips();
-            const lang = I18n?.currentLanguage || 'he';
-            App.notify(lang === 'he' ? 'כל הטיפים הוצגו מחדש' : 'All tips restored', 'success');
-        }
-
-        function scanPayslip() {
-            ImageImport.openPayslipPicker();
-        }
-
-        function renderPayslipSummary(data) {
-            const container = document.getElementById('payslipSummary');
-            const grid = document.getElementById('payslipGrid');
-            if (!container || !grid || !data) return;
-
-            const lang = I18n?.currentLanguage || 'he';
-            const t = (key, fallback) => {
-                try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
-            };
-
-            const fmt = (v) => v ? '₪' + v.toLocaleString('he-IL', { maximumFractionDigits: 0 }) : '₪0';
-            const fmtPct = (v) => v ? ` (${v}%)` : '';
-
-            const items = [
-                { label: t('grossSalary', 'שכר ברוטו'), value: data.grossSalary, cls: 'highlight' },
-                { label: t('netSalary', 'שכר נטו'), value: data.netSalary, cls: 'highlight' },
-                { label: t('baseSalary', 'שכר בסיס לחישוב'), value: data.baseSalary, cls: 'highlight' },
-                { label: t('pensionEmployee', 'פנסיה עובד'), value: data.pensionEmployee, pct: data.pensionEmployeePct, cls: '' },
-                { label: t('pensionEmployer', 'פנסיה מעביד'), value: data.pensionEmployer, pct: data.pensionEmployerPct, cls: '' },
-                { label: t('severance', 'פיצויים'), value: data.severance, pct: data.severancePct, cls: '' },
-                { label: t('trainingEmployee', 'קרן השתלמות עובד'), value: data.trainingEmployee, pct: data.trainingEmployeePct, cls: '' },
-                { label: t('trainingEmployer', 'קרן השתלמות מעביד'), value: data.trainingEmployer, pct: data.trainingEmployerPct, cls: '' },
-                { label: t('incomeTax', 'מס הכנסה'), value: data.incomeTax, cls: 'deduction' },
-                { label: t('nationalInsurance', 'ביטוח לאומי'), value: data.nationalInsurance, cls: 'deduction' },
-                { label: t('healthInsurance', 'ביטוח בריאות'), value: data.healthInsurance, cls: 'deduction' }
-            ];
-
-            grid.innerHTML = items.map(item => `
-                <div class="payslip-item ${item.cls}">
-                    <span class="label">${item.label}</span>
-                    <span class="value">${fmt(item.value)}${fmtPct(item.pct)}</span>
-                </div>
-            `).join('');
-
-            container.classList.add('visible');
-        }
-    </script>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
+
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>👤 <span data-i18n="profile.title">פרופיל פיננסי</span></h1>
+ <p data-i18n="profile.subtitle">מלא את הפרטים שלך לקבלת טיפים מותאמים אישית</p>
+ </header>
+
+ <!-- Profile Form -->
+ <div class="profile-section">
+ <h2>📋 <span data-i18n="profile.personalInfo">פרטים אישיים</span></h2>
+
+ <div class="form-row">
+ <label data-i18n="profile.age">גיל</label>
+ <input type="number" id="profileAge" min="18" max="120" class="form-control" placeholder="30">
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.familyStatus">מצב משפחתי</label>
+ <select id="profileFamilyStatus" class="form-control">
+ <option value="single" data-i18n="profile.single">רווק/ה</option>
+ <option value="married" data-i18n="profile.married">נשוי/אה</option>
+ <option value="divorced" data-i18n="profile.divorced">גרוש/ה</option>
+ </select>
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.numChildren">מספר ילדים</label>
+ <input type="number" id="profileChildren" min="0" max="20" value="0" class="form-control">
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.monthlyIncome">הכנסה חודשית נטו</label>
+ <div class="input-with-currency">
+ <span>₪</span>
+ <input type="number" id="profileIncome" min="0" step="500" class="form-control" placeholder="15,000">
+ </div>
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.employmentType">סוג תעסוקה</label>
+ <select id="profileEmployment" class="form-control">
+ <option value="employee" data-i18n="profile.employee">שכיר/ה</option>
+ <option value="selfEmployed" data-i18n="profile.selfEmployed">עצמאי/ת</option>
+ <option value="both" data-i18n="profile.both">שכיר+עצמאי</option>
+ </select>
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.hasPension">יש פנסיה?</label>
+ <label class="toggle-switch">
+ <input type="checkbox" id="profilePension">
+ <span class="toggle-slider"></span>
+ </label>
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.hasTrainingFund">יש קרן השתלמות?</label>
+ <label class="toggle-switch">
+ <input type="checkbox" id="profileTrainingFund">
+ <span class="toggle-slider"></span>
+ </label>
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.riskTolerance">סבילות לסיכון</label>
+ <div class="risk-selector" id="riskSelector">
+ <button type="button" class="risk-btn" data-risk="conservative" data-i18n="profile.conservative">שמרני</button>
+ <button type="button" class="risk-btn active" data-risk="balanced" data-i18n="profile.balanced">מאוזן</button>
+ <button type="button" class="risk-btn" data-risk="aggressive" data-i18n="profile.aggressive">אגרסיבי</button>
+ </div>
+ </div>
+
+ <div class="form-row">
+ <label data-i18n="profile.financialGoal">יעד פיננסי</label>
+ <select id="profileGoal" class="form-control">
+ <option value="none" data-i18n="profile.goalNone">אין ספציפי</option>
+ <option value="apartment" data-i18n="profile.goalApartment">חיסכון לדירה</option>
+ <option value="earlyRetirement" data-i18n="profile.goalRetirement">פרישה מוקדמת</option>
+ <option value="childrenSavings" data-i18n="profile.goalChildren">חיסכון לילדים</option>
+ <option value="wealthBuilding" data-i18n="profile.goalWealth">בניית הון</option>
+ </select>
+ </div>
+
+ <div style="margin-top: 20px; text-align: center; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+ <button class="btn-scan" onclick="scanPayslip()">
+ <span>📷</span>
+ <span data-i18n="profile.scanPayslip">סרוק תלוש משכורת</span>
+ </button>
+ <button class="btn btn-primary" onclick="saveProfile()" style="min-width: 200px;">
+ <span>💾</span>
+ <span data-i18n="common.save">שמור</span>
+ </button>
+ </div>
+ </div>
+
+ <!-- Payslip Summary -->
+ <div class="payslip-summary" id="payslipSummary">
+ <h2>📄 <span data-i18n="profile.payslipSummary">סיכום תלוש</span></h2>
+ <div class="payslip-grid" id="payslipGrid">
+ <!-- Populated by JS -->
+ </div>
+ </div>
+
+ <!-- Credit Score -->
+ <div class="credit-score-section" id="creditScoreSection">
+ <h2>📊 <span data-i18n="profile.creditScore">דירוג אשראי</span></h2>
+
+ <!-- Gauge -->
+ <div class="gauge-container">
+ <svg class="gauge-svg" width="260" height="150" viewBox="0 0 260 150">
+ <defs>
+ <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+ <stop offset="0%" style="stop-color:#ef4444"/>
+ <stop offset="35%" style="stop-color:#f59e0b"/>
+ <stop offset="65%" style="stop-color:#eab308"/>
+ <stop offset="100%" style="stop-color:#10b981"/>
+ </linearGradient>
+ </defs>
+ <!-- Background arc -->
+ <path d="M 25 135 A 105 105 0 0 1 235 135" fill="none" stroke="var(--color-border)" stroke-width="18" stroke-linecap="round"/>
+ <!-- Colored arc -->
+ <path d="M 25 135 A 105 105 0 0 1 235 135" fill="none" stroke="url(#gaugeGrad)" stroke-width="18" stroke-linecap="round"/>
+ <!-- Needle -->
+ <line id="gaugeNeedle" x1="130" y1="135" x2="130" y2="40" stroke="white" stroke-width="3" stroke-linecap="round" transform="rotate(-90, 130, 135)"/>
+ <circle cx="130" cy="135" r="8" fill="white"/>
+ <!-- Score text -->
+ <text id="gaugeScoreText" x="130" y="120" text-anchor="middle" fill="white" font-size="32" font-weight="700">--</text>
+ </svg>
+ <div class="gauge-labels">
+ <span data-i18n="profile.weak">חלש</span>
+ <span data-i18n="profile.fair">בינוני</span>
+ <span data-i18n="profile.good">טוב</span>
+ <span data-i18n="profile.excellent">מצוין</span>
+ </div>
+ </div>
+
+ <!-- Score Cards -->
+ <div class="score-cards">
+ <div class="score-card">
+ <div class="score-label" data-i18n="profile.finsightScore">ציון FinSight</div>
+ <div class="score-value" id="internalScoreValue">--<span class="score-max">/100</span></div>
+ </div>
+ <div class="score-card">
+ <div class="score-label" data-i18n="profile.externalScore">ציון חיצוני</div>
+ <div class="score-value" id="externalScoreValue">--<span class="score-max">/100</span></div>
+ </div>
+ </div>
+
+ <!-- Factor Breakdown -->
+ <div class="factors-breakdown" id="factorsBreakdown">
+ <!-- Populated by JS -->
+ </div>
+
+ <!-- External Score Form -->
+ <div class="external-score-form">
+ <h3>📝 <span data-i18n="profile.enterExternalScore">הזן ציון חיצוני</span></h3>
+ <div class="external-form-row">
+ <div class="external-form-group">
+ <label data-i18n="profile.externalScore">ציון</label>
+ <input type="number" id="extScoreInput" min="1" max="100" placeholder="85">
+ </div>
+ <div class="external-form-group">
+ <label data-i18n="profile.scoreSource">מקור</label>
+ <select id="extScoreSource">
+ <option value="BDI">BDI</option>
+ <option value="CreditInfo">CreditInfo</option>
+ <option value="DataCheck">DataCheck</option>
+ <option value="other">אחר</option>
+ </select>
+ </div>
+ <div class="external-form-group">
+ <label data-i18n="profile.checkDate">תאריך בדיקה</label>
+ <input type="date" id="extScoreDate">
+ </div>
+ <button class="btn btn-primary btn-sm" onclick="saveExternalScore()" style="height: 38px; align-self: flex-end;">
+ <span data-i18n="profile.saveScore">שמור ציון</span>
+ </button>
+ </div>
+ </div>
+
+ <!-- Improvement Tips -->
+ <div class="improvement-tips" id="improvementTips">
+ <!-- Populated by JS -->
+ </div>
+ </div>
+
+ <!-- Smart Tips -->
+ <div class="tips-section">
+ <div class="tips-header">
+ <h2>💡 <span data-i18n="profile.smartTips">טיפים חכמים</span></h2>
+ <button class="btn btn-secondary btn-sm" onclick="resetDismissedTips()" data-i18n="profile.showAllTips">הצג הכל</button>
+ </div>
+ <div id="tipsList">
+ <!-- Populated by JS -->
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
+
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+ <script>
+ if (typeof pdfjsLib !== 'undefined') {
+ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+ }
+ </script>
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/alerts.js"></script>
+ <script src="../js/goals.js"></script>
+ <script src="../js/smart-tips.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/image-import.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ // ─── Credit Score Calculator ─────────────────────────
+ const CreditScoreCalculator = {
+ DEFAULT_SCORE: 70,
+
+ calculate() {
+ const profile = Storage.getUserProfile();
+ const loans = Storage.getLoans();
+ const creditData = Storage.getCreditCards();
+ const bankBalance = Storage.getTotalBankBalance();
+ const funds = Storage.getMyFunds();
+ const monthExpenses = SmartTips.getMonthlyExpenses(SmartTips.getCurrentMonth());
+
+ // Only include factors that have real data
+ const allFactors = {
+ paymentDiscipline: this.calcPaymentDiscipline(loans),
+ creditUtilization: this.calcCreditUtilization(creditData, profile, monthExpenses),
+ debtToIncome: this.calcDebtToIncome(loans, profile, monthExpenses),
+ financialStability: this.calcFinancialStability(bankBalance, funds, profile, monthExpenses)
+ };
+
+ const baseWeights = {
+ paymentDiscipline: 0.30,
+ creditUtilization: 0.30,
+ debtToIncome: 0.25,
+ financialStability: 0.15
+ };
+
+ // Separate factors with real data from those without
+ const factors = {};
+ const noData = {};
+ for (const [key, val] of Object.entries(allFactors)) {
+ if (val === null) {
+ noData[key] = null;
+ } else {
+ factors[key] = val;
+ }
+ }
+
+ // Redistribute weights among factors that have data
+ let totalWeight = 0;
+ for (const key of Object.keys(factors)) {
+ totalWeight += baseWeights[key];
+ }
+
+ let totalScore = 0;
+ if (totalWeight > 0) {
+ for (const [key, val] of Object.entries(factors)) {
+ totalScore += val * (baseWeights[key] / totalWeight);
+ }
+ }
+
+ return { score: Math.round(totalScore), factors, noData };
+ },
+
+ calcPaymentDiscipline(loans) {
+ // No loans = no data to assess payment discipline
+ const loansWithData = loans.filter(l => l.originalAmount && l.remainingBalance && l.totalMonths && l.startDate);
+ if (loansWithData.length === 0) return null;
+ let score = 85;
+ for (const loan of loansWithData) {
+ const start = new Date(loan.startDate);
+ const monthsElapsed = Math.max(1, Math.floor((Date.now() - start.getTime()) / (1000*60*60*24*30)));
+ const expectedProgress = monthsElapsed / loan.totalMonths;
+ const actualProgress = 1 - (loan.remainingBalance / loan.originalAmount);
+ if (actualProgress >= expectedProgress * 0.9) {
+ score = Math.min(100, score + 3);
+ } else {
+ score = Math.max(0, score - 15);
+ }
+ }
+ return Math.max(0, Math.min(100, score));
+ },
+
+ calcCreditUtilization(creditData, profile, monthExpenses) {
+ const income = profile?.monthlyIncome;
+ if (!income || monthExpenses === 0) return null;
+ const ratio = monthExpenses / income;
+ if (ratio <= 0.3) return 95;
+ if (ratio <= 0.5) return 80;
+ if (ratio <= 0.7) return 60;
+ if (ratio <= 0.9) return 40;
+ return 20;
+ },
+
+ calcDebtToIncome(loans, profile, monthExpenses) {
+ const income = profile?.monthlyIncome;
+ if (!income) return null;
+ const loanPayments = Storage.getTotalMonthlyLoanPayments();
+ if (loanPayments === 0 && monthExpenses === 0) return null;
+ const totalObligations = loanPayments + monthExpenses;
+ const ratio = totalObligations / income;
+ if (ratio <= 0.4) return 95;
+ if (ratio <= 0.6) return 75;
+ if (ratio <= 0.8) return 50;
+ return 25;
+ },
+
+ calcFinancialStability(bankBalance, funds, profile, monthExpenses) {
+ let score = 50;
+ // Emergency fund check
+ if (monthExpenses > 0) {
+ const months = bankBalance / monthExpenses;
+ if (months >= 6) score += 20;
+ else if (months >= 3) score += 10;
+ else score -= 10;
+ }
+ // Has pension/funds
+ if (profile?.hasPension) score += 10;
+ if (profile?.hasTrainingFund) score += 5;
+ // Fund diversification
+ if (funds.length >= 2) score += 10;
+ else if (funds.length === 1) score += 5;
+
+ return Math.max(0, Math.min(100, score));
+ },
+
+ // Credit history length removed — requires credit bureau data not available via API
+ };
+
+ function getScoreColor(score) {
+ if (score >= 80) return '#10b981';
+ if (score >= 60) return '#eab308';
+ if (score >= 40) return '#f59e0b';
+ return '#ef4444';
+ }
+
+ function renderCreditScore() {
+ const lang = I18n?.currentLanguage || 'he';
+ const t = (key, fallback) => {
+ try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
+ };
+
+ const { score, factors, noData } = CreditScoreCalculator.calculate();
+
+ // Only save to history if we have real data
+ if (Object.keys(factors).length > 0) {
+ Storage.addScoreToHistory(score, factors);
+ }
+
+ // Update gauge needle: rotate from -90 (0 score) to +90 (100 score)
+ const angle = -90 + (score / 100) * 180;
+ const needle = document.getElementById('gaugeNeedle');
+ if (needle) needle.setAttribute('transform', `rotate(${angle}, 130, 135)`);
+
+ const scoreText = document.getElementById('gaugeScoreText');
+ if (scoreText) scoreText.textContent = score;
+
+ // Internal score card
+ const internalEl = document.getElementById('internalScoreValue');
+ if (internalEl) {
+ internalEl.innerHTML = `<span style="color:${getScoreColor(score)}">${score}</span><span class="score-max">/100</span>`;
+ }
+
+ // External score card
+ const externalEl = document.getElementById('externalScoreValue');
+ const scoreData = Storage.getCreditScore();
+ if (externalEl) {
+ if (scoreData.external && scoreData.external.score) {
+ const es = scoreData.external.score;
+ externalEl.innerHTML = `<span style="color:${getScoreColor(es)}">${es}</span><span class="score-max">/100</span>`;
+ } else {
+ externalEl.innerHTML = `<span style="color:var(--color-text-secondary)">--</span><span class="score-max">/100</span>`;
+ }
+ }
+
+ // Pre-fill external form if data exists
+ if (scoreData.external) {
+ const inp = document.getElementById('extScoreInput');
+ const src = document.getElementById('extScoreSource');
+ const dt = document.getElementById('extScoreDate');
+ if (inp && scoreData.external.score) inp.value = scoreData.external.score;
+ if (src && scoreData.external.source) src.value = scoreData.external.source;
+ if (dt && scoreData.external.date) dt.value = scoreData.external.date;
+ }
+ // Default date to today
+ const dtEl = document.getElementById('extScoreDate');
+ if (dtEl && !dtEl.value) dtEl.value = new Date().toISOString().split('T')[0];
+
+ // Factor breakdown
+ const factorLabels = {
+ paymentDiscipline: t('paymentDiscipline', 'משמעת תשלום'),
+ creditUtilization: t('creditUtilization', 'ניצול אשראי'),
+ debtToIncome: t('debtToIncome', 'חוב מול הכנסה'),
+ financialStability: t('financialStability', 'יציבות פיננסית')
+ };
+
+ const breakdownEl = document.getElementById('factorsBreakdown');
+ if (breakdownEl) {
+ const noDataLabel = lang === 'he' ? 'אין נתונים' : 'No data';
+ // Show factors with data first, then no-data factors
+ const allKeys = [...Object.keys(factors), ...Object.keys(noData)];
+ breakdownEl.innerHTML = allKeys.map(key => {
+ const val = factors[key];
+ const hasData = val !== undefined;
+ if (hasData) {
+ return `
+ <div class="factor-row">
+ <span class="factor-name">${factorLabels[key]}</span>
+ <div class="factor-bar-bg">
+ <div class="factor-bar" style="width:${val}%; background:${getScoreColor(val)};"></div>
+ </div>
+ <span class="factor-score" style="color:${getScoreColor(val)}">${val}</span>
+ </div>
+ `;
+ } else {
+ return `
+ <div class="factor-row" style="opacity: 0.5;">
+ <span class="factor-name">${factorLabels[key]}</span>
+ <div class="factor-bar-bg">
+ <div class="factor-bar" style="width:0%;"></div>
+ </div>
+ <span class="factor-score" style="color:var(--color-text-secondary); font-size:0.8rem;">${noDataLabel}</span>
+ </div>
+ `;
+ }
+ }).join('');
+ }
+
+ // Improvement tips (top 3 weakest, only from factors with data)
+ renderImprovementTips(factors, factorLabels, lang);
+ }
+
+ function renderImprovementTips(factors, labels, lang) {
+ const container = document.getElementById('improvementTips');
+ if (!container) return;
+
+ const t = (key, fallback) => {
+ try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
+ };
+
+ const sorted = Object.entries(factors).sort((a, b) => a[1] - b[1]);
+ const weakest = sorted.slice(0, 3).filter(([, val]) => val < 80);
+
+ if (weakest.length === 0) {
+ container.innerHTML = '';
+ return;
+ }
+
+ const tipMessages = {
+ paymentDiscipline: {
+ he: 'שמור על תשלומי הלוואות בזמן. פיגורים משפיעים מאוד על הדירוג',
+ en: 'Keep loan payments on time. Late payments significantly affect your score'
+ },
+ creditUtilization: {
+ he: 'נסה להוריד את ניצול האשראי מתחת ל-30% מההכנסה',
+ en: 'Try to keep credit utilization below 30% of income'
+ },
+ debtToIncome: {
+ he: 'שקול להקטין חובות או להגדיל הכנסה כדי לשפר יחס חוב-הכנסה',
+ en: 'Consider reducing debts or increasing income to improve debt-to-income ratio'
+ },
+ financialStability: {
+ he: 'בנה חיסכון חירום ופזר השקעות לשיפור היציבות הפיננסית',
+ en: 'Build an emergency fund and diversify investments to improve stability'
+ }
+ };
+
+ container.innerHTML = `
+ <h3>💡 ${t('improvementTips', 'טיפים לשיפור')}</h3>
+ ${weakest.map(([key, val]) => {
+ const priority = val < 50 ? 'red' : val < 70 ? 'yellow' : 'green';
+ const msg = tipMessages[key]?.[lang] || tipMessages[key]?.he || '';
+ return `
+ <div class="improvement-tip">
+ <span class="priority-dot priority-${priority}"></span>
+ <span><strong>${labels[key]}</strong> (${val}/100) — ${msg}</span>
+ </div>
+ `;
+ }).join('')}
+ `;
+ }
+
+ function saveExternalScore() {
+ const scoreInput = document.getElementById('extScoreInput');
+ const sourceInput = document.getElementById('extScoreSource');
+ const dateInput = document.getElementById('extScoreDate');
+
+ const score = parseInt(scoreInput?.value);
+ if (!score || score < 1 || score > 100) {
+ App.notify(I18n?.currentLanguage === 'en' ? 'Enter a score between 1-100' : 'הזן ציון בין 1-100', 'warning');
+ return;
+ }
+
+ const source = sourceInput?.value || 'BDI';
+ const date = dateInput?.value || new Date().toISOString().split('T')[0];
+
+ Storage.saveExternalCreditScore(score, source, date);
+ const lang = I18n?.currentLanguage || 'he';
+ const t = (key, fallback) => {
+ try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
+ };
+ App.notify(t('scoreSaved', 'הציון נשמר בהצלחה'), 'success');
+ renderCreditScore();
+ }
+
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'profile';
+ I18n.init();
+ loadProfile();
+ renderTips();
+ renderCreditScore();
+
+ // Risk selector click handlers
+ document.querySelectorAll('.risk-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+ document.querySelectorAll('.risk-btn').forEach(b => b.classList.remove('active'));
+ btn.classList.add('active');
+ });
+ });
+
+ // Render payslip summary if data exists
+ const profile = Storage.getUserProfile();
+ if (profile && profile.payslipData) {
+ renderPayslipSummary(profile.payslipData);
+ }
+ });
+
+ function loadProfile() {
+ const profile = Storage.getUserProfile();
+ if (!profile) return;
+
+ document.getElementById('profileAge').value = profile.age || '';
+ document.getElementById('profileFamilyStatus').value = profile.familyStatus || 'single';
+ document.getElementById('profileChildren').value = profile.numChildren || 0;
+ document.getElementById('profileIncome').value = profile.monthlyIncome || '';
+ document.getElementById('profileEmployment').value = profile.employmentType || 'employee';
+ document.getElementById('profilePension').checked = profile.hasPension || false;
+ document.getElementById('profileTrainingFund').checked = profile.hasTrainingFund || false;
+ document.getElementById('profileGoal').value = profile.financialGoal || 'none';
+
+ // Set risk tolerance
+ document.querySelectorAll('.risk-btn').forEach(btn => {
+ btn.classList.toggle('active', btn.dataset.risk === (profile.riskTolerance || 'balanced'));
+ });
+ }
+
+ function saveProfile() {
+ const existing = Storage.getUserProfile() || {};
+ const profile = {
+ age: parseInt(document.getElementById('profileAge').value) || null,
+ familyStatus: document.getElementById('profileFamilyStatus').value,
+ numChildren: parseInt(document.getElementById('profileChildren').value) || 0,
+ monthlyIncome: parseFloat(document.getElementById('profileIncome').value) || null,
+ employmentType: document.getElementById('profileEmployment').value,
+ hasPension: document.getElementById('profilePension').checked,
+ hasTrainingFund: document.getElementById('profileTrainingFund').checked,
+ riskTolerance: document.querySelector('.risk-btn.active')?.dataset.risk || 'balanced',
+ financialGoal: document.getElementById('profileGoal').value,
+ updatedAt: new Date().toISOString()
+ };
+
+ // Preserve payslip data
+ if (existing.payslipData) {
+ profile.payslipData = existing.payslipData;
+ }
+
+ Storage.saveUserProfile(profile);
+ const lang = I18n?.currentLanguage || 'he';
+ App.notify(lang === 'he' ? 'הפרופיל נשמר בהצלחה' : 'Profile saved successfully', 'success');
+ renderTips();
+ }
+
+ function renderTips() {
+ const tips = SmartTips.generateTips();
+ const lang = I18n?.currentLanguage || 'he';
+ const container = document.getElementById('tipsList');
+
+ if (tips.length === 0) {
+ container.innerHTML = `<div class="no-tips">
+ <div class="emoji">✨</div>
+ <p>${lang === 'he' ? 'אין טיפים כרגע. מלא את הפרופיל והנתונים הפיננסיים שלך' : 'No tips right now. Fill in your profile and financial data'}</p>
+ </div>`;
+ return;
+ }
+
+ tips.sort((a, b) => a.priority - b.priority);
+
+ const categoryLabels = {
+ spending: { he: 'הוצאות', en: 'Spending' },
+ savings: { he: 'חיסכון', en: 'Savings' },
+ investment: { he: 'השקעות', en: 'Investment' },
+ pension: { he: 'פנסיה', en: 'Pension' },
+ family: { he: 'משפחה', en: 'Family' },
+ general: { he: 'כללי', en: 'General' }
+ };
+
+ container.innerHTML = tips.map(tip => {
+ const badgeLabel = categoryLabels[tip.category]?.[lang] || tip.category;
+ const title = tip.title[lang] || tip.title.he;
+ const desc = tip.description[lang] || tip.description.he;
+ return `
+ <div class="tip-card severity-${tip.severity}">
+ <div class="tip-icon">${tip.icon}</div>
+ <div class="tip-content">
+ <div class="tip-badge ${tip.category}">${badgeLabel}</div>
+ <div class="tip-title">${escapeHtml(title)}</div>
+ <div class="tip-description">${escapeHtml(desc)}</div>
+ </div>
+ <button class="tip-dismiss" onclick="dismissTip('${tip.id}')" title="${lang === 'he' ? 'הסתר' : 'Dismiss'}">&times;</button>
+ </div>
+ `;
+ }).join('');
+ }
+
+ function escapeHtml(text) {
+ const div = document.createElement('div');
+ div.textContent = text;
+ return div.innerHTML;
+ }
+
+ function dismissTip(tipId) {
+ Storage.dismissTip(tipId);
+ renderTips();
+ }
+
+ function resetDismissedTips() {
+ Storage.resetDismissedTips();
+ renderTips();
+ const lang = I18n?.currentLanguage || 'he';
+ App.notify(lang === 'he' ? 'כל הטיפים הוצגו מחדש' : 'All tips restored', 'success');
+ }
+
+ function scanPayslip() {
+ ImageImport.openPayslipPicker();
+ }
+
+ function renderPayslipSummary(data) {
+ const container = document.getElementById('payslipSummary');
+ const grid = document.getElementById('payslipGrid');
+ if (!container || !grid || !data) return;
+
+ const lang = I18n?.currentLanguage || 'he';
+ const t = (key, fallback) => {
+ try { return I18n.translations[lang].profile[key] || fallback; } catch(e) { return fallback; }
+ };
+
+ const fmt = (v) => v ? '₪' + v.toLocaleString('he-IL', { maximumFractionDigits: 0 }) : '₪0';
+ const fmtPct = (v) => v ? ` (${v}%)` : '';
+
+ const items = [
+ { label: t('grossSalary', 'שכר ברוטו'), value: data.grossSalary, cls: 'highlight' },
+ { label: t('netSalary', 'שכר נטו'), value: data.netSalary, cls: 'highlight' },
+ { label: t('baseSalary', 'שכר בסיס לחישוב'), value: data.baseSalary, cls: 'highlight' },
+ { label: t('pensionEmployee', 'פנסיה עובד'), value: data.pensionEmployee, pct: data.pensionEmployeePct, cls: '' },
+ { label: t('pensionEmployer', 'פנסיה מעביד'), value: data.pensionEmployer, pct: data.pensionEmployerPct, cls: '' },
+ { label: t('severance', 'פיצויים'), value: data.severance, pct: data.severancePct, cls: '' },
+ { label: t('trainingEmployee', 'קרן השתלמות עובד'), value: data.trainingEmployee, pct: data.trainingEmployeePct, cls: '' },
+ { label: t('trainingEmployer', 'קרן השתלמות מעביד'), value: data.trainingEmployer, pct: data.trainingEmployerPct, cls: '' },
+ { label: t('incomeTax', 'מס הכנסה'), value: data.incomeTax, cls: 'deduction' },
+ { label: t('nationalInsurance', 'ביטוח לאומי'), value: data.nationalInsurance, cls: 'deduction' },
+ { label: t('healthInsurance', 'ביטוח בריאות'), value: data.healthInsurance, cls: 'deduction' }
+ ];
+
+ grid.innerHTML = items.map(item => `
+ <div class="payslip-item ${item.cls}">
+ <span class="label">${item.label}</span>
+ <span class="value">${fmt(item.value)}${fmtPct(item.pct)}</span>
+ </div>
+ `).join('');
+
+ container.classList.add('visible');
+ }
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>

@@ -3,758 +3,750 @@
 <head>
 <script>
 (function() {
-    try {
-        var t = localStorage.getItem('wl_theme');
-        var isLight = t === 'light';
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
-        if (isLight) {
-            document.documentElement.classList.add('light');
-            // body class set on DOMContentLoaded
-            if (document.body) document.body.classList.add('light');
-            document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
-        }
-    } catch(e) {}
+ try {
+ var t = localStorage.getItem('wl_theme');
+ var isLight = t === 'light';
+ document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+ if (isLight) {
+ document.documentElement.classList.add('light');
+ // body class set on DOMContentLoaded
+ if (document.body) document.body.classList.add('light');
+ document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('light'); });
+ }
+ } catch(e) {}
 })();
 </script>
-    <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB63NWYGX5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DB63NWYGX5');
-    </script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="../img/logo.svg">
-    <meta name="theme-color" content="#6366f1">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev https://www.google-analytics.com; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../img/logo.svg">
-    <title>דוחות - WizeMoney</title>
-    <link rel="stylesheet" href="../css/app.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .nav-link.active { background: #6366f1 !important; }
-        .page-header h1 { color: #6366f1; }
-        .btn-primary { background: #6366f1; }
-        .btn-primary:hover { background: #4f46e5; }
+ <meta charset="UTF-8">
+ <meta name="view-transition" content="same-origin">
+ <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+ <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <link rel="apple-touch-icon" href="../img/logo.svg">
+ <meta name="theme-color" content="#6366f1">
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.exchangerate-api.com https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://mayaapi.tase.co.il https://*.workers.dev ; frame-src https://accounts.google.com https://*.firebaseapp.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com;">
+ <meta name="referrer" content="strict-origin-when-cross-origin">
+ <meta http-equiv="X-Content-Type-Options" content="nosniff">
+ <link rel="manifest" href="../manifest.json">
+ <link rel="icon" type="image/png" href="../img/logo.svg">
+ <title>דוחות - WizeMoney</title>
+ <link rel="stylesheet" href="../css/app.css">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <style>
+ .nav-link.active { background: #6366f1 !important; }
+ .page-header h1 { color: #6366f1; }
+ .btn-primary { background: #6366f1; }
+ .btn-primary:hover { background: #4f46e5; }
 
-        .report-selector {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+ .report-selector {
+ display: flex;
+ gap: 15px;
+ margin-bottom: 30px;
+ flex-wrap: wrap;
+ align-items: center;
+ }
 
-        .report-selector select {
-            padding: 10px 20px;
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-        }
+ .report-selector select {
+ padding: 10px 20px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 8px;
+ color: white;
+ font-size: 1rem;
+ }
 
-        .report-summary {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 30px;
-        }
+ .report-summary {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 16px;
+ margin-bottom: 30px;
+ }
 
-        .report-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 16px 12px;
-            text-align: center;
-            min-width: 0;
-        }
+ .report-card {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: 12px;
+ padding: 16px 12px;
+ text-align: center;
+ min-width: 0;
+ }
 
-        .report-card .icon { font-size: 1.8rem; margin-bottom: 8px; }
-        .report-card .value { font-size: clamp(1rem, 1.6vw, 1.6rem); font-weight: bold; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .report-card .label { color: var(--color-text-secondary); font-size: 0.82rem; }
+ .report-card .icon { font-size: 1.8rem; margin-bottom: 8px; }
+ .report-card .value { font-size: clamp(1rem, 1.6vw, 1.6rem); font-weight: bold; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+ .report-card .label { color: var(--color-text-secondary); font-size: 0.82rem; }
 
-        @media (max-width: 600px) {
-            .report-summary { grid-template-columns: repeat(2, 1fr); }
-            .report-card .value { font-size: clamp(0.9rem, 4vw, 1.2rem); }
-        }
-        .report-card .change { font-size: 0.85rem; margin-top: 5px; }
-        .report-card .change.positive { color: var(--color-positive); }
-        .report-card .change.negative { color: var(--color-negative); }
+ @media (max-width: 600px) {
+ .report-summary { grid-template-columns: repeat(2, 1fr); }
+ .report-card .value { font-size: clamp(0.9rem, 4vw, 1.2rem); }
+ }
+ .report-card .change { font-size: 0.85rem; margin-top: 5px; }
+ .report-card .change.positive { color: var(--color-positive); }
+ .report-card .change.negative { color: var(--color-negative); }
 
-        .category-list {
-            list-style: none;
-        }
+ .category-list {
+ list-style: none;
+ }
 
-        .category-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--color-border);
-        }
+ .category-item {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 12px 0;
+ border-bottom: 1px solid var(--color-border);
+ }
 
-        .category-item:last-child { border-bottom: none; }
+ .category-item:last-child { border-bottom: none; }
 
-        .category-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+ .category-info {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
 
-        .category-bar {
-            width: 100px;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
+ .category-bar {
+ width: 100px;
+ height: 8px;
+ background: rgba(255,255,255,0.1);
+ border-radius: 4px;
+ overflow: hidden;
+ }
 
-        .category-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-        }
+ .category-bar-fill {
+ height: 100%;
+ border-radius: 4px;
+ }
 
-        .top-expense {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--color-border);
-        }
+ .top-expense {
+ display: flex;
+ justify-content: space-between;
+ padding: 10px 0;
+ border-bottom: 1px solid var(--color-border);
+ }
 
-        .charts-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+ .charts-row {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+ gap: 20px;
+ margin-bottom: 30px;
+ }
 
-        .print-btn {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-        }
+ .print-btn {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ }
 
-        /* Expense analysis styles */
-        .analysis-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+ /* Expense analysis styles */
+ .analysis-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 15px;
+ margin-bottom: 20px;
+ }
 
-        .analysis-stat {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
+ .analysis-stat {
+ background: rgba(255,255,255,0.05);
+ border-radius: 10px;
+ padding: 15px;
+ text-align: center;
+ }
 
-        .analysis-stat .label {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 5px;
-        }
+ .analysis-stat .label {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ margin-bottom: 5px;
+ }
 
-        .analysis-stat .value {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
+ .analysis-stat .value {
+ font-size: 1.3rem;
+ font-weight: bold;
+ }
 
-        .trend-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
+ .trend-indicator {
+ display: inline-flex;
+ align-items: center;
+ gap: 5px;
+ padding: 4px 10px;
+ border-radius: 20px;
+ font-size: 0.85rem;
+ }
 
-        .trend-up { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .trend-down { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .trend-stable { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+ .trend-up { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+ .trend-down { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+ .trend-stable { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
 
-        .unusual-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            margin-bottom: 10px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 10px;
-        }
+ .unusual-item {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 12px;
+ margin-bottom: 10px;
+ background: rgba(239, 68, 68, 0.1);
+ border: 1px solid rgba(239, 68, 68, 0.3);
+ border-radius: 10px;
+ }
 
-        .unusual-info {
-            flex: 1;
-        }
+ .unusual-info {
+ flex: 1;
+ }
 
-        .unusual-amount {
-            font-weight: bold;
-            color: var(--color-credit);
-            font-size: 1.1rem;
-        }
+ .unusual-amount {
+ font-weight: bold;
+ color: var(--color-credit);
+ font-size: 1.1rem;
+ }
 
-        .unusual-deviation {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-        }
+ .unusual-deviation {
+ font-size: 0.85rem;
+ color: var(--color-text-secondary);
+ }
 
-        .yoy-comparison {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
+ .yoy-comparison {
+ display: flex;
+ gap: 20px;
+ flex-wrap: wrap;
+ margin-top: 15px;
+ }
 
-        .yoy-item {
-            flex: 1;
-            min-width: 150px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
+ .yoy-item {
+ flex: 1;
+ min-width: 150px;
+ background: rgba(255,255,255,0.05);
+ border-radius: 10px;
+ padding: 15px;
+ text-align: center;
+ }
 
-        @media print {
-            .sidebar, .mobile-menu-toggle, .report-selector button, .print-btn { display: none !important; }
-            .main-content { margin: 0 !important; }
-            body { background: #1a1a2e !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .card, .report-card { border: 1px solid #444 !important; background: #16213e !important; color: white !important; }
-            * { color: white !important; }
-            .report-card .label, .report-card .change { color: #aaa !important; }
-        }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+ @media print {
+ .sidebar, .mobile-menu-toggle, .report-selector button, .print-btn { display: none !important; }
+ .main-content { margin: 0 !important; }
+ body { background: #1a1a2e !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+ .card, .report-card { border: 1px solid #444 !important; background: #16213e !important; color: white !important; }
+ * { color: white !important; }
+ .report-card .label, .report-card .change { color: #aaa !important; }
+ }
+ </style>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <aside class="sidebar"></aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="logo-hero">
-                <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
-            </div>
-            <header class="page-header">
-                <h1>📋 <span data-i18n="reports.title">דוחות</span></h1>
-                <p data-i18n="reports.subtitle">סיכומים ומגמות פיננסיות</p>
-            </header>
+ <!-- Main Content -->
+ <main class="main-content">
+ <div class="logo-hero">
+ <img src="../img/logo.svg" alt="WizeMoney" class="logo-hero-img">
+ </div>
+ <header class="page-header">
+ <h1>📋 <span data-i18n="reports.title">דוחות</span></h1>
+ <p data-i18n="reports.subtitle">סיכומים ומגמות פיננסיות</p>
+ </header>
 
-            <!-- Report Selector -->
-            <div class="report-selector">
-                <select id="reportMonth" onchange="loadReport()">
-                    <!-- Populated by JS -->
-                </select>
-                <button class="btn print-btn" onclick="window.print()">
-                    <span>🖨️</span>
-                    <span data-i18n="reports.printReport">הדפס דוח</span>
-                </button>
-            </div>
+ <!-- Report Selector -->
+ <div class="report-selector">
+ <select id="reportMonth" onchange="loadReport()">
+ <!-- Populated by JS -->
+ </select>
+ <button class="btn print-btn" onclick="window.print()">
+ <span>🖨️</span>
+ <span data-i18n="reports.printReport">הדפס דוח</span>
+ </button>
+ </div>
 
-            <!-- Monthly Summary -->
-            <div class="report-summary" id="reportSummary">
-                <!-- Populated by JS -->
-            </div>
+ <!-- Monthly Summary -->
+ <div class="report-summary" id="reportSummary">
+ <!-- Populated by JS -->
+ </div>
 
-            <!-- Charts -->
-            <div class="charts-row">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title"><span class="icon">📈</span> <span data-i18n="reports.expenseTrend6">מגמת הוצאות (6 חודשים)</span></h2>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="expenseTrendChart"></canvas>
-                    </div>
-                </div>
+ <!-- Charts -->
+ <div class="charts-row">
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">📈</span> <span data-i18n="reports.expenseTrend6">מגמת הוצאות (6 חודשים)</span></h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="expenseTrendChart"></canvas>
+ </div>
+ </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title"><span class="icon">📊</span> <span data-i18n="reports.categoryBreakdown">חלוקה לפי קטגוריות</span></h2>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="categoryPieChart"></canvas>
-                    </div>
-                </div>
-            </div>
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">📊</span> <span data-i18n="reports.categoryBreakdown">חלוקה לפי קטגוריות</span></h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="categoryPieChart"></canvas>
+ </div>
+ </div>
+ </div>
 
-            <!-- Category Breakdown -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="icon">📑</span> <span data-i18n="reports.categoryDetails">פירוט לפי קטגוריות</span></h2>
-                </div>
-                <ul class="category-list" id="categoryList">
-                    <!-- Populated by JS -->
-                </ul>
-            </div>
+ <!-- Category Breakdown -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">📑</span> <span data-i18n="reports.categoryDetails">פירוט לפי קטגוריות</span></h2>
+ </div>
+ <ul class="category-list" id="categoryList">
+ <!-- Populated by JS -->
+ </ul>
+ </div>
 
-            <!-- Top Expenses -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="icon">💸</span> <span data-i18n="reports.topExpenses">הוצאות גבוהות</span></h2>
-                </div>
-                <div id="topExpenses">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
+ <!-- Top Expenses -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">💸</span> <span data-i18n="reports.topExpenses">הוצאות גבוהות</span></h2>
+ </div>
+ <div id="topExpenses">
+ <!-- Populated by JS -->
+ </div>
+ </div>
 
-            <!-- Net Worth Trend -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="icon">💰</span> <span data-i18n="reports.bankBalanceTrend">מגמת יתרת בנק</span></h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="netWorthChart"></canvas>
-                </div>
-            </div>
+ <!-- Net Worth Trend -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">💰</span> <span data-i18n="reports.bankBalanceTrend">מגמת יתרת בנק</span></h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="netWorthChart"></canvas>
+ </div>
+ </div>
 
-            <!-- Feature 7: Expense Analysis -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="icon">🔍</span> <span data-i18n="reports.expenseAnalysis">ניתוח הוצאות</span></h2>
-                </div>
-                <div id="expenseAnalysis">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
+ <!-- Feature 7: Expense Analysis -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">🔍</span> <span data-i18n="reports.expenseAnalysis">ניתוח הוצאות</span></h2>
+ </div>
+ <div id="expenseAnalysis">
+ <!-- Populated by JS -->
+ </div>
+ </div>
 
-            <!-- Unusual Expenses (Anomalies) -->
-            <div class="card" id="unusualExpensesCard">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="icon">⚠️</span> <span data-i18n="reports.unusualExpenses">הוצאות חריגות</span></h2>
-                </div>
-                <div id="unusualExpenses">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
+ <!-- Unusual Expenses (Anomalies) -->
+ <div class="card" id="unusualExpensesCard">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">⚠️</span> <span data-i18n="reports.unusualExpenses">הוצאות חריגות</span></h2>
+ </div>
+ <div id="unusualExpenses">
+ <!-- Populated by JS -->
+ </div>
+ </div>
 
-            <!-- Expense Trends Chart -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="icon">📈</span> <span data-i18n="reports.expenseTrend12">מגמת הוצאות (12 חודשים)</span></h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="expenseAnalysisChart"></canvas>
-                </div>
-            </div>
-            <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
-                <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
-                <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
-            </footer>
-        </main>
+ <!-- Expense Trends Chart -->
+ <div class="card">
+ <div class="card-header">
+ <h2 class="card-title"><span class="icon">📈</span> <span data-i18n="reports.expenseTrend12">מגמת הוצאות (12 חודשים)</span></h2>
+ </div>
+ <div class="chart-container">
+ <canvas id="expenseAnalysisChart"></canvas>
+ </div>
+ </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
+ </main>
 
-        <button class="mobile-menu-toggle">☰</button>
-    </div>
+ <button class="mobile-menu-toggle">☰</button>
+ </div>
 
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/profiles.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/wizeai-sync.js"></script>
-    <script src="../js/pin-lock.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/charts.js"></script>
-    <script src="../js/reports.js"></script>
-    <script src="../js/tags.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/crypto.js"></script>
-    <script src="../js/auth.js"></script>
-    <script>
-        let expenseTrendChart, categoryPieChart, netWorthChart, expenseAnalysisChart;
+ <script src="../js/sidebar.js"></script>
+ <script src="../js/profiles.js"></script>
+ <script src="../js/storage.js"></script>
+ <script src="../js/wizeai-sync.js"></script>
+ <script src="../js/pin-lock.js"></script>
+ <script src="../js/i18n.js"></script>
+ <script src="../js/charts.js"></script>
+ <script src="../js/reports.js"></script>
+ <script src="../js/tags.js"></script>
+ <script src="../js/app.js"></script>
+ <script src="../js/firebase-config.js"></script>
+ <script src="../js/crypto.js"></script>
+ <script src="../js/auth.js"></script>
+ <script>
+ let expenseTrendChart, categoryPieChart, netWorthChart, expenseAnalysisChart;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            App.currentPage = 'reports';
-            I18n.init();
-            initMonthSelector();
-            loadReport();
-            loadTrendCharts();
-            loadExpenseAnalysis();
-        });
+ document.addEventListener('DOMContentLoaded', () => {
+ App.currentPage = 'reports';
+ I18n.init();
+ initMonthSelector();
+ loadReport();
+ loadTrendCharts();
+ loadExpenseAnalysis();
+ });
 
-        function initMonthSelector() {
-            const select = document.getElementById('reportMonth');
-            const now = new Date();
-            const months = [];
+ function initMonthSelector() {
+ const select = document.getElementById('reportMonth');
+ const now = new Date();
+ const months = [];
 
-            for (let i = 0; i < 12; i++) {
-                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                months.push({
-                    value: `${date.getFullYear()}-${date.getMonth() + 1}`,
-                    year: date.getFullYear(),
-                    month: date.getMonth() + 1,
-                    label: I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear()
-                });
-            }
+ for (let i = 0; i < 12; i++) {
+ const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+ months.push({
+ value: `${date.getFullYear()}-${date.getMonth() + 1}`,
+ year: date.getFullYear(),
+ month: date.getMonth() + 1,
+ label: I18n.translations[I18n.currentLanguage].months[date.getMonth()] + ' ' + date.getFullYear()
+ });
+ }
 
-            select.innerHTML = months.map((m, i) =>
-                `<option value="${m.value}" data-year="${m.year}" data-month="${m.month}" ${i === 0 ? 'selected' : ''}>${m.label}</option>`
-            ).join('');
-        }
+ select.innerHTML = months.map((m, i) =>
+ `<option value="${m.value}" data-year="${m.year}" data-month="${m.month}" ${i === 0 ? 'selected' : ''}>${m.label}</option>`
+ ).join('');
+ }
 
-        function loadReport() {
-            const select = document.getElementById('reportMonth');
-            const option = select.options[select.selectedIndex];
-            const year = parseInt(option.dataset.year);
-            const month = parseInt(option.dataset.month);
+ function loadReport() {
+ const select = document.getElementById('reportMonth');
+ const option = select.options[select.selectedIndex];
+ const year = parseInt(option.dataset.year);
+ const month = parseInt(option.dataset.month);
 
-            const report = Reports.generateMonthly(year, month);
+ const report = Reports.generateMonthly(year, month);
 
-            // Render summary cards
-            const changeClass = report.expenses.change <= 0 ? 'positive' : 'negative';
-            const changeIcon = report.expenses.change <= 0 ? '↓' : '↑';
+ // Render summary cards
+ const changeClass = report.expenses.change <= 0 ? 'positive' : 'negative';
+ const changeIcon = report.expenses.change <= 0 ? '↓' : '↑';
 
-            document.getElementById('reportSummary').innerHTML = `
-                <div class="report-card">
-                    <div class="icon">💸</div>
-                    <div class="value" style="color: var(--color-credit);">${I18n.formatCurrency(report.expenses.total)}</div>
-                    <div class="label">${I18n.t('reports.totalExpenses')}</div>
-                    <div class="change ${changeClass}">
-                        ${changeIcon} ${Math.abs(report.expenses.changePercent).toFixed(1)}% ${I18n.t('reports.fromLastMonth')}
-                    </div>
-                </div>
-                <div class="report-card">
-                    <div class="icon">🧾</div>
-                    <div class="value">${report.expenses.count}</div>
-                    <div class="label">${I18n.t('reports.expenseCount')}</div>
-                </div>
-                <div class="report-card">
-                    <div class="icon">📅</div>
-                    <div class="value">${I18n.formatCurrency(report.expenses.avgPerDay)}</div>
-                    <div class="label">${I18n.t('reports.dailyAvg')}</div>
-                </div>
-                <div class="report-card">
-                    <div class="icon">🏦</div>
-                    <div class="value" style="color: ${report.bank.change >= 0 ? 'var(--color-positive)' : 'var(--color-negative)'};">
-                        ${report.bank.change >= 0 ? '+' : ''}${I18n.formatCurrency(report.bank.change)}
-                    </div>
-                    <div class="label">${I18n.t('reports.balanceChange')}</div>
-                </div>
-                <div class="report-card">
-                    <div class="icon">📈</div>
-                    <div class="value" style="color: ${report.stocks.profitLoss >= 0 ? 'var(--color-positive)' : 'var(--color-negative)'};">
-                        ${report.stocks.profitLoss >= 0 ? '+' : ''}${I18n.formatCurrency(report.stocks.profitLoss)}
-                    </div>
-                    <div class="label">${I18n.t('reports.stockProfitLoss')}</div>
-                </div>
-                <div class="report-card">
-                    <div class="icon">💰</div>
-                    <div class="value" style="color: var(--color-dashboard);">${I18n.formatCurrency(report.summary.netWorth)}</div>
-                    <div class="label">${I18n.t('reports.netWorth')}</div>
-                </div>
-            `;
+ document.getElementById('reportSummary').innerHTML = `
+ <div class="report-card">
+ <div class="icon">💸</div>
+ <div class="value" style="color: var(--color-credit);">${I18n.formatCurrency(report.expenses.total)}</div>
+ <div class="label">${I18n.t('reports.totalExpenses')}</div>
+ <div class="change ${changeClass}">
+ ${changeIcon} ${Math.abs(report.expenses.changePercent).toFixed(1)}% ${I18n.t('reports.fromLastMonth')}
+ </div>
+ </div>
+ <div class="report-card">
+ <div class="icon">🧾</div>
+ <div class="value">${report.expenses.count}</div>
+ <div class="label">${I18n.t('reports.expenseCount')}</div>
+ </div>
+ <div class="report-card">
+ <div class="icon">📅</div>
+ <div class="value">${I18n.formatCurrency(report.expenses.avgPerDay)}</div>
+ <div class="label">${I18n.t('reports.dailyAvg')}</div>
+ </div>
+ <div class="report-card">
+ <div class="icon">🏦</div>
+ <div class="value" style="color: ${report.bank.change >= 0 ? 'var(--color-positive)' : 'var(--color-negative)'};">
+ ${report.bank.change >= 0 ? '+' : ''}${I18n.formatCurrency(report.bank.change)}
+ </div>
+ <div class="label">${I18n.t('reports.balanceChange')}</div>
+ </div>
+ <div class="report-card">
+ <div class="icon">📈</div>
+ <div class="value" style="color: ${report.stocks.profitLoss >= 0 ? 'var(--color-positive)' : 'var(--color-negative)'};">
+ ${report.stocks.profitLoss >= 0 ? '+' : ''}${I18n.formatCurrency(report.stocks.profitLoss)}
+ </div>
+ <div class="label">${I18n.t('reports.stockProfitLoss')}</div>
+ </div>
+ <div class="report-card">
+ <div class="icon">💰</div>
+ <div class="value" style="color: var(--color-dashboard);">${I18n.formatCurrency(report.summary.netWorth)}</div>
+ <div class="label">${I18n.t('reports.netWorth')}</div>
+ </div>
+ `;
 
-            // Render category breakdown
-            const categoryColors = {
-                food: '#ef4444', transport: '#3b82f6', shopping: '#8b5cf6',
-                entertainment: '#f59e0b', bills: '#10b981', health: '#ec4899',
-                education: '#6366f1', other: '#6b7280'
-            };
+ // Render category breakdown
+ const categoryColors = {
+ food: '#ef4444', transport: '#3b82f6', shopping: '#8b5cf6',
+ entertainment: '#f59e0b', bills: '#10b981', health: '#ec4899',
+ education: '#6366f1', other: '#6b7280'
+ };
 
-            document.getElementById('categoryList').innerHTML = report.expenses.byCategory.map(cat => `
-                <li class="category-item">
-                    <div class="category-info">
-                        <span>${Tags.getCategoryIcon(cat.category)}</span>
-                        <span>${Tags.getCategoryName(cat.category)}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div class="category-bar">
-                            <div class="category-bar-fill" style="width: ${cat.percentage}%; background: ${categoryColors[cat.category] || '#6b7280'};"></div>
-                        </div>
-                        <span style="min-width: 80px; text-align: left;">${I18n.formatCurrency(cat.amount)}</span>
-                        <span style="color: var(--color-text-secondary); min-width: 50px;">${cat.percentage.toFixed(1)}%</span>
-                    </div>
-                </li>
-            `).join('') || `<li style="padding: 20px; text-align: center; color: var(--color-text-secondary);">${I18n.t('reports.noExpensesThisMonth')}</li>`;
+ document.getElementById('categoryList').innerHTML = report.expenses.byCategory.map(cat => `
+ <li class="category-item">
+ <div class="category-info">
+ <span>${Tags.getCategoryIcon(cat.category)}</span>
+ <span>${Tags.getCategoryName(cat.category)}</span>
+ </div>
+ <div style="display: flex; align-items: center; gap: 15px;">
+ <div class="category-bar">
+ <div class="category-bar-fill" style="width: ${cat.percentage}%; background: ${categoryColors[cat.category] || '#6b7280'};"></div>
+ </div>
+ <span style="min-width: 80px; text-align: left;">${I18n.formatCurrency(cat.amount)}</span>
+ <span style="color: var(--color-text-secondary); min-width: 50px;">${cat.percentage.toFixed(1)}%</span>
+ </div>
+ </li>
+ `).join('') || `<li style="padding: 20px; text-align: center; color: var(--color-text-secondary);">${I18n.t('reports.noExpensesThisMonth')}</li>`;
 
-            // Render top expenses
-            document.getElementById('topExpenses').innerHTML = report.expenses.topExpenses.map(exp => `
-                <div class="top-expense">
-                    <div>
-                        <strong>${exp.description || I18n.t('reports.noDescription')}</strong>
-                        <div style="font-size: 0.85rem; color: var(--color-text-secondary);">
-                            ${I18n.formatDate(exp.date)} • ${Tags.getCategoryName(exp.category)}
-                        </div>
-                    </div>
-                    <div style="font-weight: bold; color: var(--color-credit);">${I18n.formatCurrency(exp.amount)}</div>
-                </div>
-            `).join('') || `<p style="padding: 20px; text-align: center; color: var(--color-text-secondary);">${I18n.t('reports.noExpensesThisMonth')}</p>`;
+ // Render top expenses
+ document.getElementById('topExpenses').innerHTML = report.expenses.topExpenses.map(exp => `
+ <div class="top-expense">
+ <div>
+ <strong>${exp.description || I18n.t('reports.noDescription')}</strong>
+ <div style="font-size: 0.85rem; color: var(--color-text-secondary);">
+ ${I18n.formatDate(exp.date)} • ${Tags.getCategoryName(exp.category)}
+ </div>
+ </div>
+ <div style="font-weight: bold; color: var(--color-credit);">${I18n.formatCurrency(exp.amount)}</div>
+ </div>
+ `).join('') || `<p style="padding: 20px; text-align: center; color: var(--color-text-secondary);">${I18n.t('reports.noExpensesThisMonth')}</p>`;
 
-            // Update category pie chart
-            updateCategoryPieChart(report.expenses.byCategory);
-        }
+ // Update category pie chart
+ updateCategoryPieChart(report.expenses.byCategory);
+ }
 
-        function loadTrendCharts() {
-            // Expense trend chart
-            const trends = Reports.getExpenseTrends(6);
-            const ctx1 = document.getElementById('expenseTrendChart');
+ function loadTrendCharts() {
+ // Expense trend chart
+ const trends = Reports.getExpenseTrends(6);
+ const ctx1 = document.getElementById('expenseTrendChart');
 
-            if (expenseTrendChart) expenseTrendChart.destroy();
+ if (expenseTrendChart) expenseTrendChart.destroy();
 
-            expenseTrendChart = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: trends.map(t => t.label),
-                    datasets: [{
-                        label: I18n.t('reports.expenses'),
-                        data: trends.map(t => t.total),
-                        borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    ...Charts.defaultOptions,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#8892b0',
-                                callback: (value) => I18n.formatCurrency(value)
-                            },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        },
-                        x: {
-                            ticks: { color: '#8892b0' },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
+ expenseTrendChart = new Chart(ctx1, {
+ type: 'line',
+ data: {
+ labels: trends.map(t => t.label),
+ datasets: [{
+ label: I18n.t('reports.expenses'),
+ data: trends.map(t => t.total),
+ borderColor: '#ef4444',
+ backgroundColor: 'rgba(239, 68, 68, 0.1)',
+ fill: true,
+ tension: 0.3
+ }]
+ },
+ options: {
+ ...Charts.defaultOptions,
+ scales: {
+ y: {
+ beginAtZero: true,
+ ticks: {
+ color: '#8892b0',
+ callback: (value) => I18n.formatCurrency(value)
+ },
+ grid: { color: 'rgba(255,255,255,0.1)' }
+ },
+ x: {
+ ticks: { color: '#8892b0' },
+ grid: { display: false }
+ }
+ }
+ }
+ });
 
-            // Net worth chart
-            const netWorthHistory = Reports.getNetWorthHistory(6);
-            const ctx3 = document.getElementById('netWorthChart');
+ // Net worth chart
+ const netWorthHistory = Reports.getNetWorthHistory(6);
+ const ctx3 = document.getElementById('netWorthChart');
 
-            if (netWorthChart) netWorthChart.destroy();
+ if (netWorthChart) netWorthChart.destroy();
 
-            netWorthChart = new Chart(ctx3, {
-                type: 'line',
-                data: {
-                    labels: netWorthHistory.map(h => h.label),
-                    datasets: [{
-                        label: I18n.t('reports.bankBalance'),
-                        data: netWorthHistory.map(h => h.value),
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    ...Charts.defaultOptions,
-                    scales: {
-                        y: {
-                            ticks: {
-                                color: '#8892b0',
-                                callback: (value) => I18n.formatCurrency(value)
-                            },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        },
-                        x: {
-                            ticks: { color: '#8892b0' },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
+ netWorthChart = new Chart(ctx3, {
+ type: 'line',
+ data: {
+ labels: netWorthHistory.map(h => h.label),
+ datasets: [{
+ label: I18n.t('reports.bankBalance'),
+ data: netWorthHistory.map(h => h.value),
+ borderColor: '#10b981',
+ backgroundColor: 'rgba(16, 185, 129, 0.1)',
+ fill: true,
+ tension: 0.3
+ }]
+ },
+ options: {
+ ...Charts.defaultOptions,
+ scales: {
+ y: {
+ ticks: {
+ color: '#8892b0',
+ callback: (value) => I18n.formatCurrency(value)
+ },
+ grid: { color: 'rgba(255,255,255,0.1)' }
+ },
+ x: {
+ ticks: { color: '#8892b0' },
+ grid: { display: false }
+ }
+ }
+ }
+ });
+ }
 
-        function updateCategoryPieChart(categories) {
-            const ctx = document.getElementById('categoryPieChart');
-            const categoryColors = {
-                food: '#ef4444', transport: '#3b82f6', shopping: '#8b5cf6',
-                entertainment: '#f59e0b', bills: '#10b981', health: '#ec4899',
-                education: '#6366f1', other: '#6b7280'
-            };
+ function updateCategoryPieChart(categories) {
+ const ctx = document.getElementById('categoryPieChart');
+ const categoryColors = {
+ food: '#ef4444', transport: '#3b82f6', shopping: '#8b5cf6',
+ entertainment: '#f59e0b', bills: '#10b981', health: '#ec4899',
+ education: '#6366f1', other: '#6b7280'
+ };
 
-            if (categoryPieChart) categoryPieChart.destroy();
+ if (categoryPieChart) categoryPieChart.destroy();
 
-            if (categories.length === 0) {
-                ctx.parentElement.innerHTML = `<p style="text-align: center; padding: 40px; color: var(--color-text-secondary);">${I18n.t('reports.noDataToShow')}</p>`;
-                return;
-            }
+ if (categories.length === 0) {
+ ctx.parentElement.innerHTML = `<p style="text-align: center; padding: 40px; color: var(--color-text-secondary);">${I18n.t('reports.noDataToShow')}</p>`;
+ return;
+ }
 
-            categoryPieChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: categories.map(c => Tags.getCategoryName(c.category)),
-                    datasets: [{
-                        data: categories.map(c => c.amount),
-                        backgroundColor: categories.map(c => categoryColors[c.category] || '#6b7280'),
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    ...Charts.defaultOptions,
-                    cutout: '50%',
-                    plugins: {
-                        ...Charts.defaultOptions.plugins,
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => {
-                                    const value = context.raw;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${context.label}: ${I18n.formatCurrency(value)} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+ categoryPieChart = new Chart(ctx, {
+ type: 'doughnut',
+ data: {
+ labels: categories.map(c => Tags.getCategoryName(c.category)),
+ datasets: [{
+ data: categories.map(c => c.amount),
+ backgroundColor: categories.map(c => categoryColors[c.category] || '#6b7280'),
+ borderWidth: 0
+ }]
+ },
+ options: {
+ ...Charts.defaultOptions,
+ cutout: '50%',
+ plugins: {
+ ...Charts.defaultOptions.plugins,
+ tooltip: {
+ callbacks: {
+ label: (context) => {
+ const value = context.raw;
+ const total = context.dataset.data.reduce((a, b) => a + b, 0);
+ const percentage = ((value / total) * 100).toFixed(1);
+ return `${context.label}: ${I18n.formatCurrency(value)} (${percentage}%)`;
+ }
+ }
+ }
+ }
+ }
+ });
+ }
 
-        // Feature 7: Expense Analysis
-        function loadExpenseAnalysis() {
-            const analysis = Reports.getExpenseAnalysis(12);
-            const container = document.getElementById('expenseAnalysis');
-            const unusualContainer = document.getElementById('unusualExpenses');
-            const unusualCard = document.getElementById('unusualExpensesCard');
+ // Feature 7: Expense Analysis
+ function loadExpenseAnalysis() {
+ const analysis = Reports.getExpenseAnalysis(12);
+ const container = document.getElementById('expenseAnalysis');
+ const unusualContainer = document.getElementById('unusualExpenses');
+ const unusualCard = document.getElementById('unusualExpensesCard');
 
-            if (!analysis.hasData) {
-                container.innerHTML = `<p style="text-align: center; padding: 20px; color: var(--color-text-secondary);">${I18n.t('reports.notEnoughData')}</p>`;
-                unusualCard.style.display = 'none';
-                return;
-            }
+ if (!analysis.hasData) {
+ container.innerHTML = `<p style="text-align: center; padding: 20px; color: var(--color-text-secondary);">${I18n.t('reports.notEnoughData')}</p>`;
+ unusualCard.style.display = 'none';
+ return;
+ }
 
-            // Trend indicator
-            const trendClass = analysis.trend.direction === 'increasing' ? 'trend-up' :
-                               analysis.trend.direction === 'decreasing' ? 'trend-down' : 'trend-stable';
-            const trendIcon = analysis.trend.direction === 'increasing' ? '📈' :
-                              analysis.trend.direction === 'decreasing' ? '📉' : '➡️';
-            const trendText = analysis.trend.direction === 'increasing' ? I18n.t('reports.trendIncreasing') :
-                              analysis.trend.direction === 'decreasing' ? I18n.t('reports.trendDecreasing') : I18n.t('reports.trendStable');
+ // Trend indicator
+ const trendClass = analysis.trend.direction === 'increasing' ? 'trend-up' :
+ analysis.trend.direction === 'decreasing' ? 'trend-down' : 'trend-stable';
+ const trendIcon = analysis.trend.direction === 'increasing' ? '📈' :
+ analysis.trend.direction === 'decreasing' ? '📉' : '➡️';
+ const trendText = analysis.trend.direction === 'increasing' ? I18n.t('reports.trendIncreasing') :
+ analysis.trend.direction === 'decreasing' ? I18n.t('reports.trendDecreasing') : I18n.t('reports.trendStable');
 
-            // Main stats
-            container.innerHTML = `
-                <div class="analysis-grid">
-                    <div class="analysis-stat">
-                        <div class="label">${I18n.t('reports.totalPeriod').replace('{months}', analysis.period.months)}</div>
-                        <div class="value">${I18n.formatCurrency(analysis.totals.total)}</div>
-                    </div>
-                    <div class="analysis-stat">
-                        <div class="label">${I18n.t('reports.monthlyAverage')}</div>
-                        <div class="value">${I18n.formatCurrency(analysis.totals.average)}</div>
-                    </div>
-                    <div class="analysis-stat">
-                        <div class="label">${I18n.t('reports.trend')}</div>
-                        <div class="value">
-                            <span class="trend-indicator ${trendClass}">
-                                ${trendIcon} ${trendText}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="analysis-stat">
-                        <div class="label">${I18n.t('reports.monthlyChange')}</div>
-                        <div class="value" style="color: ${analysis.trend.monthlyChange > 0 ? 'var(--color-negative)' : 'var(--color-positive)'};">
-                            ${analysis.trend.monthlyChange > 0 ? '+' : ''}${I18n.formatCurrency(analysis.trend.monthlyChange)}
-                        </div>
-                    </div>
-                </div>
+ // Main stats
+ container.innerHTML = `
+ <div class="analysis-grid">
+ <div class="analysis-stat">
+ <div class="label">${I18n.t('reports.totalPeriod').replace('{months}', analysis.period.months)}</div>
+ <div class="value">${I18n.formatCurrency(analysis.totals.total)}</div>
+ </div>
+ <div class="analysis-stat">
+ <div class="label">${I18n.t('reports.monthlyAverage')}</div>
+ <div class="value">${I18n.formatCurrency(analysis.totals.average)}</div>
+ </div>
+ <div class="analysis-stat">
+ <div class="label">${I18n.t('reports.trend')}</div>
+ <div class="value">
+ <span class="trend-indicator ${trendClass}">
+ ${trendIcon} ${trendText}
+ </span>
+ </div>
+ </div>
+ <div class="analysis-stat">
+ <div class="label">${I18n.t('reports.monthlyChange')}</div>
+ <div class="value" style="color: ${analysis.trend.monthlyChange > 0 ? 'var(--color-negative)' : 'var(--color-positive)'};">
+ ${analysis.trend.monthlyChange > 0 ? '+' : ''}${I18n.formatCurrency(analysis.trend.monthlyChange)}
+ </div>
+ </div>
+ </div>
 
-                <div style="margin-top: 20px;">
-                    <h4 style="margin-bottom: 10px;">📅 ${I18n.t('reports.yearlyComparison')}</h4>
-                    <div class="yoy-comparison">
-                        <div class="yoy-item">
-                            <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${I18n.t('reports.thisYear')}</div>
-                            <div style="font-size: 1.2rem; font-weight: bold;">${I18n.formatCurrency(analysis.yearOverYear.thisYear)}</div>
-                        </div>
-                        <div class="yoy-item">
-                            <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${I18n.t('reports.lastYear')}</div>
-                            <div style="font-size: 1.2rem; font-weight: bold;">${I18n.formatCurrency(analysis.yearOverYear.lastYear)}</div>
-                        </div>
-                        <div class="yoy-item">
-                            <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${I18n.t('reports.change')}</div>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: ${analysis.yearOverYear.change > 0 ? 'var(--color-negative)' : 'var(--color-positive)'};">
-                                ${analysis.yearOverYear.change > 0 ? '+' : ''}${analysis.yearOverYear.changePercent.toFixed(1)}%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+ <div style="margin-top: 20px;">
+ <h4 style="margin-bottom: 10px;">📅 ${I18n.t('reports.yearlyComparison')}</h4>
+ <div class="yoy-comparison">
+ <div class="yoy-item">
+ <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${I18n.t('reports.thisYear')}</div>
+ <div style="font-size: 1.2rem; font-weight: bold;">${I18n.formatCurrency(analysis.yearOverYear.thisYear)}</div>
+ </div>
+ <div class="yoy-item">
+ <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${I18n.t('reports.lastYear')}</div>
+ <div style="font-size: 1.2rem; font-weight: bold;">${I18n.formatCurrency(analysis.yearOverYear.lastYear)}</div>
+ </div>
+ <div class="yoy-item">
+ <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${I18n.t('reports.change')}</div>
+ <div style="font-size: 1.2rem; font-weight: bold; color: ${analysis.yearOverYear.change > 0 ? 'var(--color-negative)' : 'var(--color-positive)'};">
+ ${analysis.yearOverYear.change > 0 ? '+' : ''}${analysis.yearOverYear.changePercent.toFixed(1)}%
+ </div>
+ </div>
+ </div>
+ </div>
+ `;
 
-            // Unusual expenses
-            if (analysis.unusualExpenses.length > 0) {
-                unusualCard.style.display = 'block';
-                unusualContainer.innerHTML = analysis.unusualExpenses.slice(0, 5).map(exp => `
-                    <div class="unusual-item">
-                        <div class="unusual-info">
-                            <div><strong>${exp.description || I18n.t('reports.noDescription')}</strong></div>
-                            <div style="font-size: 0.85rem; color: var(--color-text-secondary);">
-                                ${I18n.formatDate(exp.date)} • ${Tags.getCategoryName(exp.category)}
-                            </div>
-                            <div class="unusual-deviation">
-                                ${I18n.t('reports.categoryAverage')}: ${I18n.formatCurrency(exp.mean)} | ${I18n.t('reports.deviation')}: +${exp.deviationPercent.toFixed(0)}%
-                            </div>
-                        </div>
-                        <div class="unusual-amount">${I18n.formatCurrency(exp.amount)}</div>
-                    </div>
-                `).join('');
-            } else {
-                unusualCard.style.display = 'none';
-            }
+ // Unusual expenses
+ if (analysis.unusualExpenses.length > 0) {
+ unusualCard.style.display = 'block';
+ unusualContainer.innerHTML = analysis.unusualExpenses.slice(0, 5).map(exp => `
+ <div class="unusual-item">
+ <div class="unusual-info">
+ <div><strong>${exp.description || I18n.t('reports.noDescription')}</strong></div>
+ <div style="font-size: 0.85rem; color: var(--color-text-secondary);">
+ ${I18n.formatDate(exp.date)} • ${Tags.getCategoryName(exp.category)}
+ </div>
+ <div class="unusual-deviation">
+ ${I18n.t('reports.categoryAverage')}: ${I18n.formatCurrency(exp.mean)} | ${I18n.t('reports.deviation')}: +${exp.deviationPercent.toFixed(0)}%
+ </div>
+ </div>
+ <div class="unusual-amount">${I18n.formatCurrency(exp.amount)}</div>
+ </div>
+ `).join('');
+ } else {
+ unusualCard.style.display = 'none';
+ }
 
-            // Expense analysis chart (12 months trend)
-            const ctx = document.getElementById('expenseAnalysisChart');
-            if (expenseAnalysisChart) expenseAnalysisChart.destroy();
+ // Expense analysis chart (12 months trend)
+ const ctx = document.getElementById('expenseAnalysisChart');
+ if (expenseAnalysisChart) expenseAnalysisChart.destroy();
 
-            expenseAnalysisChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: analysis.monthlyData.map(d => d.label),
-                    datasets: [{
-                        label: I18n.t('reports.expenses'),
-                        data: analysis.monthlyData.map(d => d.total),
-                        backgroundColor: analysis.monthlyData.map(d =>
-                            d.total > analysis.totals.average * 1.2 ? 'rgba(239, 68, 68, 0.7)' :
-                            d.total < analysis.totals.average * 0.8 ? 'rgba(16, 185, 129, 0.7)' :
-                            'rgba(99, 102, 241, 0.7)'
-                        ),
-                        borderRadius: 6
-                    }, {
-                        label: I18n.t('reports.average'),
-                        data: analysis.monthlyData.map(() => analysis.totals.average),
-                        type: 'line',
-                        borderColor: '#f59e0b',
-                        borderDash: [5, 5],
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        fill: false
-                    }]
-                },
-                options: {
-                    ...Charts.defaultOptions,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#8892b0',
-                                callback: (value) => I18n.formatCurrency(value)
-                            },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        },
-                        x: {
-                            ticks: { color: '#8892b0' },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
-    </script>
+ expenseAnalysisChart = new Chart(ctx, {
+ type: 'bar',
+ data: {
+ labels: analysis.monthlyData.map(d => d.label),
+ datasets: [{
+ label: I18n.t('reports.expenses'),
+ data: analysis.monthlyData.map(d => d.total),
+ backgroundColor: analysis.monthlyData.map(d =>
+ d.total > analysis.totals.average * 1.2 ? 'rgba(239, 68, 68, 0.7)' :
+ d.total < analysis.totals.average * 0.8 ? 'rgba(16, 185, 129, 0.7)' :
+ 'rgba(99, 102, 241, 0.7)'
+ ),
+ borderRadius: 6
+ }, {
+ label: I18n.t('reports.average'),
+ data: analysis.monthlyData.map(() => analysis.totals.average),
+ type: 'line',
+ borderColor: '#f59e0b',
+ borderDash: [5, 5],
+ borderWidth: 2,
+ pointRadius: 0,
+ fill: false
+ }]
+ },
+ options: {
+ ...Charts.defaultOptions,
+ scales: {
+ y: {
+ beginAtZero: true,
+ ticks: {
+ color: '#8892b0',
+ callback: (value) => I18n.formatCurrency(value)
+ },
+ grid: { color: 'rgba(255,255,255,0.1)' }
+ },
+ x: {
+ ticks: { color: '#8892b0' },
+ grid: { display: false }
+ }
+ }
+ }
+ });
+ }
+ </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
 <script src="../js/wl-text-i18n.js?v=2" defer></script>
 </body>
