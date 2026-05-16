@@ -26,6 +26,13 @@ service cloud.firestore {
         allow read, write: if isOwner(userId);
       }
 
+      // Check Deal (WizeDeal) — owner-only saved deals.
+      // Path: /users/{uid}/checkdeal_deals/{dealId}. Added 2026-05-15 during
+      // Supabase → Firebase migration. Server (Admin SDK) is unaffected.
+      match /checkdeal_deals/{dealId} {
+        allow read, write: if isOwner(userId);
+      }
+
       // Cross-app derived data — Cloud Functions (admin) only
       match /cross_app/{appId} {
         allow read:  if isOwner(userId);
@@ -58,6 +65,17 @@ service cloud.firestore {
                       && (request.resource.data.ua is string && request.resource.data.ua.size() <= 240);
         allow update, delete: if false;
       }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Check Deal — shared deal links. Anyone with the URL token can READ.
+    // Client write/update/delete are blocked — only the Next.js API routes
+    // (using the Admin SDK) may create or modify shared deals. Added
+    // 2026-05-15 during the Supabase → Firebase migration.
+    // ─────────────────────────────────────────────────────────────────────
+    match /shared_deals/{token} {
+      allow read:                 if true;
+      allow create, update, delete: if false;
     }
 
     // ─────────────────────────────────────────────────────────────────────
