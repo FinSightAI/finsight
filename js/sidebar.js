@@ -359,7 +359,7 @@
  ).join('');
  bar.innerHTML =
  '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
- '<img src="https://wizelife.ai/assets/wizelife-icon.png?v=2026-05-14" width="20" height="20" alt="" style="flex-shrink:0;display:block;height:1em;width:auto">' +
+ '<img src="https://wizelife.ai/assets/wizelife-icon.png?v=2026-05-14" width="20" height="20" alt="" style="flex-shrink:0;display:block">' +
  '<span style="font-size:13px;font-weight:800;color:#eef2ff;letter-spacing:-0.3px;font-family:Plus Jakarta Sans,sans-serif;">WizeLife</span>' +
  '</a>' +
  '<div style="display:flex;align-items:center;gap:10px;">' +
