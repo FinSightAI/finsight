@@ -1,0 +1,17 @@
+{
+  "name": "wize-firestore-rules-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unit tests for Firestore Security Rules. Runs in emulator only; never touches prod.",
+  "scripts": {
+    "test": "jest --runInBand --detectOpenHandles --forceExit"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 10000
+  }
+}
