@@ -186,8 +186,9 @@
  const subActive = item.submenu.some(s => currentFile === s.file.split('/').pop());
  const subItems = item.submenu.filter(s => !s.market || localStorage.getItem('wl_market') === s.market).map(s => {
  const a = subActive && currentFile === s.file.split('/').pop() ? ' active' : '';
- const lockAttr = s.pro ? ` data-pro="${s.proKey}"` : '';
- const lockBadge = s.pro ? ' <span class="pro-lock">Pro</span>' : '';
+ const _showProBadgeSub = (typeof Plan !== 'undefined' && Plan.isPaywallActive && Plan.isPaywallActive());
+ const lockAttr = (s.pro && _showProBadgeSub) ? ` data-pro="${s.proKey}"` : '';
+ const lockBadge = (s.pro && _showProBadgeSub) ? ' <span class="pro-lock">Pro</span>' : '';
  const i18nAttr = s.i18n ? ` data-i18n="${s.i18n}"` : '';
  return `<li class="nav-item"><a href="${s.file}" class="nav-link${a}"${lockAttr} data-category="${s.category}"><span class="icon">${getIcon(s)}</span><span${i18nAttr}>${s.label}</span>${lockBadge}</a></li>`;
  }).join('');
