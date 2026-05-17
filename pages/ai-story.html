@@ -240,12 +240,13 @@
  <main class="main-content">
  <div class="story-container">
 
- <!-- Login required (shown when not authenticated) -->
- <div class="api-setup" id="apiSetup" style="display:none">
+ <!-- Login required (shown by default until auth resolves; hidden if user is signed in) -->
+ <div class="api-setup" id="apiSetup">
  <div style="font-size:3rem;margin-bottom:16px">🔒</div>
- <h2>התחבר לחשבון</h2>
- <p style="color:var(--color-text-secondary);">יש להתחבר לחשבון FinSight כדי להשתמש בסיפור ה-AI.</p>
- <p style="color:var(--color-text-secondary);font-size:0.85rem;">לחץ על "התחבר" בתפריט הצד.</p>
+ <h2 data-i18n="aiStory.loginTitle">התחבר לחשבון</h2>
+ <p style="color:var(--color-text-secondary);" data-i18n="aiStory.loginBody">יש להתחבר לחשבון FinSight כדי להשתמש בסיפור ה-AI.</p>
+ <p style="color:var(--color-text-secondary);font-size:0.85rem;" data-i18n="aiStory.loginHint">לחץ על "התחבר" בתפריט הצד.</p>
+ <p style="margin-top:18px"><a href="../auth.html" style="display:inline-block;padding:10px 22px;background:linear-gradient(135deg,var(--color-primary),#8b5cf6);color:#fff;border-radius:10px;font-weight:600;text-decoration:none" data-i18n="aiStory.loginCta">התחבר עכשיו</a></p>
  </div>
 
  <!-- Main UI -->
