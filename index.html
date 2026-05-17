@@ -92,11 +92,11 @@
  <!-- Summary Sender Banner -->
  <div id="summarySenderBanner">
  <span class="banner-icon">📤</span>
- <span class="banner-text">הגיע הזמן לשלוח את הסיכום הפיננסי שלך</span>
+ <span class="banner-text" data-i18n="summary_banner">Time to share your financial summary</span>
  <div class="banner-actions">
- <button class="btn btn-sm" style="background:white;color:#059669;font-weight:600;" onclick="SummarySender.shareWhatsApp()">💬 שתף בוואטסאפ</button>
- <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;" onclick="SummarySender.showPreviewModal()">👁 תצוגה מקדימה</button>
- <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);" onclick="SummarySender.dismissBanner()">אחר כך</button>
+ <button class="btn btn-sm" style="background:white;color:#059669;font-weight:600;" onclick="SummarySender.shareWhatsApp()" data-i18n="share_whatsapp">💬 Share on WhatsApp</button>
+ <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;" onclick="SummarySender.showPreviewModal()" data-i18n="preview">👁 Preview</button>
+ <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);" onclick="SummarySender.dismissBanner()" data-i18n="later">Later</button>
  </div>
  </div>
 
@@ -104,15 +104,15 @@
  <div id="summaryPreviewModal">
  <div class="modal">
  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
- <h3>📊 סיכום פיננסי</h3>
+ <h3 data-i18n="financial_summary">📊 Financial Summary</h3>
  <button class="modal-close" onclick="SummarySender.closeModal()" style="background:none;border:none;color:var(--color-text-secondary);font-size:1.5rem;cursor:pointer;">&times;</button>
  </div>
  <pre id="summaryPreviewText"></pre>
  <div class="summary-share-btns">
  <button id="summaryShareWhatsApp" class="btn btn-primary">💬 WhatsApp</button>
- <button id="summaryShareEmail" class="btn btn-secondary">📧 מייל</button>
- <button id="summaryShareNative" class="btn btn-secondary" style="display:none;">↑ שתף</button>
- <button id="summaryCopyBtn" class="btn btn-secondary">📋 העתק</button>
+ <button id="summaryShareEmail" class="btn btn-secondary" data-i18n="email">📧 Email</button>
+ <button id="summaryShareNative" class="btn btn-secondary" style="display:none;" data-i18n="share">↑ Share</button>
+ <button id="summaryCopyBtn" class="btn btn-secondary" data-i18n="copy">📋 Copy</button>
  </div>
  </div>
  </div>
