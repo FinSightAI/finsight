@@ -43,17 +43,25 @@ const Plan = (() => {
         const normalized = code.trim().toUpperCase();
         if (!normalized) return false;
         try {
-            const fn = firebase.functions().httpsCallable("validateCode");
+            // Lazy-load firebase-functions-compat on landing pages
+            const functionsInstance = (typeof window.ensureFunctions === 'function')
+                ? await window.ensureFunctions()
+                : firebase.functions();
+            const fn = functionsInstance.httpsCallable("validateCode");
             const result = await fn({ code: normalized });
             if (result.data.valid) {
                 _plan = result.data.plan || "pro";
                 localStorage.setItem("wl_plan", _plan);
                 localStorage.setItem("wl_access_code", normalized);
+                // Lazy-load firebase-firestore-compat on landing pages
+                if (typeof window.ensureFirestore === 'function') {
+                    try { await window.ensureFirestore(); } catch (e) {}
+                }
                 // Save to Firestore so it persists across devices/browsers
                 try {
-                    if (typeof firebaseAuth !== "undefined" && firebaseAuth.currentUser) {
+                    if (typeof firebaseAuth !== "undefined" && firebaseAuth.currentUser && window.firebaseDb) {
                         const _uid = firebaseAuth.currentUser.uid;
-                        await firebaseDb.collection("users").doc(_uid).set({
+                        await window.firebaseDb.collection("users").doc(_uid).set({
                             plan: _plan,
                             accessCode: normalized,
                             accessCodeRedeemedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -63,16 +71,16 @@ const Plan = (() => {
                         // is not loaded inside individual app pages.
                         try {
                             if (["pro","yolo"].includes(_plan)) {
-                                const _udoc = await firebaseDb.collection("users").doc(_uid).get();
+                                const _udoc = await window.firebaseDb.collection("users").doc(_uid).get();
                                 const _u = _udoc.exists ? _udoc.data() : {};
                                 if (_u.referredBy && !_u.referralRewardSent) {
-                                    await firebaseDb.collection("users").doc(_u.referredBy).set({
+                                    await window.firebaseDb.collection("users").doc(_u.referredBy).set({
                                         referralRewards: firebase.firestore.FieldValue.arrayUnion({
                                             tier: _plan, days: 30, from: _uid, ts: Date.now(),
                                         }),
                                         referralCount: firebase.firestore.FieldValue.increment(1),
                                     }, { merge: true });
-                                    await firebaseDb.collection("users").doc(_uid).set({ referralRewardSent: true }, { merge: true });
+                                    await window.firebaseDb.collection("users").doc(_uid).set({ referralRewardSent: true }, { merge: true });
                                 }
                             }
                         } catch (e) { console.warn("Referral reward failed:", e); }

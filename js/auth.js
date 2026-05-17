@@ -20,6 +20,10 @@ const Auth = {
             this.updateUI();
 
             if (user) {
+                // Lazy-load firestore-compat if needed (landing pages defer this lib)
+                if (typeof window.ensureFirestore === 'function') {
+                    try { await window.ensureFirestore(); } catch (e) {}
+                }
                 // Sync data from cloud on login
                 await this.syncFromCloud();
                 // Push aggregated context to Firestore for WizeAI
@@ -129,9 +133,13 @@ const Auth = {
     async signInWithGoogle() {
         try {
             const result = await firebaseAuth.signInWithPopup(googleProvider);
+            // Ensure firestore-compat is loaded (lazy on landing pages)
+            if (typeof window.ensureFirestore === 'function') {
+                try { await window.ensureFirestore(); } catch (e) {}
+            }
             // First-time Google sign-in: create user doc with trial start
-            if (typeof firebaseDb !== 'undefined') {
-                const ref = firebaseDb.collection('users').doc(result.user.uid);
+            if (window.firebaseDb) {
+                const ref = window.firebaseDb.collection('users').doc(result.user.uid);
                 const doc = await ref.get();
                 if (!doc.exists) {
                     await ref.set({
@@ -185,9 +193,13 @@ const Auth = {
     async registerWithEmail(email, password) {
         try {
             const result = await firebaseAuth.createUserWithEmailAndPassword(email, password);
+            // Ensure firestore-compat is loaded (lazy on landing pages)
+            if (typeof window.ensureFirestore === 'function') {
+                try { await window.ensureFirestore(); } catch (e) {}
+            }
             // Create user doc with trial start timestamp
-            if (typeof firebaseDb !== 'undefined') {
-                await firebaseDb.collection('users').doc(result.user.uid).set({
+            if (window.firebaseDb) {
+                await window.firebaseDb.collection('users').doc(result.user.uid).set({
                     plan: 'free',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
@@ -504,6 +516,12 @@ const Auth = {
             return false;
         }
 
+        // Ensure firestore-compat is loaded (lazy on landing pages)
+        if (typeof window.ensureFirestore === 'function') {
+            try { await window.ensureFirestore(); } catch (e) {}
+        }
+        if (!window.firebaseDb) return false;
+
         try {
             const userId = this.currentUser.uid;
             const sensitiveData = {
@@ -569,7 +587,7 @@ const Auth = {
                 };
             }
 
-            await firebaseDb.collection('users').doc(userId).set(data, { merge: false });
+            await window.firebaseDb.collection('users').doc(userId).set(data, { merge: false });
 
             // Update sync status
             const syncStatus = document.getElementById('syncStatus');
@@ -625,9 +643,15 @@ const Auth = {
             return true;
         }
 
+        // Ensure firestore-compat is loaded (lazy on landing pages)
+        if (typeof window.ensureFirestore === 'function') {
+            try { await window.ensureFirestore(); } catch (e) {}
+        }
+        if (!window.firebaseDb) return false;
+
         try {
             const userId = this.currentUser.uid;
-            const doc = await firebaseDb.collection('users').doc(userId).get();
+            const doc = await window.firebaseDb.collection('users').doc(userId).get();
 
             if (doc.exists) {
                 const rawData = doc.data();
@@ -821,9 +845,14 @@ const Auth = {
         if (!confirm(I18n.t('auth.deleteConfirm2'))) return;
 
         try {
-            // Delete from Firestore
+            // Delete from Firestore — ensure firestore-compat is loaded (lazy on landing)
             if (this.currentUser) {
-                await firebaseDb.collection('users').doc(this.currentUser.uid).delete();
+                if (typeof window.ensureFirestore === 'function') {
+                    try { await window.ensureFirestore(); } catch (e) {}
+                }
+                if (window.firebaseDb) {
+                    await window.firebaseDb.collection('users').doc(this.currentUser.uid).delete();
+                }
             }
 
             // Delete from localStorage

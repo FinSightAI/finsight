@@ -35,12 +35,38 @@
  <link rel="manifest" href="manifest.json">
  <title>WizeMoney - ניהול פיננסי חכם</title>
  <link rel="stylesheet" href="css/app.css">
- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
- <!-- Firebase SDK -->
+ <!-- Lazy-loader for heavy Firebase libs (firestore ~600KB, functions ~30KB).
+      Removes ~630KB from the critical render path on the landing page.
+      Loaded synchronously so call sites can `await window._wlLazy.firestore()`. -->
+ <script>
+ window._wlLazy = {
+   _loaded: {},
+   load(src, integrity) {
+     if (this._loaded[src]) return this._loaded[src];
+     return this._loaded[src] = new Promise((resolve, reject) => {
+       const s = document.createElement('script');
+       s.src = src;
+       if (integrity) { s.integrity = integrity; s.crossOrigin = 'anonymous'; }
+       s.onload = resolve; s.onerror = reject;
+       document.head.appendChild(s);
+     });
+   },
+   async firestore() {
+     await this.load('https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js',
+       'sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3');
+     return firebase.firestore();
+   },
+   async functions() {
+     await this.load('https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js',
+       'sha384-lONBStWloxmdvtJe8gp4aEOmE9dluTdSdGA5pUHFYPBMJRUDDPSdbq32bb0Spi3v');
+     return firebase.functions();
+   },
+ };
+ </script>
+ <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
+ <!-- Firebase SDK — firestore + functions are lazy-loaded via window._wlLazy. -->
  <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
  <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
- <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
- <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js" integrity="sha384-lONBStWloxmdvtJe8gp4aEOmE9dluTdSdGA5pUHFYPBMJRUDDPSdbq32bb0Spi3v" crossorigin="anonymous"></script>
 </head>
 <body>
  <div class="app-container">

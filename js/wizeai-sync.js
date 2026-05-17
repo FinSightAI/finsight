@@ -20,6 +20,12 @@ const WizeAISync = {
         const lastSync = parseInt(localStorage.getItem('wizeai_last_sync') || '0');
         if (Date.now() - lastSync < this.THROTTLE_MS) return;
 
+        // Lazy-load firestore-compat on landing pages (perf: ~600KB off critical path)
+        if (typeof window.ensureFirestore === 'function') {
+            try { await window.ensureFirestore(); } catch (e) { return; }
+        }
+        if (typeof firebase.firestore !== 'function') return;
+
         try {
             const now = new Date();
             const monthStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
