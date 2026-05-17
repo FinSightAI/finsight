@@ -1428,6 +1428,18 @@ const I18n = {
                 rights: '© 2026 FinSight · Part of WizeLife',
                 disclaimer: 'כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.'
             },
+            trust: {
+                strip: '🔒 הצפנה ברמת בנק · לעולם לא נמכר · אפשר למחוק בכל רגע',
+                securityLink: '🔒 איך אנחנו שומרים על המידע שלך',
+                hosting: '🇺🇸 מאוחסן ב-Firebase (us-central) · GDPR + הגנת הפרטיות הישראלית',
+                bugBounty: '🐛 מצאת בעיית אבטחה? תוכנית באג-באונטי ←',
+                openSource: '📖 קוד פתוח ב-GitHub →',
+                aiNotice: '🤖 ה-AI מקבל את הנתונים שלך ללא שם, מייל או מזהים אישיים (PII scrubber פעיל)',
+                whyAskIncome: 'כדי לחשב חיסכון פנסיוני אמיתי. הנתון נשמר רק אצלך — לעולם לא נמכר.',
+                whyAskBank: 'כדי להציג את היתרה בדאשבורד. אנחנו לא מתחברים לבנק שלך — אתה מזין ידנית.',
+                whyAskCredit: 'כדי לעקוב אחר הוצאות. אנחנו לא שומרים את מספר הכרטיס המלא.',
+                whyAskProfile: 'כדי להתאים אישית. הנתונים נשמרים בענן Firebase, מוצפנים ב-AES-256.'
+            },
             income: {
                 title: 'הכנסות',
                 pageTitle: 'הכנסות - WizeMoney',
@@ -3208,6 +3220,18 @@ const I18n = {
                 rights: '© 2026 FinSight · Part of WizeLife',
                 disclaimer: 'All content is provided for informational purposes only and does not constitute financial advice.'
             },
+            trust: {
+                strip: '🔒 Bank-level encryption · Never sold · Delete anytime',
+                securityLink: '🔒 How we protect your data',
+                hosting: '🇺🇸 Hosted on Firebase (us-central) · GDPR + Israeli Privacy Law',
+                bugBounty: '🐛 Found a security bug? See our Bug Bounty →',
+                openSource: '📖 Open source on GitHub →',
+                aiNotice: '🤖 The AI receives your data with no name, email, or personal identifiers (PII scrubber active)',
+                whyAskIncome: 'So we can compute real pension savings. Data stays with you — never sold.',
+                whyAskBank: 'So we can show the balance on your dashboard. We do not connect to your bank — you enter manually.',
+                whyAskCredit: 'So we can track spending. We never store your full card number.',
+                whyAskProfile: 'So we can personalize. Data lives in Firebase, encrypted with AES-256.'
+            },
             income: {
                 title: 'Income',
                 pageTitle: 'Income - WizeMoney',
@@ -4273,6 +4297,18 @@ const I18n = {
             footer: {
                 rights: '© 2026 FinSight · Part of WizeLife',
                 disclaimer: 'Todo o conteúdo é fornecido apenas para fins informativos e não constitui aconselhamento financeiro.'
+            },
+            trust: {
+                strip: '🔒 Criptografia nível bancário · Nunca vendido · Apague quando quiser',
+                securityLink: '🔒 Como protegemos seus dados',
+                hosting: '🇺🇸 Hospedado no Firebase (us-central) · GDPR + Lei de Privacidade de Israel',
+                bugBounty: '🐛 Encontrou um bug de segurança? Veja nosso Bug Bounty →',
+                openSource: '📖 Código aberto no GitHub →',
+                aiNotice: '🤖 A IA recebe seus dados sem nome, e-mail ou identificadores pessoais (PII scrubber ativo)',
+                whyAskIncome: 'Para calcular a poupança real para aposentadoria. O dado fica só com você — nunca é vendido.',
+                whyAskBank: 'Para mostrar o saldo no painel. Não nos conectamos ao seu banco — você insere manualmente.',
+                whyAskCredit: 'Para acompanhar despesas. Nunca armazenamos o número completo do cartão.',
+                whyAskProfile: 'Para personalizar. Os dados ficam no Firebase, criptografados em AES-256.'
             },
             income: {
                 title: 'Receitas',
@@ -5353,6 +5389,18 @@ const I18n = {
             footer: {
                 rights: '© 2026 FinSight · Part of WizeLife',
                 disclaimer: 'Todo el contenido se proporciona únicamente con fines informativos y no constituye asesoramiento financiero.'
+            },
+            trust: {
+                strip: '🔒 Cifrado a nivel bancario · Nunca vendido · Elimina cuando quieras',
+                securityLink: '🔒 Cómo protegemos tus datos',
+                hosting: '🇺🇸 Alojado en Firebase (us-central) · GDPR + Ley Israelí de Privacidad',
+                bugBounty: '🐛 ¿Encontraste un bug de seguridad? Mira nuestro Bug Bounty →',
+                openSource: '📖 Código abierto en GitHub →',
+                aiNotice: '🤖 La IA recibe tus datos sin nombre, correo ni identificadores personales (PII scrubber activo)',
+                whyAskIncome: 'Para calcular el ahorro real para jubilación. El dato queda contigo — nunca se vende.',
+                whyAskBank: 'Para mostrar el saldo en el panel. No nos conectamos a tu banco — lo ingresas manualmente.',
+                whyAskCredit: 'Para hacer seguimiento de gastos. Nunca guardamos el número completo de la tarjeta.',
+                whyAskProfile: 'Para personalizar. Los datos viven en Firebase, cifrados con AES-256.'
             },
             income: {
                 title: 'Ingresos',

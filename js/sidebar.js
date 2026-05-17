@@ -259,6 +259,28 @@
  </nav>
  <div class="sidebar-footer">${footer}</div>`;
 
+ // Trust footer — security signals appended to <main> on EVERY page.
+ // Includes: security link, hosting region badge, bug-bounty link, open-source link.
+ // Renders only if the page doesn't already have an existing trust-footer-links block
+ // (e.g. index.html, which has it inlined right inside <footer>).
+ function injectTrustFooter() {
+ if (document.getElementById('wlTrustFooter')) return;
+ if (document.querySelector('.trust-footer-links')) return; // already inlined (index.html)
+ var main = document.querySelector('main.main-content') || document.querySelector('main') || document.body;
+ if (!main) return;
+ var wrap = document.createElement('div');
+ wrap.id = 'wlTrustFooter';
+ wrap.style.cssText = 'text-align:center;padding:18px 16px 28px;margin-top:24px;border-top:1px solid var(--color-border, rgba(255,255,255,0.08));color:var(--color-text-secondary, #94a3b8);font-size:11px;line-height:1.6;';
+ wrap.innerHTML =
+ '<div class="trust-footer-links" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;font-size:11px;line-height:1.5;">' +
+ '<a href="https://wizelife.ai/security.html" target="_blank" rel="noopener" data-i18n="trust.securityLink" style="color:inherit;text-decoration:none;border-bottom:1px dashed rgba(148,163,184,0.3);">🔒 איך אנחנו שומרים על המידע שלך</a>' +
+ '<a href="https://wizelife.ai/security.html#bug-bounty" target="_blank" rel="noopener" data-i18n="trust.bugBounty" style="color:inherit;text-decoration:none;border-bottom:1px dashed rgba(148,163,184,0.3);">🐛 מצאת בעיית אבטחה? תוכנית באג-באונטי ←</a>' +
+ '<a href="https://github.com/FinSightAI" target="_blank" rel="noopener" data-i18n="trust.openSource" style="color:inherit;text-decoration:none;border-bottom:1px dashed rgba(148,163,184,0.3);">📖 קוד פתוח ב-GitHub →</a>' +
+ '</div>' +
+ '<div data-i18n="trust.hosting" style="margin-top:8px;font-size:10px;opacity:0.7;">🇺🇸 מאוחסן ב-Firebase (us-central) · GDPR + הגנת הפרטיות הישראלית</div>';
+ main.appendChild(wrap);
+ }
+
  // Theme toggle — floats bottom-left
  function injectThemeToggle() {
  if (document.getElementById('wlThemeToggle')) return;
@@ -704,6 +726,7 @@
  attachProGates(aside);
  }
  injectThemeToggle();
+ injectTrustFooter();
  injectRightPanel();
  // Apply current language to sidebar labels
  if (typeof I18n !== 'undefined') I18n.translatePage();
