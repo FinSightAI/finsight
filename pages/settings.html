@@ -178,6 +178,7 @@
  <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
  <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
  <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js" integrity="sha384-7TetnPNdXXu6qURzIEXWCwpXedGGBJSXIR5Cv0gOWTB34UD5TxPHx33PhjA6wFQ3" crossorigin="anonymous"></script>
+ <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js" integrity="sha384-lONBStWloxmdvtJe8gp4aEOmE9dluTdSdGA5pUHFYPBMJRUDDPSdbq32bb0Spi3v" crossorigin="anonymous"></script>
 </head>
 <body>
  <div class="app-container">
@@ -390,6 +391,120 @@
  </button>
  </div>
  </div>
+
+ <!-- Account & Privacy (GDPR) -->
+ <div class="settings-section">
+ <h2>🔐 <span data-i18n="settings.accountPrivacy">חשבון ופרטיות</span></h2>
+
+ <div class="setting-row" id="lastLoginRow">
+ <div class="setting-label">
+ <span data-i18n="settings.lastLogin">כניסה אחרונה</span>
+ <span id="lastLoginValue" style="font-size:13px;color:var(--color-text-secondary)">—</span>
+ </div>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.cloudExport">הורד את כל נתוני החשבון (Cloud)</span>
+ <span data-i18n="settings.cloudExportDesc">קובץ JSON עם כל הנתונים השמורים אצלנו ב-Firestore — זכותך לפי GDPR</span>
+ </div>
+ <button class="btn btn-secondary" onclick="cloudExportGDPR()">
+ <span>☁️</span>
+ <span data-i18n="settings.cloudExportBtn">הורד</span>
+ </button>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.deleteAccount">מחיקת חשבון</span>
+ <span data-i18n="settings.deleteAccountDesc">מחיקה מלאה של כל הנתונים בענן. בלתי הפיכה.</span>
+ </div>
+ <button class="btn btn-danger" style="background:#dc2626;border-color:#dc2626;color:#fff" onclick="deleteAccountGDPR()">
+ <span>❌</span>
+ <span data-i18n="settings.deleteAccountBtn">מחק חשבוני</span>
+ </button>
+ </div>
+
+ <div class="setting-row">
+ <div class="setting-label">
+ <span data-i18n="settings.changePassword">שינוי סיסמה</span>
+ <span data-i18n="settings.changePasswordDesc">קבל לינק במייל לאיפוס סיסמה</span>
+ </div>
+ <button class="btn btn-secondary" onclick="sendPasswordResetGDPR()">
+ <span>🔑</span>
+ <span data-i18n="settings.changePasswordBtn">שלח לינק</span>
+ </button>
+ </div>
+ </div>
+
+ <script>
+ // Last login display + GDPR actions
+ (function(){
+   if (typeof firebase === 'undefined' || !firebase.auth) return;
+   firebase.auth().onAuthStateChanged(function(user){
+     var el = document.getElementById('lastLoginValue');
+     if (!el) return;
+     if (user && user.metadata && user.metadata.lastSignInTime) {
+       try {
+         var d = new Date(user.metadata.lastSignInTime);
+         el.textContent = d.toLocaleString(localStorage.getItem('wl_lang') || 'he-IL');
+       } catch(e) { el.textContent = user.metadata.lastSignInTime; }
+     } else {
+       el.textContent = (localStorage.getItem('wl_lang') === 'he') ? 'אינך מחובר' : 'Not signed in';
+     }
+   });
+ })();
+
+ async function cloudExportGDPR() {
+   if (typeof firebase === 'undefined' || !firebase.auth().currentUser) {
+     alert(localStorage.getItem('wl_lang') === 'he' ? 'יש להתחבר תחילה' : 'Please sign in first');
+     return;
+   }
+   try {
+     const callable = firebase.functions().httpsCallable('exportUserData');
+     const res = await callable();
+     const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
+     const url = URL.createObjectURL(blob);
+     const a = document.createElement('a');
+     a.href = url; a.download = 'wizemoney-export-' + new Date().toISOString().slice(0,10) + '.json';
+     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+   } catch (e) {
+     alert((localStorage.getItem('wl_lang') === 'he' ? 'שגיאה: ' : 'Error: ') + (e.message || e));
+   }
+ }
+
+ async function deleteAccountGDPR() {
+   var lang = localStorage.getItem('wl_lang') || 'he';
+   var confirmMsg = lang === 'he'
+     ? 'אזהרה: פעולה זו תמחק את כל הנתונים שלך בלי אפשרות שחזור. להמשיך?'
+     : 'WARNING: This will permanently delete all your data with no recovery. Continue?';
+   if (!confirm(confirmMsg)) return;
+   if (!confirm(lang === 'he' ? 'בטוח? לחיצה אחרונה — אין דרך חזרה.' : 'Are you sure? Final click — no way back.')) return;
+   try {
+     const callable = firebase.functions().httpsCallable('deleteUserAccount');
+     await callable();
+     try { await firebase.auth().signOut(); } catch(e) {}
+     try { localStorage.clear(); } catch(e) {}
+     window.location.href = '/';
+   } catch (e) {
+     alert((lang === 'he' ? 'שגיאה: ' : 'Error: ') + (e.message || e));
+   }
+ }
+
+ async function sendPasswordResetGDPR() {
+   var lang = localStorage.getItem('wl_lang') || 'he';
+   if (typeof firebase === 'undefined' || !firebase.auth().currentUser || !firebase.auth().currentUser.email) {
+     alert(lang === 'he' ? 'יש להתחבר עם אימייל וסיסמה' : 'Sign in with email/password first');
+     return;
+   }
+   try {
+     await firebase.auth().sendPasswordResetEmail(firebase.auth().currentUser.email);
+     alert(lang === 'he' ? 'נשלח לינק לאיפוס למייל שלך' : 'Reset link sent to your email');
+   } catch (e) {
+     alert((lang === 'he' ? 'שגיאה: ' : 'Error: ') + (e.message || e));
+   }
+ }
+ </script>
 
  <!-- Credit Card Bookmarklet -->
  <div class="settings-section">
