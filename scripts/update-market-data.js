@@ -836,6 +836,26 @@ async function main() {
         summary.push(`iGemel-Net: ERROR — ${err.message}`);
     }
 
+    // Always bump the displayed version in data-updates.js to the current month —
+    // even if data files didn't change, the "Last checked" message should reflect today.
+    try {
+        const dataUpdatesPath = path.join(ROOT, 'js', 'data-updates.js');
+        let content = fs.readFileSync(dataUpdatesPath, 'utf-8');
+        const now = new Date();
+        const currentYM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        const before = content;
+        content = content.replace(/igemel:\s*'\d{4}-\d{2}'/, `igemel: '${currentYM}'`);
+        content = content.replace(/themarket:\s*'\d{4}-\d{2}'/, `themarket: '${currentYM}'`);
+        if (content !== before) {
+            fs.writeFileSync(dataUpdatesPath, content, 'utf-8');
+            summary.push(`data-updates.js: version bumped to ${currentYM}`);
+            updated = true;
+        }
+    } catch (err) {
+        console.error('⚠️  version bump in data-updates.js failed:', err.message);
+        summary.push(`data-updates.js: bump ERROR — ${err.message}`);
+    }
+
     // Output summary (for GitHub Actions PR body)
     console.log('\n' + '='.repeat(40));
     console.log('Summary:');

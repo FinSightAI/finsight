@@ -7,8 +7,8 @@ const DataUpdates = {
 
     // Current data versions (update these when publishing new data)
     versions: {
-        igemel: '2025-12',
-        themarket: '2025-12',
+        igemel: '2026-05',
+        themarket: '2026-05',
         app: '1.0.0'
     },
 
