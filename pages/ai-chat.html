@@ -343,7 +343,7 @@
  'השתמש בנתונים האמיתיים שקיבלת כדי לתת עצות מדויקות ואישיות',
  'כאשר מתבקש חישוב — בצע את החישוב בפועל',
  'היה ישיר ומעשי — תן המלצות ברורות, לא רק הסברים כלליים',
- 'אם יש מידע חסר, ציין זאת בקצרה ותן הערכה בכל זאת',
+ 'אם יש מידע חסר — אמור זאת מפורש. אם בכל זאת אתה נותן הערכה, סמן את התשובה ב-⚠️ ופרט את ההנחות',
  'פרמט תשובות ארוכות עם כותרות ורשימות לקריאות נוחה',
  'אל תחזור על כל הנתונים — השתמש בהם בצורה חכמה בתוך התשובה',
  ],
@@ -357,7 +357,7 @@
  'Use os dados reais recebidos para dar conselhos precisos e personalizados',
  'Quando solicitado um cálculo — execute-o de verdade',
  'Seja direto e prático — dê recomendações claras, não apenas explicações gerais',
- 'Se faltar informação, mencione brevemente e dê uma estimativa mesmo assim',
+ 'Se faltar informação, diga isso explicitamente. Se mesmo assim der uma estimativa, prefixe com ⚠️ e explique as suposições',
  'Formate respostas longas com títulos e listas para facilitar a leitura',
  'Não repita todos os dados — use-os de forma inteligente na resposta',
  ],
@@ -371,7 +371,7 @@
  'Usa los datos reales recibidos para dar consejos precisos y personalizados',
  'Cuando se solicite un cálculo — ejecútalo de verdad',
  'Sé directo y práctico — da recomendaciones claras, no solo explicaciones generales',
- 'Si falta información, menciónalo brevemente y da una estimación de todos modos',
+ 'Si falta información, dilo explícitamente. Si aún así das una estimación, prefíjala con ⚠️ y explica los supuestos',
  'Formatea respuestas largas con títulos y listas para facilitar la lectura',
  'No repitas todos los datos — úsalos de forma inteligente en la respuesta',
  ],
@@ -385,7 +385,7 @@
  'Use the real data provided to give accurate, personalized advice',
  'When asked for a calculation — actually perform it',
  'Be direct and practical — give clear recommendations, not just general explanations',
- 'If information is missing, mention it briefly and give an estimate anyway',
+ 'If information is missing, say so explicitly. If you still give an estimate, prefix with ⚠️ and state the assumptions',
  'Format long responses with headers and lists for readability',
  'Don\'t repeat all the data — use it intelligently within the answer',
  ],
@@ -396,13 +396,23 @@
  const p = prompts[lang] || prompts.en;
  const rules = [...p.rules, ...(crossCtx ? [p.crossNote] : [])].map(r => `- ${r}`).join('\n');
 
+ // Phase 2 RAG-enforcement footer — same across 4 langs (model is multilingual).
+ const groundTruthFooter = `
+
+🛑 GROUND TRUTH ENFORCEMENT:
+- Every numerical claim about THIS user must come from the data block above (transactions, goals, accounts, plan). Never invent numbers.
+- Source-tag each number: [user transactions], [user goals], [Israeli avg], [bank rate 2026], etc.
+- Banned hedge words (don't use in any language): approximately/around/probably/I believe/generally/בערך/סביב/לרוב/בדרך כלל/aproximadamente/cerca de/alrededor.
+- If you compute a calculation, show the formula briefly so the user can verify.
+- End any advice with: "ℹ️ AI may err — verify with a licensed financial advisor before deciding."`;
+
  return `${p.intro}
 ${p.date}
 
 ${ctx}${crossCtx}
 
 ${lang === 'he' ? 'הנחיות' : lang === 'pt' ? 'Instruções' : lang === 'es' ? 'Instrucciones' : 'Instructions'}:
-${rules}`;
+${rules}${groundTruthFooter}`;
  }
 
  // ── Chat logic ──
