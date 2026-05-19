@@ -24,6 +24,16 @@ const db = admin.firestore();
 const TIER_RANK = { free: 0, pro: 1, yolo: 2 };
 const REWARD_DAYS = 30;
 
+// Anti-hallucination guardrails — Phase 1 (free, ~200 tokens/req).
+// Injected into every Gemini chat call's system_instruction. Phase 2 (RAG)
+// and Phase 3 (self-verification) are intentionally NOT here.
+const ANTI_HALLUCINATION_PREFIX = `GUARDRAILS (must follow):
+1. If you don't know a fact for certain, say "I don't know — not in my data" (in user's language). Never guess numbers, dates, names, laws.
+2. Every numerical claim must include a source tag: [verified DB], [user data], [web-search], or [provider].
+3. Banned hedge words — do NOT use: approximately / around / roughly / probably / I believe / generally — and their he (בערך/סביב/לרוב/בדרך כלל/אני מאמין/למיטב ידיעתי), pt (aproximadamente/cerca de/geralmente), es (aproximadamente/alrededor/generalmente) equivalents. Use exact numbers or admit you don't know.
+4. If confidence < 70%, start with "⚠️".
+5. End advice with: "AI may make mistakes. Verify with a licensed professional before deciding." (translated).`;
+
 /**
  * Award the referrer a 30-day bonus when `upgradedUid` first hits Pro/YOLO.
  * Idempotent — sets `referralRewardSent: true` on the upgraded user so it
@@ -780,13 +790,14 @@ exports.aiProxy = functions
             throw new functions.https.HttpsError("invalid-argument", "messages required");
         }
 
+        // Wrap user-provided system prompt with anti-hallucination guardrails.
+        const wrappedSystem = (system || '') + (system ? '\n\n' : '') + ANTI_HALLUCINATION_PREFIX;
         const body = {
             contents: messages,
-            generationConfig: { maxOutputTokens: maxTokens },
+            // Deterministic generation — temperature 0 kills creative drift.
+            generationConfig: { maxOutputTokens: maxTokens, temperature: 0, topP: 0.1 },
+            system_instruction: { parts: [{ text: wrappedSystem }] },
         };
-        if (system) {
-            body.system_instruction = { parts: [{ text: system }] };
-        }
 
         const apiKey = GEMINI_API_KEY.value();
         const res = await fetch(
