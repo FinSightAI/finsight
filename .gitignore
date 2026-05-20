@@ -14,6 +14,9 @@ Thumbs.db
 
 # Dependencies
 node_modules/
+# iCloud-bypass install dirs (see node_modules.nosync symlink trick) + temp moves
+node_modules.nosync/
+node_modules.broken/
 
 # Generated files
 scripts/update-summary.txt
