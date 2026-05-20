@@ -1,0 +1,13 @@
+# What NOT to upload when deploying functions. Cloud Build reinstalls deps from
+# package.json/package-lock.json, so node_modules is never uploaded.
+node_modules/
+# iCloud-bypass / leftover install dirs (see node_modules.nosync trick) — these
+# are NOT covered by the default 'node_modules' rule and were stalling the
+# "preparing functions directory for uploading" step.
+node_modules.nosync/
+node_modules.broken/
+.git/
+.gitignore
+*.log
+.DS_Store
+npm-debug.log
