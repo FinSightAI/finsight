@@ -9,7 +9,11 @@
  *   https://us-central1-finzilla-7f1f9.cloudfunctions.net/paypalWebhook
  */
 
-const functions        = require("firebase-functions");
+// firebase-functions v6: the v1 (Gen-1) API used throughout this file
+// (functions.https.onCall((data, context)), functions.pubsub.schedule, .runWith,
+// functions.https.HttpsError) now lives under the /v1 entrypoint. Importing it
+// here preserves all existing behavior with no logic changes.
+const functions        = require("firebase-functions/v1");
 const { defineSecret } = require("firebase-functions/params");
 const admin            = require("firebase-admin");
 const https            = require("https");
