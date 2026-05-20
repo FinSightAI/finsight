@@ -216,12 +216,24 @@ const Storage = {
         if(typeof WizeAISync!=='undefined')WizeAISync.scheduleSync();
     },
 
+    // Funnel: fire the WizeMoney "aha" once — the first time the user adds any
+    // real financial item (account/card/expense/holding). Guarded so it logs
+    // a single activation per device. See wize-track.js / funnel.html.
+    _trackActivation(action) {
+        try {
+            if (localStorage.getItem('wl_act_wizemoney')) return;
+            localStorage.setItem('wl_act_wizemoney', '1');
+            if (window.WizeTrack) WizeTrack.activation({ action: action });
+        } catch (e) { /* never block a save */ }
+    },
+
     addBankAccount(account) {
         const accounts = this.getBankAccounts();
         account.id = this.generateId();
         account.history = account.history || [{ date: new Date().toISOString().split('T')[0], balance: account.balance }];
         accounts.push(account);
         this.saveBankAccounts(accounts);
+        this._trackActivation('add_bank_account');
         return account;
     },
 
@@ -261,6 +273,7 @@ const Storage = {
         card.id = this.generateId();
         data.cards.push(card);
         this.saveCreditCards(data);
+        this._trackActivation('add_credit_card');
         return card;
     },
 
@@ -269,6 +282,7 @@ const Storage = {
         expense.id = this.generateId();
         data.expenses.push(expense);
         this.saveCreditCards(data);
+        this._trackActivation('add_expense');
         return expense;
     },
 
@@ -352,6 +366,7 @@ const Storage = {
             date: new Date().toISOString().split('T')[0]
         });
         this.saveStocks(data);
+        this._trackActivation('add_stock');
         return holding;
     },
 
@@ -483,6 +498,7 @@ const Storage = {
         fund.id = this.generateId();
         funds.push(fund);
         this.saveMyFunds(funds);
+        this._trackActivation('add_fund');
         return fund;
     },
 
