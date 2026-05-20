@@ -1362,4 +1362,79 @@ exports.notifyLoginAlert = functions
         return { isNew };
     });
 
+// ─── logEvent — universal funnel beacon ───────────────────────────────────────
+// The Next.js / React sub-apps can't load the compat `firebase` global that
+// wize-track.js needs, so they POST a small JSON event here instead. We write to
+// /events via the Admin SDK (which bypasses App Check + rules — so we validate &
+// sanitize here ourselves). CORS-restricted to our own origins; rate-limited by
+// anonId. Mirrors the schema written by the client tracker.
+const TRACK_ORIGINS = [
+    'https://wizelife.ai',
+    'https://finsightai.github.io',
+    'https://check-deal.vercel.app',
+    'https://mastermove.vercel.app',
+    'https://vitara.onrender.com',
+    'https://wizetravel.hf.space',
+    'https://ofirofir-wizetravel.hf.space',
+];
+
+function _trkStr(v, max) { return (typeof v === 'string') ? v.slice(0, max) : ''; }
+
+exports.logEvent = functions
+    .runWith({ memory: '128MB' })
+    .https.onRequest(async (req, res) => {
+        const origin = req.headers.origin || '';
+        const allowed = TRACK_ORIGINS.indexOf(origin) >= 0;
+        if (allowed) {
+            res.set('Access-Control-Allow-Origin', origin);
+            res.set('Vary', 'Origin');
+            res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            res.set('Access-Control-Allow-Headers', 'Content-Type');
+            res.set('Access-Control-Max-Age', '3600');
+        }
+        if (req.method === 'OPTIONS') return res.status(204).send('');
+        if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+        if (!allowed) return res.status(403).json({ error: 'origin' });
+
+        try {
+            const b = (req.body && typeof req.body === 'object') ? req.body : {};
+            const app = _trkStr(b.app, 24);
+            const event = _trkStr(b.event, 40);
+            const anonId = _trkStr(b.anonId, 64);
+            if (!app || !event || !anonId) return res.status(400).json({ error: 'app, event, anonId required' });
+
+            if (!(await _rateLimit('logEvent', anonId, 60))) return res.status(429).json({ error: 'rate' });
+
+            // Sanitize meta → short scalars only (no PII / free text).
+            const meta = {};
+            if (b.meta && typeof b.meta === 'object') {
+                Object.keys(b.meta).slice(0, 8).forEach((k) => {
+                    let v = b.meta[k];
+                    if (typeof v === 'string') v = v.slice(0, 60);
+                    if (v === null || ['string', 'number', 'boolean'].indexOf(typeof v) >= 0) meta[String(k).slice(0, 30)] = v;
+                });
+            }
+
+            const now = new Date();
+            const utcDay = now.getUTCFullYear() + '-' + String(now.getUTCMonth() + 1).padStart(2, '0') + '-' + String(now.getUTCDate()).padStart(2, '0');
+
+            await db.collection('events').add({
+                app, event,
+                uid: _trkStr(b.uid, 128) || null,
+                anonId,
+                sessionId: _trkStr(b.sessionId, 64) || 'beacon',
+                ts: admin.firestore.FieldValue.serverTimestamp(),
+                day: _trkStr(b.day, 10) || utcDay,
+                lang: _trkStr(b.lang, 8) || 'he',
+                path: _trkStr(b.path, 120),
+                meta,
+                via: 'beacon',
+            });
+            return res.status(204).send('');
+        } catch (e) {
+            console.warn('logEvent failed', e);
+            return res.status(500).json({ error: 'failed' });
+        }
+    });
+
 
