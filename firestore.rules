@@ -90,6 +90,18 @@ service cloud.firestore {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // Funnel / activation events (wize-track.js). Anyone on our pages may
+    // CREATE one (anonymous landing-page visits fire before signup; App Check
+    // restricts writers to our own origins). Reads are admin-only — analyzed
+    // via /funnel.html. Immutable. Shape/size validated to bound abuse.
+    // ─────────────────────────────────────────────────────────────────────
+    match /events/{id} {
+      allow read:   if isAdmin();
+      allow update, delete: if false;
+      allow create: if validateEvent();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // Catch-all — everything else is denied.
     // ─────────────────────────────────────────────────────────────────────
     match /{document=**} {
@@ -100,6 +112,29 @@ service cloud.firestore {
 
 // ─── helpers ─────────────────────────────────────────────────────────────
 function isOwner(uid)   { return request.auth != null && request.auth.uid == uid; }
+
+// Admin allow-list — used for reading the funnel `events`. Replace the
+// placeholder with your real uid (printed on funnel.html when you sign in).
+// Add more uids to the list as needed.
+function isAdmin() {
+  return request.auth != null
+      && request.auth.uid in ['REPLACE_WITH_YOUR_ADMIN_UID'];
+}
+
+function validateEvent() {
+  return request.resource.data.keys().hasOnly([
+           'app','event','uid','anonId','sessionId','ts','day','lang','path','meta'
+         ])
+      && request.resource.data.app       is string && request.resource.data.app.size()       <= 24
+      && request.resource.data.event     is string && request.resource.data.event.size()     <= 40
+      && request.resource.data.anonId    is string && request.resource.data.anonId.size()    <= 64
+      && request.resource.data.sessionId is string && request.resource.data.sessionId.size() <= 64
+      && request.resource.data.day       is string && request.resource.data.day.size()       <= 10
+      && request.resource.data.lang      is string && request.resource.data.lang.size()      <= 8
+      && request.resource.data.path      is string && request.resource.data.path.size()      <= 120
+      && (request.resource.data.uid == null || (request.resource.data.uid is string && request.resource.data.uid.size() <= 128))
+      && request.resource.data.meta is map;
+}
 function validateFeedback() {
   return request.resource.data.keys().hasOnly([
            'app','rating','pay','loved','missing','email','uid','plan',
