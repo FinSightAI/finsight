@@ -563,6 +563,12 @@
 
  </div>
 
+ <div style="text-align:center;margin-top:28px;color:#8892b0;font-size:0.85rem;line-height:1.5">
+ <span data-i18n="market.labels.dataSource">מקור הנתונים:</span>
+ <a href="https://www.supermarker.themarker.com/Gemel/CompareGemelFunds.aspx" target="_blank" rel="noopener" style="color:#a855f7;text-decoration:none">TheMarker SuperMarker</a>
+ — <span id="dataSourceDate">…</span>
+ </div>
+
  </div>
  </main>
 </div>
@@ -1122,6 +1128,23 @@
  });
 
  loadMyFunds();
+ // Data-provenance: show the source-data verification date (4 languages).
+ (function () {
+   const el = document.getElementById('dataSourceDate');
+   if (!el || !window.MarketFunds || !MarketFunds.getLastUpdate) return;
+   const lu = MarketFunds.getLastUpdate();
+   if (!lu) return;
+   const [y, m] = String(lu).split('-');
+   const months = {
+     he: ['','ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],
+     en: ['','January','February','March','April','May','June','July','August','September','October','November','December'],
+     pt: ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+     es: ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+   };
+   const L = (typeof I18n !== 'undefined' && I18n.currentLanguage) || 'he';
+   const mm = parseInt(m, 10) || 0;
+   el.textContent = ((months[L] || months.he)[mm] || m) + ' ' + y;
+ })();
  if (typeof I18n !== 'undefined') I18n.init();
 </script>
 <script src="../js/wl-common-i18n.js?v=2" defer></script>
