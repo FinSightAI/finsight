@@ -118,7 +118,7 @@ function isOwner(uid)   { return request.auth != null && request.auth.uid == uid
 // Add more uids to the list as needed.
 function isAdmin() {
   return request.auth != null
-      && request.auth.uid in ['REPLACE_WITH_YOUR_ADMIN_UID'];
+      && request.auth.uid in ['4ocNcJie6Ra1xcUA62M2dv0GikM2'];
 }
 
 function validateEvent() {
