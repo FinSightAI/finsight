@@ -1370,6 +1370,14 @@ exports.notifyLoginAlert = functions
 // anonId. Mirrors the schema written by the client tracker.
 const TRACK_ORIGINS = [
     'https://wizelife.ai',
+    // Custom subdomains the apps are actually served from (Cloudflare proxy) —
+    // the browser sends THESE as the Origin, not the underlying host.
+    'https://deal.wizelife.ai',
+    'https://tax.wizelife.ai',
+    'https://money.wizelife.ai',
+    'https://health.wizelife.ai',
+    'https://travel.wizelife.ai',
+    // Underlying hosts (kept as fallback / direct access).
     'https://finsightai.github.io',
     'https://check-deal.vercel.app',
     'https://mastermove.vercel.app',
