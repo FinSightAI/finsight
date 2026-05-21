@@ -1,50 +1,50 @@
 {
   "SPY": {
-    "currentPrice": 740.41,
-    "previousClose": 742.31,
-    "priceChange": -1.8999999999999773,
-    "priceChangePercent": -0.25595775349920885,
+    "currentPrice": 743.54,
+    "previousClose": 748.17,
+    "priceChange": -4.6299999999999955,
+    "priceChangePercent": -0.6188433110122026,
     "currency": "USD",
-    "lastUpdate": "2026-05-20T18:07:43.016Z"
+    "lastUpdate": "2026-05-21T17:48:31.284Z"
   },
   "TSM": {
-    "currentPrice": 401.685,
-    "previousClose": 399.8,
-    "priceChange": 1.884999999999991,
-    "priceChangePercent": 0.4714857428714334,
+    "currentPrice": 409.85,
+    "previousClose": 417.72,
+    "priceChange": -7.8700000000000045,
+    "priceChangePercent": -1.8840371540745007,
     "currency": "USD",
-    "lastUpdate": "2026-05-20T18:07:43.497Z"
+    "lastUpdate": "2026-05-21T17:48:31.752Z"
   },
   "TBLA": {
-    "currentPrice": 4.881,
-    "previousClose": 5.13,
-    "priceChange": -0.24899999999999967,
-    "priceChangePercent": -4.8538011695906365,
+    "currentPrice": 4.97,
+    "previousClose": 4.95,
+    "priceChange": 0.019999999999999574,
+    "priceChangePercent": 0.40404040404039543,
     "currency": "USD",
-    "lastUpdate": "2026-05-20T18:07:43.912Z"
+    "lastUpdate": "2026-05-21T17:48:32.175Z"
   },
   "TLRY": {
-    "currentPrice": 5.425,
-    "previousClose": 5.46,
-    "priceChange": -0.03500000000000014,
-    "priceChangePercent": -0.6410256410256436,
+    "currentPrice": 5.455,
+    "previousClose": 5.5,
+    "priceChange": -0.04499999999999993,
+    "priceChangePercent": -0.8181818181818169,
     "currency": "USD",
-    "lastUpdate": "2026-05-20T18:07:44.328Z"
+    "lastUpdate": "2026-05-21T17:48:32.620Z"
   },
   "XLE": {
-    "currentPrice": 59.81,
-    "previousClose": 57.63,
-    "priceChange": 2.1799999999999997,
-    "priceChangePercent": 3.782752038868644,
+    "currentPrice": 59.015,
+    "previousClose": 58.07,
+    "priceChange": 0.9450000000000003,
+    "priceChangePercent": 1.6273463061821944,
     "currency": "USD",
-    "lastUpdate": "2026-05-20T18:07:44.775Z"
+    "lastUpdate": "2026-05-21T17:48:33.066Z"
   },
   "AML.L": {
-    "currentPrice": 0.44920000000000004,
-    "previousClose": 0.4708,
-    "priceChange": -0.021599999999999953,
-    "priceChangePercent": -4.587935429056914,
+    "currentPrice": 0.465,
+    "previousClose": 0.4932,
+    "priceChange": -0.028200000000000003,
+    "priceChangePercent": -5.7177615571776155,
     "currency": "GBP",
-    "lastUpdate": "2026-05-20T18:07:45.196Z"
+    "lastUpdate": "2026-05-21T17:48:33.480Z"
   }
 }
