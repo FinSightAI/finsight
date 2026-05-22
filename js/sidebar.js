@@ -253,7 +253,7 @@
  const _shareLang = localStorage.getItem('wl_lang') || 'he';
   const _shareLabel = ({ he: 'שתף', en: 'Share', pt: 'Compartilhar', es: 'Compartir' })[_shareLang] || 'Share';
   const shareBtn = `<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:6px;justify-content:center;" onclick="(function(){ if(window.WizeShare){WizeShare.share({title:document.title,text:'WizeMoney \u2014 your personal finance dashboard',url:location.href});}else if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){});}else{try{navigator.clipboard.writeText(location.href);}catch(e){}} })()">
-  <span>📤</span><span data-i18n="nav.share">${_shareLabel}</span>
+  <span>📤</span><span>${_shareLabel}</span>
   </button>`;
   const footer = wizeAILink + shareBtn + footerBtns + mktToggle;
 

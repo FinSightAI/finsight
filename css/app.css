@@ -1698,10 +1698,14 @@ body.light #wl-rp-reopen {
   border-color: rgba(255,255,255,0.25) !important;
 }
 @media (max-width: 820px) {
+  /* On mobile the hamburger drawer already provides theme + language switching.
+     Hide the floating duplicates — they overlapped content and weren't reliably
+     tappable. Users get theme + language from the ☰ menu instead. */
   .wl-theme-btn,
   #wl-theme-toggle,
-  #wlThemeToggle {
-    bottom: calc(56px + env(safe-area-inset-bottom) + 12px) !important;
+  #wlThemeToggle,
+  #globalLangSwitcher {
+    display: none !important;
   }
 }
 [data-theme="light"] .wl-theme-btn,
