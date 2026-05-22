@@ -35,38 +35,37 @@
  <link rel="icon" type="image/png" href="../img/logo.svg">
  <title data-i18n="income.pageTitle">הכנסות - WizeMoney</title>
  <link rel="stylesheet" href="../css/app.css">
- <style>
+  <style>
+ /* ── Income page accent (reuses --color-stocks / purple from design system) ── */
  :root {
- --color-income: #8b5cf6;
+ --color-income: var(--color-stocks);        /* #8b5cf6 — already in design system */
  --color-income-light: #a78bfa;
- --color-green: #10b981;
- --color-red: #ef4444;
  }
 
  .nav-link.active { background: var(--color-income) !important; }
- .page-header h1 { color: var(--color-income); }
- .btn-primary { background: var(--color-income); }
+ .page-header h1  { color: var(--color-income); }
+ .btn-primary     { background: var(--color-income); }
  .btn-primary:hover { background: #7c3aed; }
 
- /* Summary bar */
+ /* ── Summary stats — standard card grid matching goals/assets pattern ── */
  .income-summary-bar {
- background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #a78bfa 100%);
- border-radius: 16px;
- padding: 24px;
- margin-bottom: 24px;
  display: grid;
  grid-template-columns: repeat(3, 1fr);
- gap: 16px;
- box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+ gap: var(--spacing-md);
+ margin-bottom: var(--spacing-lg);
  }
 
  .summary-stat {
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: var(--radius-md);
+ padding: var(--spacing-lg);
  text-align: center;
  }
 
  .summary-stat .stat-label {
- font-size: 0.78rem;
- color: rgba(255, 255, 255, 0.8);
+ font-size: 0.82rem;
+ color: var(--color-text-secondary);
  margin-bottom: 6px;
  font-weight: 500;
  }
@@ -74,98 +73,98 @@
  .summary-stat .stat-value {
  font-size: 1.4rem;
  font-weight: 700;
- color: #fff;
+ color: var(--color-text-primary);
  letter-spacing: -0.5px;
  }
 
- .summary-stat .stat-value.positive { color: #6ee7b7; }
- .summary-stat .stat-value.negative { color: #fca5a5; }
+ .summary-stat .stat-value.positive { color: var(--color-positive); }
+ .summary-stat .stat-value.negative { color: var(--color-negative); }
 
- .summary-divider {
- width: 1px;
- background: rgba(255, 255, 255, 0.2);
- align-self: stretch;
- }
-
- /* Income table */
+ /* ── Income table badges ── */
  .type-badge {
  display: inline-flex;
  align-items: center;
  gap: 4px;
  padding: 3px 10px;
- border-radius: 20px;
+ border-radius: var(--radius-xl);
  font-size: 0.8rem;
  font-weight: 500;
- background: rgba(139, 92, 246, 0.15);
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
  color: var(--color-income-light);
  white-space: nowrap;
  }
 
  .freq-badge {
  font-size: 0.78rem;
- color: var(--color-text-secondary, #94a3b8);
+ color: var(--color-text-secondary);
  }
 
  .amount-cell {
  font-weight: 600;
- color: var(--color-green);
+ color: var(--color-positive);
  font-variant-numeric: tabular-nums;
  }
 
  .amount-cell.one-time {
- color: var(--color-text-secondary, #94a3b8);
+ color: var(--color-text-secondary);
  }
 
  .monthly-equiv {
  font-size: 0.72rem;
- color: var(--color-text-secondary, #94a3b8);
+ color: var(--color-text-secondary);
  display: block;
  }
 
- /* Action buttons in table */
+ /* ── Action buttons in table ── */
  .action-btn {
  background: none;
  border: none;
  cursor: pointer;
  padding: 5px 8px;
- border-radius: 6px;
+ border-radius: var(--radius-sm);
  font-size: 1rem;
- transition: background 0.15s;
+ transition: background var(--transition-fast);
  }
- .action-btn:hover { background: rgba(255,255,255,0.08); }
- .action-btn.delete:hover { background: rgba(239,68,68,0.15); }
+ .action-btn:hover        { background: var(--color-bg-card); }
+ .action-btn.delete:hover { background: rgba(239, 68, 68, 0.15); }
 
- /* Quick add buttons */
+ /* ── Quick-add pill buttons ── */
  .quick-add-row {
  display: flex;
- gap: 10px;
- margin-bottom: 16px;
+ gap: var(--spacing-sm);
+ margin-bottom: var(--spacing-md);
  flex-wrap: wrap;
  }
 
  .quick-btn {
- background: rgba(139, 92, 246, 0.15);
- border: 1px solid rgba(139, 92, 246, 0.4);
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
  color: var(--color-income-light);
- border-radius: 20px;
+ border-radius: var(--radius-xl);
  padding: 6px 16px;
  font-size: 0.875rem;
  cursor: pointer;
- transition: background 0.15s, border-color 0.15s;
  font-family: inherit;
+ transition: border-color var(--transition-fast), background var(--transition-fast);
  }
  .quick-btn:hover {
- background: rgba(139, 92, 246, 0.3);
  border-color: var(--color-income);
+ background: var(--color-bg-card);
+ opacity: 0.85;
  }
 
- /* Chart container */
+ /* ── Chart container ── */
  .chart-container {
  position: relative;
  height: 260px;
  }
 
- /* Modal form */
+ .chart-container canvas {
+ background: transparent !important;
+ }
+
+ /* ── Modal form grid (2-column on desktop) ── */
  .modal-form-grid {
  display: grid;
  grid-template-columns: 1fr 1fr;
@@ -176,29 +175,25 @@
  grid-column: 1 / -1;
  }
 
- .form-group {
+ /* Override app.css .form-group margin to match grid gap */
+ .modal-form-grid .form-group {
+ margin-bottom: 0;
  display: flex;
  flex-direction: column;
  gap: 5px;
  }
 
- .form-group label {
- font-size: 0.82rem;
- color: var(--color-text-secondary, #94a3b8);
- font-weight: 500;
- }
-
  .form-group input,
  .form-group select,
  .form-group textarea {
- background: var(--color-surface, #1e293b);
- border: 1px solid var(--color-border, #334155);
- border-radius: 8px;
+ background: var(--color-bg-card);
+ border: 1px solid var(--color-border);
+ border-radius: var(--radius-sm);
  padding: 9px 12px;
- color: var(--color-text, #f1f5f9);
+ color: var(--color-text-primary);
  font-size: 0.9rem;
  font-family: inherit;
- transition: border-color 0.15s;
+ transition: border-color var(--transition-fast);
  }
 
  .form-group input:focus,
@@ -214,14 +209,14 @@
  }
 
  .form-group select option {
- background: var(--color-surface, #1e293b);
+ background: var(--color-bg-secondary);
  }
 
- /* Empty state */
+ /* ── Empty state ── */
  .empty-state {
  text-align: center;
  padding: 48px 20px;
- color: var(--color-text-secondary, #94a3b8);
+ color: var(--color-text-secondary);
  }
 
  .empty-state .empty-icon {
@@ -230,28 +225,14 @@
  display: block;
  }
 
- .empty-state p {
- font-size: 1rem;
- margin-bottom: 4px;
- }
+ .empty-state p     { font-size: 1rem; margin-bottom: 4px; }
+ .empty-state small { font-size: 0.82rem; opacity: 0.7; }
 
- .empty-state small {
- font-size: 0.82rem;
- opacity: 0.7;
- }
-
- /* Responsive */
+ /* ── Responsive ── */
  @media (max-width: 600px) {
- .income-summary-bar {
- grid-template-columns: 1fr;
- gap: 12px;
- }
- .modal-form-grid {
- grid-template-columns: 1fr;
- }
- .modal-form-grid .full-width {
- grid-column: 1;
- }
+ .income-summary-bar   { grid-template-columns: 1fr; gap: var(--spacing-sm); }
+ .modal-form-grid      { grid-template-columns: 1fr; }
+ .modal-form-grid .full-width { grid-column: 1; }
  }
  </style>
 <meta name="wl-sentry-dsn" content="">
@@ -351,6 +332,10 @@
  <canvas id="incomeExpensesChart"></canvas>
  </div>
  </div>
+ <footer style="text-align:center; padding: 20px 16px 32px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--color-border); margin-top: 32px;">
+ <div data-i18n="footer.rights">© 2026 FinSight. כל הזכויות שמורות.</div>
+ <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
+ </footer>
  </main>
  </div>
 
