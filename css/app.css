@@ -161,6 +161,7 @@ body.ltr .sidebar-header {
 
 .main-content {
     flex: 1;
+    min-width: 0;
     padding: var(--spacing-xl);
     max-width: 1400px;
     margin-inline-start: max(230px, calc((100vw - 1400px) / 2));
@@ -960,11 +961,16 @@ select.form-control {
 }
 
 @media (max-width: 768px) {
+    html, body {
+        overflow-x: clip;
+    }
+
     .sidebar {
         transform: translateX(100%);
         z-index: 200;
         top: 92px;
         height: calc(100vh - 92px);
+        overflow-x: hidden;
     }
 
     body.ltr .sidebar {
@@ -1060,6 +1066,25 @@ select.form-control {
     .modal {
         width: 95%;
         margin: var(--spacing-sm);
+    }
+
+    /* Prevent brand wordmark from setting a min-content width wider than the viewport */
+    .brand-wordmark {
+        font-size: clamp(1.6rem, 9vw, 2.2rem) !important;
+    }
+
+    /* Trust strip: prevent overflow at narrow widths */
+    .trust-strip {
+        font-size: 10px !important;
+        white-space: normal;
+        padding: 6px 10px !important;
+    }
+}
+
+/* Extra-narrow screens: further shrink the wordmark */
+@media (max-width: 360px) {
+    .brand-wordmark {
+        font-size: clamp(1.4rem, 8vw, 1.8rem) !important;
     }
 }
 

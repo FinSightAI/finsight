@@ -250,7 +250,12 @@
  const _wizeAITagline = ({ he: 'יועץ חוצה-אפליקציות', en: 'Cross-app advisor', pt: 'Consultor multi-app', es: 'Asesor entre apps' })[_wizeAILang] || 'Cross-app advisor';
  const wizeAILink = `<a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-inline-start:auto;">${_wizeAITagline}</span></a>`;
  // Plan pill at bottom removed — top WizeBar already shows plan/nick.
- const footer = wizeAILink + footerBtns + mktToggle;
+ const _shareLang = localStorage.getItem('wl_lang') || 'he';
+  const _shareLabel = ({ he: 'שתף', en: 'Share', pt: 'Compartilhar', es: 'Compartir' })[_shareLang] || 'Share';
+  const shareBtn = `<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:6px;justify-content:center;" onclick="(function(){ if(window.WizeShare){WizeShare.share({title:document.title,text:'WizeMoney \u2014 your personal finance dashboard',url:location.href});}else if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){});}else{try{navigator.clipboard.writeText(location.href);}catch(e){}} })()">
+  <span>📤</span><span data-i18n="nav.share">${_shareLabel}</span>
+  </button>`;
+  const footer = wizeAILink + shareBtn + footerBtns + mktToggle;
 
  const html = `
  <nav>
