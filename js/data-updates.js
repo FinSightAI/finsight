@@ -88,23 +88,29 @@ const DataUpdates = {
 
         const monthNames = {
             he: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
-            en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            pt: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+            es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
         };
 
-        const monthName = monthNames[lang][parseInt(month) - 1];
+        const monthName = (monthNames[lang] || monthNames.en)[parseInt(month) - 1];
 
         const messages = {
             igemel: {
                 he: `נתוני iGemel-Net עודכנו ל${monthName} ${year}`,
-                en: `iGemel-Net data updated for ${monthName} ${year}`
+                en: `iGemel-Net data updated for ${monthName} ${year}`,
+                pt: `Dados do iGemel-Net atualizados para ${monthName} de ${year}`,
+                es: `Datos de iGemel-Net actualizados para ${monthName} de ${year}`
             },
             themarket: {
                 he: `נתוני TheMarker עודכנו ל${monthName} ${year}`,
-                en: `TheMarker data updated for ${monthName} ${year}`
+                en: `TheMarker data updated for ${monthName} ${year}`,
+                pt: `Dados do TheMarker atualizados para ${monthName} de ${year}`,
+                es: `Datos de TheMarker actualizados para ${monthName} de ${year}`
             }
         };
 
-        return messages[type]?.[lang] || messages[type]?.he;
+        return messages[type]?.[lang] || messages[type]?.en;
     },
 
     /**
