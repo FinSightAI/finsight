@@ -154,7 +154,7 @@
  <div style="text-align:center;position:relative;">
  <h1 class="brand-wordmark" dir="ltr" lang="en" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:2.6rem;letter-spacing:-1px;margin:8px auto 4px;line-height:1.05;unicode-bidi:isolate;">Wize<span style="background:linear-gradient(135deg,#10b981,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#10b981;">Money</span></h1>
  <p data-i18n="dashboard.subtitle" style="color:var(--color-text-muted);font-size:0.95rem;margin-top:6px;">סקירה כללית של הנכסים שלך</p>
- <button class="btn btn-secondary btn-sm" onclick="WidgetManager.showCustomizeModal()" style="white-space:nowrap;position:absolute;top:8px;inset-inline-end:0;">
+ <button class="btn btn-secondary btn-sm wm-hdr-customize" onclick="WidgetManager.showCustomizeModal()" style="white-space:nowrap;position:absolute;top:8px;inset-inline-end:0;">
  <span>⚙️</span>
  <span data-i18n="dashboard.customize">התאמה אישית</span>
  </button>
@@ -352,6 +352,11 @@
  </div>
 
  <style>
+ /* BUG2 FIX: Customize button lives in the sidebar menu on mobile — hide header version */
+ @media (max-width: 768px) {
+  .wm-hdr-customize { display: none !important; }
+ }
+
  /* Summary Sender Banner */
  #summarySenderBanner {
  display: none;

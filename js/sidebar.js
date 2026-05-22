@@ -255,7 +255,35 @@
   const shareBtn = `<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:6px;justify-content:center;" onclick="(function(){ if(window.WizeShare){WizeShare.share({title:document.title,text:'WizeMoney \u2014 your personal finance dashboard',url:location.href});}else if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){});}else{try{navigator.clipboard.writeText(location.href);}catch(e){}} })()">
   <span>📤</span><span>${_shareLabel}</span>
   </button>`;
-  const footer = wizeAILink + shareBtn + footerBtns + mktToggle;
+  // ── Sidebar lang switcher (all 4 languages, always visible in sidebar) ──
+  const _slLang = localStorage.getItem('wl_lang') || 'he';
+  function _slPillStyle(active) {
+    return 'flex:1;background:' + (active ? 'rgba(16,185,129,0.18)' : 'none') + ';border:none;color:' + (active ? '#10b981' : '#94a3b8') + ';padding:6px 4px;border-radius:6px;font:700 11px Inter,sans-serif;cursor:pointer;letter-spacing:.4px;';
+  }
+  // Build each pill as a plain <button> with data-sl-lang attribute.
+  // The onclick calls window._slSetLang(lang) which is defined right after.
+  const sidebarLangPills = ['he','en','pt','es'].map(function(l){
+    var active = (l === _slLang);
+    return '<button data-sl-lang="' + l + '" onclick="window._slSetLang(\'' + l + '\')" style="' + _slPillStyle(active) + '">' + l.toUpperCase() + '</button>';
+  }).join('');
+  const sidebarLangRow = '<div class="sidebar-lang-row" style="display:flex;gap:4px;margin-bottom:8px;padding:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">' + sidebarLangPills + '</div>';
+  // Global helper called by lang pill onclick — updates active highlight + calls I18n
+  window._slSetLang = function(l) {
+    try { localStorage.setItem('wl_lang', l); } catch(e) {}
+    if (typeof I18n !== 'undefined' && I18n.setLanguage) I18n.setLanguage(l);
+    document.querySelectorAll('.sidebar-lang-row [data-sl-lang]').forEach(function(b) {
+      var a = b.getAttribute('data-sl-lang') === l;
+      b.style.background = a ? 'rgba(16,185,129,0.18)' : 'none';
+      b.style.color = a ? '#10b981' : '#94a3b8';
+    });
+  };
+
+  // ── Customize button (dashboard only — WidgetManager lives in index.html) ──
+  const _customizeLang = localStorage.getItem('wl_lang') || 'he';
+  const _customizeLabel = ({ he: 'התאמה אישית', en: 'Customize', pt: 'Personalizar', es: 'Personalizar' })[_customizeLang] || 'Customize';
+  const customizeBtn = !inPages ? '<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:6px;justify-content:center;" onclick="if(typeof WidgetManager!==\'undefined\')WidgetManager.showCustomizeModal()" data-i18n="dashboard.customize"><span>⚙️</span><span>' + _customizeLabel + '</span></button>' : '';
+
+  const footer = sidebarLangRow + customizeBtn + wizeAILink + shareBtn + footerBtns + mktToggle;
 
  const html = `
  <nav>
@@ -697,38 +725,7 @@
  const aside = document.querySelector('aside.sidebar');
  if (aside) {
  aside.innerHTML = html;
- // Append a compact lang switcher inside the sidebar so mobile users
- // can change language from the hamburger drawer.
- try {
- if (!aside.querySelector('.sidebar-lang-pills')) {
- const wrap = document.createElement('div');
- wrap.className = 'sidebar-lang-pills';
- wrap.style.cssText = 'display:flex;gap:4px;margin:14px 12px 6px;padding:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;';
- ['he','en','pt','es'].forEach(function(l){
- const b = document.createElement('button');
- b.textContent = l.toUpperCase();
- b.style.cssText = 'flex:1;background:none;border:none;color:#94a3b8;padding:6px 4px;border-radius:6px;font:700 11px Inter,sans-serif;cursor:pointer;letter-spacing:.4px;';
- b.onclick = function(){
- try { localStorage.setItem('wl_lang', l); } catch(e){}
- if (typeof I18n !== 'undefined' && I18n.setLanguage) I18n.setLanguage(l);
- wrap.querySelectorAll('button').forEach(function(x){
- x.style.color = x.textContent.toLowerCase() === l ? '#10b981' : '#94a3b8';
- x.style.background = x.textContent.toLowerCase() === l ? 'rgba(16,185,129,0.18)' : 'none';
- });
- };
- wrap.appendChild(b);
- });
- aside.appendChild(wrap);
- // initial active state
- var cur = (localStorage.getItem('wl_lang') || 'he').toLowerCase();
- wrap.querySelectorAll('button').forEach(function(x){
- if (x.textContent.toLowerCase() === cur) {
- x.style.color = '#10b981';
- x.style.background = 'rgba(16,185,129,0.18)';
- }
- });
- }
- } catch(e) {}
+  // sidebar-lang-row is now inlined in sidebar-footer via sidebarLangRow (see footer assembly above)
  attachProGates(aside);
  }
  injectThemeToggle();
