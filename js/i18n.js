@@ -1187,7 +1187,7 @@ const I18n = {
                 severance: 'פיצויים',
                 creditScore: 'דירוג אשראי',
                 creditScoreSubtitle: 'הערכת בריאות האשראי שלך',
-                finsightScore: 'ציון FinSight',
+                finsightScore: 'ציון WizeMoney',
                 externalScore: 'ציון חיצוני',
                 paymentDiscipline: 'משמעת תשלום',
                 creditUtilization: 'ניצול אשראי',
@@ -1425,7 +1425,7 @@ const I18n = {
                 needsIncomeData: 'נדרש נתון הכנסה בפרופיל'
             },
             footer: {
-                rights: '© 2026 FinSight · Part of WizeLife',
+                rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.'
             },
             trust: {
@@ -2979,7 +2979,7 @@ const I18n = {
                 severance: 'Severance',
                 creditScore: 'Credit Score',
                 creditScoreSubtitle: 'Your credit health assessment',
-                finsightScore: 'FinSight Score',
+                finsightScore: 'WizeMoney Score',
                 externalScore: 'External Score',
                 paymentDiscipline: 'Payment Discipline',
                 creditUtilization: 'Credit Utilization',
@@ -3217,7 +3217,7 @@ const I18n = {
                 needsIncomeData: 'Income data required in profile'
             },
             footer: {
-                rights: '© 2026 FinSight · Part of WizeLife',
+                rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'All content is provided for informational purposes only and does not constitute financial advice.'
             },
             trust: {
@@ -4074,7 +4074,7 @@ const I18n = {
                 severance: 'Indenização',
                 creditScore: 'Pontuação de Crédito',
                 creditScoreSubtitle: 'Avaliação da saúde do seu crédito',
-                finsightScore: 'Pontuação FinSight',
+                finsightScore: 'Pontuação WizeMoney',
                 externalScore: 'Pontuação Externa',
                 paymentDiscipline: 'Disciplina de Pagamento',
                 creditUtilization: 'Utilização de Crédito',
@@ -4295,7 +4295,7 @@ const I18n = {
                 needsIncomeData: 'Dados de renda necessários no perfil'
             },
             footer: {
-                rights: '© 2026 FinSight · Part of WizeLife',
+                rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'Todo o conteúdo é fornecido apenas para fins informativos e não constitui aconselhamento financeiro.'
             },
             trust: {
@@ -5166,7 +5166,7 @@ const I18n = {
                 severance: 'Indemnización',
                 creditScore: 'Puntaje de Crédito',
                 creditScoreSubtitle: 'Evaluación de la salud de tu crédito',
-                finsightScore: 'Puntaje FinSight',
+                finsightScore: 'Puntaje WizeMoney',
                 externalScore: 'Puntaje Externo',
                 paymentDiscipline: 'Disciplina de Pago',
                 creditUtilization: 'Utilización de Crédito',
@@ -5387,7 +5387,7 @@ const I18n = {
                 needsIncomeData: 'Se necesitan datos de ingresos en el perfil'
             },
             footer: {
-                rights: '© 2026 FinSight · Part of WizeLife',
+                rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'Todo el contenido se proporciona únicamente con fines informativos y no constituye asesoramiento financiero.'
             },
             trust: {
