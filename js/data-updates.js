@@ -20,6 +20,29 @@ const DataUpdates = {
 
         // Check periodically
         setInterval(() => this.checkForUpdates(), this.CHECK_INTERVAL);
+
+        // The banner's message spans have no data-i18n attribute, so I18n's
+        // translatePage() doesn't touch them — re-render it ourselves when the
+        // user switches language (covers both the in-app switcher, which sets
+        // <html lang>, and the shared WizeBar pills, which fire wl-lang-change).
+        const onLangChange = () => this.rerenderBanner();
+        window.addEventListener('wl-lang-change', onLangChange);
+        try {
+            new MutationObserver(onLangChange).observe(document.documentElement, {
+                attributes: true, attributeFilter: ['lang', 'dir']
+            });
+        } catch (e) {}
+    },
+
+    /**
+     * Re-render the update banner in the current language. No-op if the banner
+     * isn't currently visible (e.g. dismissed), so it never re-pops itself.
+     */
+    rerenderBanner() {
+        if (!document.getElementById('dataUpdateBanner')) return;
+        if (!this._activeUpdates || !this._activeUpdates.length) return;
+        const fresh = this._activeUpdates.map(u => ({ ...u, message: this.formatUpdateMessage(u.type) }));
+        this.showUpdateNotification(fresh);
     },
 
     /**
@@ -119,6 +142,10 @@ const DataUpdates = {
     showUpdateNotification(updates) {
         const lang = I18n?.currentLanguage || 'he';
         const isHebrew = lang === 'he';
+
+        // Keep the update list (with their types) so we can re-render in another
+        // language without losing track of what's shown.
+        this._activeUpdates = updates;
 
         // Remove existing banner if any
         const existingBanner = document.getElementById('dataUpdateBanner');
