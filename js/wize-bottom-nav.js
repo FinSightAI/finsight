@@ -85,10 +85,10 @@
       { icon:'user',   key:'profile',href:'%BASE%pages/preferences.html',label:{he:'פרופיל', en:'Profile', pt:'Perfil',  es:'Perfil' } }
     ],
     tax: [
-      { icon:'home',  key:'home',    href:'/',         label:{he:'בית',    en:'Home',     pt:'Início',  es:'Inicio'  } },
-      { icon:'chat',  key:'advisor', href:'/advisor',  label:{he:'יועץ',   en:'Advisor',  pt:'Consultor',es:'Asesor' } },
-      { icon:'doc',   key:'reports', href:'/reports',  label:{he:'דוחות',  en:'Reports',  pt:'Relatórios',es:'Reportes'} },
-      { icon:'user',  key:'profile', href:'/profile',  label:{he:'פרופיל', en:'Profile',  pt:'Perfil',  es:'Perfil'  } }
+      { icon:'home',  key:'home',    action:'wizeTaxHome',    label:{he:'בית',    en:'Home',     pt:'Início',   es:'Inicio'  } },
+      { icon:'chat',  key:'advisor', action:'wizeTaxAdvisor', label:{he:'יועץ',   en:'Advisor',  pt:'Consultor',es:'Asesor'  } },
+      { icon:'doc',   key:'reports', action:'wizeTaxReports', label:{he:'דוחות',  en:'Reports',  pt:'Relatórios',es:'Reportes'} },
+      { icon:'user',  key:'profile', action:'wizeTaxProfile', label:{he:'פרופיל', en:'Profile',  pt:'Perfil',   es:'Perfil'  } }
     ],
     health: [
       { icon:'home',    key:'new',     action:'newChat',           label:{he:'בית',     en:'Home',    pt:'Início',  es:'Inicio'  } },
