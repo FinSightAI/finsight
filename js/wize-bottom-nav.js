@@ -110,7 +110,7 @@
     ],
     portal: [
       { icon:'home',  key:'home',     href:'/',                  label:{he:'בית',     en:'Home',    pt:'Início', es:'Inicio'} },
-      { icon:'apps',  key:'apps',     href:'/dashboard.html',    label:{he:'אפליקציות',en:'Apps',   pt:'Apps',   es:'Apps'  } },
+      { icon:'apps',  key:'apps',     href:'/#products',         label:{he:'אפליקציות',en:'Apps',   pt:'Apps',   es:'Apps'  } },
       { icon:'user',  key:'account',  href:'/account.html', label:{he:'חשבון', en:'Account',pt:'Conta',  es:'Cuenta'} }
     ]
   };
