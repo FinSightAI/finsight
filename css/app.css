@@ -121,6 +121,8 @@ body {
     min-height: 100vh;
     color: var(--color-text-primary);
     line-height: 1.6;
+    /* Pre-reserve 36px for WizeLife HUD bar — eliminates CLS from JS-injected padding */
+    padding-top: 36px;
 }
 
 body.ltr {
@@ -1423,6 +1425,7 @@ select.form-control {
     body {
         background: white;
         color: black;
+        padding-top: 0 !important;
     }
 
     .card {
