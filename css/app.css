@@ -968,12 +968,14 @@ html[dir="rtl"] .mobile-header,
     background: rgba(0, 0, 0, 0.55);
     z-index: 140;
     opacity: 0;
+    pointer-events: none;
     transition: opacity var(--transition-normal);
     -webkit-tap-highlight-color: transparent;
 }
 
 .sidebar-overlay.active {
     opacity: 1;
+    pointer-events: auto;
 }
 
 /* ===== Sidebar Footer ===== */
