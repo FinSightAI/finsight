@@ -246,17 +246,17 @@
  ${(function(){const lang=localStorage.getItem('wl_lang')||'he';const labels={he:'שוק ברזיל',en:'Brazilian Market',pt:'Mercado Brasileiro',es:'Mercado Brasileño'};const l=labels[lang]||labels.en;return mkt==='br'?'🇧🇷 '+l+' ✓':'🇧🇷 '+l;}())}
  </button>
  </div>`;
- const _wizeAILang = localStorage.getItem('wl_lang') || 'he';
+ const _wizeAILang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
  const _wizeAITagline = ({ he: 'יועץ חוצה-אפליקציות', en: 'Cross-app advisor', pt: 'Consultor multi-app', es: 'Asesor entre apps' })[_wizeAILang] || 'Cross-app advisor';
  const wizeAILink = `<a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-inline-start:auto;">${_wizeAITagline}</span></a>`;
  // Plan pill at bottom removed — top WizeBar already shows plan/nick.
- const _shareLang = localStorage.getItem('wl_lang') || 'he';
+ const _shareLang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
   const _shareLabel = ({ he: 'שתף', en: 'Share', pt: 'Compartilhar', es: 'Compartir' })[_shareLang] || 'Share';
   const shareBtn = `<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:6px;justify-content:center;" onclick="(function(){ if(window.WizeShare){WizeShare.share({title:document.title,text:'WizeMoney \u2014 your personal finance dashboard',url:location.href});}else if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){});}else{try{navigator.clipboard.writeText(location.href);}catch(e){}} })()">
   <span>📤</span><span>${_shareLabel}</span>
   </button>`;
   // ── Sidebar lang switcher (all 4 languages, always visible in sidebar) ──
-  const _slLang = localStorage.getItem('wl_lang') || 'he';
+  const _slLang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
   function _slPillStyle(active) {
     return 'flex:1;background:' + (active ? 'rgba(16,185,129,0.18)' : 'none') + ';border:none;color:' + (active ? '#10b981' : '#94a3b8') + ';padding:6px 4px;border-radius:6px;font:700 11px Inter,sans-serif;cursor:pointer;letter-spacing:.4px;';
   }
@@ -279,7 +279,7 @@
   };
 
   // ── Customize button (dashboard only — WidgetManager lives in index.html) ──
-  const _customizeLang = localStorage.getItem('wl_lang') || 'he';
+  const _customizeLang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
   const _customizeLabel = ({ he: 'התאמה אישית', en: 'Customize', pt: 'Personalizar', es: 'Personalizar' })[_customizeLang] || 'Customize';
   const customizeBtn = !inPages ? '<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:6px;justify-content:center;" onclick="if(typeof WidgetManager!==\'undefined\')WidgetManager.showCustomizeModal()" data-i18n="dashboard.customize"><span>⚙️</span><span>' + _customizeLabel + '</span></button>' : '';
 
@@ -384,7 +384,7 @@
  const bar = document.createElement('div');
  bar.id = 'wl-bar';
  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;height:calc(36px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);z-index:99999;background:rgba(5,6,15,0.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;padding-left:16px;padding-right:16px;font-family:Inter,-apple-system,sans-serif;box-sizing:border-box;direction:ltr;';
- const l = localStorage.getItem('wl_lang') || 'he';
+ const l = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
  const LANGS = ['he','en','pt','es'];
  const pillCSS = (active) => `background:${active?'rgba(16,185,129,0.18)':'none'};border:none;color:${active?'#10b981':'#6b7280'};padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.4px;`;
  const langPills = LANGS.map(lng =>
@@ -445,7 +445,7 @@
  function updatePlanPill() {
  const el = document.getElementById('sidebarPlanPill');
  if (!el || typeof Plan === 'undefined') return;
- const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || 'he';
+ const lang = (typeof I18n !== 'undefined' && I18n.currentLang) || localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
  if (Plan.isYolo()) {
  el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 12px;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(239,68,68,0.15));border:1px solid rgba(245,158,11,0.3);border-radius:10px;font-size:0.78rem;font-weight:700;color:#f59e0b;">⚡ YOLO</div>';
  } else if (Plan.isPro()) {
@@ -602,7 +602,7 @@
  // Reading dir from <html> is unreliable here — sidebar.js fires from
  // DOMContentLoaded, sometimes BEFORE i18n.js sets document.documentElement.dir.
  // Source of truth is localStorage.wl_lang (set the moment the user clicks a pill).
- const _wlLang = (function(){ try { return (localStorage.getItem('wl_lang') || 'he').slice(0,2); } catch(e) { return 'he'; } })();
+ const _wlLang = (function(){ try { return (localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}())).slice(0,2); } catch(e) { return 'he'; } })();
  const isLtr = _wlLang !== 'he';
  const panelSide = isLtr ? 'right:0;left:auto;' : 'left:0;right:auto;';
  const padProp = isLtr ? 'padding-right' : 'padding-left';
@@ -649,7 +649,7 @@
 
  let tipOffset = 0;
  function rotateTips() {
- const lang = localStorage.getItem('wl_lang') || 'he';
+ const lang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
  const tips = ALL_TIPS[lang] || ALL_TIPS.en;
  const lbl = LABELS[lang] || LABELS.en;
  const tipsEl = document.getElementById('wl-rp-tips-label');
