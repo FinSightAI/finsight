@@ -5780,20 +5780,23 @@ const I18n = {
      * Initialize i18n with saved language
      */
     init() {
-        // Priority: URL ?lang param → shared wl_lang key → app-specific setting → browser
+        // Priority: URL ?lang param → shared wl_lang (explicit user choice) → browser locale.
+        // settings.language is NOT used as a fallback — Storage's default is 'he' but treating
+        // that as a user preference made every en/pt/es visitor render Hebrew. wl_lang is set
+        // only by explicit setLanguage(), so its presence is the real "user picked" signal.
         const urlLang = new URLSearchParams(window.location.search).get('lang');
         const wlLang  = localStorage.getItem('wl_lang');
-        const settings = Storage.getSettings();
-        const resolved = urlLang || wlLang || settings.language;
+        const resolved = urlLang || wlLang;
         if (resolved && this.languages.includes(resolved)) {
             this.currentLanguage = resolved;
         } else {
             const bl = (navigator.language || 'en').toLowerCase();
-            // Hebrew not auto-detected — user selects manually
-            if (bl.startsWith('pt')) this.currentLanguage = 'pt';
+            if (bl.startsWith('he')) this.currentLanguage = 'he';
+            else if (bl.startsWith('pt')) this.currentLanguage = 'pt';
             else if (bl.startsWith('es')) this.currentLanguage = 'es';
             else this.currentLanguage = 'en';
         }
+        const settings = Storage.getSettings();
         // Persist resolved language to both keys
         localStorage.setItem('wl_lang', this.currentLanguage);
         Storage.saveSettings({ ...settings, language: this.currentLanguage });
