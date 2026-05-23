@@ -1052,6 +1052,23 @@ select.form-control {
     .table-container {
         -webkit-overflow-scrolling: touch;
     }
+    /* Tap targets ≥40x40 (a11y / Apple HIG) */
+    .lang-btn,[data-lang],[data-wl-lang] {
+        min-width: 40px;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 10px;
+    }
+    .mobile-header-lang .lang-btn {
+        min-width: 40px !important;
+        min-height: 40px !important;
+    }
+    button:not(.btn):not(.nav-link):not(.mobile-tab):not(.wbn-btn):not(.bnav-btn):not(.lang-btn) {
+        min-height: 40px;
+        min-width: 40px;
+    }
 }
 
 @media (max-width: 480px) {
