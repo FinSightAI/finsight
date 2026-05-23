@@ -217,6 +217,33 @@ const DataUpdates = {
                 .update-dismiss:hover {
                     background: rgba(255, 255, 255, 0.3);
                 }
+                /* Compact pill on mobile — the desktop card was occupying ~90%
+                   of viewport width because it stacked verbose 'TheMarker /
+                   Gemel-Net updated for {month} {year}' lines vertically. */
+                @media (max-width: 768px) {
+                    .data-update-banner {
+                        max-width: calc(100vw - 32px);
+                        padding: 8px 12px;
+                        border-radius: 10px;
+                        font-size: 12px;
+                        line-height: 1.35;
+                    }
+                    .update-content { gap: 8px; flex-wrap: nowrap; }
+                    .update-icon { font-size: 14px; flex-shrink: 0; }
+                    .update-messages { gap: 2px; font-size: 11px; min-width: 0; flex: 1; }
+                    .update-messages span {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    .update-dismiss {
+                        padding: 5px 10px;
+                        font-size: 11px;
+                        font-weight: 600;
+                        border-radius: 6px;
+                        flex-shrink: 0;
+                    }
+                }
             `;
             document.head.appendChild(style);
         }
