@@ -807,6 +807,15 @@ select.form-control {
     gap: 12px;
 }
 
+/* In RTL, the flex row reverses visually so the toggle (first child) ends up
+   on the RIGHT — but the user expects the hamburger on the LEFT in Hebrew
+   (inline-end in RTL). Reverse the flex direction in RTL so first-child stays
+   on the visual LEFT. */
+html[dir="rtl"] .mobile-header,
+[dir="rtl"] .mobile-header {
+    flex-direction: row-reverse;
+}
+
 .mobile-header-toggle {
     background: none;
     border: none;
