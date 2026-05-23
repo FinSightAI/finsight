@@ -124,8 +124,11 @@
     }
 
     var cur = detectApp();
-    /* WizeLife portal IS the launcher — no need for an apps hamburger here. */
-    if (cur === 'portal') return;
+    /* On the WizeLife portal, only skip if the page has its own inline
+       hamburger (index.html has #hamburger). Sub-pages like /account.html
+       /about.html /security.html etc. NEED the shared hamburger so the user
+       always has a menu to navigate between apps + access account. */
+    if (cur === 'portal' && document.getElementById('hamburger')) return;
 
     /* Avoid a DOUBLE hamburger: if the host app already renders its own
        mobile menu toggle (WizeTax .wt-hamburger, WizeMoney .mobile-menu-toggle /

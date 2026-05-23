@@ -161,6 +161,11 @@ body.ltr {
     height: 100vh;
     overflow-y: auto;
     z-index: 100;
+    /* transition gated by body.app-ready so the sidebar doesn't animate from
+       its default (visible) position to translateX(100%) on every page load —
+       that animation was perceived as 'sidebar opening for a moment then sliding out'. */
+}
+body.app-ready .sidebar {
     transition: transform var(--transition-normal);
 }
 

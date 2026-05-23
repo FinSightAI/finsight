@@ -714,7 +714,16 @@ window.sanitize = sanitize;
 })();
 
 // Initialize app when DOM is ready
-document.addEventListener('DOMContentLoaded', () => App.init());
+document.addEventListener('DOMContentLoaded', () => {
+    App.init();
+    // Gate the .sidebar transition behind this class so it doesn't animate
+    // from default → translateX(100%) on first paint (caused a 'sidebar opens
+    // then closes' flash on every page navigation). Two RAFs ensures the
+    // browser has finished initial style resolution before transitions enable.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.body.classList.add('app-ready');
+    }));
+});
 
 // Make App available globally
 window.App = App;
