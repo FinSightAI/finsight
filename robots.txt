@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://money.wizelife.ai/sitemap.xml
+
+# Block admin/auth pages from indexing
+Disallow: /pages/settings.html
+Disallow: /pages/profile.html
+Disallow: /pages/preferences.html
