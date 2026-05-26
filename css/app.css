@@ -1101,6 +1101,16 @@ html[dir="rtl"] .mobile-header,
         min-height: 40px;
         min-width: 40px;
     }
+    /* Small tap targets — WizeMoney specific */
+    .mobile-header-brand {
+        min-height: 40px;
+    }
+    .trust-footer-links a {
+        min-height: 40px;
+        padding: 10px 4px;
+        display: inline-flex;
+        align-items: center;
+    }
 }
 
 @media (max-width: 480px) {
