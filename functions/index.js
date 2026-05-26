@@ -670,47 +670,129 @@ exports.applyReferralRewards = functions.pubsub
 
 // ─── Welcome Email — on new user registration ─────────────────────────────────
 
+/**
+ * Welcome email — sent on Firebase Auth user create. Multi-lang (HE/EN/PT/ES).
+ * Detects language from common email TLD heuristic; default English. The Money
+ * client also writes `preferred_lang` to /users/{uid} *after* this fires, so for
+ * future iterations consider a Firestore-trigger approach for language accuracy.
+ */
 exports.sendWelcomeEmail = functions
     .runWith({ secrets: [RESEND_API_KEY] })
     .auth.user().onCreate(async (user) => {
         const email = user.email;
         if (!email) return;
 
-        const resendClient = new Resend(RESEND_API_KEY.value());
+        let resendKey;
+        try { resendKey = RESEND_API_KEY.value(); } catch (e) { resendKey = ''; }
+        if (!resendKey) {
+            console.log('Welcome email skipped — RESEND_API_KEY not bound');
+            return;
+        }
 
+        const resendClient = new Resend(resendKey);
         const name = user.displayName || email.split("@")[0];
+
+        // Lightweight lang detection from email TLD — better than always-Hebrew.
+        const lower = email.toLowerCase();
+        let lang = 'en';
+        if (lower.endsWith('.il') || lower.endsWith('.co.il')) lang = 'he';
+        else if (lower.endsWith('.br') || lower.endsWith('.com.br')) lang = 'pt';
+        else if (lower.endsWith('.es') || lower.endsWith('.mx') || lower.endsWith('.ar') ||
+                 lower.endsWith('.cl') || lower.endsWith('.pe') || lower.endsWith('.co')) lang = 'es';
+
+        const T = {
+            en: {
+                subject: "Welcome to WizeLife — your 5-in-1 AI life suite 🎉",
+                title:   "Welcome to WizeLife",
+                greet:   `Hi ${name},`,
+                p1:      "Your account is ready. You now have access to 5 AI tools under one login:",
+                tools:   ["💰 Money — finance + investments", "✈️ Travel — flight deals + AI agent",
+                          "🧮 Tax — compare 20+ countries", "💊 Health — lab interpretation",
+                          "🏠 Deal — real-estate ROI"],
+                cta:     "Open dashboard →",
+                spamHelp:"📥 Found this in spam? Tap \"Not Spam\" so your friends get theirs in Inbox 🙏",
+                footer:  "WizeLife · sent on signup",
+                unsub:   "Manage preferences",
+                dir: 'ltr',
+            },
+            he: {
+                subject: "ברוכים הבאים ל-WizeLife — חבילת AI לחיים 🎉",
+                title:   "ברוכים הבאים ל-WizeLife",
+                greet:   `היי ${name},`,
+                p1:      "החשבון שלך מוכן. יש לך גישה ל-5 כלי AI בכניסה אחת:",
+                tools:   ["💰 Money — כספים והשקעות", "✈️ Travel — דילי טיסות + סוכן AI",
+                          "🧮 Tax — השוואה בין 20+ מדינות", "💊 Health — פירוש בדיקות",
+                          "🏠 Deal — תשואת נדל\"ן"],
+                cta:     "פתח את הדאשבורד ←",
+                spamHelp:"📥 הגיע לתיקיית ספאם? לחץ \"Not Spam\" וגרור ל-Inbox — זה עוזר לחברים שלך לקבל בInbox 🙏",
+                footer:  "WizeLife · נשלח אוטומטית בעת ההרשמה",
+                unsub:   "ניהול העדפות",
+                dir: 'rtl',
+            },
+            pt: {
+                subject: "Bem-vindo ao WizeLife — sua suíte de IA 5-em-1 🎉",
+                title:   "Bem-vindo ao WizeLife",
+                greet:   `Olá ${name},`,
+                p1:      "Sua conta está pronta. Você tem acesso a 5 ferramentas de IA em um único login:",
+                tools:   ["💰 Money — finanças + investimentos", "✈️ Travel — promoções de voos + agente IA",
+                          "🧮 Tax — compare 20+ países", "💊 Health — interpretação de exames",
+                          "🏠 Deal — ROI imobiliário"],
+                cta:     "Abrir painel →",
+                spamHelp:"📥 Foi para o spam? Toque em \"Not Spam\" para ajudar seus amigos a receberem no Inbox 🙏",
+                footer:  "WizeLife · enviado no cadastro",
+                unsub:   "Gerenciar preferências",
+                dir: 'ltr',
+            },
+            es: {
+                subject: "Bienvenido a WizeLife — tu suite de IA 5-en-1 🎉",
+                title:   "Bienvenido a WizeLife",
+                greet:   `Hola ${name},`,
+                p1:      "Tu cuenta está lista. Tienes acceso a 5 herramientas de IA con un solo inicio de sesión:",
+                tools:   ["💰 Money — finanzas + inversiones", "✈️ Travel — ofertas de vuelos + agente IA",
+                          "🧮 Tax — compara 20+ países", "💊 Health — interpretación de análisis",
+                          "🏠 Deal — ROI inmobiliario"],
+                cta:     "Abrir panel →",
+                spamHelp:"📥 ¿Fue al spam? Toca \"Not Spam\" para ayudar a tus amigos a recibir en Inbox 🙏",
+                footer:  "WizeLife · enviado al registrarse",
+                unsub:   "Gestionar preferencias",
+                dir: 'ltr',
+            },
+        };
+
+        const t = T[lang];
+        const toolsList = t.tools.map(item => `<li style="margin:6px 0;color:#334155;">${item}</li>`).join('');
 
         const html = `
 <!DOCTYPE html>
-<html dir="rtl" lang="he">
+<html dir="${t.dir}" lang="${lang}">
 <head><meta charset="UTF-8"><style>
   body { font-family: Arial, sans-serif; background:#f4f4f8; margin:0; padding:0; }
-  .wrap { max-width:520px; margin:32px auto; background:#fff; border-radius:16px;
+  .wrap { max-width:560px; margin:32px auto; background:#fff; border-radius:16px;
           padding:36px 32px; box-shadow:0 2px 12px rgba(0,0,0,.08); }
-  h1 { color:#10b981; font-size:1.6rem; margin-bottom:8px; }
+  h1 { background:linear-gradient(135deg,#6366f1,#a78bfa,#ec4899);
+       -webkit-background-clip:text; background-clip:text;
+       -webkit-text-fill-color:transparent; font-size:1.7rem; margin-bottom:8px; font-weight:900; letter-spacing:-0.5px; }
   p  { color:#334155; line-height:1.7; }
-  .badge { display:inline-block; background:#ecfdf5; color:#10b981; font-weight:700;
-           padding:6px 16px; border-radius:20px; margin:16px 0; font-size:1rem; }
-  .cta { display:inline-block; margin-top:20px; background:#10b981; color:#fff;
-         padding:12px 28px; border-radius:10px; text-decoration:none;
+  ul { list-style:none; padding:0; margin:14px 0; }
+  .cta { display:inline-block; margin-top:20px; background:linear-gradient(135deg,#6366f1,#a78bfa); color:#fff;
+         padding:14px 30px; border-radius:12px; text-decoration:none;
          font-weight:700; font-size:1rem; }
-  .footer { margin-top:28px; font-size:0.8rem; color:#94a3b8; }
+  .help { margin-top:24px; padding:14px 18px; background:#fef3c7; border-radius:10px;
+          color:#78350f; font-size:0.88rem; }
+  .footer { margin-top:28px; font-size:0.8rem; color:#94a3b8; text-align:center; }
+  .footer a { color:#6366f1; text-decoration:none; }
 </style></head>
 <body>
   <div class="wrap">
-    <h1>ברוכים הבאים ל-WizeMoney 💰</h1>
-    <p>היי ${name},</p>
-    <p>נרשמת בהצלחה! החשבון שלך מוכן.</p>
-    <div class="badge">✨ 3 ימי Pro חינם — מופעל עכשיו</div>
-    <p>במשך 3 ימים הבאים תוכל לגשת לכל התכונות המתקדמות:<br>
-    AI פיננסי אישי, ניתוח תיק השקעות, אופטימיזציית מס ועוד.</p>
-    <a class="cta" href="https://finsightai.github.io/finsight/">פתח את הדאשבורד →</a>
-    <div style="margin-top:24px; padding:12px 16px; background:#fef3c7; border-radius:8px; color:#78350f; font-size:0.88rem; text-align:right;">
-      📥 הגיע לתיקיית ספאם? לחץ <strong>"Not Spam"</strong> וגרור ל-Inbox — זה עוזר לחברים שלך לקבל את שלהם ב-Inbox 🙏
-    </div>
+    <h1>${t.title}</h1>
+    <p>${t.greet}</p>
+    <p>${t.p1}</p>
+    <ul>${toolsList}</ul>
+    <a class="cta" href="https://wizelife.ai/dashboard.html">${t.cta}</a>
+    <div class="help">${t.spamHelp}</div>
     <div class="footer">
-      WizeLife · נשלח אוטומטית בעת ההרשמה<br>
-      לביטול קבלת אימיילים — <a href="https://finsightai.github.io/finsight/">כניסה להגדרות</a>
+      ${t.footer}<br>
+      <a href="https://wizelife.ai/dashboard.html">${t.unsub}</a>
     </div>
   </div>
 </body>
@@ -718,12 +800,12 @@ exports.sendWelcomeEmail = functions
 
         try {
             await resendClient.emails.send({
-                from: 'WizeMoney <noreply@wizelife.ai>',
+                from: 'WizeLife <noreply@wizelife.ai>',
                 to:   email,
-                subject: "ברוכים הבאים ל-WizeMoney — 3 ימי Pro חינם 🎉",
+                subject: t.subject,
                 html,
             });
-            console.log(`✅ Welcome email sent to ${email}`);
+            console.log(`✅ Welcome email sent to ${email} (${lang})`);
         } catch (err) {
             console.error("Welcome email failed:", err.message);
         }
