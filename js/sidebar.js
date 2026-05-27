@@ -391,7 +391,7 @@
  `<button data-wl-lang="${lng}" onclick="(function(l){localStorage.setItem('wl_lang',l);if(typeof I18n!=='undefined')I18n.setLanguage(l);document.getElementById('wl-bar').querySelectorAll('[data-wl-lang]').forEach(function(b){b.style.cssText='${pillCSS(false)}';if(b.getAttribute('data-wl-lang')===l)b.style.cssText='${pillCSS(true)}'});})('${lng}')" style="${pillCSS(lng===l)}">${lng.toUpperCase()}</button>`
  ).join('');
  bar.innerHTML =
- '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
+ '<a href="https://wizelife.ai/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
  '<img src="https://wizelife.ai/assets/wizelife-icon.png?v=2026-05-14" width="20" height="20" alt="" style="flex-shrink:0;display:block">' +
  '<span style="font-size:13px;font-weight:800;color:#eef2ff;letter-spacing:-0.3px;font-family:Plus Jakarta Sans,sans-serif;">WizeLife</span>' +
  '</a>' +
