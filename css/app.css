@@ -830,6 +830,11 @@ html[dir="rtl"] .mobile-header,
     border-radius: var(--radius-sm);
     transition: background var(--transition-fast);
     flex-shrink: 0;
+    /* Inline-start standard: 8px from edge across all WizeLife apps.
+       Money's mobile-header uses flex, so position is set on the parent
+       container; this explicit hint matches the cross-app convention. */
+    margin-inline-start: 0;
+    left: 8px;
 }
 
 .mobile-header-toggle:hover,
