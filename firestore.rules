@@ -68,6 +68,18 @@ service cloud.firestore {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // WizeMoney localStorage cloud backup — owner-only. One doc per user
+    // holds a mirror of all `finance_*` localStorage keys so data follows
+    // the user across devices / domains / browser-cache wipes. Added
+    // 2026-05-27 after a user lost their stocks when the domain changed
+    // (finsightai.github.io → money.wizelife.ai — different origin =
+    // separate localStorage bucket).
+    // ─────────────────────────────────────────────────────────────────────
+    match /userBackups/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // Check Deal — shared deal links. Anyone with the URL token can READ.
     // Client write/update/delete are blocked — only the Next.js API routes
     // (using the Admin SDK) may create or modify shared deals. Added
