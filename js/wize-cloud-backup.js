@@ -7,10 +7,13 @@
  * module keeps a copy of every BACKUP_KEYS entry in Firestore so the data
  * follows the user across devices, domains, and reinstalls.
  *
- * MODEL: one document per user at `userBackups/{uid}`:
+ * MODEL: one doc per app at `userBackups/{uid}/data/wizemoney`:
  *   { data: { finance_stocks: "<stringified JSON>", ... },
  *     updatedAt: Firestore.serverTimestamp(),
  *     version: 2 }
+ *
+ * Sibling docs (wizetax / wizehealth / wizetravel) live under the same
+ * userBackups/{uid}/data/ sub-collection so apps can't overwrite each other.
  *
  * FLOWS:
  *   - On login: read cloud doc → compare server `updatedAt` against
@@ -21,6 +24,7 @@
 (function () {
     'use strict';
 
+    const APP_ID = 'wizemoney';
     const BACKUP_KEYS = [
         'finance_bank_accounts',
         'finance_credit_cards',
@@ -140,7 +144,7 @@
 
         const ts = nowTs();
         try {
-            await db.collection('userBackups').doc(_currentUid).set({
+            await db.collection('userBackups').doc(_currentUid).collection('data').doc(APP_ID).set({
                 data,
                 version: 2,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -174,7 +178,7 @@
 
         let cloudDoc;
         try {
-            cloudDoc = await db.collection('userBackups').doc(uid).get();
+            cloudDoc = await db.collection('userBackups').doc(uid).collection('data').doc(APP_ID).get();
         } catch (e) {
             console.warn('WizeCloudBackup: initial fetch failed', e?.code || e?.message);
             return;
@@ -275,7 +279,7 @@
         const db = await ensureFirestore();
         if (db && _currentUid) {
             try {
-                const d = await db.collection('userBackups').doc(_currentUid).get();
+                const d = await db.collection('userBackups').doc(_currentUid).collection('data').doc(APP_ID).get();
                 if (d.exists) {
                     const c = d.data();
                     out.cloud = {
