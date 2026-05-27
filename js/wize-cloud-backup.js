@@ -101,12 +101,35 @@
         return firebase.firestore();
     }
 
+    function looksEncrypted(valueStr) {
+        // Pin-lock encrypts entries as {"__enc":true,...}. We must NOT push
+        // encrypted blobs — they'd be useless on another device with a
+        // different PIN, AND would mask the user's real data on cloud restore.
+        try {
+            const p = JSON.parse(valueStr);
+            return p && p.__enc === true;
+        } catch { return false; }
+    }
+
+    function snapshotLocalSafe() {
+        const data = {};
+        let skipped = 0;
+        for (const k of BACKUP_KEYS) {
+            const v = getLocalKey(k);
+            if (v == null) continue;
+            if (looksEncrypted(v)) { skipped++; continue; }
+            data[k] = v;
+        }
+        if (skipped > 0) console.info(`WizeCloudBackup: skipped ${skipped} PIN-locked keys`);
+        return data;
+    }
+
     async function pushNow() {
         if (!_currentUid) return;
         const db = await ensureFirestore();
         if (!db) return;
 
-        const data = snapshotLocal();
+        const data = snapshotLocalSafe();
         if (!Object.keys(data).length) return;
 
         const sizeBytes = jsonSize(data);
@@ -122,11 +145,13 @@
                 version: 2,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 clientTs: ts,
+                keyCount: Object.keys(data).length,
             }, { merge: false });
             localStorage.setItem(LOCAL_TS_KEY, String(ts));
-            // Quiet success — no toast spam
+            return { ok: true, keys: Object.keys(data).length };
         } catch (e) {
             console.warn('WizeCloudBackup: push failed', e?.code || e?.message);
+            return { ok: false, error: e?.code || e?.message };
         }
     }
 
@@ -138,6 +163,7 @@
 
     /**
      * On login, compare cloud vs local. Restore if cloud is newer or local is empty.
+     * If cloud is empty and local has data → push immediately (first-device case).
      */
     async function initialRestore(uid) {
         if (_initialRestoreDone) return;
@@ -153,7 +179,19 @@
             console.warn('WizeCloudBackup: initial fetch failed', e?.code || e?.message);
             return;
         }
-        if (!cloudDoc.exists) return;
+        // No cloud doc yet — if local has data, push immediately so first-device
+        // users get protection without waiting for the next Storage.set.
+        if (!cloudDoc.exists) {
+            const localHasData = BACKUP_KEYS.some(k => {
+                const v = getLocalKey(k);
+                return v && !looksEncrypted(v);
+            });
+            if (localHasData) {
+                console.log('WizeCloudBackup: no cloud doc yet — pushing initial snapshot');
+                await pushNow();
+            }
+            return;
+        }
 
         const cloud = cloudDoc.data() || {};
         if (!cloud.data || typeof cloud.data !== 'object') return;
@@ -225,12 +263,44 @@
         });
     }
 
-    // Expose for manual triggers (e.g., from the migration page)
+    // Diagnostic: callable from console as WizeCloudBackup.status()
+    async function status() {
+        const out = {
+            uid: _currentUid,
+            wrapped: typeof Storage !== 'undefined' && Storage.__cloudWrapped === true,
+            localKeys: BACKUP_KEYS.filter(k => getLocalKey(k)).length,
+            localTs: parseInt(localStorage.getItem(LOCAL_TS_KEY) || '0', 10),
+            cloud: null,
+        };
+        const db = await ensureFirestore();
+        if (db && _currentUid) {
+            try {
+                const d = await db.collection('userBackups').doc(_currentUid).get();
+                if (d.exists) {
+                    const c = d.data();
+                    out.cloud = {
+                        keyCount: c.keyCount || Object.keys(c.data || {}).length,
+                        clientTs: c.clientTs,
+                        ageSec: c.clientTs ? Math.round((Date.now() - c.clientTs) / 1000) : null,
+                    };
+                } else {
+                    out.cloud = 'no-doc-yet';
+                }
+            } catch (e) {
+                out.cloud = 'fetch-error: ' + (e?.code || e?.message);
+            }
+        }
+        console.table(out);
+        return out;
+    }
+
+    // Expose for manual triggers + diagnostics
     window.WizeCloudBackup = {
         init,
         pushNow,
         scheduleBackup,
         snapshotLocal,
+        status,
         BACKUP_KEYS,
     };
 
