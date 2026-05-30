@@ -864,6 +864,10 @@ exports.dripEmailScheduler = functions
                     title: 'חישוב מס אישי — 2 דקות',
                     body: `ישראלים שעשו את החישוב גילו שהם יכולים לחסוך ₪40,000–₪120,000 בשנה במס.<br><br>WizeTax מחשב בדיוק <strong>את המצב שלך</strong> — לפי ההכנסה, הנכסים, ומצב המשפחה שלך — מול 26 מדינות.`,
                     cta: 'חשב את החיסכון שלי ←',
+                    urgencyBadge: 'מחיר בטא — $4.99/חודש',
+                    urgencyNote: 'עולה ל-$9.99 אחרי סיום הבטא',
+                    upgradeTitle: '⏳ כרגע במחיר השקה — לא יישאר כך לנצח',
+                    upgradeLink: 'שדרג ל-Pro לפני שהמחיר עולה',
                     ps: `💡 P.S. — תוצאת "מס יציאה" מפתיעה הרבה אנשים. כדאי לדעת לפני שמחליטים.`,
                     dir: 'rtl',
                 },
@@ -872,6 +876,10 @@ exports.dripEmailScheduler = functions
                     title: 'Your personal tax calculation — 2 min',
                     body: `Israelis who ran the numbers found they could save $30,000–$80,000/year in taxes by relocating.<br><br>WizeTax calculates exactly <strong>your situation</strong> — based on your income, assets, and family — across 26 countries.`,
                     cta: 'Calculate my savings →',
+                    urgencyBadge: 'Beta pricing — $4.99/mo',
+                    urgencyNote: 'increases to $9.99 after beta ends',
+                    upgradeTitle: "⏳ Launch pricing — won't last forever",
+                    upgradeLink: 'Upgrade to Pro before price increases',
                     ps: `💡 P.S. — The "exit tax" result surprises most people. Worth knowing before you decide.`,
                     dir: 'ltr',
                 },
@@ -880,6 +888,10 @@ exports.dripEmailScheduler = functions
                     title: 'Seu cálculo fiscal pessoal — 2 min',
                     body: `Israelenses que fizeram as contas descobriram que podem economizar R$150.000–R$400.000/ano em impostos.<br><br>WizeTax calcula exatamente <strong>a sua situação</strong> — pela sua renda, ativos e família — em 26 países.`,
                     cta: 'Calcular minha economia →',
+                    urgencyBadge: 'Preço beta — $4,99/mês',
+                    urgencyNote: 'sobe para $9,99 após o beta',
+                    upgradeTitle: '⏳ Preço de lançamento — não dura para sempre',
+                    upgradeLink: 'Fazer upgrade para Pro antes do aumento',
                     ps: `💡 P.S. — O resultado do "imposto de saída" surpreende a maioria. Vale saber antes de decidir.`,
                     dir: 'ltr',
                 },
@@ -888,6 +900,10 @@ exports.dripEmailScheduler = functions
                     title: 'Tu cálculo fiscal personal — 2 min',
                     body: `Israelíes que hicieron los cálculos descubrieron que pueden ahorrar $30,000–$80,000/año en impuestos.<br><br>WizeTax calcula exactamente <strong>tu situación</strong> — según tus ingresos, activos y familia — en 26 países.`,
                     cta: 'Calcular mis ahorros →',
+                    urgencyBadge: 'Precio beta — $4,99/mes',
+                    urgencyNote: 'sube a $9,99 tras el beta',
+                    upgradeTitle: '⏳ Precio de lanzamiento — no durará siempre',
+                    upgradeLink: 'Actualizar a Pro antes del aumento',
                     ps: `💡 P.S. — El resultado del "impuesto de salida" sorprende a la mayoría. Vale saber antes de decidir.`,
                     dir: 'ltr',
                 },
@@ -896,21 +912,32 @@ exports.dripEmailScheduler = functions
             const t = T[lang] || T.en;
             const utmLink = `https://tax.wizelife.ai/advisor?utm_source=drip&utm_medium=email&utm_campaign=day1&lang=${lang}`;
 
+            const urgencyLink = `https://wizelife.ai/auth.html?next=/dashboard.html&utm_source=drip&utm_medium=email&utm_campaign=day1_urgency&lang=${lang}`;
             const html = `<!DOCTYPE html><html dir="${t.dir}" lang="${lang}"><head><meta charset="UTF-8"><style>
 body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0}
-.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;padding:32px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.urgency{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;text-align:center;padding:10px 16px;font-size:.85rem;font-weight:700;letter-spacing:.3px}
+.urgency span{opacity:.85;font-weight:400}
+.body{padding:32px}
 h1{font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 16px}
 p{color:#334155;line-height:1.7;margin:0 0 20px}
 .cta{display:inline-block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:700;font-size:1rem}
-.ps{margin-top:24px;padding:14px;background:#fffbeb;border-radius:10px;color:#78350f;font-size:.88rem}
+.upgrade{margin-top:20px;padding:16px;background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(168,85,247,.06));border:1px solid rgba(99,102,241,.2);border-radius:12px}
+.upgrade p{margin:0 0 10px;font-size:.88rem;color:#4338ca;font-weight:600}
+.upgrade a{color:#6366f1;font-size:.85rem;font-weight:700;text-decoration:none}
+.ps{margin-top:20px;padding:14px;background:#fffbeb;border-radius:10px;color:#78350f;font-size:.88rem}
 .foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}
-</style></head><body><div class="wrap">
+</style></head><body>
+<div class="wrap">
+<div class="urgency">🔥 ${t.urgencyBadge} <span>— ${t.urgencyNote}</span></div>
+<div class="body">
 <h1>${t.title}</h1>
 <p>${t.body}</p>
 <a class="cta" href="${utmLink}">${t.cta}</a>
+<div class="upgrade"><p>${t.upgradeTitle}</p><a href="${urgencyLink}">${t.upgradeLink} →</a></div>
 <div class="ps">${t.ps}</div>
 <div class="foot">WizeLife · <a href="https://wizelife.ai/dashboard.html" style="color:#6366f1">dashboard</a></div>
-</div></body></html>`;
+</div></div></body></html>`;
 
             try {
                 await resend.emails.send({
