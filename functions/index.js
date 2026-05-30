@@ -809,6 +809,122 @@ exports.sendWelcomeEmail = functions
         } catch (err) {
             console.error("Welcome email failed:", err.message);
         }
+
+        // Save drip state so dripEmailScheduler can send Day-1 follow-up
+        try {
+            await db.collection('users').doc(user.uid).set({
+                email,
+                name,
+                lang,
+                drip1_sent: false,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            }, { merge: true });
+        } catch (e) {
+            console.warn('drip state save failed', e.message);
+        }
+    });
+
+
+// ─── Drip Email — Day 1 follow-up ────────────────────────────────────────────
+// Runs every 6 hours. Finds users who signed up 20-36h ago and haven't
+// received the Day-1 email yet. Sends a direct link to WizeTax advisor.
+exports.dripEmailScheduler = functions
+    .runWith({ secrets: [RESEND_API_KEY] })
+    .pubsub.schedule('every 6 hours')
+    .onRun(async () => {
+        let resendKey;
+        try { resendKey = RESEND_API_KEY.value(); } catch (e) { resendKey = ''; }
+        if (!resendKey) { console.log('drip skipped — no RESEND_API_KEY'); return; }
+        const resend = new Resend(resendKey);
+
+        const now = Date.now();
+        const min20h = new Date(now - 36 * 60 * 60 * 1000); // 36h ago
+        const max20h = new Date(now - 20 * 60 * 60 * 1000); // 20h ago
+
+        const snap = await db.collection('users')
+            .where('drip1_sent', '==', false)
+            .where('createdAt', '>=', min20h)
+            .where('createdAt', '<=', max20h)
+            .limit(50)
+            .get();
+
+        console.log(`drip Day-1: ${snap.size} users to email`);
+
+        for (const doc of snap.docs) {
+            const u = doc.data();
+            const email = u.email;
+            if (!email) continue;
+
+            const lang = (u.lang || 'en').slice(0, 2);
+            const name = u.name || email.split('@')[0];
+
+            const T = {
+                he: {
+                    subject: `${name}, כמה תחסוך אם תעבור לפורטוגל? 🧮`,
+                    title: 'חישוב מס אישי — 2 דקות',
+                    body: `ישראלים שעשו את החישוב גילו שהם יכולים לחסוך ₪40,000–₪120,000 בשנה במס.<br><br>WizeTax מחשב בדיוק <strong>את המצב שלך</strong> — לפי ההכנסה, הנכסים, ומצב המשפחה שלך — מול 26 מדינות.`,
+                    cta: 'חשב את החיסכון שלי ←',
+                    ps: `💡 P.S. — תוצאת "מס יציאה" מפתיעה הרבה אנשים. כדאי לדעת לפני שמחליטים.`,
+                    dir: 'rtl',
+                },
+                en: {
+                    subject: `${name}, how much tax could you save by relocating? 🧮`,
+                    title: 'Your personal tax calculation — 2 min',
+                    body: `Israelis who ran the numbers found they could save $30,000–$80,000/year in taxes by relocating.<br><br>WizeTax calculates exactly <strong>your situation</strong> — based on your income, assets, and family — across 26 countries.`,
+                    cta: 'Calculate my savings →',
+                    ps: `💡 P.S. — The "exit tax" result surprises most people. Worth knowing before you decide.`,
+                    dir: 'ltr',
+                },
+                pt: {
+                    subject: `${name}, quanto você economizaria em impostos emigrando? 🧮`,
+                    title: 'Seu cálculo fiscal pessoal — 2 min',
+                    body: `Israelenses que fizeram as contas descobriram que podem economizar R$150.000–R$400.000/ano em impostos.<br><br>WizeTax calcula exatamente <strong>a sua situação</strong> — pela sua renda, ativos e família — em 26 países.`,
+                    cta: 'Calcular minha economia →',
+                    ps: `💡 P.S. — O resultado do "imposto de saída" surpreende a maioria. Vale saber antes de decidir.`,
+                    dir: 'ltr',
+                },
+                es: {
+                    subject: `${name}, ¿cuánto podrías ahorrar en impuestos emigrando? 🧮`,
+                    title: 'Tu cálculo fiscal personal — 2 min',
+                    body: `Israelíes que hicieron los cálculos descubrieron que pueden ahorrar $30,000–$80,000/año en impuestos.<br><br>WizeTax calcula exactamente <strong>tu situación</strong> — según tus ingresos, activos y familia — en 26 países.`,
+                    cta: 'Calcular mis ahorros →',
+                    ps: `💡 P.S. — El resultado del "impuesto de salida" sorprende a la mayoría. Vale saber antes de decidir.`,
+                    dir: 'ltr',
+                },
+            };
+
+            const t = T[lang] || T.en;
+            const utmLink = `https://tax.wizelife.ai/advisor?utm_source=drip&utm_medium=email&utm_campaign=day1&lang=${lang}`;
+
+            const html = `<!DOCTYPE html><html dir="${t.dir}" lang="${lang}"><head><meta charset="UTF-8"><style>
+body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0}
+.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;padding:32px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+h1{font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 16px}
+p{color:#334155;line-height:1.7;margin:0 0 20px}
+.cta{display:inline-block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:700;font-size:1rem}
+.ps{margin-top:24px;padding:14px;background:#fffbeb;border-radius:10px;color:#78350f;font-size:.88rem}
+.foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}
+</style></head><body><div class="wrap">
+<h1>${t.title}</h1>
+<p>${t.body}</p>
+<a class="cta" href="${utmLink}">${t.cta}</a>
+<div class="ps">${t.ps}</div>
+<div class="foot">WizeLife · <a href="https://wizelife.ai/dashboard.html" style="color:#6366f1">dashboard</a></div>
+</div></body></html>`;
+
+            try {
+                await resend.emails.send({
+                    from: 'WizeLife <noreply@wizelife.ai>',
+                    to: email,
+                    subject: t.subject,
+                    html,
+                });
+                await doc.ref.update({ drip1_sent: true });
+                console.log(`✅ drip Day-1 sent to ${email}`);
+            } catch (e) {
+                console.error(`drip Day-1 failed for ${email}:`, e.message);
+            }
+        }
     });
 
 // ─── AI Proxy — callable function ────────────────────────────────────────────
