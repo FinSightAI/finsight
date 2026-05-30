@@ -974,6 +974,7 @@ p{color:#334155;line-height:1.7;margin:0 0 20px}
 
             const T3 = {
                 he: {
+                    banner: '🌍 מדריך השוואת מדינות — WizeTax',
                     subject: `${name}, 3 מדינות שישראלים בוחרים — מה מתאים לך?`,
                     title: '🌍 פורטוגל, קפריסין, איחוד האמירויות',
                     body: `כל אחת מהן מציעה משהו שונה:<br><br>
@@ -985,6 +986,7 @@ p{color:#334155;line-height:1.7;margin:0 0 20px}
                     dir: 'rtl',
                 },
                 en: {
+                    banner: '🌍 Country Comparison Guide — WizeTax',
                     subject: `${name}, 3 countries Israelis choose — which fits you?`,
                     title: '🌍 Portugal, Cyprus, UAE',
                     body: `Each offers something different:<br><br>
@@ -996,6 +998,7 @@ p{color:#334155;line-height:1.7;margin:0 0 20px}
                     dir: 'ltr',
                 },
                 pt: {
+                    banner: '🌍 Guia de Comparação de Países — WizeTax',
                     subject: `${name}, 3 países que israelenses escolhem — qual é o seu?`,
                     title: '🌍 Portugal, Chipre, Emirados',
                     body: `Cada um oferece algo diferente:<br><br>
@@ -1007,6 +1010,7 @@ p{color:#334155;line-height:1.7;margin:0 0 20px}
                     dir: 'ltr',
                 },
                 es: {
+                    banner: '🌍 Guía de Comparación de Países — WizeTax',
                     subject: `${name}, 3 países que israelíes eligen — ¿cuál te conviene?`,
                     title: '🌍 Portugal, Chipre, Emiratos',
                     body: `Cada uno ofrece algo diferente:<br><br>
@@ -1031,7 +1035,7 @@ p{color:#334155;line-height:1.8;margin:0 0 20px}
 .ps{margin-top:20px;padding:14px;background:#eff6ff;border-radius:10px;color:#1e40af;font-size:.88rem}
 .foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}
 </style></head><body><div class="wrap">
-<div class="banner">🌍 מדריך השוואת מדינות — WizeTax</div>
+<div class="banner">${t3.banner}</div>
 <div class="body">
 <h1>${t3.title}</h1>
 <p>${t3.body}</p>
@@ -1155,6 +1159,79 @@ p{color:#334155;line-height:1.8;margin:0 0 20px}
             } catch (e) {
                 console.error(`drip Day-7 failed for ${email}:`, e.message);
             }
+
+        // ── Leads collection: users who came via landing-page email capture
+        // captureLeadEmail saves to `leads` (not `users`), using capturedAt field.
+
+        // leads Day-1 (20-36h)
+        const lSnap1 = await db.collection('leads')
+            .where('drip1_sent', '==', false)
+            .where('capturedAt', '>=', min20h)
+            .where('capturedAt', '<=', max20h)
+            .limit(50).get();
+        console.log(`leads drip Day-1: ${lSnap1.size} leads to email`);
+        for (const doc of lSnap1.docs) {
+            const u = doc.data(); const email = u.email; if (!email) continue;
+            const lang = (u.lang || 'en').slice(0, 2);
+            const name = email.split('@')[0];
+            const TL1 = {
+                he: { subject: `${name}, כמה תחסכ אם תעבור לחו"ל? 🧮`, title: 'חישוב מס אישי — 2 דקות', body: 'ישראלים שעשו את החישוב גילו שהם יכולים לחסכ ₪40,000–₪120,000 בשנה במס.<br><br>WizeTax מחשב בדיוק <strong>את המצב שלך</strong>.', cta: 'חשב את החיסכון שלי ←', dir: 'rtl' },
+                en: { subject: `${name}, how much would you save moving abroad? 🧮`, title: 'Personal Tax Calculator — 2 min', body: 'Israelis who ran the numbers found they can save ₪40,000–₪120,000 per year in taxes.<br><br>WizeTax calculates <strong>your exact situation</strong>.', cta: 'Calculate my savings →', dir: 'ltr' },
+                pt: { subject: `${name}, quanto pouparia mudando para o exterior? 🧮`, title: 'Calculadora Fiscal Pessoal — 2 min', body: 'Israelenses podem poupar ₪40.000–₪120.000 por ano em impostos.<br><br>WizeTax calcula <strong>a sua situação exata</strong>.', cta: 'Calcular minha poupança →', dir: 'ltr' },
+                es: { subject: `${name}, ¿cuánto ahorrarías mudándote al exterior? 🧮`, title: 'Calculadora Fiscal Personal — 2 min', body: 'Israelíes pueden ahorrar ₪40.000–₪120.000 al año en impuestos.<br><br>WizeTax calcula <strong>tu situación exacta</strong>.', cta: 'Calcular mis ahorros →', dir: 'ltr' },
+            };
+            const tL1 = TL1[lang] || TL1.en;
+            const utmLink1L = `https://tax.wizelife.ai/advisor?utm_source=drip&utm_medium=email&utm_campaign=lead_day1&lang=${lang}`;
+            const html1L = `<!DOCTYPE html><html dir="${tL1.dir}" lang="${lang}"><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0}.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;overflow:hidden}.badge{background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;text-align:center;padding:10px;font-size:.85rem;font-weight:700}.body{padding:32px}h1{font-size:1.2rem;font-weight:900;color:#1e293b;margin:0 0 16px}p{color:#334155;line-height:1.8;margin:0 0 20px}.cta{display:inline-block;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:700}.foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}</style></head><body><div class="wrap"><div class="badge">Pro בטא — $4.99/חודש</div><div class="body"><h1>${tL1.title}</h1><p>${tL1.body}</p><a class="cta" href="${utmLink1L}">${tL1.cta}</a><div class="foot">WizeLife · <a href="https://wizelife.ai/dashboard.html" style="color:#6366f1">dashboard</a></div></div></div></body></html>`;
+            try { await resend.emails.send({ from: 'WizeLife <noreply@wizelife.ai>', to: email, subject: tL1.subject, html: html1L }); await doc.ref.update({ drip1_sent: true }); console.log(`✅ leads drip Day-1 sent to ${email}`); } catch (e) { console.error(`leads drip Day-1 failed for ${email}:`, e.message); }
+        }
+
+        // leads Day-3 (60-90h)
+        const lSnap3 = await db.collection('leads')
+            .where('drip2_sent', '==', false)
+            .where('capturedAt', '>=', new Date(now - 90 * 60 * 60 * 1000))
+            .where('capturedAt', '<=', new Date(now - 60 * 60 * 60 * 1000))
+            .limit(50).get();
+        console.log(`leads drip Day-3: ${lSnap3.size} leads to email`);
+        for (const doc of lSnap3.docs) {
+            const u = doc.data(); const email = u.email; if (!email) continue;
+            const lang = (u.lang || 'en').slice(0, 2);
+            const name = email.split('@')[0];
+            const TL3 = {
+                he: { banner: '🌍 מדריך השוואת מדינות — WizeTax', subject: `${name}, 3 מדינות שישראלים בוחרים — מה מתאים לך?`, title: '🌍 פורטוגל, קפריסין, איחוד האמירויות', body: 'כל אחת מהן מציעה משהו שונה. WizeTax מחשב בדיוק כמה כל מדינה שווה לך אישית.', cta: 'השווה את שלושתן ←', dir: 'rtl' },
+                en: { banner: '🌍 Country Comparison Guide — WizeTax', subject: `${name}, 3 countries Israelis choose — which fits you?`, title: '🌍 Portugal, Cyprus, UAE', body: 'Each offers something different. WizeTax calculates exactly how much each country is worth for you.', cta: 'Compare all three →', dir: 'ltr' },
+                pt: { banner: '🌍 Guia de Comparação de Países — WizeTax', subject: `${name}, 3 países que israelenses escolhem — qual é o seu?`, title: '🌍 Portugal, Chipre, Emirados', body: 'Cada um oferece algo diferente. WizeTax calcula exatamente quanto cada país vale para você.', cta: 'Comparar os três →', dir: 'ltr' },
+                es: { banner: '🌍 Guía de Comparación de Países — WizeTax', subject: `${name}, 3 países que israelíes eligen — ¿cuál te conviene?`, title: '🌍 Portugal, Chipre, Emiratos', body: 'Cada uno ofrece algo diferente. WizeTax calcula exactamente cuánto vale cada país para ti.', cta: 'Comparar los tres →', dir: 'ltr' },
+            };
+            const tL3 = TL3[lang] || TL3.en;
+            const utmLink3L = `https://tax.wizelife.ai/relocation-analyzer?utm_source=drip&utm_medium=email&utm_campaign=lead_day3&lang=${lang}`;
+            const html3L = `<!DOCTYPE html><html dir="${tL3.dir}" lang="${lang}"><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0}.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;overflow:hidden}.banner{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;text-align:center;padding:10px;font-size:.85rem;font-weight:700}.body{padding:32px}h1{font-size:1.2rem;font-weight:900;color:#1e293b;margin:0 0 16px}p{color:#334155;line-height:1.8;margin:0 0 20px}.cta{display:inline-block;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:700}.foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}</style></head><body><div class="wrap"><div class="banner">${tL3.banner}</div><div class="body"><h1>${tL3.title}</h1><p>${tL3.body}</p><a class="cta" href="${utmLink3L}">${tL3.cta}</a><div class="foot">WizeLife · <a href="https://wizelife.ai/dashboard.html" style="color:#6366f1">dashboard</a></div></div></div></body></html>`;
+            try { await resend.emails.send({ from: 'WizeLife <noreply@wizelife.ai>', to: email, subject: tL3.subject, html: html3L }); await doc.ref.update({ drip2_sent: true }); console.log(`✅ leads drip Day-3 sent to ${email}`); } catch (e) { console.error(`leads drip Day-3 failed for ${email}:`, e.message); }
+        }
+
+        // leads Day-7 (160-175h)
+        const lSnap7 = await db.collection('leads')
+            .where('drip3_sent', '==', false)
+            .where('capturedAt', '>=', new Date(now - 175 * 60 * 60 * 1000))
+            .where('capturedAt', '<=', new Date(now - 160 * 60 * 60 * 1000))
+            .limit(50).get();
+        console.log(`leads drip Day-7: ${lSnap7.size} leads to email`);
+        for (const doc of lSnap7.docs) {
+            const u = doc.data(); const email = u.email; if (!email) continue;
+            const lang = (u.lang || 'en').slice(0, 2);
+            const name = email.split('@')[0];
+            const TL7 = {
+                he: { subject: `${name}, מחיר הבטא נגמר בקרוב ⏰`, title: 'הזדמנות אחרונה — Pro $4.99 / YOLO $9.99', body: 'שבוע עבר מאז שהכנסת את המייל שלך.<br><br>מחיר הבטא עדיין פעיל — אבל לא לנצח.', cta: 'נעל את מחיר הבטא ←', sub: 'ביטול בכל עת.', ps: '⏳ המחיר עולה ל-$9.99 אחרי סיום הבטא.', dir: 'rtl' },
+                en: { subject: `${name}, beta pricing ends soon ⏰`, title: 'Last chance — Pro $4.99 / YOLO $9.99', body: 'One week since you entered your email.<br><br>The <strong>$4.99/month</strong> beta price is still active — but not forever.', cta: 'Lock in beta pricing →', sub: 'Cancel anytime.', ps: '⏳ Price increases to $9.99 after beta ends.', dir: 'ltr' },
+                pt: { subject: `${name}, preço beta termina em breve ⏰`, title: 'Última chance — Pro $4,99 / YOLO $9,99', body: 'Uma semana desde que introduziu o seu e-mail.<br><br>O preço beta de <strong>$4,99/mês</strong> ainda está ativo — mas não para sempre.', cta: 'Garantir preço beta →', sub: 'Cancele a qualquer momento.', ps: '⏳ O preço sobe para $9,99 após o beta.', dir: 'ltr' },
+                es: { subject: `${name}, el precio beta termina pronto ⏰`, title: 'Última oportunidad — Pro $4,99 / YOLO $9,99', body: 'Una semana desde que introdujiste tu email.<br><br>El precio beta de <strong>$4,99/mes</strong> sigue activo — pero no para siempre.', cta: 'Asegurar precio beta →', sub: 'Cancela cuando quieras.', ps: '⏳ El precio sube a $9,99 después del beta.', dir: 'ltr' },
+            };
+            const tL7 = TL7[lang] || TL7.en;
+            const utmLink7L = `https://wizelife.ai/auth.html?next=/dashboard.html&utm_source=drip&utm_medium=email&utm_campaign=lead_day7&lang=${lang}`;
+            const html7L = `<!DOCTYPE html><html dir="${tL7.dir}" lang="${lang}"><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0}.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;overflow:hidden}.countdown{background:linear-gradient(135deg,#dc2626,#9f1239);color:#fff;text-align:center;padding:12px;font-size:.9rem;font-weight:800}.body{padding:32px}h1{font-size:1.3rem;font-weight:900;color:#dc2626;margin:0 0 16px}p{color:#334155;line-height:1.8;margin:0 0 20px}.price{font-size:2.2rem;font-weight:900;color:#dc2626;text-align:center;margin:16px 0 4px}.price-sub{text-align:center;color:#6b7280;font-size:.85rem;margin-bottom:24px}.cta{display:block;text-align:center;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;padding:16px 28px;border-radius:12px;text-decoration:none;font-weight:800;font-size:1.05rem}.cta-sub{text-align:center;font-size:.78rem;color:#94a3b8;margin-top:8px}.ps{margin-top:20px;padding:14px;background:#fef2f2;border-radius:10px;color:#991b1b;font-size:.88rem}.foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}</style></head><body><div class="wrap"><div class="countdown">⏰ ${lang==='he'?'מחיר בטא — עוד מעט נגמר':'Beta pricing — ending soon'}</div><div class="body"><h1>${tL7.title}</h1><p>${tL7.body}</p><div class="price">$4.99</div><div class="price-sub">${lang==='he'?'לחודש · ביטול בכל עת':'/month · cancel anytime'}</div><a class="cta" href="${utmLink7L}">${tL7.cta}</a><div class="cta-sub">${tL7.sub}</div><div class="ps">${tL7.ps}</div><div class="foot">WizeLife · <a href="https://wizelife.ai/dashboard.html" style="color:#6366f1">dashboard</a></div></div></div></body></html>`;
+            try { await resend.emails.send({ from: 'WizeLife <noreply@wizelife.ai>', to: email, subject: tL7.subject, html: html7L }); await doc.ref.update({ drip3_sent: true }); console.log(`✅ leads drip Day-7 sent to ${email}`); } catch (e) { console.error(`leads drip Day-7 failed for ${email}:`, e.message); }
+        }
+
         }
     });
 
@@ -1879,6 +1956,167 @@ exports.logEvent = functions
         }
     });
 
+
+
+
+// ─── captureLeadEmail — landing page inline email capture ────────────────────
+// Called from /p/relocate-*.html widgets after user sees their savings number.
+// Body: { email, source, lang, savingsUSD, country }
+// Returns 204 on success (or silently on invalid origin/rate-limit).
+exports.captureLeadEmail = functions
+    .runWith({ secrets: [RESEND_API_KEY], memory: '256MB' })
+    .https.onRequest(async (req, res) => {
+        const ALLOWED = ['https://wizelife.ai', 'https://finsightai.github.io'];
+        const origin = req.headers.origin || '';
+        if (ALLOWED.includes(origin)) {
+            res.set('Access-Control-Allow-Origin', origin);
+            res.set('Vary', 'Origin');
+            res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            res.set('Access-Control-Allow-Headers', 'Content-Type');
+            res.set('Access-Control-Max-Age', '3600');
+        }
+        if (req.method === 'OPTIONS') return res.status(204).send('');
+        if (req.method !== 'POST') return res.status(405).send('');
+        if (!ALLOWED.includes(origin)) return res.status(204).send('');
+
+        const b = (req.body && typeof req.body === 'object') ? req.body : {};
+        if (typeof b.email === 'string' && /[<>"'`]/.test(b.email)) return res.status(400).json({ error: 'invalid email' });
+        const email = (typeof b.email === 'string') ? b.email.trim().toLowerCase().slice(0, 254) : '';
+        if (!email || !email.includes('@') || email.indexOf('.') < 0) return res.status(400).json({ error: 'invalid email' });
+
+        // Rate limit: 5 submissions per email per minute
+        if (!(await _rateLimit('captureLead', email, 5))) return res.status(429).json({ error: 'rate' });
+
+        const lang       = ['he','en','pt','es'].includes(b.lang) ? b.lang : 'en';
+        const source     = typeof b.source === 'string' ? b.source.slice(0, 60) : 'landing';
+        const savingsRaw = (typeof b.savingsUSD === 'number' && isFinite(b.savingsUSD)) ? Math.round(b.savingsUSD) : 0;
+        const country    = (typeof b.country === 'string') ? b.country.slice(0, 40).replace(/[^a-z]/g, '') : '';
+
+        const fmt = n => n >= 1e6 ? '$' + (n/1e6).toFixed(1) + 'M' : '$' + Math.round(n).toLocaleString();
+        const savingsStr = savingsRaw > 1000 ? fmt(savingsRaw) : null;
+
+        const COUNTRIES = {
+            uae:      { flag: '\u{1F1E6}\u{1F1EA}', he: '\u05D0\u05D9\u05D7\u05D5\u05D3 \u05D4\u05D0\u05DE\u05D9\u05E8\u05D5\u05D9\u05D5\u05EA', en: 'UAE',       pt: 'EAU',       es: 'EAU'        },
+            cyprus:   { flag: '\u{1F1E8}\u{1F1FE}', he: '\u05E7\u05E4\u05E8\u05D9\u05E1\u05D9\u05DF',        en: 'Cyprus',    pt: 'Chipre',    es: 'Chipre'     },
+            italy:    { flag: '\u{1F1EE}\u{1F1F9}', he: '\u05D0\u05D9\u05D8\u05DC\u05D9\u05D4',         en: 'Italy',     pt: 'It\u00E1lia',   es: 'Italia'     },
+            greece:   { flag: '\u{1F1EC}\u{1F1F7}', he: '\u05D9\u05D5\u05D5\u05DF',           en: 'Greece',    pt: 'Gr\u00E9cia',   es: 'Grecia'     },
+            brazil:   { flag: '\u{1F1E7}\u{1F1F7}', he: '\u05D1\u05E8\u05D6\u05D9\u05DC',          en: 'Brazil',    pt: 'Brasil',    es: 'Brasil'     },
+            usa:      { flag: '\u{1F1FA}\u{1F1F8}', he: '\u05D0\u05E8\u05D4"\u05D1',          en: 'USA',       pt: 'EUA',       es: 'EE.UU.'     },
+            bali:     { flag: '\u{1F1EE}\u{1F1E9}', he: '\u05D1\u05D0\u05DC\u05D9',           en: 'Bali',      pt: 'Bali',      es: 'Bali'       },
+            thailand: { flag: '\u{1F1F9}\u{1F1ED}', he: '\u05EA\u05D0\u05D9\u05DC\u05E0\u05D3',         en: 'Thailand',  pt: 'Tail\u00E2ndia', es: 'Tailandia'  },
+            portugal: { flag: '\u{1F1F5}\u{1F1F9}', he: '\u05E4\u05D5\u05E8\u05D8\u05D5\u05D2\u05DC',        en: 'Portugal',  pt: 'Portugal',  es: 'Portugal'   },
+        };
+        const ci = COUNTRIES[country] || { flag: '\uD83C\uDF0D', he: country, en: country, pt: country, es: country };
+        const cname = ci[lang] || ci.en;
+        const cflag = ci.flag;
+
+        const T = {
+            he: {
+                subject: savingsStr ? cflag + ' \u05D7\u05E1\u05DB\u05EA ' + savingsStr + ' \u05D1-10 \u05E9\u05E0\u05D9\u05DD \u2014 ' + cname + ' \u05DE\u05D5\u05DC \u05D9\u05E9\u05E8\u05D0\u05DC'
+                                    : cflag + ' \u05D4\u05DE\u05D3\u05E8\u05D9\u05DA \u05E9\u05DC\u05DA \u05DC' + cname + ' \u05DE-WizeLife',
+                title:   savingsStr ? '\u05D7\u05E1\u05DB\u05EA ' + savingsStr + ' \u05D1-10 \u05E9\u05E0\u05D9\u05DD' : '\u05D4\u05DE\u05D3\u05E8\u05D9\u05DA \u05E9\u05DC\u05DA \u05DC' + cname,
+                sub:     '\u05D9\u05E9\u05E8\u05D0\u05DC \u05DE\u05D5\u05DC ' + cname + ' \u2014 \u05E0\u05D9\u05EA\u05D5\u05D7 \u05D0\u05D9\u05E9\u05D9',
+                savingsLabel: '\u05D7\u05D9\u05E1\u05DB\u05D5\u05DF \u05DE\u05E6\u05D8\u05D1\u05E8 \u05D1-10 \u05E9\u05E0\u05D9\u05DD \u05DE\u05D5\u05DC \u05D9\u05E9\u05E8\u05D0\u05DC',
+                tip1: 'WizeTax \u05DE\u05D7\u05E9\u05D1 \u05D0\u05EA \u05DE\u05E1 \u05D4\u05D9\u05E6\u05D9\u05D0\u05D4 \u05D4\u05D0\u05D9\u05E9\u05D9 \u05E9\u05DC\u05DA',
+                tip2: '\u05EA\u05D6\u05DE\u05D5\u05DF \u05D0\u05D5\u05E4\u05D8\u05D9\u05DE\u05DC\u05D9 \u05E2\u05D1\u05D5\u05E8 \u2014 \u05DE\u05EA\u05D9 \u05E4\u05D3\u05D0\u05D9 \u05DC\u05E2\u05D6\u05D5\u05D1',
+                tip3: '\u05D4\u05E9\u05D5\u05D5\u05D0\u05D4 \u05DC-8 \u05DE\u05D3\u05D9\u05E0\u05D5\u05EA \u05E0\u05D5\u05E1\u05E4\u05D5\u05EA \u05D1\u05DC\u05D7\u05D9\u05E6\u05D4',
+                cta:  '\u05E4\u05EA\u05D7 \u05D7\u05E9\u05D1\u05D5\u05DF \u05D7\u05D9\u05E0\u05DD \u2190',
+                footer: 'WizeLife \u00B7 \u05E0\u05E9\u05DC\u05D7 \u05DB\u05D9 \u05D4\u05DB\u05E0\u05E1\u05EA \u05D0\u05EA \u05D4\u05D0\u05D9\u05DE\u05D9\u05D9\u05DC \u05E9\u05DC\u05DA \u05D1\u05D3\u05E3 \u05D4\u05DE\u05D7\u05E9\u05D1\u05D5\u05DF',
+                dir:  'rtl',
+            },
+            en: {
+                subject: savingsStr ? cflag + " You'd save " + savingsStr + " in 10 years \u2014 " + cname + " vs Israel"
+                                    : cflag + " Your " + cname + " tax guide from WizeLife",
+                title:   savingsStr ? "You'd save " + savingsStr + " in 10 years" : "Your " + cname + " tax guide",
+                sub:     "Israel vs " + cname + " \u2014 personalized analysis",
+                savingsLabel: "10-year cumulative savings vs Israel",
+                tip1: "WizeTax calculates your personal exit tax",
+                tip2: "Optimal timing \u2014 when to actually make the move",
+                tip3: "Compare 8 more countries in one click",
+                cta:  "Sign up free \u2192",
+                footer: "WizeLife \u00B7 sent because you entered your email on the calculator page",
+                dir:  'ltr',
+            },
+            pt: {
+                subject: savingsStr ? cflag + " Pouparia " + savingsStr + " em 10 anos \u2014 " + cname + " vs Israel"
+                                    : cflag + " O seu guia fiscal de " + cname + " da WizeLife",
+                title:   savingsStr ? "Pouparia " + savingsStr + " em 10 anos" : "O seu guia fiscal de " + cname,
+                sub:     "Israel vs " + cname + " \u2014 an\u00E1lise personalizada",
+                savingsLabel: "Poupan\u00E7a cumulativa de 10 anos vs Israel",
+                tip1: "WizeTax calcula o seu imposto de sa\u00EDda pessoal",
+                tip2: "Timing ideal \u2014 quando fazer a mudan\u00E7a",
+                tip3: "Compare mais 8 pa\u00EDses com um clique",
+                cta:  "Registar gr\u00E1tis \u2192",
+                footer: "WizeLife \u00B7 enviado porque introduziu o seu e-mail na p\u00E1gina da calculadora",
+                dir:  'ltr',
+            },
+            es: {
+                subject: savingsStr ? cflag + " Ahorrar\u00EDas " + savingsStr + " en 10 a\u00F1os \u2014 " + cname + " vs Israel"
+                                    : cflag + " Tu gu\u00EDa fiscal de " + cname + " de WizeLife",
+                title:   savingsStr ? "Ahorrar\u00EDas " + savingsStr + " en 10 a\u00F1os" : "Tu gu\u00EDa fiscal de " + cname,
+                sub:     "Israel vs " + cname + " \u2014 an\u00E1lisis personalizado",
+                savingsLabel: "Ahorro acumulado de 10 a\u00F1os vs Israel",
+                tip1: "WizeTax calcula tu impuesto de salida personal",
+                tip2: "Timing \u00F3ptimo \u2014 cu\u00E1ndo hacer el movimiento",
+                tip3: "Compara 8 pa\u00EDses m\u00E1s en un clic",
+                cta:  "Registrarse gratis \u2192",
+                footer: "WizeLife \u00B7 enviado porque introdujiste tu email en la p\u00E1gina de la calculadora",
+                dir:  'ltr',
+            },
+        };
+
+        const t = T[lang];
+
+        const savingsCard = savingsStr
+            ? `<div style="background:linear-gradient(135deg,#064e3b,#065f46);border:1px solid #10b981;border-radius:14px;padding:20px 24px;text-align:center;margin:20px 0;"><div style="font-size:0.75rem;font-weight:700;color:#6ee7b7;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">${t.savingsLabel}</div><div style="font-size:2.6rem;font-weight:900;color:#6ee7b7;line-height:1.1;">${savingsStr}</div><div style="font-size:0.85rem;color:#a7f3d0;margin-top:4px;">${cflag} ${cname}</div></div>`
+            : '';
+
+        const html = `<!DOCTYPE html><html dir="${t.dir}" lang="${lang}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;background:#0d0f1a;font-family:Arial,sans-serif;"><div style="max-width:520px;margin:32px auto;background:#11142a;border-radius:18px;padding:36px 28px;border:1px solid rgba(255,255,255,0.08);"><div style="text-align:center;margin-bottom:20px;"><span style="font-size:2.2rem;">${cflag}</span><h1 style="margin:10px 0 4px;font-size:1.5rem;font-weight:900;color:#eef2ff;">${t.title}</h1><p style="margin:0;font-size:0.88rem;color:#9ca3af;">${t.sub}</p></div>${savingsCard}<div style="margin:20px 0;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:16px;"><div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;"><span style="font-size:1.1rem;flex-shrink:0;">🧮</span><span style="color:#cbd5e1;font-size:0.88rem;">${t.tip1}</span></div><div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;"><span style="font-size:1.1rem;flex-shrink:0;">⏱️</span><span style="color:#cbd5e1;font-size:0.88rem;">${t.tip2}</span></div><div style="display:flex;align-items:flex-start;gap:10px;"><span style="font-size:1.1rem;flex-shrink:0;">🌍</span><span style="color:#cbd5e1;font-size:0.88rem;">${t.tip3}</span></div></div><div style="text-align:center;margin-top:24px;"><a href="https://wizelife.ai/auth.html?next=%2Fdashboard.html&utm_source=lead_email&utm_campaign=${country}" style="display:inline-block;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:800;font-size:1rem;">${t.cta}</a></div><p style="margin-top:28px;font-size:0.75rem;color:#475569;text-align:center;">${t.footer}</p></div></body></html>`;
+
+        // Save lead to Firestore
+        try {
+            await db.collection('leads').add({
+                email,
+                source,
+                country,
+                lang,
+                savingsUSD: savingsRaw,
+                capturedAt: admin.firestore.FieldValue.serverTimestamp(),
+                drip1_sent: false,
+                drip2_sent: false,
+                drip3_sent: false,
+            });
+        } catch (e) { console.warn('lead save failed', e.message); }
+
+        let resendKey;
+        try { resendKey = RESEND_API_KEY.value(); } catch (e) { resendKey = ''; }
+        if (!resendKey) return res.status(204).send('');
+
+        const resend = new Resend(resendKey);
+
+        // Add to Resend audience
+        try {
+            await resend.contacts.create({
+                email,
+                audienceId: 'd266041d-86c8-4d43-8da9-cd2a10a4ad23',
+                unsubscribed: false,
+                firstName: email.split('@')[0],
+            });
+        } catch (e) { console.warn('Resend audience add failed', e.message); }
+
+        // Send immediate personalized email
+        try {
+            await resend.emails.send({
+                from:    'WizeLife <noreply@wizelife.ai>',
+                to:      email,
+                subject: t.subject,
+                html,
+            });
+            console.log('captureLeadEmail sent to', email, country, savingsStr || 'no-savings');
+        } catch (e) { console.warn('captureLeadEmail send failed', e.message); }
+
+        return res.status(204).send('');
+    });
 
 // ─── SSO: issue custom token from Firebase ID token ──────────────────────────
 // Sub-apps (WizeTravel, WizeTax) receive a Firebase ID token via URL SSO but
