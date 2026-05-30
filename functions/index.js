@@ -1484,7 +1484,12 @@ exports.logEvent = functions
         }
         if (req.method === 'OPTIONS') return res.status(204).send('');
         if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
-        if (!allowed) return res.status(403).json({ error: 'origin' });
+        // Disallowed origin → silently drop (204). Returning 403 here polluted the
+        // function/execution_count metric with bot-noise (~30-120 hits/5min from
+        // scrapers without Origin headers), making the error-spike alert useless.
+        // The request is still dropped (no Firestore write); we just don't 4xx
+        // back. Real server errors (5xx) below still surface to the alert.
+        if (!allowed) return res.status(204).send('');
 
         try {
             const b = (req.body && typeof req.body === 'object') ? req.body : {};
@@ -1528,3 +1533,22 @@ exports.logEvent = functions
     });
 
 
+// ─── SSO: issue custom token from Firebase ID token ──────────────────────────
+// Sub-apps (WizeTravel, WizeTax) receive a Firebase ID token via URL SSO but
+// cannot call signInWithCustomToken with it. This function exchanges a valid ID
+// token for a custom token, allowing the client SDK to materialise a session and
+// activate CloudBackup. Rate-limited server-side; no secrets needed.
+exports.issueCustomToken = functions.https.onCall(async (data) => {
+    const idToken = data && data.idToken;
+    if (!idToken || typeof idToken !== 'string') {
+        throw new functions.https.HttpsError('invalid-argument', 'idToken required');
+    }
+    try {
+        const decoded = await admin.auth().verifyIdToken(idToken);
+        const customToken = await admin.auth().createCustomToken(decoded.uid);
+        return { customToken };
+    } catch (e) {
+        console.warn('issueCustomToken failed', e.message);
+        throw new functions.https.HttpsError('unauthenticated', 'Invalid or expired token');
+    }
+});
