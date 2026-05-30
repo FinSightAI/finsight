@@ -5,7 +5,7 @@
  */
 const Plan = (() => {
     // ─── MASTER SWITCH ────────────────────────────────────────────
-    const PAYWALL_ACTIVE = false;  // pre-launch: everyone gets Pro, no badges, no gates
+    const PAYWALL_ACTIVE = true;   // paywall live — PayPal required
 
     // Access codes validated server-side via Firebase Function (validateCode)
 
