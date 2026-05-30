@@ -810,13 +810,15 @@ exports.sendWelcomeEmail = functions
             console.error("Welcome email failed:", err.message);
         }
 
-        // Save drip state so dripEmailScheduler can send Day-1 follow-up
+        // Save drip state so dripEmailScheduler can send Day-1/3/7 follow-ups
         try {
             await db.collection('users').doc(user.uid).set({
                 email,
                 name,
                 lang,
                 drip1_sent: false,
+                drip2_sent: false,
+                drip3_sent: false,
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
             }, { merge: true });
         } catch (e) {
@@ -864,10 +866,10 @@ exports.dripEmailScheduler = functions
                     title: 'חישוב מס אישי — 2 דקות',
                     body: `ישראלים שעשו את החישוב גילו שהם יכולים לחסוך ₪40,000–₪120,000 בשנה במס.<br><br>WizeTax מחשב בדיוק <strong>את המצב שלך</strong> — לפי ההכנסה, הנכסים, ומצב המשפחה שלך — מול 26 מדינות.`,
                     cta: 'חשב את החיסכון שלי ←',
-                    urgencyBadge: 'מחיר בטא — $4.99/חודש',
-                    urgencyNote: 'עולה ל-$9.99 אחרי סיום הבטא',
-                    upgradeTitle: '⏳ כרגע במחיר השקה — לא יישאר כך לנצח',
-                    upgradeLink: 'שדרג ל-Pro לפני שהמחיר עולה',
+                    urgencyBadge: 'Pro בטא — $4.99/חודש',
+                    urgencyNote: 'YOLO $9.99 · מחיר עולה אחרי הבטא',
+                    upgradeTitle: '⏳ Pro בטא — $4.99/חודש בלבד, לא יישאר כך לנצח',
+                    upgradeLink: 'שדרג ל-Pro ($4.99) או YOLO ($9.99)',
                     ps: `💡 P.S. — תוצאת "מס יציאה" מפתיעה הרבה אנשים. כדאי לדעת לפני שמחליטים.`,
                     dir: 'rtl',
                 },
@@ -876,10 +878,10 @@ exports.dripEmailScheduler = functions
                     title: 'Your personal tax calculation — 2 min',
                     body: `Israelis who ran the numbers found they could save $30,000–$80,000/year in taxes by relocating.<br><br>WizeTax calculates exactly <strong>your situation</strong> — based on your income, assets, and family — across 26 countries.`,
                     cta: 'Calculate my savings →',
-                    urgencyBadge: 'Beta pricing — $4.99/mo',
-                    urgencyNote: 'increases to $9.99 after beta ends',
-                    upgradeTitle: "⏳ Launch pricing — won't last forever",
-                    upgradeLink: 'Upgrade to Pro before price increases',
+                    urgencyBadge: 'Pro beta — $4.99/mo',
+                    urgencyNote: 'YOLO $9.99 · prices rise after beta',
+                    upgradeTitle: "⏳ Pro beta — $4.99/mo only, won't last forever",
+                    upgradeLink: 'Upgrade: Pro ($4.99) or YOLO ($9.99)',
                     ps: `💡 P.S. — The "exit tax" result surprises most people. Worth knowing before you decide.`,
                     dir: 'ltr',
                 },
@@ -888,10 +890,10 @@ exports.dripEmailScheduler = functions
                     title: 'Seu cálculo fiscal pessoal — 2 min',
                     body: `Israelenses que fizeram as contas descobriram que podem economizar R$150.000–R$400.000/ano em impostos.<br><br>WizeTax calcula exatamente <strong>a sua situação</strong> — pela sua renda, ativos e família — em 26 países.`,
                     cta: 'Calcular minha economia →',
-                    urgencyBadge: 'Preço beta — $4,99/mês',
-                    urgencyNote: 'sobe para $9,99 após o beta',
-                    upgradeTitle: '⏳ Preço de lançamento — não dura para sempre',
-                    upgradeLink: 'Fazer upgrade para Pro antes do aumento',
+                    urgencyBadge: 'Pro beta — $4,99/mês',
+                    urgencyNote: 'YOLO $9,99 · preços sobem após o beta',
+                    upgradeTitle: '⏳ Pro beta — $4,99/mês apenas',
+                    upgradeLink: 'Upgrade: Pro ($4,99) ou YOLO ($9,99)',
                     ps: `💡 P.S. — O resultado do "imposto de saída" surpreende a maioria. Vale saber antes de decidir.`,
                     dir: 'ltr',
                 },
@@ -900,10 +902,10 @@ exports.dripEmailScheduler = functions
                     title: 'Tu cálculo fiscal personal — 2 min',
                     body: `Israelíes que hicieron los cálculos descubrieron que pueden ahorrar $30,000–$80,000/año en impuestos.<br><br>WizeTax calcula exactamente <strong>tu situación</strong> — según tus ingresos, activos y familia — en 26 países.`,
                     cta: 'Calcular mis ahorros →',
-                    urgencyBadge: 'Precio beta — $4,99/mes',
-                    urgencyNote: 'sube a $9,99 tras el beta',
-                    upgradeTitle: '⏳ Precio de lanzamiento — no durará siempre',
-                    upgradeLink: 'Actualizar a Pro antes del aumento',
+                    urgencyBadge: 'Pro beta — $4,99/mes',
+                    urgencyNote: 'YOLO $9,99 · precios suben tras el beta',
+                    upgradeTitle: '⏳ Pro beta — $4,99/mes solamente',
+                    upgradeLink: 'Upgrade: Pro ($4,99) o YOLO ($9,99)',
                     ps: `💡 P.S. — El resultado del "impuesto de salida" sorprende a la mayoría. Vale saber antes de decidir.`,
                     dir: 'ltr',
                 },
@@ -950,6 +952,208 @@ p{color:#334155;line-height:1.7;margin:0 0 20px}
                 console.log(`✅ drip Day-1 sent to ${email}`);
             } catch (e) {
                 console.error(`drip Day-1 failed for ${email}:`, e.message);
+            }
+        }
+
+        // ── Day-3 (60–90h): country spotlight ───────────────────────────────
+        const snap3 = await db.collection('users')
+            .where('drip2_sent', '==', false)
+            .where('createdAt', '>=', new Date(now - 90 * 60 * 60 * 1000))
+            .where('createdAt', '<=', new Date(now - 60 * 60 * 60 * 1000))
+            .limit(50)
+            .get();
+
+        console.log(`drip Day-3: ${snap3.size} users to email`);
+
+        for (const doc of snap3.docs) {
+            const u = doc.data();
+            const email = u.email;
+            if (!email) continue;
+            const lang = (u.lang || 'en').slice(0, 2);
+            const name = u.name || email.split('@')[0];
+
+            const T3 = {
+                he: {
+                    subject: `${name}, 3 מדינות שישראלים בוחרים — מה מתאים לך?`,
+                    title: '🌍 פורטוגל, קפריסין, איחוד האמירויות',
+                    body: `כל אחת מהן מציעה משהו שונה:<br><br>
+🇵🇹 <strong>פורטוגל NHR</strong> — מס שטוח 10% על פנסיה, 0% על דיבידנדים זרים. מבוקשת ע"י שכירים ובעלי עסקים.<br><br>
+🇨🇾 <strong>קפריסין 60 יום</strong> — לא חייבים 183 יום. 0% מס יציאה ישראלי אם עוברים נכון.<br><br>
+🇦🇪 <strong>איחוד האמירויות</strong> — 0% מס הכנסה. מתאים לפרילנסרים ויזמים.`,
+                    cta: 'השווה את שלושתן ←',
+                    ps: '💡 P.S. — WizeTax מחשב בדיוק כמה כל מדינה שווה לך אישית.',
+                    dir: 'rtl',
+                },
+                en: {
+                    subject: `${name}, 3 countries Israelis choose — which fits you?`,
+                    title: '🌍 Portugal, Cyprus, UAE',
+                    body: `Each offers something different:<br><br>
+🇵🇹 <strong>Portugal NHR</strong> — flat 10% tax on pension, 0% on foreign dividends. Popular with employees and business owners.<br><br>
+🇨🇾 <strong>Cyprus 60-day rule</strong> — no need for 183 days. 0% Israeli exit tax if done correctly.<br><br>
+🇦🇪 <strong>UAE</strong> — 0% income tax. Great for freelancers and entrepreneurs.`,
+                    cta: 'Compare all three →',
+                    ps: '💡 P.S. — WizeTax calculates exactly how much each country is worth for you personally.',
+                    dir: 'ltr',
+                },
+                pt: {
+                    subject: `${name}, 3 países que israelenses escolhem — qual é o seu?`,
+                    title: '🌍 Portugal, Chipre, Emirados',
+                    body: `Cada um oferece algo diferente:<br><br>
+🇵🇹 <strong>Portugal NHR</strong> — imposto fixo de 10% sobre pensão, 0% sobre dividendos estrangeiros.<br><br>
+🇨🇾 <strong>Chipre regra 60 dias</strong> — sem necessidade de 183 dias. 0% imposto de saída israelense se feito corretamente.<br><br>
+🇦🇪 <strong>Emirados</strong> — 0% imposto de renda. Ótimo para freelancers e empreendedores.`,
+                    cta: 'Comparar os três →',
+                    ps: '💡 P.S. — WizeTax calcula exatamente quanto cada país vale para você pessoalmente.',
+                    dir: 'ltr',
+                },
+                es: {
+                    subject: `${name}, 3 países que israelíes eligen — ¿cuál te conviene?`,
+                    title: '🌍 Portugal, Chipre, Emiratos',
+                    body: `Cada uno ofrece algo diferente:<br><br>
+🇵🇹 <strong>Portugal NHR</strong> — impuesto fijo del 10% sobre pensión, 0% sobre dividendos extranjeros.<br><br>
+🇨🇾 <strong>Chipre regla 60 días</strong> — sin necesidad de 183 días. 0% impuesto de salida israelí si se hace correctamente.<br><br>
+🇦🇪 <strong>Emiratos</strong> — 0% impuesto sobre la renta. Ideal para freelancers y emprendedores.`,
+                    cta: 'Comparar los tres →',
+                    ps: '💡 P.S. — WizeTax calcula exactamente cuánto vale cada país para ti personalmente.',
+                    dir: 'ltr',
+                },
+            };
+            const t3 = T3[lang] || T3.en;
+            const utmLink3 = `https://tax.wizelife.ai/relocation-analyzer?utm_source=drip&utm_medium=email&utm_campaign=day3&lang=${lang}`;
+            const html3 = `<!DOCTYPE html><html dir="${t3.dir}" lang="${lang}"><head><meta charset="UTF-8"><style>
+body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0}
+.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.banner{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;text-align:center;padding:10px 16px;font-size:.85rem;font-weight:700}
+.body{padding:32px}
+h1{font-size:1.2rem;font-weight:900;color:#1e293b;margin:0 0 16px}
+p{color:#334155;line-height:1.8;margin:0 0 20px}
+.cta{display:inline-block;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:700;font-size:1rem}
+.ps{margin-top:20px;padding:14px;background:#eff6ff;border-radius:10px;color:#1e40af;font-size:.88rem}
+.foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}
+</style></head><body><div class="wrap">
+<div class="banner">🌍 מדריך השוואת מדינות — WizeTax</div>
+<div class="body">
+<h1>${t3.title}</h1>
+<p>${t3.body}</p>
+<a class="cta" href="${utmLink3}">${t3.cta}</a>
+<div class="ps">${t3.ps}</div>
+<div class="foot">WizeLife · <a href="https://wizelife.ai/dashboard.html" style="color:#6366f1">dashboard</a></div>
+</div></div></body></html>`;
+            try {
+                await resend.emails.send({
+                    from: 'WizeLife <noreply@wizelife.ai>',
+                    to: email,
+                    subject: t3.subject,
+                    html: html3,
+                });
+                await doc.ref.update({ drip2_sent: true });
+                console.log(`✅ drip Day-3 sent to ${email}`);
+            } catch (e) {
+                console.error(`drip Day-3 failed for ${email}:`, e.message);
+            }
+        }
+
+        // ── Day-7 (160–175h): final urgency ─────────────────────────────────
+        const snap7 = await db.collection('users')
+            .where('drip3_sent', '==', false)
+            .where('createdAt', '>=', new Date(now - 175 * 60 * 60 * 1000))
+            .where('createdAt', '<=', new Date(now - 160 * 60 * 60 * 1000))
+            .limit(50)
+            .get();
+
+        console.log(`drip Day-7: ${snap7.size} users to email`);
+
+        for (const doc of snap7.docs) {
+            const u = doc.data();
+            const email = u.email;
+            if (!email) continue;
+            const lang = (u.lang || 'en').slice(0, 2);
+            const name = u.name || email.split('@')[0];
+
+            const T7 = {
+                he: {
+                    subject: `${name}, מחיר הבטא נגמר בקרוב ⏰`,
+                    title: 'הזדמנות אחרונה — Pro $4.99 / YOLO $9.99',
+                    body: `שבוע עבר מאז שנרשמת ל-WizeLife.<br><br>
+מחיר הבטא של <strong>$4.99/חודש</strong> עדיין פעיל — אבל לא לנצח.<br><br>
+Pro כולל: ניתוח מס מלא ב-26 מדינות, יועץ AI ללא הגבלה, השוואת קרנות, מחשבון מס יציאה מלא, ועוד.`,
+                    cta: 'נעל את מחיר הבטא ←',
+                    sub: 'ביטול בכל עת. ללא מחויבות.',
+                    ps: '⏳ המחיר עולה ל-$9.99 אחרי סיום הבטא. ששלמת עכשיו — נשאר קבוע.',
+                    dir: 'rtl',
+                },
+                en: {
+                    subject: `${name}, beta pricing ends soon ⏰`,
+                    title: 'Last chance — Pro $4.99 / YOLO $9.99',
+                    body: `One week since you joined WizeLife.<br><br>
+The <strong>$4.99/month</strong> beta price is still active — but not forever.<br><br>
+Pro includes: full tax analysis across 26 countries, unlimited AI advisor, fund comparison, full exit tax calculator, and more.`,
+                    cta: 'Lock in beta pricing →',
+                    sub: 'Cancel anytime. No commitment.',
+                    ps: "⏳ Price increases to $9.99 after beta ends. What you pay now — stays fixed.",
+                    dir: 'ltr',
+                },
+                pt: {
+                    subject: `${name}, preço beta termina em breve ⏰`,
+                    title: 'Última chance — Pro $4,99 / YOLO $9,99',
+                    body: `Uma semana desde que você entrou no WizeLife.<br><br>
+O preço beta de <strong>$4,99/mês</strong> ainda está ativo — mas não para sempre.<br><br>
+Pro inclui: análise fiscal completa em 26 países, consultor IA ilimitado, comparação de fundos, calculadora de imposto de saída completa e mais.`,
+                    cta: 'Garantir preço beta →',
+                    sub: 'Cancele a qualquer momento. Sem compromisso.',
+                    ps: '⏳ O preço sobe para $9,99 após o beta. O que você paga agora — fica fixo.',
+                    dir: 'ltr',
+                },
+                es: {
+                    subject: `${name}, el precio beta termina pronto ⏰`,
+                    title: 'Última oportunidad — Pro $4,99 / YOLO $9,99',
+                    body: `Una semana desde que te uniste a WizeLife.<br><br>
+El precio beta de <strong>$4,99/mes</strong> sigue activo — pero no para siempre.<br><br>
+Pro incluye: análisis fiscal completo en 26 países, asesor IA ilimitado, comparación de fondos, calculadora de impuesto de salida completa y más.`,
+                    cta: 'Asegurar precio beta →',
+                    sub: 'Cancela cuando quieras. Sin compromiso.',
+                    ps: '⏳ El precio sube a $9,99 después del beta. Lo que pagas ahora — queda fijo.',
+                    dir: 'ltr',
+                },
+            };
+            const t7 = T7[lang] || T7.en;
+            const utmLink7 = `https://wizelife.ai/auth.html?next=/dashboard.html&utm_source=drip&utm_medium=email&utm_campaign=day7&lang=${lang}`;
+            const html7 = `<!DOCTYPE html><html dir="${t7.dir}" lang="${lang}"><head><meta charset="UTF-8"><style>
+body{font-family:Arial,sans-serif;background:#f4f4f8;margin:0}
+.wrap{max-width:520px;margin:24px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.countdown{background:linear-gradient(135deg,#dc2626,#9f1239);color:#fff;text-align:center;padding:12px 16px;font-size:.9rem;font-weight:800;letter-spacing:.5px}
+.body{padding:32px}
+h1{font-size:1.3rem;font-weight:900;color:#dc2626;margin:0 0 16px}
+p{color:#334155;line-height:1.8;margin:0 0 20px}
+.price{font-size:2.2rem;font-weight:900;color:#dc2626;text-align:center;margin:16px 0 4px;font-variant-numeric:tabular-nums}
+.price-sub{text-align:center;color:#6b7280;font-size:.85rem;margin-bottom:24px}
+.cta{display:block;text-align:center;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;padding:16px 28px;border-radius:12px;text-decoration:none;font-weight:800;font-size:1.05rem}
+.cta-sub{text-align:center;font-size:.78rem;color:#94a3b8;margin-top:8px}
+.ps{margin-top:20px;padding:14px;background:#fef2f2;border-radius:10px;color:#991b1b;font-size:.88rem}
+.foot{margin-top:24px;font-size:.78rem;color:#94a3b8;text-align:center}
+</style></head><body><div class="wrap">
+<div class="countdown">⏰ ${lang==='he'?'מחיר בטא — עוד מעט נגמר':'Beta pricing — ending soon'}</div>
+<div class="body">
+<h1>${t7.title}</h1>
+<p>${t7.body}</p>
+<div class="price">$4.99</div>
+<div class="price-sub">${lang==='he'?'לחודש · ביטול בכל עת':'/month · cancel anytime'}</div>
+<a class="cta" href="${utmLink7}">${t7.cta}</a>
+<div class="cta-sub">${t7.sub}</div>
+<div class="ps">${t7.ps}</div>
+<div class="foot">WizeLife · <a href="https://wizelife.ai/dashboard.html" style="color:#6366f1">dashboard</a></div>
+</div></div></body></html>`;
+            try {
+                await resend.emails.send({
+                    from: 'WizeLife <noreply@wizelife.ai>',
+                    to: email,
+                    subject: t7.subject,
+                    html: html7,
+                });
+                await doc.ref.update({ drip3_sent: true });
+                console.log(`✅ drip Day-7 sent to ${email}`);
+            } catch (e) {
+                console.error(`drip Day-7 failed for ${email}:`, e.message);
             }
         }
     });
