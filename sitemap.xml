@@ -3,37 +3,12 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://money.wizelife.ai/</loc>
+    <lastmod>2026-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="he" href="https://money.wizelife.ai/?lang=he" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://money.wizelife.ai/?lang=en" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://money.wizelife.ai/?lang=pt" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://money.wizelife.ai/?lang=es" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://money.wizelife.ai/" />
-  </url>
-  <url>
-    <loc>https://money.wizelife.ai/pages/income.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://money.wizelife.ai/pages/goals.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://money.wizelife.ai/pages/reports.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://money.wizelife.ai/pages/stocks.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://money.wizelife.ai/pages/simulator.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://money.wizelife.ai/?lang=he"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://money.wizelife.ai/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://money.wizelife.ai/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://money.wizelife.ai/?lang=es"/>
   </url>
 </urlset>
