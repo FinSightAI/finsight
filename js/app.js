@@ -162,8 +162,9 @@ const App = {
         header.className = 'mobile-header';
         /* No lang pills here — they live inside the sidebar drawer + the
            WizeLife hamburger menu, so the top bar stays clean. */
+        var _menuLbl = ({he:'תפריט',en:'Menu',pt:'Menu',es:'Menú'})[(typeof I18n!=='undefined' && I18n.currentLanguage) || 'en'] || 'Menu';
         header.innerHTML =
-            '<button class="mobile-header-toggle" aria-label="תפריט">☰</button>' +
+            '<button class="mobile-header-toggle" aria-label="' + _menuLbl + '">☰</button>' +
             '<a href="' + homeHref + '" class="mobile-header-brand">' +
                 '<span class="mobile-header-name">Wize<span class="brand-highlight">Money</span></span>' +
             '</a>';
