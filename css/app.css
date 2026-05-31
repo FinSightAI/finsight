@@ -478,6 +478,10 @@ body.ltr .nav-submenu {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    /* Reserve a stable line box so the skeleton→value swap / bold-font load
+       does not resize the card (was a residual CLS source on the dashboard). */
+    line-height: 1.5;
+    min-height: 1.5em;
 }
 
 .summary-card.bank .value { color: var(--color-bank); }
