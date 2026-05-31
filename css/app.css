@@ -478,19 +478,10 @@ body.ltr .nav-submenu {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    /* Fixed-height flex box so the skeleton(₪0)→real-value swap and bold-font
-       load do NOT resize the card. Was the residual dashboard CLS source. */
-    height: 2.4rem;
-    line-height: 2.4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-/* Skeleton must occupy the SAME box as the loaded value (no inline-block / extra height). */
-.summary-card .value.skeleton {
-    display: flex;
-    min-width: 0;
-    height: 2.4rem;
+    /* Reserve a stable line box so the skeleton→value swap / bold-font load
+       does not resize the card (residual CLS mitigation). */
+    line-height: 1.5;
+    min-height: 1.5em;
 }
 
 .summary-card.bank .value { color: var(--color-bank); }
