@@ -11,12 +11,12 @@ const WidgetManager = {
         { id: 'fullPicture', name: { he: 'תמונה פיננסית מלאה', en: 'Full Financial Picture' }, icon: '🗺️', default: true },
         { id: 'assetDistribution', name: { he: 'חלוקת נכסים', en: 'Asset Distribution' }, icon: '🥧', default: true },
         { id: 'monthlyExpenses', name: { he: 'הוצאות חודשיות', en: 'Monthly Expenses' }, icon: '💳', default: true },
-        { id: 'recentTransactions', name: { he: 'פעולות אחרונות', en: 'Recent Transactions' }, icon: '📋', default: true },
-        { id: 'stockAlerts', name: { he: 'התראות מניות', en: 'Stock Alerts' }, icon: '🔔', default: false },
         { id: 'goalsProgress', name: { he: 'התקדמות יעדים', en: 'Goals Progress' }, icon: '🎯', default: false },
-        { id: 'quickStats', name: { he: 'סטטיסטיקות מהירות', en: 'Quick Stats' }, icon: '📈', default: false },
         { id: 'currencyRates', name: { he: 'שערי מטבע', en: 'Currency Rates' }, icon: '💱', default: false },
-        { id: 'smartTips', name: { he: 'טיפים חכמים', en: 'Smart Tips' }, icon: '💡', default: false }
+        { id: 'smartTips', name: { he: 'טיפים חכמים', en: 'Smart Tips' }, icon: '💡', default: false },
+        { id: 'quickStats', name: { he: 'סטטיסטיקות מהירות', en: 'Quick Stats' }, icon: '📈', default: false },
+        { id: 'recentTransactions', name: { he: 'פעולות אחרונות', en: 'Recent Transactions' }, icon: '📋', default: true },
+        { id: 'stockAlerts', name: { he: 'התראות מניות', en: 'Stock Alerts' }, icon: '🔔', default: false }
     ],
 
     /**
