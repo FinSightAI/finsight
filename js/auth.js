@@ -87,7 +87,7 @@ const Auth = {
             });
         }
 
-        this.updateSecurityBadge();
+        setTimeout(() => this.updateSecurityBadge(), 0);
     },
 
     /**

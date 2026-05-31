@@ -47,7 +47,7 @@
     es: { msg: 'Nueva versión disponible', btn: 'Actualizar' },
   };
 
-  function showBanner() {
+  function showBanner(newVersion) {
     if (document.getElementById(BANNER_ID)) return;
     var lang = getLang();
     var tr = TR[lang] || TR.he;
@@ -56,7 +56,7 @@
     bar.setAttribute('role', 'alert');
     bar.style.cssText = [
       'position:fixed', 'top:0', 'left:0', 'right:0',
-      'z-index:2147483645',
+      'z-index:100000',
       'background:linear-gradient(90deg,#6366f1,#8b5cf6)',
       'color:#fff', 'padding:8px 14px',
       'font:600 12px Inter,-apple-system,sans-serif',
@@ -97,9 +97,11 @@
           });
         }
       } catch (e) {}
-      // Persist the server version so a post-reload check doesn't immediately
-      // re-show the banner before the new SW has fully activated.
-      try { localStorage.setItem('wize_acked_version', LOCAL); } catch (e) {}
+      // Persist the SERVER version (not LOCAL) so a post-reload check doesn't
+      // immediately re-show the banner. Bug fix 2026-05-26: was saving LOCAL
+      // (old version) which made the comparison `acked === j.version` always
+      // false, so the banner reappeared after every reload.
+      try { localStorage.setItem('wize_acked_version', newVersion || LOCAL); } catch (e) {}
       // Delay reload slightly so postMessage has time to process, then force
       // a hard reload that bypasses HTTP cache + SW cache.
       setTimeout(function () {
@@ -126,7 +128,7 @@
             var acked = localStorage.getItem('wize_acked_version');
             if (acked === j.version) return;
           } catch (e) {}
-          showBanner();
+          showBanner(j.version);
         }
       })
       .catch(function () {})

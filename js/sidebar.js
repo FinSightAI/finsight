@@ -391,7 +391,7 @@
  `<button data-wl-lang="${lng}" onclick="(function(l){localStorage.setItem('wl_lang',l);if(typeof I18n!=='undefined')I18n.setLanguage(l);document.getElementById('wl-bar').querySelectorAll('[data-wl-lang]').forEach(function(b){b.style.cssText='${pillCSS(false)}';if(b.getAttribute('data-wl-lang')===l)b.style.cssText='${pillCSS(true)}'});})('${lng}')" style="${pillCSS(lng===l)}">${lng.toUpperCase()}</button>`
  ).join('');
  bar.innerHTML =
- '<a href="https://finsightai.github.io/wizelife/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
+ '<a href="https://wizelife.ai/dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;line-height:1;">' +
  '<img src="https://wizelife.ai/assets/wizelife-icon.png?v=2026-05-14" width="20" height="20" alt="" style="flex-shrink:0;display:block">' +
  '<span style="font-size:13px;font-weight:800;color:#eef2ff;letter-spacing:-0.3px;font-family:Plus Jakarta Sans,sans-serif;">WizeLife</span>' +
  '</a>' +
@@ -399,7 +399,7 @@
  /* Hidden on mobile (lang lives in the hamburger drawer there).
  Inline display is set via JS below to dodge any CSS specificity surprises. */
  '<div class="wl-bar-lang" style="gap:2px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;">' + langPills + '</div>' +
- '<span id="wl-bar-plan" style="display:none;font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;">FREE</span>' +
+ '<span id="wl-bar-plan" style="display:none;font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);white-space:nowrap;cursor:pointer;transition:background .2s,color .2s;"></span>' +
  '<span id="wl-bar-nick" style="font-size:11px;font-weight:600;color:#6ee7b7;background:rgba(110,231,183,0.1);padding:2px 8px;border-radius:99px;white-space:nowrap;display:none;"></span>' +
  '</div>';
  document.body.prepend(bar);
@@ -496,8 +496,23 @@
  }
  } catch(e) {}
  if (plan === 'free' || !plan) plan = localStorage.getItem('wl_plan') || 'free';
- const labels = { yolo: '⚡ YOLO', pro: '✦ PRO', free: 'FREE', pro_trial: '✦ PRO' };
- el.textContent = labels[plan] || 'FREE';
+ const upgLbls = { he: 'חינם · שדרג ←', en: 'FREE · Upgrade →', pt: 'GRÁTIS · Upgrade →', es: 'GRATIS · Upgrade →' };
+ const wlLang = (localStorage.getItem('wl_lang') || 'en').toLowerCase();
+ const isFree = plan === 'free' || plan === '' || !plan;
+ if (isFree) {
+ el.innerHTML = '<a href="https://wizelife.ai/#pricing" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">' + (upgLbls[wlLang] || upgLbls['en']) + '</a>';
+ el.style.background = 'rgba(99,102,241,0.15)';
+ el.style.color = '#a5b4fc';
+ el.style.borderColor = 'rgba(99,102,241,0.25)';
+ el.style.cursor = 'pointer';
+ el.onmouseenter = function() { this.style.background = 'linear-gradient(135deg,#6366f1,#a78bfa)'; this.style.color = '#fff'; };
+ el.onmouseleave = function() { this.style.background = 'rgba(99,102,241,0.15)'; this.style.color = '#a5b4fc'; };
+ } else {
+ const labels = { yolo: '⚡ YOLO', pro: '✦ PRO', pro_trial: '✦ PRO' };
+ el.textContent = labels[plan] || plan.toUpperCase();
+ el.style.cursor = 'default';
+ el.onmouseenter = null;
+ el.onmouseleave = null;
  if (plan === 'yolo') {
  el.style.background = 'linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2))';
  el.style.color = '#fbbf24';
@@ -506,10 +521,7 @@
  el.style.background = 'rgba(16,185,129,0.18)';
  el.style.color = '#34d399';
  el.style.borderColor = 'rgba(16,185,129,0.35)';
- } else {
- el.style.background = 'rgba(99,102,241,0.15)';
- el.style.color = '#a5b4fc';
- el.style.borderColor = 'rgba(99,102,241,0.25)';
+ }
  }
  }
 

@@ -11,8 +11,8 @@ const StockAPI = {
     YAHOO_URL: 'https://query1.finance.yahoo.com/v8/finance/chart',
     TASE_API_URL: 'https://api.tase.co.il/api',
     PROXY_URLS: [
-        'https://api.codetabs.com/v1/proxy/?quest=',  // ← currently the only reliable one
-        'https://corsproxy.io/?url=',
+        'https://stocks.wizelife.ai/?url=',
+        'https://api.codetabs.com/v1/proxy/?quest=',
         'https://api.allorigins.win/raw?url='
     ],
     _currentProxyIndex: 0,
