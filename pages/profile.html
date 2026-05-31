@@ -602,7 +602,7 @@
  <option value="BDI">BDI</option>
  <option value="CreditInfo">CreditInfo</option>
  <option value="DataCheck">DataCheck</option>
- <option value="other">אחר</option>
+ <option value="other" data-i18n="profile.other">אחר</option>
  </select>
  </div>
  <div class="external-form-group">
@@ -636,8 +636,6 @@
  <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
  </footer>
  </main>
-
- <button class="mobile-menu-toggle">☰</button>
  </div>
 
  <script  src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
@@ -850,7 +848,7 @@
 
  const breakdownEl = document.getElementById('factorsBreakdown');
  if (breakdownEl) {
- const noDataLabel = lang === 'he' ? 'אין נתונים' : 'No data';
+ const noDataLabel = I18n.t('common.noData');
  // Show factors with data first, then no-data factors
  const allKeys = [...Object.keys(factors), ...Object.keys(noData)];
  breakdownEl.innerHTML = allKeys.map(key => {
@@ -1020,7 +1018,7 @@
 
  Storage.saveUserProfile(profile);
  const lang = I18n?.currentLanguage || 'he';
- App.notify(lang === 'he' ? 'הפרופיל נשמר בהצלחה' : 'Profile saved successfully', 'success');
+ App.notify(I18n.t('profile.profileSaved') || 'Profile saved', 'success');
  renderTips();
  }
 
@@ -1032,7 +1030,7 @@
  if (tips.length === 0) {
  container.innerHTML = `<div class="no-tips">
  <div class="emoji">✨</div>
- <p>${lang === 'he' ? 'אין טיפים כרגע. מלא את הפרופיל והנתונים הפיננסיים שלך' : 'No tips right now. Fill in your profile and financial data'}</p>
+ <p>${I18n.t('profile.noTips')}</p>
  </div>`;
  return;
  }
@@ -1060,7 +1058,7 @@
  <div class="tip-title">${escapeHtml(title)}</div>
  <div class="tip-description">${escapeHtml(desc)}</div>
  </div>
- <button class="tip-dismiss" onclick="dismissTip('${tip.id}')" title="${lang === 'he' ? 'הסתר' : 'Dismiss'}">&times;</button>
+ <button class="tip-dismiss" onclick="dismissTip('${tip.id}')" title="${I18n.t('profile.dismiss') || 'Dismiss'}">&times;</button>
  </div>
  `;
  }).join('');
@@ -1081,7 +1079,7 @@
  Storage.resetDismissedTips();
  renderTips();
  const lang = I18n?.currentLanguage || 'he';
- App.notify(lang === 'he' ? 'כל הטיפים הוצגו מחדש' : 'All tips restored', 'success');
+ App.notify(I18n.t('profile.tipsRestored') || 'All tips restored', 'success');
  }
 
  function scanPayslip() {

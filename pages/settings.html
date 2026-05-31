@@ -332,12 +332,12 @@
  </div>
 
  <!-- Smart Alerts -->
- <h3 style="margin: 25px 0 15px; font-size: 1.1rem;">🧠 התראות חכמות</h3>
+ <h3 style="margin: 25px 0 15px; font-size: 1.1rem;" data-i18n="settings.smartAlerts">🧠 התראות חכמות</h3>
 
  <div class="setting-row">
  <div class="setting-label">
- <span>🏦 התראת יתרת בנק נמוכה</span>
- <span>קבל התראה כשיתרת הבנק יורדת מתחת לסף</span>
+ <span data-i18n="settings.bankBalanceAlert">🏦 התראת יתרת בנק נמוכה</span>
+ <span data-i18n="settings.bankBalanceAlertDesc">קבל התראה כשיתרת הבנק יורדת מתחת לסף</span>
  </div>
  <input type="number" id="bankBalanceThreshold" placeholder="0" min="0"
  style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;"
@@ -345,8 +345,8 @@
  </div>
  <div class="setting-row">
  <div class="setting-label">
- <span>💸 התראת הוצאות מול הכנסה</span>
- <span>התראה כשהוצאות עוברות X% מההכנסה החודשית</span>
+ <span data-i18n="settings.incomeExpenseAlertLabel">💸 התראת הוצאות מול הכנסה</span>
+ <span data-i18n="settings.incomeExpenseAlertDesc">התראה כשהוצאות עוברות X% מההכנסה החודשית</span>
  </div>
  <div style="display:flex;align-items:center;gap:6px;">
  <input type="number" id="incomeExpenseAlert" placeholder="80" min="0" max="200"
@@ -431,7 +431,7 @@
          el.textContent = d.toLocaleString(localStorage.getItem('wl_lang') || 'he-IL');
        } catch(e) { el.textContent = user.metadata.lastSignInTime; }
      } else {
-       el.textContent = (localStorage.getItem('wl_lang') === 'he') ? 'אינך מחובר' : 'Not signed in';
+       el.textContent = I18n.t('settings.notSignedIn');
      }
    });
  })();
@@ -439,11 +439,11 @@
 
  <!-- Credit Card Bookmarklet -->
  <div class="settings-section">
- <h2>🔖 ייבוא מאתרי אשראי</h2>
+ <h2>🔖 <span data-i18n="settings.creditBookmarkletImport">ייבוא מאתרי אשראי</span></h2>
  <div class="setting-row">
  <div class="setting-label">
- <span>סימניית ייבוא אשראי</span>
- <span>גרור לסרגל הסימניות — לחץ עליה בדף העסקאות של האשראי</span>
+ <span data-i18n="settings.creditBookmarkletLabel">סימניית ייבוא אשראי</span>
+ <span data-i18n="settings.creditBookmarkletDesc">גרור לסרגל הסימניות — לחץ עליה בדף העסקאות של האשראי</span>
  </div>
  <a id="bookmarkletLink" href="#"
  style="border: 2px dashed var(--color-border); padding: 8px 16px; border-radius: 8px;
@@ -453,16 +453,16 @@
  </a>
  </div>
  <div class="setting-row" style="flex-wrap:wrap; gap:8px;">
- <span style="color:var(--color-text-secondary); font-size:13px;">נתמך:</span>
- <span class="badge">כאל ✅</span>
- <span class="badge">מקס ✅</span>
- <span class="badge">ישראכרט ✅</span>
+ <span style="color:var(--color-text-secondary); font-size:13px;" data-i18n="settings.bookmarkletSupported">נתמך:</span>
+ <span class="badge" data-i18n="settings.creditBadgeKal">כאל ✅</span>
+ <span class="badge" data-i18n="settings.creditBadgeMax">מקס ✅</span>
+ <span class="badge" data-i18n="settings.creditBadgeIsracard">ישראכרט ✅</span>
  </div>
 
  <div class="setting-row" style="margin-top:16px;">
  <div class="setting-label">
- <span>סימניית ייבוא בנק</span>
- <span>גרור לסרגל — לחץ בדף התנועות של הבנק לייבוא יתרה + תנועות</span>
+ <span data-i18n="settings.bankBookmarkletLabel">סימניית ייבוא בנק</span>
+ <span data-i18n="settings.bankBookmarkletDesc">גרור לסרגל — לחץ בדף התנועות של הבנק לייבוא יתרה + תנועות</span>
  </div>
  <a id="bankBookmarkletLink" href="#"
  style="border: 2px dashed var(--color-border); padding: 8px 16px; border-radius: 8px;
@@ -472,21 +472,21 @@
  </a>
  </div>
  <div class="setting-row" style="flex-wrap:wrap; gap:8px;">
- <span style="color:var(--color-text-secondary); font-size:13px;">נתמך:</span>
- <span class="badge">לאומי ✅</span>
- <span class="badge">פועלים ✅</span>
- <span class="badge">מזרחי ✅</span>
- <span class="badge">דיסקונט ✅</span>
+ <span style="color:var(--color-text-secondary); font-size:13px;" data-i18n="settings.bookmarkletSupported">נתמך:</span>
+ <span class="badge" data-i18n="settings.bankBadgeLeumi">לאומי ✅</span>
+ <span class="badge" data-i18n="settings.bankBadgePoalim">פועלים ✅</span>
+ <span class="badge" data-i18n="settings.bankBadgeMizrahi">מזרחי ✅</span>
+ <span class="badge" data-i18n="settings.bankBadgeDiscount">דיסקונט ✅</span>
  </div>
 
  <details style="margin-top:12px;">
- <summary style="cursor:pointer; color:var(--color-text-secondary); font-size:13px;">איך מגדירים?</summary>
+ <summary style="cursor:pointer; color:var(--color-text-secondary); font-size:13px;" data-i18n="settings.bookmarkletSetupTitle">איך מגדירים?</summary>
  <ol style="font-size:13px; color:var(--color-text-secondary); margin-top:8px; padding-right:20px; line-height:2;">
- <li>ודא שסרגל הסימניות מוצג בדפדפן (Ctrl+Shift+B)</li>
- <li>גרור את הסימניה הרלוונטית לסרגל</li>
- <li>כנס לאתר הבנק / האשראי ועבור לדף התנועות</li>
- <li>לחץ על הסימניה — תראה הודעת אישור</li>
- <li>חזור לWizeMoney → הדף המתאים → לחץ "ייבוא מסימניה"</li>
+ <li data-i18n="settings.bookmarkletStep1">ודא שסרגל הסימניות מוצג בדפדפן (Ctrl+Shift+B)</li>
+ <li data-i18n="settings.bookmarkletStep2">גרור את הסימניה הרלוונטית לסרגל</li>
+ <li data-i18n="settings.bookmarkletStep3">כנס לאתר הבנק / האשראי ועבור לדף התנועות</li>
+ <li data-i18n="settings.bookmarkletStep4">לחץ על הסימניה — תראה הודעת אישור</li>
+ <li data-i18n="settings.bookmarkletStep5">חזור לWizeMoney → הדף המתאים → לחץ "ייבוא מסימניה"</li>
  </ol>
  </details>
  </div>
@@ -606,12 +606,12 @@
 
  <!-- Summary Sender -->
  <div class="settings-section" id="summarySenderSection">
- <h2>📤 סיכום פיננסי אוטומטי</h2>
+ <h2>📤 <span data-i18n="settings.autoSummaryTitle">סיכום פיננסי אוטומטי</span></h2>
 
  <div class="setting-row">
  <div class="setting-label">
- <span>הפעל שליחה אוטומטית</span>
- <span>קבל סיכום שבועי/חודשי של כל הנכסים שלך</span>
+ <span data-i18n="settings.autoSummaryEnable">הפעל שליחה אוטומטית</span>
+ <span data-i18n="settings.autoSummaryDesc">קבל סיכום שבועי/חודשי של כל הנכסים שלך</span>
  </div>
  <label class="toggle-switch">
  <input type="checkbox" id="summaryEnabled" onchange="saveSummarySettings()">
@@ -622,47 +622,47 @@
  <div id="summaryOptions" style="display:none;">
  <div class="setting-row">
  <div class="setting-label">
- <span>תדירות</span>
+ <span data-i18n="settings.summaryFrequency">תדירות</span>
  </div>
  <select id="summaryFrequency" onchange="onSummaryFreqChange()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
- <option value="weekly">שבועי</option>
- <option value="monthly">חודשי</option>
+ <option value="weekly" data-i18n="settings.summaryWeekly">שבועי</option>
+ <option value="monthly" data-i18n="settings.summaryMonthly">חודשי</option>
  </select>
  </div>
 
  <div class="setting-row" id="summaryDayOfWeekRow">
  <div class="setting-label">
- <span>יום בשבוע</span>
+ <span data-i18n="settings.summaryDayOfWeek">יום בשבוע</span>
  </div>
  <select id="summaryDayOfWeek" onchange="saveSummarySettings()" style="padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;">
- <option value="0">ראשון</option>
- <option value="1">שני</option>
- <option value="2">שלישי</option>
- <option value="3">רביעי</option>
- <option value="4">חמישי</option>
- <option value="5" selected>שישי</option>
- <option value="6">שבת</option>
+ <option value="0" data-i18n="settings.daySun">ראשון</option>
+ <option value="1" data-i18n="settings.dayMon">שני</option>
+ <option value="2" data-i18n="settings.dayTue">שלישי</option>
+ <option value="3" data-i18n="settings.dayWed">רביעי</option>
+ <option value="4" data-i18n="settings.dayThu">חמישי</option>
+ <option value="5" selected data-i18n="settings.dayFri">שישי</option>
+ <option value="6" data-i18n="settings.daySat">שבת</option>
  </select>
  </div>
 
  <div class="setting-row" id="summaryDayOfMonthRow" style="display:none;">
  <div class="setting-label">
- <span>יום בחודש</span>
+ <span data-i18n="settings.summaryDayOfMonth">יום בחודש</span>
  </div>
  <input type="number" id="summaryDayOfMonth" min="1" max="28" value="1" onchange="saveSummarySettings()" style="width:80px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:center;">
  </div>
 
  <div class="setting-row">
  <div class="setting-label">
- <span>מספר WhatsApp</span>
- <span>כולל קידומת מדינה, לדוגמה: 972501234567</span>
+ <span data-i18n="settings.whatsappNumber">מספר WhatsApp</span>
+ <span data-i18n="settings.whatsappNumberDesc">כולל קידומת מדינה, לדוגמה: 972501234567</span>
  </div>
  <input type="tel" id="summaryPhone" placeholder="972501234567" onchange="saveSummarySettings()" style="width:160px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;">
  </div>
 
  <div class="setting-row">
  <div class="setting-label">
- <span>כתובת מייל</span>
+ <span data-i18n="settings.emailAddress">כתובת מייל</span>
  </div>
  <input type="email" id="summaryEmail" placeholder="me@example.com" onchange="saveSummarySettings()" style="width:200px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;">
  </div>
@@ -670,13 +670,13 @@
  <div class="setting-row">
  <div class="setting-label">
  <span>🤖 CallMeBot API Key <span class="tooltip-btn" data-tooltip="שירות חינמי לשליחת WhatsApp.&#10;כנס לcallmebot.com לקבלת&#10;המספר ומפתח ה-API.">?</span></span>
- <span>לשליחה אוטומטית לגמרי — WizeMoney שולח בלי לחיצה</span>
+ <span data-i18n="settings.callMeBotDesc">לשליחה אוטומטית לגמרי — WizeMoney שולח בלי לחיצה</span>
  </div>
  <input type="text" id="callmebotApiKey" placeholder="1234567" onchange="saveSummarySettings()" style="width:120px;padding:8px 12px;background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:8px;color:white;text-align:left;direction:ltr;font-family:monospace;">
  </div>
 
  <details style="margin-top:4px;margin-bottom:8px;">
- <summary style="cursor:pointer;color:var(--color-text-secondary);font-size:13px;padding:4px 0;">איך מקבלים API Key מ-CallMeBot?</summary>
+ <summary style="cursor:pointer;color:var(--color-text-secondary);font-size:13px;padding:4px 0;" data-i18n="settings.callMeBotSetupTitle">איך מקבלים API Key מ-CallMeBot?</summary>
  <ol style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 0;padding-right:20px;line-height:2;">
  <li>כנס ל-<a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" style="color:var(--color-primary);">callmebot.com</a> וקבל את המספר העדכני</li>
  <li>שמור את המספר באנשי הקשר שלך בשם "CallMeBot"</li>
@@ -686,8 +686,8 @@
  </details>
 
  <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;">
- <button class="btn btn-primary" onclick="previewSummaryNow()">👁️ תצוגה מקדימה עכשיו</button>
- <button class="btn btn-secondary" onclick="testCallMeBot()">🔔 שלח הודעת בדיקה</button>
+ <button class="btn btn-primary" onclick="previewSummaryNow()" data-i18n="settings.previewBtn">👁️ תצוגה מקדימה עכשיו</button>
+ <button class="btn btn-secondary" onclick="testCallMeBot()" data-i18n="settings.sendTestBtn">🔔 שלח הודעת בדיקה</button>
  </div>
  </div>
  </div>
@@ -712,8 +712,6 @@
  <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
  </footer>
  </main>
-
- <button class="mobile-menu-toggle">☰</button>
  </div>
 
  <!-- Add Category Modal -->
@@ -1146,7 +1144,7 @@
  };
  Storage.saveSummarySchedule(s);
  document.getElementById('summaryOptions').style.display = s.enabled ? 'block' : 'none';
- App.notify('הגדרות נשמרו', 'success');
+ App.notify(I18n.t('settings.settingsSaved'), 'success');
  }
 
  function onSummaryFreqChange() {

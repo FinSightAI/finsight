@@ -349,12 +349,12 @@
  <input type="file" id="smartImportInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="smartImportFile(event)">
  <button class="btn btn-secondary btn-sm" onclick="importFromBookmarklet()">
  <span>📋</span>
- <span>ייבוא מסימניה</span>
+ <span data-i18n="credit.importBookmarklet">ייבוא מסימניה</span>
  </button>
  <span class="tooltip-btn" data-tooltip="לחץ על הסימניה באתר האשראי,&#10;חזור לכאן ולחץ כפתור זה.&#10;להגדרת הסימניה: הגדרות ← ייבוא מאתרי אשראי">?</span>
  <button class="btn btn-secondary btn-sm" onclick="detectRecurringPayments()">
  <span>🔄</span>
- <span>זהה תשלומים קבועים</span>
+ <span data-i18n="credit.detectRecurring">זהה תשלומים קבועים</span>
  </button>
  <button class="btn btn-danger btn-sm" onclick="deleteAllExpenses()">
  <span>🗑️</span>
@@ -383,11 +383,11 @@
  <button class="btn btn-secondary btn-sm" id="hoursToggleBtn" onclick="toggleHoursMode()" title="הצג שעות עבודה">⏱️</button>
  </div>
  <div id="hoursRateRow" style="display:none; margin-top:10px; display:none; align-items:center; gap:10px; font-size:0.85rem; color:var(--color-text-secondary);">
- <span>שכר שעתי:</span>
- <input type="number" id="hourlyRateInput" min="1" placeholder="₪ לשעה"
+ <span data-i18n="credit.hourlyRate">שכר שעתי:</span>
+ <input type="number" id="hourlyRateInput" min="1" placeholder="₪/h" data-i18n-placeholder="credit.hourlyRatePlaceholder"
  style="width:110px;padding:6px 10px;border:1px solid var(--color-border);border-radius:8px;background:var(--color-bg);color:var(--color-text-primary);font-size:0.9rem;"
  oninput="saveHourlyRate(this.value); loadExpenses()">
- <span style="font-size:0.75rem;">(ברוטו או נטו — לפי בחירתך)</span>
+ <span style="font-size:0.75rem;" data-i18n="credit.hourlyRateNote">(ברוטו או נטו — לפי בחירתך)</span>
  </div>
  <div class="table-container">
  <table>
@@ -428,9 +428,6 @@
  <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
  </footer>
  </main>
-
- <!-- Mobile Menu Toggle -->
- <button class="mobile-menu-toggle">☰</button>
  </div>
 
  <!-- Add Card Modal -->
@@ -612,7 +609,7 @@
  const container = document.getElementById('cardsContainer');
 
  if (data.cards.length === 0) {
- container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">💳</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין כרטיסי אשראי</div><div style="font-size:0.85rem;margin-bottom:20px">עקוב אחרי ההוצאות החודשיות שלך</div><button class="btn btn-primary btn-sm" onclick="openCardModal()">+ הוסף כרטיס</button></div>`;
+ container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">💳</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">${I18n.t('credit.noCardsTitle')}</div><div style="font-size:0.85rem;margin-bottom:20px">${I18n.t('credit.noCardsDesc')}</div><button class="btn btn-primary btn-sm" onclick="openCardModal()">+ ${I18n.t('credit.addCard')}</button></div>`;
  return;
  }
 

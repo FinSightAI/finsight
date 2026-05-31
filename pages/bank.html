@@ -88,11 +88,11 @@
  </button>
  <button class="btn btn-secondary" onclick="importStatementFile()">
  <span>📄</span>
- <span>ייבוא דף חשבון</span>
+ <span data-i18n="bank.importStatement">ייבוא דף חשבון</span>
  </button>
  <button class="btn btn-secondary" onclick="importFromBankBookmarklet()">
  <span>📋</span>
- <span>ייבוא מסימניה</span>
+ <span data-i18n="bank.importBookmarklet">ייבוא מסימניה</span>
  </button>
  <span class="tooltip-btn" data-tooltip="לחץ על סימניית WizeMoney בנק באתר הבנק,&#10;חזור לכאן ולחץ כפתור זה.&#10;להגדרת הסימניה: הגדרות ← ייבוא מאתרי אשראי">?</span>
  </div>
@@ -146,17 +146,17 @@
  <!-- Transactions History -->
  <div class="card" id="transactionsCard" style="display: none;">
  <div class="card-header">
- <h2 class="card-title"><span class="icon">📜</span> תנועות אחרונות</h2>
- <button class="btn btn-sm btn-secondary" id="showAllTxBtn" onclick="toggleAllTransactions()" style="display:none;">הצג הכל</button>
+ <h2 class="card-title"><span class="icon">📜</span> <span data-i18n="bank.recentTransactions">תנועות אחרונות</span></h2>
+ <button class="btn btn-sm btn-secondary" id="showAllTxBtn" onclick="toggleAllTransactions()" style="display:none;" data-i18n="bank.showAll">הצג הכל</button>
  </div>
  <div class="table-container">
  <table>
  <thead>
  <tr>
- <th>תאריך</th>
- <th>תיאור</th>
- <th>סכום</th>
- <th>יתרה</th>
+ <th data-i18n="bank.colDate">תאריך</th>
+ <th data-i18n="bank.colDescription">תיאור</th>
+ <th data-i18n="bank.colAmount">סכום</th>
+ <th data-i18n="bank.colBalance">יתרה</th>
  </tr>
  </thead>
  <tbody id="transactionsTable"></tbody>
@@ -168,9 +168,6 @@
  <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
  </footer>
  </main>
-
- <!-- Mobile Menu Toggle -->
- <button class="mobile-menu-toggle">☰</button>
  </div>
 
  <!-- Add/Edit Account Modal -->
@@ -283,7 +280,7 @@
  const footerTotal = document.getElementById('totalBalanceFooter');
 
  if (accounts.length === 0) {
- tbody.innerHTML = `<tr><td colspan="5"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏦</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין חשבונות בנק</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף את החשבון הראשון שלך כדי לעקוב אחרי היתרות</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף חשבון</button></div></td></tr>`;
+ tbody.innerHTML = `<tr><td colspan="5"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏦</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">${I18n.t('bank.noAccountsTitle')}</div><div style="font-size:0.85rem;margin-bottom:20px">${I18n.t('bank.noAccountsDesc')}</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ ${I18n.t('bank.addAccount')}</button></div></td></tr>`;
  totalEl.textContent = I18n.formatCurrency(0);
  footer.style.display = 'none';
  document.getElementById('historyCard').style.display = 'none';
@@ -697,28 +694,28 @@
  <label>${I18n.t('bank.nameDescCol')}</label>
  <select id="mapName" class="form-control">
  <option value="-1">${I18n.t('bank.notSelected')}</option>
- ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ ${headers.map((h, i) => `<option value="${i}">${h || `${I18n.t('bank.colNumber')} ${i+1}`}</option>`).join('')}
  </select>
  </div>
  <div class="form-group">
  <label>${I18n.t('bank.balanceCol')}</label>
  <select id="mapBalance" class="form-control" required>
  <option value="-1">${I18n.t('bank.selectBalanceCol')}</option>
- ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ ${headers.map((h, i) => `<option value="${i}">${h || `${I18n.t('bank.colNumber')} ${i+1}`}</option>`).join('')}
  </select>
  </div>
  <div class="form-group">
  <label>${I18n.t('bank.bankCol')}</label>
  <select id="mapBank" class="form-control">
  <option value="-1">${I18n.t('bank.notSelected')}</option>
- ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ ${headers.map((h, i) => `<option value="${i}">${h || `${I18n.t('bank.colNumber')} ${i+1}`}</option>`).join('')}
  </select>
  </div>
  <div class="form-group">
  <label>${I18n.t('bank.accountCol')}</label>
  <select id="mapAccount" class="form-control">
  <option value="-1">${I18n.t('bank.notSelected')}</option>
- ${headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('')}
+ ${headers.map((h, i) => `<option value="${i}">${h || `${I18n.t('bank.colNumber')} ${i+1}`}</option>`).join('')}
  </select>
  </div>
  </div>
@@ -960,22 +957,22 @@
  modal.innerHTML = `
  <div class="modal" style="max-width: 480px;">
  <div class="modal-header">
- <h2>בחר חשבון לייבוא</h2>
+ <h2>${I18n.t('bank.selectAccountTitle')}</h2>
  <button class="modal-close" onclick="document.getElementById('accountSelectModal').remove()">&times;</button>
  </div>
  <div class="modal-body">
  <p style="color: var(--color-text-secondary); margin-bottom: 16px;">${preview}</p>
  <div class="form-group">
- <label>חשבון יעד</label>
+ <label>${I18n.t('bank.targetAccount')}</label>
  <select id="targetAccountSelect" class="form-control">
- <option value="new">➕ צור חשבון חדש</option>
+ <option value="new">${I18n.t('bank.createNewAccount')}</option>
  ${accounts.map(a => `<option value="${a.id}">${a.nameHe || a.nameEn} – ${I18n.t('bank.banks.' + a.bank) || a.bank}</option>`).join('')}
  </select>
  </div>
  </div>
  <div class="modal-footer">
- <button class="btn btn-secondary" onclick="document.getElementById('accountSelectModal').remove()">ביטול</button>
- <button class="btn btn-primary" onclick="confirmAccountSelect()">ייבא תנועות</button>
+ <button class="btn btn-secondary" onclick="document.getElementById('accountSelectModal').remove()">${I18n.t('common.cancel')}</button>
+ <button class="btn btn-primary" onclick="confirmAccountSelect()">${I18n.t('bank.importTransactions')}</button>
  </div>
  </div>
  `;
@@ -1092,42 +1089,42 @@
  }
 
  function showStatementMappingModal(headers, rows, headerIdx) {
- const opts = headers.map((h, i) => `<option value="${i}">${h || 'עמודה ' + (i+1)}</option>`).join('');
+ const opts = headers.map((h, i) => `<option value="${i}">${h || `${I18n.t('bank.colNumber')} ${i+1}`}</option>`).join('');
  const modal = document.createElement('div');
  modal.className = 'modal-overlay active';
  modal.id = 'stmtMappingModal';
  modal.innerHTML = `
  <div class="modal" style="max-width: 500px;">
  <div class="modal-header">
- <h2>מיפוי עמודות דף חשבון</h2>
+ <h2>${I18n.t('bank.stmtMappingTitle')}</h2>
  <button class="modal-close" onclick="document.getElementById('stmtMappingModal').remove()">&times;</button>
  </div>
  <div class="modal-body">
- <p style="color: var(--color-text-secondary);">לא זוהו עמודות אוטומטית. אנא בחר ידנית:</p>
+ <p style="color: var(--color-text-secondary);">${I18n.t('bank.autoDetectFailed')}</p>
  <div class="form-group">
- <label>תאריך *</label>
- <select id="smDate" class="form-control"><option value="-1">-- בחר --</option>${opts}</select>
+ <label>${I18n.t('bank.dateCol')}</label>
+ <select id="smDate" class="form-control"><option value="-1">${I18n.t('bank.selectFirst')}</option>${opts}</select>
  </div>
  <div class="form-group">
- <label>תיאור</label>
- <select id="smDesc" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
+ <label>${I18n.t('bank.descriptionCol')}</label>
+ <select id="smDesc" class="form-control"><option value="-1">${I18n.t('bank.notRelevant')}</option>${opts}</select>
  </div>
  <div class="form-group">
- <label>חיוב</label>
- <select id="smDebit" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
+ <label>${I18n.t('bank.debitCol')}</label>
+ <select id="smDebit" class="form-control"><option value="-1">${I18n.t('bank.notRelevant')}</option>${opts}</select>
  </div>
  <div class="form-group">
- <label>זכות</label>
- <select id="smCredit" class="form-control"><option value="-1">-- לא רלוונטי --</option>${opts}</select>
+ <label>${I18n.t('bank.creditCol')}</label>
+ <select id="smCredit" class="form-control"><option value="-1">${I18n.t('bank.notRelevant')}</option>${opts}</select>
  </div>
  <div class="form-group">
- <label>יתרה *</label>
- <select id="smBalance" class="form-control"><option value="-1">-- בחר --</option>${opts}</select>
+ <label>${I18n.t('bank.balanceColRequired')}</label>
+ <select id="smBalance" class="form-control"><option value="-1">${I18n.t('bank.selectFirst')}</option>${opts}</select>
  </div>
  </div>
  <div class="modal-footer">
- <button class="btn btn-secondary" onclick="document.getElementById('stmtMappingModal').remove()">ביטול</button>
- <button class="btn btn-primary" onclick="applyStatementMapping()">המשך</button>
+ <button class="btn btn-secondary" onclick="document.getElementById('stmtMappingModal').remove()">${I18n.t('common.cancel')}</button>
+ <button class="btn btn-primary" onclick="applyStatementMapping()">${I18n.t('bank.continueBtn')}</button>
  </div>
  </div>
  `;
@@ -1284,8 +1281,7 @@
  modal.innerHTML = `
  <div class="modal" style="max-width:440px;">
  <div class="modal-header">
- <h2>בחר חשבון לייבוא</h2>
- <button class="modal-close" onclick="document.getElementById('bankPickerModal').remove()">&times;</button>
+ <h2>${I18n.t('bank.bankPickerTitle')}</h2> <button class="modal-close" onclick="document.getElementById('bankPickerModal').remove()">&times;</button>
  </div>
  <div class="modal-body">
  <p style="color:var(--color-text-secondary);margin-bottom:12px;">
@@ -1298,8 +1294,8 @@
  </div>
  </div>
  <div class="modal-footer">
- <button class="btn btn-secondary" onclick="document.getElementById('bankPickerModal').remove()">ביטול</button>
- <button class="btn btn-primary" onclick="confirmBankPicker()">ייבא</button>
+ <button class="btn btn-secondary" onclick="document.getElementById('bankPickerModal').remove()">${I18n.t('common.cancel')}</button>
+ <button class="btn btn-primary" onclick="confirmBankPicker()">${I18n.t('bank.importBookmarklet')}</button>
  </div>
  </div>`;
  document.body.appendChild(modal);

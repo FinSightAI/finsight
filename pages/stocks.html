@@ -503,15 +503,15 @@
  <th data-i18n="common.date">תאריך</th>
  <th data-i18n="common.type">סוג</th>
  <th data-i18n="stocks.symbol">סימול</th>
- <th>שם</th>
+ <th data-i18n="stocks.colName">שם</th>
  <th data-i18n="stocks.quantity">כמות</th>
  <th data-i18n="stocks.price">מחיר</th>
  <th data-i18n="common.total">סה״כ</th>
- <th>מחיר קנייה</th>
- <th>רווח/הפסד</th>
- <th>שינוי יומי</th>
+ <th data-i18n="stocks.colPurchasePrice">מחיר קנייה</th>
+ <th data-i18n="stocks.colProfitLoss">רווח/הפסד</th>
+ <th data-i18n="stocks.colDailyChange">שינוי יומי</th>
  <th>MA150</th>
- <th>טרנד</th>
+ <th data-i18n="stocks.colTrend">טרנד</th>
  <th data-i18n="common.actions">פעולות</th>
  </tr>
  </thead>
@@ -629,7 +629,7 @@
  <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;" id="benchmarkStatsGrid">
  </div>
  <div id="benchmarkPeriodNote" style="display:none; text-align:center; margin-top:10px; font-size:11px; color:var(--color-text-secondary);">
- ⓘ האחוזים מציגים תשואה תקופתית (שינוי מחיר בתקופה הנבחרת), לא P&amp;L כולל מול מחיר הקנייה
+ <span data-i18n="stocks.periodReturnInfo">ⓘ האחוזים מציגים תשואה תקופתית (שינוי מחיר בתקופה הנבחרת), לא P&amp;L כולל מול מחיר הקנייה</span>
  </div>
  </div>
  </div>
@@ -638,9 +638,6 @@
  <div data-i18n="footer.disclaimer">כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.</div>
  </footer>
  </main>
-
- <!-- Mobile Menu Toggle -->
- <button class="mobile-menu-toggle">☰</button>
  </div>
 
  <!-- Add Stock Modal -->
@@ -712,7 +709,7 @@
  </div>
  <a id="taseNAVLink" href="#" target="_blank" rel="noopener"
  style="display:none; font-size:0.85rem; color:var(--color-primary);">
- 📊 פתח עמוד קרן ב-TASE לשווי עדכני
+ <span data-i18n="stocks.openTASEPage">📊 פתח עמוד קרן ב-TASE לשווי עדכני</span>
  </a>
  </form>
  </div>
@@ -1170,7 +1167,7 @@
  const totalReturnPercent = totalCostILS > 0 ? ((totalProfitILS / totalCostILS) * 100).toFixed(1) : '0.0';
  rows.push(`
  <tr style="font-weight: bold; border-top: 2px solid var(--color-border);">
- <td class="col-static" colspan="4" style="text-align: left;">סה"כ</td>
+ <td class="col-static" colspan="4" style="text-align: left;">${I18n.t('stocks.totalRow')}</td>
  <td class="col-static">₪${totalCostILS.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
  <td class="col-dynamic" colspan="4"></td>
  <td class="col-dynamic"><strong>₪${totalValueILS.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}</strong></td>
@@ -1461,19 +1458,19 @@
  if (!badge) return;
  badge.style.display = 'inline-block';
  if (status.taseOpen && status.nyseOpen) {
- badge.textContent = '🟢 שני שווקים פתוחים';
+ badge.textContent = I18n.t('stocks.marketBothOpen');
  badge.style.background = 'rgba(34, 197, 94, 0.15)';
  badge.style.color = '#22c55e';
  } else if (status.taseOpen) {
- badge.textContent = '🟢 בורסת ת"א פתוחה';
+ badge.textContent = I18n.t('stocks.marketTASEOpen');
  badge.style.background = 'rgba(34, 197, 94, 0.15)';
  badge.style.color = '#22c55e';
  } else if (status.nyseOpen) {
- badge.textContent = '🟢 NYSE פתוח';
+ badge.textContent = I18n.t('stocks.marketNYSEOpen');
  badge.style.background = 'rgba(34, 197, 94, 0.15)';
  badge.style.color = '#22c55e';
  } else {
- badge.textContent = '🔴 שווקים סגורים';
+ badge.textContent = I18n.t('stocks.marketClosed');
  badge.style.background = 'rgba(156, 163, 175, 0.15)';
  badge.style.color = 'var(--color-text-secondary)';
  }
@@ -1492,9 +1489,9 @@
  if (remaining >= 60) {
  const m = Math.floor(remaining / 60);
  const s = remaining % 60;
- el.textContent = `עדכון בעוד ${m}:${String(s).padStart(2, '0')}`;
+ el.textContent = `${I18n.t('stocks.updateInMin')} ${m}:${String(s).padStart(2, '0')}`;
  } else {
- el.textContent = `עדכון בעוד ${remaining} שנ'`;
+ el.textContent = `${I18n.t('stocks.updateInSec')} ${remaining}s`;
  }
  remaining--;
  }
@@ -1621,8 +1618,8 @@
  <div class="alert-info">
  <span class="alert-type">${_s(StockAlerts.getAlertTypeName(alert.type))}</span>
  ${!alert.type.includes('ma150') ? `<span class="alert-value">${_s(alert.value)}</span>` : ''}
- ${alert.triggered ? '<span class="badge badge-success">התקיים</span>' : ''}
- ${!alert.enabled ? '<span class="badge badge-danger">מושבת</span>' : ''}
+ ${alert.triggered ? `<span class="badge badge-success">${I18n.t('stocks.alertTriggered')}</span>` : ''}
+ ${!alert.enabled ? `<span class="badge badge-danger">${I18n.t('stocks.alertDisabled')}</span>` : ''}
  </div>
  <div class="alert-actions">
  <button class="btn btn-sm btn-secondary" onclick="toggleAlertEnabled('${_s(alert.id)}')">${alert.enabled ? '⏸️' : '▶️'}</button>
@@ -1649,13 +1646,13 @@
  }
 
  function deleteAlert(alertId) {
- if (confirm('האם למחוק התראה זו?')) {
+ if (confirm(I18n.t('stocks.deleteAlertConfirm'))) {
  StockAlerts.removeAlert(alertId);
  const title = document.getElementById('viewAlertsTitle').textContent;
  const symbol = title.replace(I18n.t('stocks.viewAlerts') + ' - ', '');
  viewAlerts(symbol);
  loadWatchlist();
- App.notify('התראה נמחקה', 'success');
+ App.notify(I18n.t('stocks.alertDeleted'), 'success');
  }
  }
 
@@ -1975,7 +1972,7 @@
  const watchlist = StockAlerts.getWatchlist();
 
  // Clear existing options except first
- select.innerHTML = '<option value="">בחר מניה...</option>';
+ select.innerHTML = `<option value="">${I18n.t('stocks.selectStockOption')}</option>`;
 
  // Add holdings
  if (holdings.length > 0) {
@@ -2038,7 +2035,7 @@
  }
 
  if (!stockData.success || !stockData.historicalData || stockData.historicalData.length === 0) {
- emptyState.innerHTML = '<span style="font-size: 3rem;">⚠️</span><p style="margin-top: 15px;">לא ניתן לטעון נתונים עבור מניה זו</p>';
+ emptyState.innerHTML = `<span style="font-size: 3rem;">⚠️</span><p style="margin-top: 15px;">${I18n.t('stocks.chartLoadError')}</p>`;
  emptyState.style.display = 'block';
  infoSection.style.display = 'none';
  return;
