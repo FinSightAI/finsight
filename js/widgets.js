@@ -81,26 +81,26 @@ const WidgetManager = {
         const config = this.getConfig();
         const main = document.querySelector('.main-content');
 
+        // Visibility always applies.
         document.querySelectorAll('[data-widget]').forEach(element => {
-            const widgetId = element.getAttribute('data-widget');
-            const widgetConfig = config[widgetId];
-
-            if (widgetConfig && !widgetConfig.enabled) {
-                element.style.display = 'none';
-            } else {
-                element.style.display = '';
-            }
-
-            // Apply CSS order for drag-reorder
-            if (widgetConfig && widgetConfig.order != null) {
-                element.style.order = widgetConfig.order;
-            }
+            const widgetConfig = config[element.getAttribute('data-widget')];
+            element.style.display = (widgetConfig && !widgetConfig.enabled) ? 'none' : '';
         });
 
-        // Make main-content a flex column so `order` works
-        if (main) {
+        // Ordering (flex + CSS order) ONLY when the user saved a custom layout.
+        // Default users keep natural DOM block flow: switching to flex + per-widget
+        // order reflowed the page (non-data-widget containers like .charts-grid
+        // default to order:0 and jumped to the top) → CLS~0.7. See web-vitals-check.js.
+        let customized = false;
+        try { customized = !!Storage.get(Storage.KEYS.DASHBOARD_WIDGETS); } catch (e) {}
+        if (main && customized) {
             main.style.display = 'flex';
             main.style.flexDirection = 'column';
+            Array.prototype.forEach.call(main.children, (el, i) => { el.style.order = String(i); });
+            document.querySelectorAll('[data-widget]').forEach(element => {
+                const widgetConfig = config[element.getAttribute('data-widget')];
+                if (widgetConfig && widgetConfig.order != null) element.style.order = String(widgetConfig.order);
+            });
         }
     },
 
