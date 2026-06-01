@@ -1491,7 +1491,8 @@ exports.paypalWebhook = functions
 
                     // Detect tier from the PayPal plan_id when available
                     const planId = sub.plan_id || "";
-                    const tier   = (process.env.PAYPAL_YOLO_PLAN_ID && planId === process.env.PAYPAL_YOLO_PLAN_ID) ? "yolo" : "pro";
+                    const YOLO_PLAN_ID = "P-3WT61990FP2103335NH32GVA"; // same ID as dashboard.html PAYPAL_YOLO_PLAN_ID
+                    const tier   = planId === YOLO_PLAN_ID ? "yolo" : "pro";
 
                     await db.collection("users").doc(uid).set(
                         {
