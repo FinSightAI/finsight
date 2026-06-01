@@ -574,7 +574,7 @@
  loadRecentTransactions();
  SummarySender.checkAndShowBanner();
  loadBudgetAlerts();
- Onboarding.check();
+ /* disabled 2026-06-01: shared wize-onboarding.js wizard now handles first-run onboarding (i18n'd, Esc-closable). Legacy #onboardingOverlay double-showed + its backdrop intercepted clicks, blocking the hamburger after the wizard closed. */ void 0;
  });
 
  function loadRecentTransactions() {

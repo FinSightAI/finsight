@@ -55,6 +55,10 @@ const I18n = {
             // AI Story
             aiStory: {
                 pageTitle: 'סיפור השבוע',
+                loginTitle: 'התחבר לחשבון',
+                loginBody: 'יש להתחבר לחשבון WizeMoney כדי להשתמש בסיפור ה-AI.',
+                loginHint: 'לחץ על "התחבר" בתפריט הצד.',
+                loginCta: 'התחבר עכשיו',
                 connectTitle: 'חבר את Claude AI',
                 connectDesc: 'הכנס את מפתח ה-API של Anthropic כדי לקבל סיכום שבועי אישי של ההוצאות שלך. המפתח נשמר אצלך בדפדפן בלבד ולא נשלח לשום שרת.',
                 connectBtn: 'התחבר',
@@ -1955,6 +1959,10 @@ const I18n = {
             // AI Story
             aiStory: {
                 pageTitle: 'Weekly Story',
+                loginTitle: 'Sign in to your account',
+                loginBody: 'Sign in to your WizeMoney account to use the AI Story.',
+                loginHint: 'Click "Sign in" in the side menu.',
+                loginCta: 'Sign in now',
                 connectTitle: 'Connect Claude AI',
                 connectDesc: 'Enter your Anthropic API key to get a personalized weekly summary of your expenses. The key is stored only in your browser and never sent to any server.',
                 connectBtn: 'Connect',
@@ -3856,6 +3864,10 @@ const I18n = {
             // AI Story
             aiStory: {
                 pageTitle: 'História da Semana',
+                loginTitle: 'Entre na sua conta',
+                loginBody: 'Entre na sua conta WizeMoney para usar a História com IA.',
+                loginHint: 'Clique em "Entrar" no menu lateral.',
+                loginCta: 'Entrar agora',
                 connectTitle: 'Conectar Claude AI',
                 connectDesc: 'Insira sua chave de API da Anthropic para receber um resumo semanal personalizado dos seus gastos. A chave é armazenada apenas no seu navegador e nunca é enviada a nenhum servidor.',
                 connectBtn: 'Conectar',
@@ -5218,6 +5230,10 @@ const I18n = {
             // AI Story
             aiStory: {
                 pageTitle: 'Historia de la Semana',
+                loginTitle: 'Inicia sesión en tu cuenta',
+                loginBody: 'Inicia sesión en tu cuenta WizeMoney para usar la Historia con IA.',
+                loginHint: 'Haz clic en "Iniciar sesión" en el menú lateral.',
+                loginCta: 'Iniciar sesión ahora',
                 connectTitle: 'Conectar Claude AI',
                 connectDesc: 'Ingresa tu clave de API de Anthropic para recibir un resumen semanal personalizado de tus gastos. La clave se almacena solo en tu navegador y nunca se envía a ningún servidor.',
                 connectBtn: 'Conectar',
