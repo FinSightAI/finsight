@@ -199,6 +199,11 @@ const App = {
 
         overlay.addEventListener('click', closeSidebar);
 
+        // Close on Escape (a11y — parity with the shared hamburger drawer)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
+        });
+
         // Close on nav link click (navigate to page)
         sidebar.querySelectorAll('.nav-link[href]').forEach(link => {
             link.addEventListener('click', () => {
