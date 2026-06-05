@@ -2184,3 +2184,35 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
 
     return { deleted: true, authDeleted };
 });
+
+// ─── CSP violation report collector ──────────────────────────────────────────
+// Receives Content-Security-Policy violation reports (report-uri / report-to)
+// from the apps, so genuine XSS / inline-script attempts and CSP misconfig become
+// visible. Browser extensions generate the bulk of real-world CSP noise, so those
+// are filtered out. No auth (browsers post anonymously); capped + never throws.
+exports.cspReport = functions.https.onRequest(async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') return res.status(204).send('');
+    if (req.method !== 'POST') return res.status(405).send('');
+    try {
+        const body = req.body || {};
+        // report-uri → { "csp-report": {...} } ; report-to → [ { body: {...} }, ... ]
+        const raw = Array.isArray(body) ? body.map(r => (r && r.body) || r) : [body['csp-report'] || body];
+        const NOISE = /^(chrome|moz|safari|webkit)-extension:|^about:|^chrome:|^data:text\/html/i;
+        const trunc = (s, n) => (typeof s === 'string' ? s.slice(0, n) : '');
+        for (const r of raw.slice(0, 5)) { // cap per request — no write-spam
+            if (!r || typeof r !== 'object') continue;
+            const blocked = r['blocked-uri'] || r.blockedURL || '';
+            const source  = r['source-file'] || r.sourceFile || '';
+            if (NOISE.test(blocked) || NOISE.test(source)) continue; // extension noise
+            await db.collection('cspReports').add({
+                directive:   trunc(r['violated-directive'] || r['effective-directive'] || r.effectiveDirective, 80),
+                blockedUri:  trunc(blocked, 300),
+                documentUri: trunc(r['document-uri'] || r.documentURL, 300),
+                sourceFile:  trunc(source, 300),
+                at: admin.firestore.FieldValue.serverTimestamp(),
+            }).catch(() => {});
+        }
+    } catch (e) { /* never fail a report */ }
+    return res.status(204).send('');
+});
