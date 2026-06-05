@@ -34,7 +34,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21   # firebase-tools 15+ requires JDK 21+ for the emulator
 
       - name: Install firebase-tools
         run: npm i -g firebase-tools
