@@ -2138,3 +2138,30 @@ exports.issueCustomToken = functions.https.onCall(async (data) => {
         throw new functions.https.HttpsError('unauthenticated', 'Invalid or expired token');
     }
 });
+
+// ─── GDPR: complete account + data deletion ──────────────────────────────────
+// The old client-side delete (account.html) only cleared a few subcollections
+// and the users/{uid} doc — leaving context / cross_app / checkdeal_deals /
+// consent subcollections AND the whole userBackups/{uid} mirror behind
+// (Firestore does NOT cascade-delete subcollections when a parent doc is
+// deleted). This callable uses recursiveDelete to erase the entire tree for the
+// caller, plus their cloud-backup mirror, plus the Auth account — so "delete my
+// account" actually removes everything. Auth-only: a user can only delete self.
+exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        throw new functions.https.HttpsError("unauthenticated", "Sign in first");
+    }
+    const uid = context.auth.uid;
+    const fs = admin.firestore();
+
+    // recursiveDelete clears the doc AND every nested subcollection.
+    await fs.recursiveDelete(fs.collection("users").doc(uid));
+    await fs.recursiveDelete(fs.collection("userBackups").doc(uid));
+
+    // Best-effort Auth deletion (Firestore data is already gone regardless).
+    let authDeleted = false;
+    try { await admin.auth().deleteUser(uid); authDeleted = true; }
+    catch (e) { console.warn("deleteUserAccount: auth delete failed", e.message); }
+
+    return { deleted: true, authDeleted };
+});

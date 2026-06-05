@@ -1,0 +1,52 @@
+# Backend test layer — Firestore Security Rules + Cloud Functions, run against
+# the Firebase emulator. Complements the Playwright daily-qa (which only sees the
+# deployed frontend). These catch money/auth/data regressions a browser cannot.
+#
+# Local equivalent:
+#   export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+#   firebase emulators:exec --only firestore 'npm test --prefix functions'
+#   firebase emulators:exec --only firestore 'npm test --prefix firestore-tests'
+name: backend-tests
+
+on:
+  push:
+    paths:
+      - 'functions/**'
+      - 'firestore.rules'
+      - 'firestore-tests/**'
+      - '.github/workflows/backend-tests.yml'
+  schedule:
+    - cron: '0 3 * * *'   # 06:00 Israel, alongside daily-qa
+  workflow_dispatch: {}
+
+jobs:
+  emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The Firestore emulator is a Java app.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install firebase-tools
+        run: npm i -g firebase-tools
+
+      - name: Install deps (functions + rules tests)
+        run: |
+          npm ci --prefix functions || npm install --prefix functions
+          npm ci --prefix firestore-tests || npm install --prefix firestore-tests
+
+      - name: Firestore Security Rules (emulator)
+        run: firebase emulators:exec --only firestore 'npm test --prefix firestore-tests' --project finzilla-7f1f9
+
+      - name: Cloud Functions (emulator)
+        # firestore,auth — deleteUserAccount exercises the Auth emulator too.
+        run: firebase emulators:exec --only firestore,auth 'npm test --prefix functions' --project finzilla-7f1f9

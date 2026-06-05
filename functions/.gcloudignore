@@ -11,3 +11,5 @@ node_modules.broken/
 *.log
 .DS_Store
 npm-debug.log
+# Test files — never needed at runtime in the cloud.
+__tests__/
