@@ -19,6 +19,10 @@ on:
     - cron: '0 3 * * *'   # 06:00 Israel, alongside daily-qa
   workflow_dispatch: {}
 
+# Run the pinned v4 actions on Node 24 (they default to the now-deprecated Node 20).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   emulator:
     runs-on: ubuntu-latest
