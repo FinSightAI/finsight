@@ -1473,7 +1473,26 @@ exports.paypalWebhook = functions
         }
 
         const eventType = req.body && req.body.event_type;
-        console.log("PayPal event:", eventType);
+        const eventId   = req.body && req.body.id;
+        console.log("PayPal event:", eventType, eventId);
+
+        // Replay protection — PayPal delivers webhooks at-least-once and retries
+        // failures, so the same event can arrive multiple times. We've already
+        // verified the signature above; now dedup on the PayPal event id using an
+        // atomic create() (fails if the doc already exists) so a duplicate can
+        // never re-run the side effects below. Defence-in-depth on top of the
+        // per-user referralRewardSent guard.
+        if (eventId) {
+            try {
+                await db.collection("processedWebhooks").doc(String(eventId)).create({
+                    type: eventType || null,
+                    at: admin.firestore.FieldValue.serverTimestamp(),
+                });
+            } catch (e) {
+                console.log("Duplicate PayPal webhook ignored:", eventId);
+                return res.json({ received: true, duplicate: true });
+            }
+        }
 
         try {
             switch (eventType) {

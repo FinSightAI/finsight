@@ -154,3 +154,19 @@ describe('paypalWebhook — referral reward idempotency', () => {
     expect(bob.referralCount).toBe(1); // not 2 — idempotent
   });
 });
+
+describe('paypalWebhook — replay protection (event-id dedup)', () => {
+  it('processes the first delivery and ignores a replayed identical event', async () => {
+    await db.collection('users').doc('u_replay').set({ plan: 'free' });
+    const r = activatedReq('u_replay', 'SUB-RP-1', 'SOME-PLAN');
+    r.body.id = 'WH-EVT-REPLAY-1';
+
+    const first = await invoke(r);
+    const second = await invoke(r);
+
+    expect(first.body).toMatchObject({ received: true });
+    expect(first.body.duplicate).toBeUndefined();
+    expect(second.body).toMatchObject({ received: true, duplicate: true });
+    expect((await db.doc('users/u_replay').get()).data().plan).toBe('pro');
+  });
+});
