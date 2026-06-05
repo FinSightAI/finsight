@@ -2216,3 +2216,101 @@ exports.cspReport = functions.https.onRequest(async (req, res) => {
     } catch (e) { /* never fail a report */ }
     return res.status(204).send('');
 });
+
+// ─── FinSight Terminal — background price-push alerts ─────────────────────────
+// The FinSight PWA (finsight-terminal.vercel.app) registers a Web-Push
+// subscription + its price-alert rules here; a 5-minute cron checks live prices
+// and pushes a notification when a target is hit — even when the app is closed.
+//
+// Secret (set via `firebase functions:secrets:set VAPID_PRIVATE`):
+//   VAPID_PRIVATE — the VAPID private key (public key is below + in the client).
+const webpush       = require("web-push");
+const crypto        = require("crypto");
+const VAPID_PRIVATE = defineSecret("VAPID_PRIVATE");
+const VAPID_PUBLIC  = "BHwC1Eq9iPE0pw9acgTjT7VZBE2OVFtrYZnvK_OklVATa5iRjpcIDeSk0XP99z47YNfbJunxkKwTRLMUNkcgR5U";
+const FINSIGHT_API  = "https://finsight-terminal.vercel.app";
+const FINSIGHT_ORIGIN = "https://finsight-terminal.vercel.app";
+const pushSubId = (endpoint) => crypto.createHash("sha256").update(endpoint).digest("hex").slice(0, 32);
+
+// Save / update / clear a device's push subscription + alert rules.
+exports.finsightSavePush = functions.https.onRequest(async (req, res) => {
+    res.set("Access-Control-Allow-Origin", FINSIGHT_ORIGIN);
+    res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    if (req.method === "OPTIONS") return res.status(204).send("");
+    if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+    try {
+        const { subscription, alerts } = req.body || {};
+        if (!subscription || !subscription.endpoint) return res.status(400).json({ error: "no subscription" });
+        const id = pushSubId(subscription.endpoint);
+        const clean = (Array.isArray(alerts) ? alerts : [])
+            .map((a) => ({ symbol: String(a.symbol || ""), dir: a.dir === "below" ? "below" : "above", price: Number(a.price) }))
+            .filter((a) => a.symbol && a.price > 0);
+        if (!clean.length) {
+            await db.collection("finsightPush").doc(id).delete().catch(() => {});
+            return res.json({ ok: true, cleared: true });
+        }
+        await db.collection("finsightPush").doc(id).set({
+            subscription,
+            alerts: clean,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        res.json({ ok: true, alerts: clean.length });
+    } catch (e) {
+        console.error("finsightSavePush", e);
+        res.status(500).json({ error: String(e.message || e) });
+    }
+});
+
+// Every 5 minutes: check live prices against stored alerts; push when hit.
+exports.finsightCheckAlerts = functions
+    .runWith({ secrets: [VAPID_PRIVATE] })
+    .pubsub.schedule("every 5 minutes")
+    .timeZone("UTC")
+    .onRun(async () => {
+        const snap = await db.collection("finsightPush").get();
+        if (snap.empty) return null;
+        webpush.setVapidDetails("mailto:ofirshamir57@gmail.com", VAPID_PUBLIC, VAPID_PRIVATE.value());
+
+        // collect every symbol under watch, fetch quotes from FinSight in ≤40 chunks
+        const symbols = new Set();
+        snap.forEach((d) => (d.data().alerts || []).forEach((a) => symbols.add(a.symbol)));
+        if (!symbols.size) return null;
+        const syms = [...symbols], prices = {};
+        for (let i = 0; i < syms.length; i += 40) {
+            const chunk = syms.slice(i, i + 40);
+            try {
+                const r = await fetch(`${FINSIGHT_API}/api/quote?symbols=${encodeURIComponent(chunk.join(","))}`).then((x) => x.json());
+                (r.quotes || []).forEach((q) => q.symbol && q.price != null && !q.error && (prices[q.symbol] = q));
+            } catch (e) { console.error("finsight quote fetch", e.message); }
+        }
+
+        const jobs = [];
+        snap.forEach((doc) => {
+            const data = doc.data();
+            const remaining = [], fired = [];
+            (data.alerts || []).forEach((a) => {
+                const q = prices[a.symbol], p = q && q.price;
+                const hit = p != null && (a.dir === "above" ? p >= a.price : p <= a.price);
+                if (hit) fired.push({ a, p, name: (q.ticker || q.name || a.symbol) });
+                else remaining.push(a);
+            });
+            if (!fired.length) return;
+            fired.forEach((f) => {
+                const payload = JSON.stringify({
+                    title: `${f.name} ${f.a.dir === "above" ? "↑" : "↓"} ${f.a.price}`,
+                    body: `Target hit — now ${f.p}`,
+                    symbol: f.a.symbol,
+                });
+                jobs.push(webpush.sendNotification(data.subscription, payload).catch((err) => {
+                    if (err.statusCode === 404 || err.statusCode === 410) return doc.ref.delete();
+                    console.error("finsight push", err.statusCode);
+                }));
+            });
+            // keep the un-fired alerts; drop the doc if nothing's left to watch
+            jobs.push(remaining.length ? doc.ref.update({ alerts: remaining }) : doc.ref.delete());
+        });
+        await Promise.all(jobs);
+        console.log(`finsightCheckAlerts: ${snap.size} device(s), ${syms.length} symbol(s)`);
+        return null;
+    });
