@@ -2280,6 +2280,17 @@ exports.finsightCheckAlerts = functions
     .pubsub.schedule("every 5 minutes")
     .timeZone("UTC")
     .onRun(async () => {
+        // Cross-app keepalive (free): WizeHealth runs on Cloud Run with
+        // min-instances=0, so the first visitor after an idle gap eats a
+        // ~2-3s cold start. This job already fires every 5 min (well inside
+        // Cloud Run's idle window) via an existing Scheduler trigger, so a
+        // cheap fire-and-forget ping keeps that instance warm at $0 — no paid
+        // min-instance, no extra Scheduler job. Lives here purely because this
+        // is the only thing already running every 5 min.
+        try {
+            await fetch("https://wizehealth-1027614800253.us-central1.run.app/api/config", { signal: AbortSignal.timeout(8000) });
+        } catch (_) { /* keepalive is best-effort; never blocks alert delivery */ }
+
         const snap = await db.collection("finsightPush").get();
         if (snap.empty) return null;
         webpush.setVapidDetails("mailto:ofirshamir57@gmail.com", VAPID_PUBLIC, VAPID_PRIVATE.value());
