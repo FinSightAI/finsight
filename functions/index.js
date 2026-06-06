@@ -2243,18 +2243,30 @@ exports.finsightSavePush = functions.https.onRequest(async (req, res) => {
         const { subscription, alerts } = req.body || {};
         if (!subscription || !subscription.endpoint) return res.status(400).json({ error: "no subscription" });
         const id = pushSubId(subscription.endpoint);
+        const ref = db.collection("finsightPush").doc(id);
         const clean = (Array.isArray(alerts) ? alerts : [])
-            .map((a) => ({ symbol: String(a.symbol || ""), dir: a.dir === "below" ? "below" : "above", price: Number(a.price) }))
+            .map((a) => {
+                const o = { symbol: String(a.symbol || ""), dir: a.dir === "below" ? "below" : "above", price: Number(a.price) };
+                const trail = Number(a.trail);
+                if (trail > 0) { o.trail = trail; o.peak = Number(a.peak) || o.price; }
+                return o;
+            })
             .filter((a) => a.symbol && a.price > 0);
         if (!clean.length) {
-            await db.collection("finsightPush").doc(id).delete().catch(() => {});
+            await ref.delete().catch(() => {});
             return res.json({ ok: true, cleared: true });
         }
-        await db.collection("finsightPush").doc(id).set({
-            subscription,
-            alerts: clean,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        // Merge trailing peaks with any peak already stored — the cloud peak only ever
+        // rises, so a stale client (peak frozen while it was closed) can't lower the stop.
+        const prevPeak = {};
+        ((await ref.get()).data()?.alerts || []).forEach((a) => { if (a.trail) prevPeak[a.symbol] = a.peak; });
+        clean.forEach((a) => {
+            if (a.trail) {
+                a.peak = Math.max(a.peak || 0, prevPeak[a.symbol] || 0);
+                a.price = Math.round(a.peak * (1 - a.trail / 100) * 100) / 100;
+            }
         });
+        await ref.set({ subscription, alerts: clean, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
         res.json({ ok: true, alerts: clean.length });
     } catch (e) {
         console.error("finsightSavePush", e);
@@ -2289,17 +2301,24 @@ exports.finsightCheckAlerts = functions
         snap.forEach((doc) => {
             const data = doc.data();
             const remaining = [], fired = [];
+            let mutated = false; // a trailing peak ratcheted up → persist even if nothing fired
             (data.alerts || []).forEach((a) => {
                 const q = prices[a.symbol], p = q && q.price;
+                // trailing stop: ratchet the peak with the live price; the trigger only rises
+                if (a.trail && p != null) {
+                    const peak = Math.max(a.peak || p, p);
+                    if (peak !== a.peak) { a.peak = peak; mutated = true; }
+                    const trig = Math.round(peak * (1 - a.trail / 100) * 100) / 100;
+                    if (trig !== a.price) { a.price = trig; mutated = true; }
+                }
                 const hit = p != null && (a.dir === "above" ? p >= a.price : p <= a.price);
                 if (hit) fired.push({ a, p, name: (q.ticker || q.name || a.symbol) });
                 else remaining.push(a);
             });
-            if (!fired.length) return;
             fired.forEach((f) => {
                 const payload = JSON.stringify({
-                    title: `${f.name} ${f.a.dir === "above" ? "↑" : "↓"} ${f.a.price}`,
-                    body: `Target hit — now ${f.p}`,
+                    title: f.a.trail ? `${f.name} 🛑 trailing stop ${f.a.price}` : `${f.name} ${f.a.dir === "above" ? "↑" : "↓"} ${f.a.price}`,
+                    body: `${f.a.dir === "below" ? "Dropped to" : "Rose to"} ${f.p}`,
                     symbol: f.a.symbol,
                 });
                 jobs.push(webpush.sendNotification(data.subscription, payload).catch((err) => {
@@ -2307,8 +2326,9 @@ exports.finsightCheckAlerts = functions
                     console.error("finsight push", err.statusCode);
                 }));
             });
-            // keep the un-fired alerts; drop the doc if nothing's left to watch
-            jobs.push(remaining.length ? doc.ref.update({ alerts: remaining }) : doc.ref.delete());
+            // persist when an alert fired (was removed) OR a trailing peak ratcheted up
+            if (fired.length) jobs.push(remaining.length ? doc.ref.update({ alerts: remaining }) : doc.ref.delete());
+            else if (mutated) jobs.push(doc.ref.update({ alerts: remaining }));
         });
         await Promise.all(jobs);
         console.log(`finsightCheckAlerts: ${snap.size} device(s), ${syms.length} symbol(s)`);
