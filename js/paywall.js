@@ -23,7 +23,7 @@ const Paywall = (() => {
             },
             yolo: {
                 name: "YOLO ⚡",
-                price: "$4.90",
+                price: "$9.99",
                 period: "/ חודש",
                 color: "#f59e0b",
                 perks: [
@@ -54,7 +54,7 @@ const Paywall = (() => {
             },
             yolo: {
                 name: "YOLO ⚡",
-                price: "$4.90",
+                price: "$9.99",
                 period: "/ month",
                 color: "#f59e0b",
                 perks: [
