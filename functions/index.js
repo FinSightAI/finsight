@@ -1907,7 +1907,7 @@ const TRACK_ORIGINS = [
     'https://finsightai.github.io',
     'https://check-deal.vercel.app',
     'https://mastermove.vercel.app',
-    'https://vitara.onrender.com',
+    'https://wizehealth-3ol2retcla-uc.a.run.app', // WizeHealth backend (migrated off Render → Cloud Run)
     'https://wizetravel.hf.space',
     'https://ofirofir-wizetravel.hf.space',
 ];
