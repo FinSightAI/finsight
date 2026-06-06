@@ -1237,7 +1237,7 @@ p{color:#334155;line-height:1.8;margin:0 0 20px}
 
 // ─── AI Proxy — callable function ────────────────────────────────────────────
 
-const AI_LIMIT = { free: 2, pro: 20, yolo: 40 };
+const AI_LIMIT = { free: 3, pro: 20, yolo: 40 };
 
 /**
  * Firestore-backed rate limiting — tiered by plan.

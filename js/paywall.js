@@ -11,7 +11,7 @@ const Paywall = (() => {
                 name: "Free",
                 price: "חינם",
                 color: "#6b7280",
-                perks: ["2 שאלות AI ביום", "עד 50 עסקאות", "לוח בקרה בסיסי", "יעדי חיסכון"],
+                perks: ["3 שאלות AI ביום", "עד 50 עסקאות", "לוח בקרה בסיסי", "יעדי חיסכון"],
             },
             pro: {
                 name: "Pro",
@@ -42,7 +42,7 @@ const Paywall = (() => {
                 name: "Free",
                 price: "Free",
                 color: "#6b7280",
-                perks: ["2 AI questions/day", "Up to 50 transactions", "Basic dashboard", "Savings goals"],
+                perks: ["3 AI questions/day", "Up to 50 transactions", "Basic dashboard", "Savings goals"],
             },
             pro: {
                 name: "Pro",
