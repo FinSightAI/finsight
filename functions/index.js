@@ -2240,7 +2240,7 @@ exports.finsightSavePush = functions.https.onRequest(async (req, res) => {
     if (req.method === "OPTIONS") return res.status(204).send("");
     if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
     try {
-        const { subscription, alerts } = req.body || {};
+        const { subscription, alerts, symbols, signals } = req.body || {};
         if (!subscription || !subscription.endpoint) return res.status(400).json({ error: "no subscription" });
         const id = pushSubId(subscription.endpoint);
         const ref = db.collection("finsightPush").doc(id);
@@ -2252,22 +2252,35 @@ exports.finsightSavePush = functions.https.onRequest(async (req, res) => {
                 return o;
             })
             .filter((a) => a.symbol && a.price > 0);
-        if (!clean.length) {
+        // Symbols to watch for background technical signals (150-day MA cross) + earnings.
+        const watchSymbols = [...new Set((Array.isArray(symbols) ? symbols : [])
+            .map((s) => String(s || "").toUpperCase().trim()).filter(Boolean))].slice(0, 80);
+        const wantSignals = signals !== false && watchSymbols.length > 0;
+        const prev = (await ref.get()).data() || {};
+        if (!clean.length && !wantSignals) { // nothing left to track → drop the device record
             await ref.delete().catch(() => {});
             return res.json({ ok: true, cleared: true });
         }
         // Merge trailing peaks with any peak already stored — the cloud peak only ever
         // rises, so a stale client (peak frozen while it was closed) can't lower the stop.
         const prevPeak = {};
-        ((await ref.get()).data()?.alerts || []).forEach((a) => { if (a.trail) prevPeak[a.symbol] = a.peak; });
+        (prev.alerts || []).forEach((a) => { if (a.trail) prevPeak[a.symbol] = a.peak; });
         clean.forEach((a) => {
             if (a.trail) {
                 a.peak = Math.max(a.peak || 0, prevPeak[a.symbol] || 0);
                 a.price = Math.round(a.peak * (1 - a.trail / 100) * 100) / 100;
             }
         });
-        await ref.set({ subscription, alerts: clean, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
-        res.json({ ok: true, alerts: clean.length });
+        await ref.set({
+            subscription,
+            alerts: clean,
+            watchSymbols: wantSignals ? watchSymbols : [],
+            signals: wantSignals,
+            ma150: prev.ma150 || {},           // preserve 150-MA cross baseline across saves
+            earnPushed: prev.earnPushed || {}, // remember which earnings dates we've already pushed
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        res.json({ ok: true, alerts: clean.length, watching: wantSignals ? watchSymbols.length : 0 });
     } catch (e) {
         console.error("finsightSavePush", e);
         res.status(500).json({ error: String(e.message || e) });
@@ -2295,28 +2308,69 @@ exports.finsightCheckAlerts = functions
         if (snap.empty) return null;
         webpush.setVapidDetails("mailto:ofirshamir57@gmail.com", VAPID_PUBLIC, VAPID_PRIVATE.value());
 
-        // collect every symbol under watch, fetch quotes from FinSight in ≤40 chunks
-        const symbols = new Set();
-        snap.forEach((d) => (d.data().alerts || []).forEach((a) => symbols.add(a.symbol)));
-        if (!symbols.size) return null;
-        const syms = [...symbols], prices = {};
-        for (let i = 0; i < syms.length; i += 40) {
-            const chunk = syms.slice(i, i + 40);
+        // Two kinds of symbols: price-alert targets (need a live quote) and
+        // signal-watch tickers (need the technical read + earnings calendar).
+        const priceSyms = new Set(), watchSyms = new Set();
+        snap.forEach((d) => {
+            const data = d.data();
+            (data.alerts || []).forEach((a) => priceSyms.add(a.symbol));
+            if (data.signals) (data.watchSymbols || []).forEach((s) => watchSyms.add(s));
+        });
+        if (!priceSyms.size && !watchSyms.size) return null;
+
+        // Quotes (live price + display name) for the union, in ≤40-symbol chunks.
+        const quoteSyms = [...new Set([...priceSyms, ...watchSyms])], prices = {};
+        for (let i = 0; i < quoteSyms.length; i += 40) {
+            const chunk = quoteSyms.slice(i, i + 40);
             try {
                 const r = await fetch(`${FINSIGHT_API}/api/quote?symbols=${encodeURIComponent(chunk.join(","))}`).then((x) => x.json());
                 (r.quotes || []).forEach((q) => q.symbol && q.price != null && !q.error && (prices[q.symbol] = q));
             } catch (e) { console.error("finsight quote fetch", e.message); }
         }
+        const nameOf = (sym) => (prices[sym] && (prices[sym].ticker || prices[sym].name)) || sym;
+
+        // Technical read (above150 / verdict) for watched tickers — analyze is per-symbol, so fan out with bounded concurrency.
+        const tech = {};
+        const wsyms = [...watchSyms];
+        let wi = 0;
+        await Promise.all(Array.from({ length: Math.min(6, wsyms.length) }, async () => {
+            while (wi < wsyms.length) {
+                const sym = wsyms[wi++];
+                try {
+                    const r = await fetch(`${FINSIGHT_API}/api/analyze?symbol=${encodeURIComponent(sym)}`).then((x) => x.json());
+                    if (r && r.analysis && r.analysis.above150 != null) tech[sym] = { above150: !!r.analysis.above150, verdict: r.analysis.verdict };
+                } catch (e) { console.error("finsight analyze", sym, e.message); }
+            }
+        }));
+
+        // Upcoming earnings for watched tickers, in ≤25-symbol chunks.
+        const earn = {};
+        for (let i = 0; i < wsyms.length; i += 25) {
+            const chunk = wsyms.slice(i, i + 25);
+            try {
+                const r = await fetch(`${FINSIGHT_API}/api/earnings?symbols=${encodeURIComponent(chunk.join(","))}`).then((x) => x.json());
+                Object.assign(earn, r.earnings || {});
+            } catch (e) { console.error("finsight earnings", e.message); }
+        }
+        const todayISO = new Date().toISOString().slice(0, 10);
+        const daysUntil = (iso) => Math.round((Date.parse(iso + "T00:00:00Z") - Date.parse(todayISO + "T00:00:00Z")) / 86400000);
 
         const jobs = [];
         snap.forEach((doc) => {
             const data = doc.data();
+            const send = (title, body, symbol) => jobs.push(
+                webpush.sendNotification(data.subscription, JSON.stringify({ title, body, symbol })).catch((err) => {
+                    if (err.statusCode === 404 || err.statusCode === 410) return doc.ref.delete();
+                    console.error("finsight push", err.statusCode);
+                })
+            );
+
+            // ── price-target + trailing-stop alerts ──
             const remaining = [], fired = [];
             let mutated = false; // a trailing peak ratcheted up → persist even if nothing fired
             (data.alerts || []).forEach((a) => {
                 const q = prices[a.symbol], p = q && q.price;
-                // trailing stop: ratchet the peak with the live price; the trigger only rises
-                if (a.trail && p != null) {
+                if (a.trail && p != null) { // trailing stop: ratchet the peak; the trigger only rises
                     const peak = Math.max(a.peak || p, p);
                     if (peak !== a.peak) { a.peak = peak; mutated = true; }
                     const trig = Math.round(peak * (1 - a.trail / 100) * 100) / 100;
@@ -2326,22 +2380,44 @@ exports.finsightCheckAlerts = functions
                 if (hit) fired.push({ a, p, name: (q.ticker || q.name || a.symbol) });
                 else remaining.push(a);
             });
-            fired.forEach((f) => {
-                const payload = JSON.stringify({
-                    title: f.a.trail ? `${f.name} 🛑 trailing stop ${f.a.price}` : `${f.name} ${f.a.dir === "above" ? "↑" : "↓"} ${f.a.price}`,
-                    body: `${f.a.dir === "below" ? "Dropped to" : "Rose to"} ${f.p}`,
-                    symbol: f.a.symbol,
-                });
-                jobs.push(webpush.sendNotification(data.subscription, payload).catch((err) => {
-                    if (err.statusCode === 404 || err.statusCode === 410) return doc.ref.delete();
-                    console.error("finsight push", err.statusCode);
-                }));
+            fired.forEach((f) => send(
+                f.a.trail ? `${f.name} 🛑 trailing stop ${f.a.price}` : `${f.name} ${f.a.dir === "above" ? "↑" : "↓"} ${f.a.price}`,
+                `${f.a.dir === "below" ? "Dropped to" : "Rose to"} ${f.p}`,
+                f.a.symbol
+            ));
+
+            // ── technical signals: 150-day MA cross + upcoming earnings ──
+            const ma150 = { ...(data.ma150 || {}) }, earnPushed = { ...(data.earnPushed || {}) };
+            let sigMutated = false;
+            if (data.signals) (data.watchSymbols || []).forEach((sym) => {
+                const t = tech[sym];
+                if (t) {
+                    const prevAbove = ma150[sym];
+                    if (prevAbove != null && prevAbove !== t.above150) // a genuine flip since last run
+                        send(`${nameOf(sym)} ${t.above150 ? "📈 reclaimed 150-day MA" : "📉 lost 150-day MA"}`,
+                            t.above150 ? "Long-term trend turned bullish." : "Long-term trend turned cautious — protect the position.", sym);
+                    if (prevAbove !== t.above150) { ma150[sym] = t.above150; sigMutated = true; }
+                }
+                const e = earn[sym];
+                if (e && e.date) {
+                    const d = daysUntil(e.date);
+                    if (d >= 0 && d <= 2 && earnPushed[sym] !== e.date) { // report imminent, not yet pushed
+                        send(`${nameOf(sym)} 📅 earnings ${d === 0 ? "today" : d === 1 ? "tomorrow" : "in " + d + " days"}`,
+                            `Reports on ${e.date}${e.hour ? " (" + e.hour + ")" : ""}.`, sym);
+                        earnPushed[sym] = e.date; sigMutated = true;
+                    }
+                }
             });
-            // persist when an alert fired (was removed) OR a trailing peak ratcheted up
-            if (fired.length) jobs.push(remaining.length ? doc.ref.update({ alerts: remaining }) : doc.ref.delete());
-            else if (mutated) jobs.push(doc.ref.update({ alerts: remaining }));
+            for (const s in earnPushed) if (daysUntil(earnPushed[s]) < -2) { delete earnPushed[s]; sigMutated = true; } // bound growth
+
+            // ── persist all changes for this device in a single write ──
+            if (fired.length && !remaining.length && !data.signals) { jobs.push(doc.ref.delete()); return; }
+            const upd = {};
+            if (fired.length || mutated) upd.alerts = remaining;
+            if (sigMutated) { upd.ma150 = ma150; upd.earnPushed = earnPushed; }
+            if (Object.keys(upd).length) jobs.push(doc.ref.update(upd));
         });
         await Promise.all(jobs);
-        console.log(`finsightCheckAlerts: ${snap.size} device(s), ${syms.length} symbol(s)`);
+        console.log(`finsightCheckAlerts: ${snap.size} device(s), ${priceSyms.size} price, ${watchSyms.size} watch`);
         return null;
     });
