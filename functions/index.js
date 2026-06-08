@@ -1546,14 +1546,21 @@ exports.paypalWebhook = functions
                         break;
                     }
 
+                    // A renewal (SALE.COMPLETED) carries only billing_agreement_id —
+                    // NOT plan_id — so we can't re-derive the tier here. Preserve the
+                    // tier set at ACTIVATED; hardcoding "pro" silently downgraded paying
+                    // YOLO subscribers on every monthly charge. Only fall back to "pro"
+                    // if the doc somehow lost its paid tier (e.g. ACTIVATED was missed).
+                    const existingPlan = (snap.docs[0].data() || {}).plan;
+                    const renewTier = (existingPlan === "yolo" || existingPlan === "pro") ? existingPlan : "pro";
                     await snap.docs[0].ref.set(
                         {
-                            plan: "pro",
+                            plan: renewTier,
                             planLastPayment: admin.firestore.FieldValue.serverTimestamp(),
                         },
                         { merge: true }
                     );
-                    console.log(`✅ Pro renewed for sub=${subId}`);
+                    console.log(`✅ ${renewTier.toUpperCase()} renewed for sub=${subId}`);
                     break;
                 }
 
