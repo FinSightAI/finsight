@@ -1356,6 +1356,23 @@ exports.syncCrossAppData = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError("permission-denied", "Yolo plan required for cross-app AI");
     }
 
+    // Suite-wide AI cost cap (shared aiQuota/{date}__GLOBAL across ALL apps) —
+    // bounds total LLM spend regardless of IP rotation. ~800/day ≈ $10/mo. Fails
+    // open if Firestore errors (the GCP budget is the hard backstop).
+    {
+        const _today = new Date().toISOString().slice(0, 10);
+        const _capRef = db.collection("aiQuota").doc(`${_today}__GLOBAL`);
+        const _CAP = parseInt(process.env.AI_GLOBAL_DAILY_CAP || "800", 10);
+        const _ok = await db.runTransaction(async (txn) => {
+            const s = await txn.get(_capRef);
+            const c = s.exists ? (s.data().count || 0) : 0;
+            if (c >= _CAP) return false;
+            txn.set(_capRef, { count: c + 1, date: _today }, { merge: true });
+            return true;
+        }).catch(() => true);
+        if (!_ok) throw new functions.https.HttpsError("resource-exhausted", "AI at daily capacity — try again tomorrow.");
+    }
+
     const { appId, appName, summary } = data;
     if (!appId || !KNOWN_APP_IDS.has(appId)) {
         throw new functions.https.HttpsError("invalid-argument", "Unknown appId");
