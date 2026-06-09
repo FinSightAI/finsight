@@ -1151,18 +1151,18 @@ const ImageImport = {
         modal.innerHTML = `
             <div class="modal" style="max-width: 500px;">
                 <div class="modal-header">
-                    <h2>${lang === 'he' ? 'נתוני תלוש משכורת' : 'Payslip Data'}</h2>
+                    <h2>${lang === 'he' ? 'נתוני תלוש משכורת' : lang === 'pt' ? 'Dados do holerite' : lang === 'es' ? 'Datos de nómina' : 'Payslip Data'}</h2>
                     <button class="modal-close" onclick="document.getElementById('payslipPreviewModal').remove()">&times;</button>
                 </div>
                 <div class="modal-body">
                     <p style="margin-bottom: 15px; color: var(--color-text-secondary); font-size: 0.9rem;">
-                        ${lang === 'he' ? 'זוהו נתוני תלוש — ניתן לערוך לפני שמירה.' : 'Payslip data detected — you can edit before saving.'}
+                        ${lang === 'he' ? 'זוהו נתוני תלוש — ניתן לערוך לפני שמירה.' : lang === 'pt' ? 'Dados do holerite detectados — você pode editar antes de salvar.' : lang === 'es' ? 'Datos de nómina detectados — puede editar antes de guardar.' : 'Payslip data detected — you can edit before saving.'}
                     </p>
                     ${fieldsHTML}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" onclick="document.getElementById('payslipPreviewModal').remove()">${lang === 'he' ? 'ביטול' : 'Cancel'}</button>
-                    <button class="btn btn-primary" onclick="ImageImport.confirmPayslipImport()">${lang === 'he' ? 'שמור בפרופיל' : 'Save to Profile'}</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('payslipPreviewModal').remove()">${lang === 'he' ? 'ביטול' : lang === 'pt' ? 'Cancelar' : lang === 'es' ? 'Cancelar' : 'Cancel'}</button>
+                    <button class="btn btn-primary" onclick="ImageImport.confirmPayslipImport()">${lang === 'he' ? 'שמור בפרופיל' : lang === 'pt' ? 'Salvar no perfil' : lang === 'es' ? 'Guardar en el perfil' : 'Save to Profile'}</button>
                 </div>
             </div>
         `;

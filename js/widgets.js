@@ -299,7 +299,7 @@ const WidgetManager = {
 
         if (typeof App !== 'undefined' && App.notify) {
             const lang = I18n?.currentLanguage || 'he';
-            App.notify(lang === 'he' ? 'הדשבורד אופס לברירת מחדל' : 'Dashboard reset to default', 'success');
+            App.notify(lang === 'he' ? 'הדשבורד אופס לברירת מחדל' : lang === 'pt' ? 'Painel redefinido para o padrão' : lang === 'es' ? 'Panel restablecido a los valores predeterminados' : 'Dashboard reset to default', 'success');
         }
     },
 

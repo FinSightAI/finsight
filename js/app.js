@@ -584,9 +584,7 @@ const App = {
                 reader.onload = (event) => {
                     try {
                         const data = JSON.parse(event.target.result);
-                        if (this.confirm(I18n.currentLanguage === 'he' ?
-                            'האם לייבא את הנתונים? פעולה זו תחליף את הנתונים הקיימים.' :
-                            'Import data? This will replace existing data.')) {
+                        if (this.confirm(I18n.currentLanguage === 'he' ? 'האם לייבא את הנתונים? פעולה זו תחליף את הנתונים הקיימים.' : currentLanguage === 'pt' ? 'Importar dados? Isso substituirá os dados existentes.' : currentLanguage === 'es' ? '¿Importar datos? Esto reemplazará los datos existentes.' : 'Import data? This will replace existing data.')) {
                             Storage.importData(data);
                             location.reload();
                         }

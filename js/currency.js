@@ -165,7 +165,7 @@ const CurrencyRates = {
                 </div>
             </div>
             <div class="rates-updated">
-                ${lang === 'he' ? 'עדכון אחרון:' : 'Last update:'} ${new Date().toLocaleTimeString(lang === 'he' ? 'he-IL' : 'en-US')}
+                ${lang === 'he' ? 'עדכון אחרון:' : lang === 'pt' ? 'Última atualização:' : lang === 'es' ? 'Última actualización:' : 'Last update:'} ${new Date().toLocaleTimeString(lang === 'he' ? 'he-IL' : 'en-US')}
             </div>
         `;
     },

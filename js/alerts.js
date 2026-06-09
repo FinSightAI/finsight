@@ -94,7 +94,7 @@ const Alerts = {
                 alerts.push({
                     type: 'danger',
                     icon: '🚨',
-                    title: I18n.currentLanguage === 'he' ? 'חריגה מהתקציב!' : 'Budget Exceeded!',
+                    title: I18n.currentLanguage === 'he' ? 'חריגה מהתקציב!' : currentLanguage === 'pt' ? 'Orçamento excedido!' : currentLanguage === 'es' ? '¡Presupuesto excedido!' : 'Budget Exceeded!',
                     message: I18n.currentLanguage === 'he'
                         ? `הוצאת ${I18n.formatCurrency(totalSpent)} מתוך ${I18n.formatCurrency(config.budgets.total)}`
                         : `Spent ${I18n.formatCurrency(totalSpent)} of ${I18n.formatCurrency(config.budgets.total)}`,
@@ -104,7 +104,7 @@ const Alerts = {
                 alerts.push({
                     type: 'warning',
                     icon: '⚠️',
-                    title: I18n.currentLanguage === 'he' ? 'מתקרב לתקציב' : 'Approaching Budget',
+                    title: I18n.currentLanguage === 'he' ? 'מתקרב לתקציב' : currentLanguage === 'pt' ? 'Perto do orçamento' : currentLanguage === 'es' ? 'Cerca del presupuesto' : 'Approaching Budget',
                     message: I18n.currentLanguage === 'he'
                         ? `הוצאת ${percentage.toFixed(0)}% מהתקציב החודשי`
                         : `Spent ${percentage.toFixed(0)}% of monthly budget`,

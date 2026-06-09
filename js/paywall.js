@@ -196,10 +196,10 @@ const Paywall = (() => {
             const isCurrent = key === currentPlan;
             return `
               <div class="pw-plan ${plan.highlight ? 'highlight' : ''}">
-                ${plan.highlight ? `<div class="badge">${lang === 'he' ? '⭐ הכי פופולרי' : '⭐ Most Popular'}</div>` : ''}
+                ${plan.highlight ? `<div class="badge">${lang === 'he' ? '⭐ הכי פופולרי' : lang === 'pt' ? '⭐ Mais popular' : lang === 'es' ? '⭐ Más popular' : '⭐ Most Popular'}</div>` : ''}
                 <div class="pw-plan-name" style="color:${plan.color}">${plan.name}</div>
                 <div class="pw-plan-price">${plan.price}</div>
-                <div class="pw-plan-period">${plan.period || (lang === 'he' ? 'לתמיד' : 'forever')}</div>
+                <div class="pw-plan-period">${plan.period || (lang === 'he' ? 'לתמיד' : lang === 'pt' ? 'para sempre' : lang === 'es' ? 'para siempre' : 'forever')}</div>
                 <ul class="pw-plan-perks">
                   ${plan.perks.map(perk => `<li>${perk}</li>`).join('')}
                 </ul>

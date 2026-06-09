@@ -440,7 +440,7 @@
 
  // Validate inputs
  if (currentAge >= retirementAge) {
- alert(currentLang === 'he' ? 'גיל פרישה חייב להיות גדול מהגיל הנוכחי' : 'Retirement age must be greater than current age');
+ alert(currentLang === 'he' ? 'גיל פרישה חייב להיות גדול מהגיל הנוכחי' : currentLang === 'pt' ? 'A idade de aposentadoria deve ser maior que a idade atual' : currentLang === 'es' ? 'La edad de jubilación debe ser mayor que la edad actual' : 'Retirement age must be greater than current age');
  return;
  }
 
@@ -530,7 +530,7 @@
  labels: labels,
  datasets: [
  {
- label: currentLang === 'he' ? 'צבירה כוללת' : 'Total Balance',
+ label: currentLang === 'he' ? 'צבירה כוללת' : currentLang === 'pt' ? 'Saldo total' : currentLang === 'es' ? 'Saldo total' : 'Total Balance',
  data: balance,
  borderColor: '#10b981',
  backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -539,7 +539,7 @@
  tension: 0.3
  },
  {
- label: currentLang === 'he' ? 'סה״כ הפקדות' : 'Total Deposits',
+ label: currentLang === 'he' ? 'סה״כ הפקדות' : currentLang === 'pt' ? 'Total de depósitos' : currentLang === 'es' ? 'Total de depósitos' : 'Total Deposits',
  data: deposits,
  borderColor: '#8b5cf6',
  backgroundColor: 'transparent',
@@ -572,7 +572,7 @@
  return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
  },
  title: function(context) {
- return (currentLang === 'he' ? 'גיל ' : 'Age ') + context[0].label;
+ return (currentLang === 'he' ? 'גיל ' : currentLang === 'pt' ? 'Idade ' : currentLang === 'es' ? 'Edad ' : 'Age ') + context[0].label;
  }
  }
  }
@@ -582,7 +582,7 @@
  display: true,
  title: {
  display: true,
- text: currentLang === 'he' ? 'גיל' : 'Age',
+ text: currentLang === 'he' ? 'גיל' : currentLang === 'pt' ? 'Idade' : currentLang === 'es' ? 'Edad' : 'Age',
  color: getComputedStyle(document.body).getPropertyValue('--color-text-secondary') || '#888'
  },
  ticks: {
@@ -596,7 +596,7 @@
  display: true,
  title: {
  display: true,
- text: currentLang === 'he' ? 'סכום (₪)' : 'Amount (₪)',
+ text: currentLang === 'he' ? 'סכום (₪)' : currentLang === 'pt' ? 'Valor (₪)' : currentLang === 'es' ? 'Monto (₪)' : 'Amount (₪)',
  color: getComputedStyle(document.body).getPropertyValue('--color-text-secondary') || '#888'
  },
  ticks: {
