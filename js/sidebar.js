@@ -53,6 +53,34 @@
  }
  } catch(e) {}
 
+ // ── WL SSO → Firebase session ──
+ // Portal users arrive with an ID token in wl_sso but NO Firebase Auth session,
+ // so currentUser stays null and AI features (aiProxy) falsely demand sign-in.
+ // Exchange the SSO ID token for a custom token (issueCustomToken CF) and sign
+ // in, so currentUser is set — same bridge WizeTax uses. Skip if already signed
+ // in (direct login). Waits for the firebase SDK to load.
+ (function _wlEstablishSession() {
+ var _ssoTok;
+ try { _ssoTok = (JSON.parse(localStorage.getItem('wl_sso') || '{}')).token; } catch (e) {}
+ if (!_ssoTok) return;
+ if (typeof firebase === 'undefined' || !firebase.auth) { setTimeout(_wlEstablishSession, 400); return; }
+ firebase.auth().onAuthStateChanged(function (u) {
+ if (u) return; // already signed in (direct or already bridged)
+ fetch('https://us-central1-finzilla-7f1f9.cloudfunctions.net/issueCustomToken', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ data: { idToken: _ssoTok } }),
+ })
+ .then(function (r) { return r.json(); })
+ .then(function (j) {
+ if (j && j.result && j.result.customToken) {
+ firebase.auth().signInWithCustomToken(j.result.customToken).catch(function () {});
+ }
+ })
+ .catch(function () { /* non-fatal */ });
+ });
+ })();
+
  // Detect whether we're at root or inside pages/
  const path = window.location.pathname;
  const inPages = path.includes('/pages/');
