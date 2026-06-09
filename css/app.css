@@ -12,6 +12,8 @@ body { transition: background 200ms ease; }
     --color-border: rgba(255, 255, 255, 0.1);
     --color-text-primary: #ffffff;
     --color-text-secondary: #8892b0;
+    --color-bg-hover: rgba(255, 255, 255, 0.08); /* was undefined → 3 invisible buttons */
+    --color-text: var(--color-text-primary);     /* alias used in ~20 inline styles */
 
     /* Category Colors */
     --color-dashboard: #10b981;
@@ -54,6 +56,7 @@ body.light {
     --color-border: rgba(0, 0, 0, 0.1);
     --color-text-primary: #1e293b;
     --color-text-secondary: #64748b;
+    --color-bg-hover: rgba(0, 0, 0, 0.06); /* light-mode hover */
     --color-positive: #10b981;
     --color-negative: #f43f5e;
 }
@@ -595,6 +598,7 @@ select.form-control {
 }
 
 /* ===== Buttons ===== */
+.btn:disabled, button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; pointer-events: none; }
 .btn {
     display: inline-flex;
     align-items: center;
