@@ -838,7 +838,7 @@
 
  <script  src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
  <script src="../js/sidebar.js?v=2026060901"></script>
- <script src="../js/profiles.js"></script>
+ <script src="../js/profiles.js?v=2026060902"></script>
  <script src="../js/storage.js"></script>
  <script src="../js/wizeai-sync.js"></script>
  <script src="js/wize-cloud-backup.js"></script>
@@ -846,15 +846,15 @@
  <script src="../js/i18n.js"></script>
  <script src="../js/charts.js"></script>
  <script src="../js/csv-import.js"></script>
- <script src="../js/image-import.js"></script>
+ <script src="../js/image-import.js?v=2026060902"></script>
  <script src="../js/stock-api.js"></script>
  <script src="../js/stock-alerts.js"></script>
  <script src="../js/notifications.js"></script>
  <script src="../js/currency.js"></script>
- <script src="../js/app.js?v=2026060901"></script>
+ <script src="../js/app.js?v=2026060902"></script>
  <script src="../js/firebase-config.js"></script>
  <script src="../js/crypto.js"></script>
- <script src="../js/auth.js"></script>
+ <script src="../js/auth.js?v=2026060902"></script>
  <script>
  function escapeHtml(str) {
  return String(str ?? '')
@@ -2247,7 +2247,7 @@
  const data = CSVImport.parse(csvText);
  const result = await CSVImport.importData('stocks', data);
  if (result.success) {
- App.notify(`יובאו ${result.imported} מניות בהצלחה`, 'success');
+ App.notify(Tn(`יובאו ${result.imported} מניות בהצלחה`,`${result.imported} stocks imported successfully`,`${result.imported} acoes importadas com sucesso`,`${result.imported} acciones importadas con exito`), 'success');
  loadStocks();
  } else {
  App.notify(result.error || 'שגיאה בייבוא', 'error');
@@ -2336,7 +2336,7 @@
  imported++;
  });
 
- App.notify(`יובאו ${imported} אחזקות בהצלחה!`, 'success');
+ App.notify(Tn(`יובאו ${imported} אחזקות בהצלחה!`,`${imported} holdings imported successfully!`,`${imported} posicoes importadas com sucesso!`,`${imported} posiciones importadas con exito!`), 'success');
  // Clear price cache to use imported values
  Object.keys(priceCache).forEach(key => delete priceCache[key]);
  loadStocks();

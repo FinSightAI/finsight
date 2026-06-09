@@ -563,7 +563,7 @@ const ImageImport = {
         }
 
         if (imported > 0) {
-            App.notify(`יובאו ${imported} רשומות בהצלחה`, 'success');
+            App.notify(Tn(`יובאו ${imported} רשומות בהצלחה`,`${imported} records imported successfully`,`${imported} registros importados com sucesso`,`${imported} registros importados con exito`), 'success');
         } else {
             App.notify(T('לא נמצאו רשומות תקינות לייבוא'), 'error');
         }
