@@ -634,7 +634,7 @@
 
  orDivider.style.display = 'block';
  const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
- container.innerHTML = '<div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:8px;">הקרנות שלך:</div>' +
+ container.innerHTML = '<div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:8px;">' + I18n.t('compare.rt_yourFunds') + '</div>' +
  filtered.map(f => `
  <div class="my-fund-item" onclick="selectMyFund('${_s(f.id)}')" id="mfi-${_s(f.id)}">
  <div>
@@ -722,7 +722,7 @@
  matches = matches.slice().sort((a,b) => (b.year5||0) - (a.year5||0)).slice(0, 40);
 
  if (matches.length === 0) {
- dropdown.innerHTML = '<div class="fund-dropdown-empty">לא נמצאו קרנות תואמות</div>';
+ dropdown.innerHTML = '<div class="fund-dropdown-empty">' + I18n.t('compare.rt_noFundsFound') + '</div>';
  dropdown.style.display = 'block';
  return;
  }
@@ -735,8 +735,8 @@
  <div class="fname">${_esc(f.nameHe)}</div>
  <div class="fmeta">
  <span>${_esc(f.companyHe)}</span>
- <span class="${retClass}">תשואה שנה: ${f.year1 != null ? (Number(f.year1) || 0).toFixed(1)+'%' : '—'}</span>
- <span>דמי ניהול: ${f.fee != null ? (Number(f.fee) || 0)+'%' : '—'}</span>
+ <span class="${retClass}">${I18n.t('compare.rt_returnYearLabel')}${f.year1 != null ? (Number(f.year1) || 0).toFixed(1)+'%' : '—'}</span>
+ <span>${I18n.t('compare.rt_feeLabel')}${f.fee != null ? (Number(f.fee) || 0)+'%' : '—'}</span>
  </div>
  </div>`;
  }).join('');
@@ -863,11 +863,11 @@
 
  // Summary boxes
  document.getElementById('res-cur-val').textContent = '₪' + Math.round(curFinal).toLocaleString('he-IL');
- document.getElementById('res-cur-sub').textContent = `תשואה ${curReturn.toFixed(1)}% | דמי ניהול ${curFee.toFixed(2)}%`;
+ document.getElementById('res-cur-sub').textContent = I18n.t('compare.rt_resSub').replace('{ret}', curReturn.toFixed(1)).replace('{fee}', curFee.toFixed(2));
 
  document.getElementById('res-alt-val').textContent = '₪' + Math.round(altFinal).toLocaleString('he-IL');
- const altName = selectedAltFund ? selectedAltFund.nameHe : 'קרן חלופית';
- document.getElementById('res-alt-sub').textContent = `תשואה ${altReturn.toFixed(1)}% | דמי ניהול ${altFee.toFixed(2)}%`;
+ const altName = selectedAltFund ? selectedAltFund.nameHe : I18n.t('compare.rt_altFundFallback');
+ document.getElementById('res-alt-sub').textContent = I18n.t('compare.rt_resSub').replace('{ret}', altReturn.toFixed(1)).replace('{fee}', altFee.toFixed(2));
 
  const diffBox = document.getElementById('res-diff');
  const diffSub = document.getElementById('res-diff-sub');
@@ -875,8 +875,8 @@
  diffBox.style.color = diff >= 0 ? '#10b981' : '#ef4444';
  const diffPct = curFinal > 0 ? (diff / curFinal * 100) : 0;
  diffSub.textContent = diff >= 0
- ? `החלופה טובה יותר ב-${diffPct.toFixed(1)}%`
- : `הנוכחית טובה יותר ב-${Math.abs(diffPct).toFixed(1)}%`;
+ ? I18n.t('compare.rt_diffBetter').replace('{pct}', diffPct.toFixed(1))
+ : I18n.t('compare.rt_diffCurBetter').replace('{pct}', Math.abs(diffPct).toFixed(1));
 
  // Chart
  buildChart(curSeries, altSeries, years);
@@ -971,8 +971,8 @@
  const title = document.getElementById('verdictTitle');
  const body = document.getElementById('verdictBody');
 
- const altName = selectedAltFund ? selectedAltFund.nameHe : 'הקרן החלופית';
- const curName = document.getElementById('curName').value || 'הקרן הנוכחית';
+ const altName = selectedAltFund ? selectedAltFund.nameHe : I18n.t('compare.rt_altFundName');
+ const curName = document.getElementById('curName').value || I18n.t('compare.rt_curFundName');
 
  const retDiff = altRet - curRet;
  const feeDiff = curFee - altFee; // positive = alt is cheaper
@@ -980,31 +980,30 @@
  if (diff > 50000) {
  card.className = 'verdict-card positive';
  icon.textContent = '🚀';
- title.textContent = `מעבר ל-${altName} ישתלם מאוד!`;
- body.textContent = `לאחר ${years} שנים, ${altName} תניב לך ₪${Math.round(diff).toLocaleString('he-IL')} יותר.
- ${retDiff > 0 ? `הקרן החלופית מציגה תשואה שנתית גבוהה יותר ב-${retDiff.toFixed(1)}%.` : ''}
- ${feeDiff > 0.1 ? ` בנוסף, דמי הניהול נמוכים יותר ב-${feeDiff.toFixed(2)}% — וזה מצטבר להפרש גדול לאורך זמן.` : ''}
- שים לב לבדוק את תנאי המעבר ועמלות.`;
+ title.textContent = I18n.t('compare.rt_v1Title').replace('{name}', altName);
+ body.textContent = I18n.t('compare.rt_v1Body').replace(/\{name\}/g, altName).replace('{years}', years).replace('{amount}', Math.round(diff).toLocaleString('he-IL'))
+ + (retDiff > 0 ? '\n ' + I18n.t('compare.rt_v1RetExtra').replace('{pct}', retDiff.toFixed(1)) : '')
+ + (feeDiff > 0.1 ? '\n ' + I18n.t('compare.rt_v1FeeExtra').replace('{pct}', feeDiff.toFixed(2)) : '')
+ + '\n ' + I18n.t('compare.rt_v1Note');
  } else if (diff > 5000) {
  card.className = 'verdict-card positive';
  icon.textContent = '✅';
- title.textContent = `המעבר כדאי`;
- body.textContent = `${altName} מצטיינת ב-₪${Math.round(diff).toLocaleString('he-IL')} לאחר ${years} שנים.
- ${feeDiff > 0.05 ? `דמי הניהול הנמוכים יותר (${feeDiff.toFixed(2)}%) הם יתרון משמעותי לטווח ארוך.` : ''}
- בדוק שאין עמלות מעבר שיבלעו את היתרון.`;
+ title.textContent = I18n.t('compare.rt_v2Title');
+ body.textContent = I18n.t('compare.rt_v2Body').replace('{name}', altName).replace('{amount}', Math.round(diff).toLocaleString('he-IL')).replace('{years}', years)
+ + (feeDiff > 0.05 ? '\n ' + I18n.t('compare.rt_v2FeeExtra').replace('{pct}', feeDiff.toFixed(2)) : '')
+ + '\n ' + I18n.t('compare.rt_v2Note');
  } else if (diff > -5000) {
  card.className = 'verdict-card neutral';
  icon.textContent = '⚖️';
- title.textContent = `ההפרש קטן — תשקול את הגורמים הנוספים`;
- body.textContent = `ההפרש הכספי בין הקרנות קטן יחסית (₪${Math.abs(Math.round(diff)).toLocaleString('he-IL')} לאחר ${years} שנים).
- שים לב לגורמים כמו איכות שירות, ניסיון הבית השקעות, גמישות, ומדיניות ההשקעה.`;
+ title.textContent = I18n.t('compare.rt_v3Title');
+ body.textContent = I18n.t('compare.rt_v3Body').replace('{amount}', Math.abs(Math.round(diff)).toLocaleString('he-IL')).replace('{years}', years);
  } else {
  card.className = 'verdict-card negative';
  icon.textContent = '⛔';
- title.textContent = `הקרן הנוכחית עדיפה`;
- body.textContent = `על בסיס הנתונים שהוזנו, ${curName} מניבה ₪${Math.abs(Math.round(diff)).toLocaleString('he-IL')} יותר לאחר ${years} שנים.
- ${altRet < curRet ? `התשואה ההיסטורית של הקרן החלופית נמוכה יותר (${altRet.toFixed(1)}% לעומת ${curRet.toFixed(1)}%).` : ''}
- שים לב: תשואות עבר אינן ערובה לעתיד.`;
+ title.textContent = I18n.t('compare.rt_v4Title');
+ body.textContent = I18n.t('compare.rt_v4Body').replace('{name}', curName).replace('{amount}', Math.abs(Math.round(diff)).toLocaleString('he-IL')).replace('{years}', years)
+ + (altRet < curRet ? '\n ' + I18n.t('compare.rt_v4RetExtra').replace('{alt}', altRet.toFixed(1)).replace('{cur}', curRet.toFixed(1)) : '')
+ + '\n ' + I18n.t('compare.rt_v4Note');
  }
  }
 
@@ -1027,19 +1026,19 @@
 
  container.innerHTML = `
  <div class="fee-item">
- <div class="fi-label">עלות דמי ניהול — קרן נוכחית (${curFee}%)</div>
+ <div class="fi-label">${I18n.t('compare.rt_feeCostCur').replace('{fee}', curFee)}</div>
  <div class="fi-val" style="color:#ef4444;">-₪${Math.round(feeCostCur).toLocaleString('he-IL')}</div>
- <div class="fi-sub">לאחר ${years} שנים</div>
+ <div class="fi-sub">${I18n.t('compare.rt_feeAfterYears').replace('{years}', years)}</div>
  </div>
  <div class="fee-item">
- <div class="fi-label">עלות דמי ניהול — קרן חלופית (${altFee}%)</div>
+ <div class="fi-label">${I18n.t('compare.rt_feeCostAlt').replace('{fee}', altFee)}</div>
  <div class="fi-val" style="color:#f59e0b;">-₪${Math.round(feeCostAlt).toLocaleString('he-IL')}</div>
- <div class="fi-sub">לאחר ${years} שנים</div>
+ <div class="fi-sub">${I18n.t('compare.rt_feeAfterYears').replace('{years}', years)}</div>
  </div>
  <div class="fee-item" style="border-color:rgba(16,185,129,0.3);">
- <div class="fi-label">חיסכון בדמי ניהול מהמעבר</div>
+ <div class="fi-label">${I18n.t('compare.rt_feeSaving')}</div>
  <div class="fi-val" style="color:${feeSaving >= 0 ? '#10b981' : '#ef4444'};">${feeSaving >= 0 ? '+' : ''}₪${Math.abs(Math.round(feeSaving)).toLocaleString('he-IL')}</div>
- <div class="fi-sub">${feeSaving >= 0 ? 'יתרון לקרן החלופית' : 'יתרון לקרן הנוכחית'}</div>
+ <div class="fi-sub">${feeSaving >= 0 ? I18n.t('compare.rt_advAlt') : I18n.t('compare.rt_advCur')}</div>
  </div>
  `;
  }
@@ -1053,10 +1052,10 @@
  document.getElementById('returnBars').innerHTML = `
  <div style="margin-bottom:16px;">
  <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:6px;">
- <span>תשואה שנתית ברוטו</span>
+ <span>${I18n.t('compare.rt_grossAnnual')}</span>
  </div>
  <div style="margin-bottom:8px;">
- <div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:3px;">קרן נוכחית — ${curRet.toFixed(1)}%</div>
+ <div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:3px;">${I18n.t('compare.rt_curFundDash').replace('{pct}', curRet.toFixed(1))}</div>
  <div class="return-bar-wrap">
  <div class="return-bar-wrap" style="flex:1;height:10px;background:var(--color-border);border-radius:5px;overflow:hidden;">
  <div style="height:100%;width:${(curRet/maxRet*100).toFixed(0)}%;background:#10b981;border-radius:5px;transition:width 0.6s;"></div>
@@ -1065,7 +1064,7 @@
  </div>
  </div>
  <div>
- <div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:3px;">קרן חלופית — ${altRet.toFixed(1)}%</div>
+ <div style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:3px;">${I18n.t('compare.rt_altFundDash').replace('{pct}', altRet.toFixed(1))}</div>
  <div class="return-bar-wrap">
  <div class="return-bar-wrap" style="flex:1;height:10px;background:var(--color-border);border-radius:5px;overflow:hidden;">
  <div style="height:100%;width:${(altRet/maxRet*100).toFixed(0)}%;background:#f59e0b;border-radius:5px;transition:width 0.6s;"></div>
@@ -1076,12 +1075,12 @@
  </div>
 
  <div>
- <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:6px;">תשואה נטו (אחרי דמי ניהול)</div>
+ <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:6px;">${I18n.t('compare.rt_netReturn')}</div>
  <div style="display:flex;gap:20px;flex-wrap:wrap;">
- <div style="font-size:1.1rem;font-weight:700;color:#10b981;">קרן נוכחית: ${netCur.toFixed(2)}%</div>
- <div style="font-size:1.1rem;font-weight:700;color:#f59e0b;">קרן חלופית: ${netAlt.toFixed(2)}%</div>
+ <div style="font-size:1.1rem;font-weight:700;color:#10b981;">${I18n.t('compare.rt_curFundColon').replace('{pct}', netCur.toFixed(2))}</div>
+ <div style="font-size:1.1rem;font-weight:700;color:#f59e0b;">${I18n.t('compare.rt_altFundColon').replace('{pct}', netAlt.toFixed(2))}</div>
  <div style="font-size:1rem;font-weight:600;color:${netAlt >= netCur ? '#10b981' : '#ef4444'};">
- הפרש: ${netAlt >= netCur ? '+' : ''}${(netAlt - netCur).toFixed(2)}% לשנה
+ ${I18n.t('compare.rt_diffPerYear').replace('{sign}', netAlt >= netCur ? '+' : '').replace('{pct}', (netAlt - netCur).toFixed(2))}
  </div>
  </div>
  </div>
@@ -1091,24 +1090,24 @@
  // ─── Considerations ───────────────────────────────────────────────
  function buildConsiderations(type, diff, curFee, altFee) {
  const items = [
- { icon: '📜', text: 'תשואות עבר אינן ערובה לעתיד — בדוק את מדיניות ההשקעה ומסלול הקרן לפני מעבר.' },
- { icon: '💼', text: 'עמלות מעבר: בדוק אם יש עמלת יציאה בקרן הנוכחית או עמלת כניסה בקרן החדשה.' },
- { icon: '⏳', text: 'תקופת מעבר: מעבר בין קרנות לוקח בדרך כלל 30-60 יום, ובמהלכו הכסף לא מושקע.' },
+ { icon: '📜', text: I18n.t('compare.rt_con1') },
+ { icon: '💼', text: I18n.t('compare.rt_con2') },
+ { icon: '⏳', text: I18n.t('compare.rt_con3') },
  ];
 
  if (type === 'training') {
- items.push({ icon: '🎓', text: 'קרן השתלמות: בדוק שהמעבר לא פוגע בוותק — 6 שנים נדרשות למשיכה פטורה ממס.' });
+ items.push({ icon: '🎓', text: I18n.t('compare.rt_con4') });
  }
  if (type === 'pension') {
- items.push({ icon: '🏛️', text: 'פנסיה: ביטוחי אובדן כושר עבודה עלולים להיפגע במעבר — קבל אישור מחברה החדשה לפני שינוי.' });
- items.push({ icon: '👷', text: 'פנסיה: וודא שהמעביד שלך מאשר לנייד את ההפקדות לקרן החדשה.' });
+ items.push({ icon: '🏛️', text: I18n.t('compare.rt_con5') });
+ items.push({ icon: '👷', text: I18n.t('compare.rt_con6') });
  }
  if (type === 'gemel') {
- items.push({ icon: '💼', text: 'גמל: בדוק את סוג הגמל — גמל להשקעה, גמל לפיצויים, ו-גמל רגיל — כללי המעבר שונים.' });
+ items.push({ icon: '💼', text: I18n.t('compare.rt_con7') });
  }
 
- items.push({ icon: '🤝', text: 'כדאי להתייעץ עם יועץ פנסיוני מורשה לפני ביצוע מעבר, במיוחד לסכומים גדולים.' });
- items.push({ icon: '🗓️', text: 'נתוני השוק מתעדכנים מדי חודש — בדוק את הנתונים העדכניים ביותר לפני החלטה.' });
+ items.push({ icon: '🤝', text: I18n.t('compare.rt_con8') });
+ items.push({ icon: '🗓️', text: I18n.t('compare.rt_con9') });
 
  document.getElementById('considerationsList').innerHTML = items.map(it =>
  `<li><span class="ci">${it.icon}</span><span>${it.text}</span></li>`
