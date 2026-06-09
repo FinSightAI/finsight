@@ -851,6 +851,7 @@ const I18n = {
             },
             // Settings
             settings: {
+                rt_whatsappTestMsg: '✅ WizeMoney — הודעת בדיקה נשלחה בהצלחה!',
                 title: 'הגדרות',
                 subtitle: 'התאמה אישית של האפליקציה',
                 monthlyBudget: 'תקציב חודשי',
@@ -2837,6 +2838,7 @@ const I18n = {
             },
             // Settings
             settings: {
+                rt_whatsappTestMsg: '✅ WizeMoney — test message sent successfully!',
                 title: 'Settings',
                 subtitle: 'Customize the application',
                 monthlyBudget: 'Monthly Budget',
@@ -5202,6 +5204,7 @@ const I18n = {
             },
             // Settings
             settings: {
+                rt_whatsappTestMsg: '✅ WizeMoney — mensagem de teste enviada com sucesso!',
                 title: 'Configurações',
                 subtitle: 'Personalizar o aplicativo',
                 monthlyBudget: 'Orçamento Mensal',
@@ -6650,6 +6653,7 @@ const I18n = {
             },
             // Settings
             settings: {
+                rt_whatsappTestMsg: '✅ WizeMoney — ¡mensaje de prueba enviado correctamente!',
                 title: 'Configuración',
                 subtitle: 'Personalizar la aplicación',
                 monthlyBudget: 'Presupuesto Mensual',

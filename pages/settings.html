@@ -1168,7 +1168,7 @@
  return;
  }
  App.notify(T('שולח הודעת בדיקה...'), 'info');
- const testText = '✅ WizeMoney — הודעת בדיקה נשלחה בהצלחה!';
+ const testText = I18n.t('settings.rt_whatsappTestMsg');
  const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encodeURIComponent(testText)}&apikey=${encodeURIComponent(apiKey)}`;
  // Use Image trick to bypass CORS — fetch() gets blocked by browser
  const img = new Image();
