@@ -1123,7 +1123,7 @@
  <td class="col-static">${(Number(h.quantity) || 0).toLocaleString()}</td>
  <td class="col-static">${currencySymbol}${(Number(h.avgPrice) || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
  <td class="col-static">₪${costILS.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
- <td class="col-dynamic">${cached.currentPrice ? `${currencySymbol}${cached.currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : h.valueILS > 0 ? `<span style="color:var(--color-text-secondary);font-size:0.85rem;">מתעדכן...</span>` : `${currencySymbol}${currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}</td>
+ <td class="col-dynamic">${cached.currentPrice ? `${currencySymbol}${cached.currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : h.valueILS > 0 ? `<span style="color:var(--color-text-secondary);font-size:0.85rem;">${I18n.t('stocks.rt_updating')}</span>` : `${currencySymbol}${currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}</td>
  <td class="col-dynamic">${dailyChangeDisplay}</td>
  <td class="col-dynamic">${ma150Display}</td>
  <td class="col-dynamic">${trendDisplay}</td>
@@ -1701,7 +1701,7 @@
  </div>
  `).join('');
  } catch (error) {
- resultsDiv.innerHTML = '<div class="search-error">שגיאה בחיפוש</div>';
+ resultsDiv.innerHTML = `<div class="search-error">${I18n.t('stocks.rt_searchError')}</div>`;
  }
  }, 300);
  }
@@ -1737,7 +1737,7 @@
  }
 
  function removeFromWatchlist(symbol) {
- if (confirm(`האם להסיר את ${symbol} מרשימת המעקב?`)) {
+ if (confirm(I18n.t('stocks.rt_removeWatchConfirm').replace('{symbol}', symbol))) {
  StockAlerts.removeFromWatchlist(symbol);
  loadWatchlist();
  App.notify(T('מניה הוסרה מרשימת המעקב'), 'success');
@@ -1816,7 +1816,7 @@
  // Sell Modal
  function openSellModal(symbol, maxQuantity, currentPrice) {
  document.getElementById('sellSymbol').value = symbol;
- document.getElementById('sellInfo').textContent = `${symbol} - כמות זמינה: ${maxQuantity}`;
+ document.getElementById('sellInfo').textContent = I18n.t('stocks.rt_qtyAvailable').replace('{symbol}', symbol).replace('{maxQuantity}', maxQuantity);
  document.getElementById('sellQuantity').max = maxQuantity;
  document.getElementById('sellQuantity').value = '';
  document.getElementById('sellPrice').value = currentPrice;
@@ -1926,19 +1926,19 @@
  }
 
  return {
- 'סימול': h.symbol,
- 'שם': h.name || '-',
- 'כמות': h.quantity,
- 'מטבע': currency,
- 'מחיר רכישה': h.avgPrice,
- 'עלות רכישה ₪': Math.round(costILS),
- 'מחיר נוכחי': currentPrice,
- 'שינוי יומי %': Number(dailyChange.toFixed(2)),
- 'MA150 מרחק %': ma150Dist !== null && ma150Dist !== undefined ? Number(ma150Dist.toFixed(1)) : '-',
- 'טרנד': trend,
- 'שווי נוכחי ₪': Math.round(valueILS),
- 'רווח ₪': Math.round(profitILS),
- 'שינוי %': Number(profitPercent.toFixed(1))
+ [I18n.t('stocks.xl_symbol')]: h.symbol,
+ [I18n.t('stocks.xl_name')]: h.name || '-',
+ [I18n.t('stocks.xl_quantity')]: h.quantity,
+ [I18n.t('stocks.xl_currency')]: currency,
+ [I18n.t('stocks.xl_buyPrice')]: h.avgPrice,
+ [I18n.t('stocks.xl_costILS')]: Math.round(costILS),
+ [I18n.t('stocks.xl_currentPrice')]: currentPrice,
+ [I18n.t('stocks.xl_dailyChangePct')]: Number(dailyChange.toFixed(2)),
+ [I18n.t('stocks.xl_ma150DistPct')]: ma150Dist !== null && ma150Dist !== undefined ? Number(ma150Dist.toFixed(1)) : '-',
+ [I18n.t('stocks.xl_trend')]: trend,
+ [I18n.t('stocks.xl_valueILS')]: Math.round(valueILS),
+ [I18n.t('stocks.xl_profitILS')]: Math.round(profitILS),
+ [I18n.t('stocks.xl_changePct')]: Number(profitPercent.toFixed(1))
  };
  });
 
@@ -1977,7 +1977,7 @@
  // Add holdings
  if (holdings.length > 0) {
  const holdingsGroup = document.createElement('optgroup');
- holdingsGroup.label = '📋 אחזקות';
+ holdingsGroup.label = I18n.t('stocks.rt_holdingsGroup');
  holdings.forEach(h => {
  const option = document.createElement('option');
  option.value = h.symbol;
@@ -1990,7 +1990,7 @@
  // Add watchlist
  if (watchlist.length > 0) {
  const watchlistGroup = document.createElement('optgroup');
- watchlistGroup.label = '👁️ רשימת מעקב';
+ watchlistGroup.label = I18n.t('stocks.rt_watchlistGroup');
  watchlist.forEach(w => {
  const option = document.createElement('option');
  option.value = w.symbol;
@@ -2150,7 +2150,7 @@
  labels: priceLabels,
  datasets: [
  {
- label: `מחיר ${symbol}`,
+ label: I18n.t('stocks.rt_chartPrice').replace('{symbol}', symbol),
  data: priceValues,
  borderColor: '#8b5cf6',
  backgroundColor: 'rgba(139, 92, 246, 0.1)',
@@ -2250,7 +2250,7 @@
  App.notify(Tn(`יובאו ${result.imported} מניות בהצלחה`,`${result.imported} stocks imported successfully`,`${result.imported} acoes importadas com sucesso`,`${result.imported} acciones importadas con exito`), 'success');
  loadStocks();
  } else {
- App.notify(result.error || 'שגיאה בייבוא', 'error');
+ App.notify(result.error || I18n.t('stocks.rt_importError'), 'error');
  }
  } catch (e) {
  console.error('CSV import error:', e);
@@ -2295,11 +2295,11 @@
  const totalValue = holdings.reduce((sum, h) => sum + (h.valueILS || 0), 0);
  const totalProfit = holdings.reduce((sum, h) => sum + (h.profitILS || 0), 0);
  const confirmed = confirm(
- `נמצאו ${holdings.length} אחזקות\n` +
- `שווי כולל: ₪${totalValue.toLocaleString(undefined, {minimumFractionDigits: 0})}\n` +
- `רווח/הפסד: ₪${totalProfit.toLocaleString(undefined, {minimumFractionDigits: 0})}\n\n` +
- `רשימת מניות:\n${holdings.map(h => ` ${h.symbol} - ${h.name} (₪${(h.valueILS || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}, רווח: ₪${(h.profitILS || 0).toLocaleString(undefined, {maximumFractionDigits: 0})})`).join('\n')}\n\n` +
- `לייבא את כל האחזקות?`
+ `${I18n.t('stocks.rt_foundHoldings').replace('{count}', holdings.length)}\n` +
+ `${I18n.t('stocks.rt_totalValueLine')}: ₪${totalValue.toLocaleString(undefined, {minimumFractionDigits: 0})}\n` +
+ `${I18n.t('stocks.rt_profitLossLine')}: ₪${totalProfit.toLocaleString(undefined, {minimumFractionDigits: 0})}\n\n` +
+ `${I18n.t('stocks.rt_stockListLine')}:\n${holdings.map(h => ` ${h.symbol} - ${h.name} (₪${(h.valueILS || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}, ${I18n.t('stocks.rt_profitInline')}: ₪${(h.profitILS || 0).toLocaleString(undefined, {maximumFractionDigits: 0})})`).join('\n')}\n\n` +
+ `${I18n.t('stocks.rt_importAllConfirm')}`
  );
 
  if (!confirmed) return;
@@ -2312,10 +2312,10 @@
  if (existingData.holdings.length > 0) {
  const manualHoldings = existingData.holdings.filter(h => !brokerSymbols.includes(h.symbol));
  const choice = confirm(
- `נמצאו ${existingData.holdings.length} אחזקות קיימות.\n` +
- `מתוכן ${manualHoldings.length} אחזקות ידניות (לא מהברוקר).\n\n` +
- `כן = עדכן מניות ברוקר, שמור ידניות\n` +
- `לא = החלף הכל (מחק גם ידניות)`
+ `${I18n.t('stocks.rt_existingHoldings').replace('{count}', existingData.holdings.length)}\n` +
+ `${I18n.t('stocks.rt_ofWhichManual').replace('{count}', manualHoldings.length)}\n\n` +
+ `${I18n.t('stocks.rt_yesUpdateKeep')}\n` +
+ `${I18n.t('stocks.rt_noReplaceAll')}`
  );
  importMode = choice ? 'smart' : 'replace';
  }
@@ -2420,7 +2420,7 @@
  }
 
  if (headerIdx === -1) {
- throw new Error('לא נמצא פורמט מוכר בקובץ');
+ throw new Error(I18n.t('stocks.rt_unknownFormat'));
  }
 
  // Parse data rows after header
@@ -2646,7 +2646,7 @@
  if (saved.length > 0) {
  const sep = document.createElement('option');
  sep.disabled = true;
- sep.textContent = '── מניות שהוספתי ──';
+ sep.textContent = I18n.t('stocks.rt_sepAdded');
  select.appendChild(sep);
 
  saved.forEach(s => {
@@ -2665,7 +2665,7 @@
  if (data.holdings && data.holdings.length > 0) {
  const sep2 = document.createElement('option');
  sep2.disabled = true;
- sep2.textContent = '── התיק שלי ──';
+ sep2.textContent = I18n.t('stocks.rt_sepPortfolio');
  select.appendChild(sep2);
 
  data.holdings.forEach(stock => {
@@ -3280,7 +3280,7 @@
 
  const annualMain = annualize(mainReturn, years);
  const annualSublabel = isLongPeriod && annualMain !== null ? `${I18n.t('benchmark.annualReturn')}: ${annualMain >= 0 ? '+' : ''}${annualMain.toFixed(1)}%` : '';
- const periodLabel = compareTarget.type === 'portfolio' ? (annualSublabel || 'תשואה תקופתית') : annualSublabel;
+ const periodLabel = compareTarget.type === 'portfolio' ? (annualSublabel || I18n.t('stocks.rt_periodReturn')) : annualSublabel;
  addStat(mainLabel, mainReturn, mainReturn >= 0 ? 'var(--color-positive)' : 'var(--color-negative)', periodLabel);
 
  for (const [sym, ret] of Object.entries(benchmarkReturns)) {
