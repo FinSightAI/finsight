@@ -539,7 +539,7 @@ const SmartImport = {
 
         // Validate required fields
         if (mapping.date === undefined || mapping.amount === undefined || mapping.description === undefined) {
-            alert('יש למפות לפחות: תאריך, סכום ותיאור');
+            alert(T('יש למפות לפחות: תאריך, סכום ותיאור'));
             return;
         }
 

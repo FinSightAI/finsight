@@ -1164,15 +1164,15 @@
  const phone = (s.recipientPhone || '').replace(/\D/g, '');
  const apiKey = (s.callmebotApiKey || '').trim();
  if (!phone || !apiKey) {
- App.notify('הזן מספר טלפון ו-API Key תחילה', 'error');
+ App.notify(T('הזן מספר טלפון ו-API Key תחילה'), 'error');
  return;
  }
- App.notify('שולח הודעת בדיקה...', 'info');
+ App.notify(T('שולח הודעת בדיקה...'), 'info');
  const testText = '✅ WizeMoney — הודעת בדיקה נשלחה בהצלחה!';
  const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encodeURIComponent(testText)}&apikey=${encodeURIComponent(apiKey)}`;
  // Use Image trick to bypass CORS — fetch() gets blocked by browser
  const img = new Image();
- img.onload = img.onerror = () => App.notify('✅ הבקשה נשלחה — בדוק את WhatsApp תוך שנייה', 'success');
+ img.onload = img.onerror = () => App.notify(T('✅ הבקשה נשלחה — בדוק את WhatsApp תוך שנייה'), 'success');
  img.src = url;
  }
 

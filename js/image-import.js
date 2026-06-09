@@ -58,7 +58,7 @@ const ImageImport = {
 
             const text = result.data.text;
             if (!text || text.trim().length < 5) {
-                App.notify('לא זוהה טקסט בתמונה', 'error');
+                App.notify(T('לא זוהה טקסט בתמונה'), 'error');
                 return;
             }
 
@@ -73,7 +73,7 @@ const ImageImport = {
 
             const rows = this.parseOCRText(text);
             if (rows.length < 1) {
-                App.notify('לא נמצאו שורות נתונים בתמונה', 'error');
+                App.notify(T('לא נמצאו שורות נתונים בתמונה'), 'error');
                 return;
             }
 
@@ -81,7 +81,7 @@ const ImageImport = {
         } catch (error) {
             this.closeLoadingModal();
             console.error('OCR error:', error);
-            App.notify('שגיאה בזיהוי טקסט: ' + error.message, 'error');
+            App.notify(T('שגיאה בזיהוי טקסט: ') + error.message, 'error');
         }
     },
 
@@ -333,7 +333,7 @@ const ImageImport = {
         const expectedPension = pensionEl ? parseFloat(pensionEl.value) || null : null;
 
         if (!name || !value) {
-            App.notify('יש למלא שם ושווי', 'error');
+            App.notify(T('יש למלא שם ושווי'), 'error');
             return;
         }
 
@@ -361,7 +361,7 @@ const ImageImport = {
         localStorage.setItem(FUNDS_KEY, JSON.stringify(funds));
 
         if (typeof loadFunds === 'function') loadFunds();
-        App.notify('הקרן יובאה בהצלחה', 'success');
+        App.notify(T('הקרן יובאה בהצלחה'), 'success');
     },
 
     /**
@@ -539,7 +539,7 @@ const ImageImport = {
     confirmImport(dataType) {
         const rows = this.getPreviewData();
         if (rows.length < 2) {
-            App.notify('נדרשות לפחות 2 שורות (כותרות + נתונים)', 'error');
+            App.notify(T('נדרשות לפחות 2 שורות (כותרות + נתונים)'), 'error');
             return;
         }
 
@@ -565,7 +565,7 @@ const ImageImport = {
         if (imported > 0) {
             App.notify(`יובאו ${imported} רשומות בהצלחה`, 'success');
         } else {
-            App.notify('לא נמצאו רשומות תקינות לייבוא', 'error');
+            App.notify(T('לא נמצאו רשומות תקינות לייבוא'), 'error');
         }
     },
 
@@ -846,7 +846,7 @@ const ImageImport = {
 
             const text = result.data.text;
             if (!text || text.trim().length < 5) {
-                App.notify('לא זוהה טקסט בתמונה', 'error');
+                App.notify(T('לא זוהה טקסט בתמונה'), 'error');
                 return;
             }
 
@@ -854,7 +854,7 @@ const ImageImport = {
 
             const data = this.extractPayslip(text);
             if (!data) {
-                App.notify('לא זוהה תלוש משכורת בתמונה', 'error');
+                App.notify(T('לא זוהה תלוש משכורת בתמונה'), 'error');
                 return;
             }
 
@@ -862,7 +862,7 @@ const ImageImport = {
         } catch (error) {
             this.closeLoadingModal();
             console.error('Payslip OCR error:', error);
-            App.notify('שגיאה בזיהוי טקסט: ' + error.message, 'error');
+            App.notify(T('שגיאה בזיהוי טקסט: ') + error.message, 'error');
         }
     },
 
@@ -871,7 +871,7 @@ const ImageImport = {
      */
     async processPayslipPDF(file) {
         if (typeof pdfjsLib === 'undefined') {
-            App.notify('PDF.js לא נטען — נא לרענן את הדף', 'error');
+            App.notify(T('PDF.js לא נטען — נא לרענן את הדף'), 'error');
             return;
         }
 
@@ -914,7 +914,7 @@ const ImageImport = {
             this.closeLoadingModal();
 
             if (!combinedText || combinedText.trim().length < 5) {
-                App.notify('לא זוהה טקסט ב-PDF', 'error');
+                App.notify(T('לא זוהה טקסט ב-PDF'), 'error');
                 return;
             }
 
@@ -922,7 +922,7 @@ const ImageImport = {
 
             const data = this.extractPayslip(combinedText);
             if (!data) {
-                App.notify('לא זוהה תלוש משכורת ב-PDF', 'error');
+                App.notify(T('לא זוהה תלוש משכורת ב-PDF'), 'error');
                 return;
             }
 
@@ -931,7 +931,7 @@ const ImageImport = {
         } catch (error) {
             this.closeLoadingModal();
             console.error('Payslip PDF error:', error);
-            App.notify('שגיאה בעיבוד PDF: ' + error.message, 'error');
+            App.notify(T('שגיאה בעיבוד PDF: ') + error.message, 'error');
         }
     },
 
@@ -1226,6 +1226,6 @@ const ImageImport = {
             renderPayslipSummary(payslipData);
         }
 
-        App.notify('נתוני התלוש נשמרו בהצלחה', 'success');
+        App.notify(T('נתוני התלוש נשמרו בהצלחה'), 'success');
     }
 };

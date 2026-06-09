@@ -1691,7 +1691,7 @@
  try {
  var data = JSON.parse(text);
  if (!data.__finsight || !Array.isArray(data.transactions)) {
- App.notify('הקליפבורד לא מכיל נתוני WizeMoney. לחץ על הסימניה באתר האשראי תחילה.', 'error');
+ App.notify(T('הקליפבורד לא מכיל נתוני WizeMoney. לחץ על הסימניה באתר האשראי תחילה.'), 'error');
  return;
  }
  var items = data.transactions.map(function(tx) {
@@ -1716,7 +1716,7 @@
  }
  });
  if (updatedCount > 0) {
- App.notify('עודכנו קטגוריות ל-' + updatedCount + ' עסקאות', 'success');
+ App.notify(T('עודכנו קטגוריות ל-') + updatedCount + ' עסקאות', 'success');
  loadExpenses();
  return;
  }
@@ -1727,13 +1727,13 @@
  });
  });
  if (!hasNew) {
- App.notify('כל העסקאות כבר ייובאו', 'warning');
+ App.notify(T('כל העסקאות כבר ייובאו'), 'warning');
  return;
  }
- App.notify('נטענו ' + items.length + ' עסקאות מ-' + (data.sourceName || data.source), 'success');
+ App.notify(T('נטענו ') + items.length + ' עסקאות מ-' + (data.sourceName || data.source), 'success');
  importExpensesFromSmartImport(items);
  } catch(e) {
- App.notify('תוכן אינו תקין.', 'error');
+ App.notify(T('תוכן אינו תקין.'), 'error');
  }
  }
 
@@ -1764,7 +1764,7 @@
  function detectRecurringPayments() {
  var allExpenses = Storage.getCreditCards().expenses;
  if (!allExpenses.length) {
- App.notify('אין הוצאות לניתוח', 'warning');
+ App.notify(T('אין הוצאות לניתוח'), 'warning');
  return;
  }
 
@@ -1813,7 +1813,7 @@
  });
 
  if (!candidates.length) {
- App.notify('לא נמצאו תשלומים קבועים חדשים', 'info');
+ App.notify(T('לא נמצאו תשלומים קבועים חדשים'), 'info');
  return;
  }
 
@@ -1864,7 +1864,7 @@
  added++;
  });
  modal.remove();
- if (added > 0) App.notify('נוספו ' + added + ' תשלומים קבועים', 'success');
+ if (added > 0) App.notify(T('נוספו ') + added + ' תשלומים קבועים', 'success');
  };
  }
 

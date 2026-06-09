@@ -146,7 +146,7 @@ const Auth = {
                         plan: 'free',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
-                    App.notify('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉', 'success');
+                    App.notify(T('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉'), 'success');
                 } else {
                     App.notify(`${I18n.t('auth.welcome')}, ${result.user.displayName}!`, 'success');
                 }
@@ -204,7 +204,7 @@ const Auth = {
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             }
-            App.notify('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉', 'success');
+            App.notify(T('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉'), 'success');
             this.closeEmailModal();
             return result.user;
         } catch (error) {
@@ -563,14 +563,14 @@ const Auth = {
                 const encrypted = await DataCrypto.encrypt(sensitiveData, userId);
                 if (!encrypted) {
                     console.error('Encryption failed, aborting cloud save');
-                    App.notify('שגיאה בהצפנה - הנתונים לא נשמרו בענן', 'error');
+                    App.notify(T('שגיאה בהצפנה - הנתונים לא נשמרו בענן'), 'error');
                     return false;
                 }
                 const encSize = new Blob([encrypted]).size;
                 console.log(`Cloud sync: encrypted size = ${(encSize / 1024).toFixed(1)} KB`);
                 if (encSize > 900000) {
                     console.warn('Cloud sync: data approaching Firestore 1MB limit!');
-                    App.notify('אזהרה: הנתונים גדולים מאוד, ייתכן שהסנכרון ייכשל', 'warning');
+                    App.notify(T('אזהרה: הנתונים גדולים מאוד, ייתכן שהסנכרון ייכשל'), 'warning');
                 }
                 data = {
                     encryptedData: encrypted,

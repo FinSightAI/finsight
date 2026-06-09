@@ -914,14 +914,14 @@
  }
 
  if (rows.length < 2) {
- App.notify('הקובץ ריק או לא תקין', 'error');
+ App.notify(T('הקובץ ריק או לא תקין'), 'error');
  return;
  }
 
  const bankFormat = detectBankFormat(rows);
  if (bankFormat) {
  const bankNames = { leumi: 'בנק לאומי', hapoalim: 'בנק הפועלים', discount: 'בנק דיסקונט', mizrahi: 'בנק מזרחי' };
- App.notify('זוהה פורמט: ' + bankNames[bankFormat], 'success');
+ App.notify(T('זוהה פורמט: ') + bankNames[bankFormat], 'success');
  }
 
  const headerIdx = findStatementHeaderRow(rows);
@@ -936,7 +936,7 @@
  showAccountSelectModal(rows, headerIdx, detected);
  } catch (error) {
  console.error('Statement import error:', error);
- App.notify('שגיאה בייבוא: ' + error.message, 'error');
+ App.notify(T('שגיאה בייבוא: ') + error.message, 'error');
  }
  };
 
@@ -1028,7 +1028,7 @@
  }
 
  if (transactions.length === 0) {
- App.notify('לא נמצאו תנועות לייבוא', 'error');
+ App.notify(T('לא נמצאו תנועות לייבוא'), 'error');
  return;
  }
 
@@ -1052,7 +1052,7 @@
  const accounts = Storage.getBankAccounts();
  const acc = accounts.find(a => a.id === targetId);
  if (!acc) {
- App.notify('החשבון לא נמצא', 'error');
+ App.notify(T('החשבון לא נמצא'), 'error');
  return;
  }
 
@@ -1136,7 +1136,7 @@
  const dateIdx = parseInt(document.getElementById('smDate').value);
  const balanceIdx = parseInt(document.getElementById('smBalance').value);
  if (dateIdx < 0 || balanceIdx < 0) {
- App.notify('יש לבחור לפחות תאריך ויתרה', 'error');
+ App.notify(T('יש לבחור לפחות תאריך ויתרה'), 'error');
  return;
  }
  const detected = {
@@ -1238,7 +1238,7 @@
  const text = await navigator.clipboard.readText();
  const data = JSON.parse(text);
  if (!data.__finsight_bank) {
- App.notify('הקליפבורד לא מכיל נתוני בנק. לחץ על הסימניה באתר הבנק תחילה.', 'error');
+ App.notify(T('הקליפבורד לא מכיל נתוני בנק. לחץ על הסימניה באתר הבנק תחילה.'), 'error');
  return;
  }
 
@@ -1267,8 +1267,8 @@
  applyBankImport(match, data);
 
  } catch(e) {
- if (e.name === 'SyntaxError') App.notify('תוכן הקליפבורד אינו תקין', 'error');
- else App.notify('לא ניתן לקרוא מהקליפבורד', 'error');
+ if (e.name === 'SyntaxError') App.notify(T('תוכן הקליפבורד אינו תקין'), 'error');
+ else App.notify(T('לא ניתן לקרוא מהקליפבורד'), 'error');
  }
  }
 

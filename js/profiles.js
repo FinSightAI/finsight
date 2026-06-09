@@ -359,7 +359,7 @@ const ProfileManager = {
         const name  = document.getElementById('pmName')?.value.trim();
         const emoji = document.getElementById('pmEmoji')?.value.trim() || '👤';
         const type  = document.getElementById('pmType')?.value || 'adult';
-        if (!name) { alert('נא למלא שם'); return; }
+        if (!name) { alert(T('נא למלא שם')); return; }
         const id = this.createMember({ name, emoji, color: this._selectedColor, type });
         this.closeAddModal();
         this.switchTo(id);

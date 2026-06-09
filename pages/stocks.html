@@ -1720,7 +1720,7 @@
  const market = document.getElementById('watchlistMarket').value;
 
  if (!symbol) {
- App.notify('נא להזין סימול', 'error');
+ App.notify(T('נא להזין סימול'), 'error');
  return;
  }
 
@@ -1730,9 +1730,9 @@
  closeAddWatchlistModal();
  loadWatchlist();
  refreshAllPrices(true);
- App.notify('מניה נוספה לרשימת המעקב', 'success');
+ App.notify(T('מניה נוספה לרשימת המעקב'), 'success');
  } else {
- App.notify('מניה זו כבר ברשימת המעקב', 'error');
+ App.notify(T('מניה זו כבר ברשימת המעקב'), 'error');
  }
  }
 
@@ -1740,7 +1740,7 @@
  if (confirm(`האם להסיר את ${symbol} מרשימת המעקב?`)) {
  StockAlerts.removeFromWatchlist(symbol);
  loadWatchlist();
- App.notify('מניה הוסרה מרשימת המעקב', 'success');
+ App.notify(T('מניה הוסרה מרשימת המעקב'), 'success');
  }
  }
 
@@ -1881,7 +1881,7 @@
  function exportHoldingsToExcel() {
  const data = Storage.getStocks();
  if (data.holdings.length === 0) {
- App.notify('אין אחזקות לייצוא', 'error');
+ App.notify(T('אין אחזקות לייצוא'), 'error');
  return;
  }
 
@@ -1954,7 +1954,7 @@
 
  const dateStr = new Date().toISOString().split('T')[0];
  XLSX.writeFile(wb, `WizeMoney_Holdings_${dateStr}.xlsx`);
- App.notify('קובץ Excel יוצא בהצלחה ✓', 'success');
+ App.notify(T('קובץ Excel יוצא בהצלחה ✓'), 'success');
  }
 
  function importData() {
@@ -2254,7 +2254,7 @@
  }
  } catch (e) {
  console.error('CSV import error:', e);
- App.notify('שגיאה בקריאת הקובץ: ' + e.message, 'error');
+ App.notify(T('שגיאה בקריאת הקובץ: ') + e.message, 'error');
  }
  event.target.value = '';
  return;
@@ -2287,7 +2287,7 @@
  }
 
  if (holdings.length === 0) {
- App.notify('לא נמצאו אחזקות בקובץ', 'error');
+ App.notify(T('לא נמצאו אחזקות בקובץ'), 'error');
  return;
  }
 
@@ -2343,7 +2343,7 @@
 
  } catch (error) {
  console.error('Broker import error:', error);
- App.notify('שגיאה בקריאת הקובץ: ' + error.message, 'error');
+ App.notify(T('שגיאה בקריאת הקובץ: ') + error.message, 'error');
  }
 
  // Reset file input
@@ -2707,7 +2707,7 @@
  loadTVChart(select.value);
  }
  } else {
- alert('אפשר למחוק רק מניות שהוספת ידנית');
+ alert(T('אפשר למחוק רק מניות שהוספת ידנית'));
  }
  }
 
