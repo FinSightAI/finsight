@@ -8522,10 +8522,15 @@ const I18n = {
             else if (bl.startsWith('es')) this.currentLanguage = 'es';
             else this.currentLanguage = 'en';
         }
-        const settings = Storage.getSettings();
+        // Some lightweight pages (pension, training, mygemel*) load i18n.js WITHOUT storage.js —
+        // guard the Storage calls so init() still resolves the language + translates the page there.
+        const hasStorage = typeof Storage !== 'undefined' && Storage && typeof Storage.getSettings === 'function';
+        const settings = hasStorage ? Storage.getSettings() : {};
         // Persist resolved language to both keys
         localStorage.setItem('wl_lang', this.currentLanguage);
-        Storage.saveSettings({ ...settings, language: this.currentLanguage });
+        if (hasStorage && typeof Storage.saveSettings === 'function') {
+            Storage.saveSettings({ ...settings, language: this.currentLanguage });
+        }
         this.updatePageDirection();
         this.translatePage();
     },
