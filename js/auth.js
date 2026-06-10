@@ -892,6 +892,9 @@ const FINANCIAL_KEYS = ['finance_bank_accounts', 'finance_credit_cards', 'financ
     'finance_assets', 'finance_my_funds', 'finance_loans', 'finance_user_profile',
     'finance_stock_alerts', 'finance_goals', 'finance_subscriptions'];
 let saveTimeout = null;
+// Guard: some lightweight pages (pension, training, mygemel*) load auth.js WITHOUT storage.js.
+// Without this check, `Storage.set.bind` throws a TypeError at module load and aborts the rest of auth.js.
+if (typeof Storage !== 'undefined' && Storage && typeof Storage.set === 'function') {
 const originalStorageSet = Storage.set.bind(Storage);
 Storage.set = function(key, data) {
     originalStorageSet(key, data);
@@ -920,6 +923,7 @@ Storage.set = function(key, data) {
         }, 2000);
     }
 };
+} // end Storage.set guard
 
 // Make available globally
 window.Auth = Auth;
