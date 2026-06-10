@@ -195,40 +195,36 @@
 <script>
 // ── Sectors data (GICS 11 sectors + leading ETF + top holdings) ────────────────
 const SECTORS = [
- { id: 'tech', icon: '💻', he: 'טכנולוגיה', en: 'Technology', etf: 'XLK', leaders: ['AAPL','MSFT','NVDA','AVGO','ORCL'] },
- { id: 'health', icon: '🏥', he: 'בריאות', en: 'Health Care', etf: 'XLV', leaders: ['LLY','UNH','JNJ','ABBV','MRK'] },
- { id: 'financial', icon: '🏦', he: 'פיננסים', en: 'Financials', etf: 'XLF', leaders: ['BRK-B','JPM','V','MA','BAC'] },
- { id: 'consumer-disc', icon: '🛍️', he: 'צריכה לא מחזורית', en: 'Consumer Discretionary',etf: 'XLY', leaders: ['AMZN','TSLA','HD','MCD','LOW'] },
- { id: 'communication', icon: '📡', he: 'תקשורת', en: 'Communication', etf: 'XLC', leaders: ['META','GOOGL','NFLX','DIS','VZ'] },
- { id: 'industrial', icon: '🏭', he: 'תעשייה', en: 'Industrials', etf: 'XLI', leaders: ['GE','CAT','RTX','HON','UNP'] },
- { id: 'consumer-staples',icon: '🛒', he: 'צריכה בסיסית', en: 'Consumer Staples', etf: 'XLP', leaders: ['PG','COST','WMT','KO','PEP'] },
- { id: 'energy', icon: '⛽', he: 'אנרגיה', en: 'Energy', etf: 'XLE', leaders: ['XOM','CVX','COP','EOG','SLB'] },
- { id: 'utilities', icon: '💡', he: 'תשתיות', en: 'Utilities', etf: 'XLU', leaders: ['NEE','SO','DUK','CEG','AEP'] },
- { id: 'realestate', icon: '🏢', he: 'נדל״ן', en: 'Real Estate', etf: 'XLRE', leaders: ['PLD','AMT','EQIX','WELL','SPG'] },
- { id: 'materials', icon: '🧪', he: 'חומרים', en: 'Materials', etf: 'XLB', leaders: ['LIN','SHW','APD','ECL','FCX'] },
+ { id: 'tech', icon: '💻', nameKey: 'sectors.rt_secTech', etf: 'XLK', leaders: ['AAPL','MSFT','NVDA','AVGO','ORCL'] },
+ { id: 'health', icon: '🏥', nameKey: 'sectors.rt_secHealth', etf: 'XLV', leaders: ['LLY','UNH','JNJ','ABBV','MRK'] },
+ { id: 'financial', icon: '🏦', nameKey: 'sectors.rt_secFinancial', etf: 'XLF', leaders: ['BRK-B','JPM','V','MA','BAC'] },
+ { id: 'consumer-disc', icon: '🛍️', nameKey: 'sectors.rt_secConsumerDisc', etf: 'XLY', leaders: ['AMZN','TSLA','HD','MCD','LOW'] },
+ { id: 'communication', icon: '📡', nameKey: 'sectors.rt_secCommunication', etf: 'XLC', leaders: ['META','GOOGL','NFLX','DIS','VZ'] },
+ { id: 'industrial', icon: '🏭', nameKey: 'sectors.rt_secIndustrial', etf: 'XLI', leaders: ['GE','CAT','RTX','HON','UNP'] },
+ { id: 'consumer-staples',icon: '🛒', nameKey: 'sectors.rt_secConsumerStaples', etf: 'XLP', leaders: ['PG','COST','WMT','KO','PEP'] },
+ { id: 'energy', icon: '⛽', nameKey: 'sectors.rt_secEnergy', etf: 'XLE', leaders: ['XOM','CVX','COP','EOG','SLB'] },
+ { id: 'utilities', icon: '💡', nameKey: 'sectors.rt_secUtilities', etf: 'XLU', leaders: ['NEE','SO','DUK','CEG','AEP'] },
+ { id: 'realestate', icon: '🏢', nameKey: 'sectors.rt_secRealEstate', etf: 'XLRE', leaders: ['PLD','AMT','EQIX','WELL','SPG'] },
+ { id: 'materials', icon: '🧪', nameKey: 'sectors.rt_secMaterials', etf: 'XLB', leaders: ['LIN','SHW','APD','ECL','FCX'] },
 ];
 
 const SPY = 'SPY';
 
 const TF = { '1d': 1, '1w': 5, '1m': 21, 'ytd': null, '1y': 252 };
 
-const TX = {
- he: {
- marketLabel: 'שוק כללי (S&P 500)', bestSectorLabel: 'הסקטור המוביל', worstSectorLabel: 'הסקטור החלש',
- spreadLabel: 'פער מהמוביל לחלש',
- loading: 'טוען נתוני סקטורים…', error: 'שגיאה בטעינת נתוני שוק. נסה לרענן.',
- leadersTitle: 'מובילים בסקטור',
- },
- en: {
- marketLabel: 'Market (S&P 500)', bestSectorLabel: 'Top Sector', worstSectorLabel: 'Bottom Sector',
- spreadLabel: 'Top–Bottom Spread',
- loading: 'Loading sector data…', error: 'Error loading market data. Try refresh.',
- leadersTitle: 'Top Holdings',
- }
-};
-
-function getLang() { try { return localStorage.getItem('wl_lang') === 'en' ? 'en' : 'he'; } catch { return 'he'; } }
-function tx() { return TX[getLang()] || TX.he; }
+function getLang() { try { return (typeof I18n !== 'undefined' && I18n.currentLanguage) || localStorage.getItem('wl_lang') || 'he'; } catch { return 'he'; } }
+function tx() {
+ return {
+ marketLabel: I18n.t('sectors.marketLabel'),
+ bestSectorLabel: I18n.t('sectors.bestSectorLabel'),
+ worstSectorLabel: I18n.t('sectors.worstSectorLabel'),
+ spreadLabel: I18n.t('sectors.spreadLabel'),
+ loading: I18n.t('sectors.loading'),
+ error: I18n.t('sectors.error'),
+ leadersTitle: I18n.t('sectors.leadersTitle'),
+ };
+}
+function secName(s) { return I18n.t(s.nameKey); }
 function fmtPct(n, sign = true) { if (n == null || isNaN(n)) return '–'; const s = (sign && n > 0) ? '+' : ''; return s + n.toFixed(2) + '%'; }
 function pctClass(n) { return n > 0 ? 'up' : n < 0 ? 'down' : 'neutral'; }
 
@@ -291,12 +287,12 @@ function renderSummary() {
  </div>
  <div class="sec-summary-card">
  <div class="sec-summary-label">${t.bestSectorLabel}</div>
- <div class="sec-summary-value up">${best.s.icon} ${getLang()==='he'?best.s.he:best.s.en}</div>
+ <div class="sec-summary-value up">${best.s.icon} ${secName(best.s)}</div>
  <div style="font-size:0.85rem;color:var(--color-text-secondary)">${fmtPct(best.pct)}</div>
  </div>
  <div class="sec-summary-card">
  <div class="sec-summary-label">${t.worstSectorLabel}</div>
- <div class="sec-summary-value down">${worst.s.icon} ${getLang()==='he'?worst.s.he:worst.s.en}</div>
+ <div class="sec-summary-value down">${worst.s.icon} ${secName(worst.s)}</div>
  <div style="font-size:0.85rem;color:var(--color-text-secondary)">${fmtPct(worst.pct)}</div>
  </div>
  <div class="sec-summary-card">
@@ -334,7 +330,7 @@ function renderGrid() {
  <div class="sec-row" data-sector="${s.id}" data-etf="${s.etf}">
  <div class="sec-name">
  <span class="sec-icon">${s.icon}</span>
- <span>${isHe ? s.he : s.en}</span>
+ <span>${secName(s)}</span>
  </div>
  <div class="sec-etf">${s.etf}<br><span style="font-size:0.75rem;opacity:0.7">${lastPrice ? '$' + lastPrice.toFixed(2) : '–'}</span></div>
  <div class="sec-pct ${pctClass(pct)}">${fmtPct(pct)}</div>

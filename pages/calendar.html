@@ -488,8 +488,10 @@
 <script src="../js/auth.js?v=2026060902"></script>
 <script>
  const CUSTOM_EVENTS_KEY = 'finance_calendar_events';
- const MONTH_NAMES = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
- const DAY_NAMES = ['א','ב','ג','ד','ה','ו','ש']; // Sun-Sat
+ const _MONTH_FALLBACK = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+ const _DAY_FALLBACK = ['א','ב','ג','ד','ה','ו','ש']; // Sun-Sat
+ const monthNames = () => (typeof I18n !== 'undefined' && I18n.t('cal.rt_monthNames')) || _MONTH_FALLBACK;
+ const dayNames = () => (typeof I18n !== 'undefined' && I18n.t('cal.rt_dayNames')) || _DAY_FALLBACK;
 
  let viewYear = new Date().getFullYear();
  let viewMonth = new Date().getMonth(); // 0-indexed
@@ -521,7 +523,7 @@
  if (!s.renewalDate) {
  // No specific date — show on the 1st as estimate
  add(1, { type:'subscription', icon:'🔄', name: s.name, amount: s.amount,
- detail: 'חידוש חודשי (תאריך לא ידוע)' });
+ detail: I18n.t('cal.rt_subRenewUnknown') });
  return;
  }
  const renewal = new Date(s.renewalDate + 'T00:00:00');
@@ -563,9 +565,9 @@
  loans.forEach(l => {
  const day = l.paymentDay || 1;
  if (day <= daysInMonth) {
- add(day, { type:'loan', icon:'🏦', name: l.name || l.type || 'הלוואה',
+ add(day, { type:'loan', icon:'🏦', name: l.name || l.type || I18n.t('cal.typeLoan'),
  amount: l.monthlyPayment || 0,
- detail: l.remainingBalance ? 'יתרה: ₪' + Math.round(l.remainingBalance).toLocaleString('he-IL') : '' });
+ detail: l.remainingBalance ? I18n.t('cal.rt_balancePrefix') + Math.round(l.remainingBalance).toLocaleString('he-IL') : '' });
  }
  });
 
@@ -577,7 +579,7 @@
  if (d.getFullYear() === year && d.getMonth() === month) {
  add(d.getDate(), { type:'goal', icon: g.icon || '🎯', name: g.name,
  amount: g.targetAmount - (g.currentAmount || 0),
- detail: 'יעד חיסכון — נדרש עוד ₪' + Math.round(g.targetAmount - (g.currentAmount||0)).toLocaleString('he-IL') });
+ detail: I18n.t('cal.rt_goalNeed') + Math.round(g.targetAmount - (g.currentAmount||0)).toLocaleString('he-IL') });
  }
  });
 
@@ -612,14 +614,14 @@
 
  // ── Render calendar ───────────────────────────────────────────────
  function render() {
- document.getElementById('monthTitle').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+ document.getElementById('monthTitle').textContent = `${monthNames()[viewMonth]} ${viewYear}`;
 
  const events = buildEvents(viewYear, viewMonth);
  const grid = document.getElementById('calGrid');
 
  // Day headers (Sun=0 … Sat=6, but display RTL: ש to א)
  // Israeli week: ראשון to שבת
- const headers = DAY_NAMES.map(d => `<div class="cal-day-header">${d}'</div>`).join('');
+ const headers = dayNames().map(d => `<div class="cal-day-header">${d}'</div>`).join('');
 
  // First day of month (0=Sun)
  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
@@ -646,7 +648,7 @@
  `<div class="cal-event type-${ev.type}" title="${ev.name}${ev.amount ? ' · ₪'+Math.round(ev.amount).toLocaleString('he-IL') : ''}">${ev.icon} ${ev.name}</div>`
  ).join('');
 
- const moreEl = more > 0 ? `<div class="cal-more">+${more} נוספים</div>` : '';
+ const moreEl = more > 0 ? `<div class="cal-more">${I18n.t('cal.rt_moreCount').replace('{n}', more)}</div>` : '';
 
  cells += `<div class="cal-cell${isToday ? ' today' : ''}${hasEvents ? ' has-events' : ''}"
  onclick="${hasEvents ? `openDayModal(${day})` : ''}">
@@ -726,7 +728,7 @@
  const dateStr = ev.diff === 0 ? I18n.t('cal.today') : ev.diff === 1 ? I18n.t('cal.tomorrow') : `${I18n.t('cal.inDays1')}${ev.diff}${I18n.t('cal.inDays2')}`;
  const isUrgent = ev.diff <= 3;
  const day = ev.date.getDate();
- const mon = MONTH_NAMES[ev.date.getMonth()];
+ const mon = monthNames()[ev.date.getMonth()];
  return `<div class="upcoming-item">
  <div class="upcoming-dot" style="background:${colorMap[ev.type] || '#8b5cf6'}"></div>
  <div class="upcoming-info">
@@ -745,7 +747,7 @@
  function openDayModal(day) {
  const events = buildEvents(viewYear, viewMonth);
  const dayEvs = events[day] || [];
- const dateStr = `${day} ${MONTH_NAMES[viewMonth]} ${viewYear}`;
+ const dateStr = `${day} ${monthNames()[viewMonth]} ${viewYear}`;
 
  document.getElementById('dayModalTitle').textContent = '📅 ' + dateStr;
 

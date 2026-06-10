@@ -700,7 +700,7 @@ body:not(.market-br) .br-only { display: none !important; }
  const filteredFunds = currentFilter === 'all' ? funds : funds.filter(f => f.type === currentFilter);
 
  if (filteredFunds.length === 0) {
- tbody.innerHTML = `<tr><td colspan="7"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">📊</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין קרנות / חסכונות</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף קרן השתלמות, פנסיה או גמל לעקוב אחרי הצמיחה</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">+ הוסף קרן</button></div></td></tr>`;
+ tbody.innerHTML = `<tr><td colspan="7"><div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">📊</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">${I18n.t('myFunds.rt_emptyTitle')}</div><div style="font-size:0.85rem;margin-bottom:20px">${I18n.t('myFunds.rt_emptyDesc')}</div><button class="btn btn-primary btn-sm" onclick="openAddModal()">${I18n.t('myFunds.rt_emptyBtn')}</button></div></td></tr>`;
  footer.style.display = 'none';
  document.getElementById('chartCard').style.display = 'none';
  return;
@@ -1440,7 +1440,7 @@ body:not(.market-br) .br-only { display: none !important; }
  <div style="font-size:0.85rem;color:var(--color-text-secondary);">${p.company}</div>
  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;font-size:0.8rem;">
  <span>💰 ₪${p.balance.toLocaleString()}</span>
- ${p.monthlyDeposit ? `<span>📤 ₪${p.monthlyDeposit.toLocaleString()}/חודש</span>` : ''}
+ ${p.monthlyDeposit ? `<span>📤 ₪${p.monthlyDeposit.toLocaleString()}${I18n.t('myFunds.rt_perMonth')}</span>` : ''}
  ${p.ytdReturn ? `<span>📈 ${p.ytdReturn.toFixed(2)}%</span>` : ''}
  ${p.feeDeposit || p.feeSavings ? `<span>🏷️ ${p.feeDeposit}%/${p.feeSavings}%</span>` : ''}
  </div>

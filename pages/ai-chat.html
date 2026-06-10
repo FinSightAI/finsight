@@ -580,7 +580,7 @@ ${rules}${groundTruthFooter}`;
  function refreshCrossAppContext() {
  _crossAppData = null;
  const btn = document.getElementById('cross-app-refresh-btn');
- if (btn) { btn.textContent = '✓ מרענן...'; setTimeout(() => { btn.textContent = typeof I18n !== 'undefined' ? I18n.t('chat.refreshContextBtn') : '🔄 רענן קונטקסט'; }, 1500); }
+ if (btn) { btn.textContent = I18n.t('chat.rt_refreshing'); setTimeout(() => { btn.textContent = typeof I18n !== 'undefined' ? I18n.t('chat.refreshContextBtn') : '🔄 רענן קונטקסט'; }, 1500); }
  }
 
  function updateApiStatus(user) {
@@ -588,12 +588,12 @@ ${rules}${groundTruthFooter}`;
  const refreshBtn = document.getElementById('cross-app-refresh-btn');
  if (user) {
  const isYolo = typeof Plan !== 'undefined' && Plan.isYolo();
- el.textContent = isYolo ? '✦ Yolo AI — כל הכלים' : '✓ AI מחובר';
+ el.textContent = isYolo ? I18n.t('chat.rt_yoloConnected') : I18n.t('chat.rt_aiConnected');
  el.style.background = isYolo ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.12)';
  el.style.color = isYolo ? '#f59e0b' : '#10b981';
  if (refreshBtn) refreshBtn.style.display = isYolo ? '' : 'none';
  } else {
- el.textContent = '🔒 נדרשת התחברות';
+ el.textContent = I18n.t('chat.rt_loginRequired');
  el.style.background = 'rgba(245,158,11,0.1)';
  el.style.color = '#f59e0b';
  if (refreshBtn) refreshBtn.style.display = 'none';

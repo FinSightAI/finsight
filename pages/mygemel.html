@@ -326,9 +326,9 @@
  const pension = MyGemelFunds.getData('pension');
  const gemel = MyGemelFunds.getData('gemel');
 
- const trainingText = currentLang === 'he' ? `${training.length} קרנות` : `${training.length} funds`;
- const pensionText = currentLang === 'he' ? `${pension.length} קרנות` : `${pension.length} funds`;
- const gemelText = currentLang === 'he' ? `${gemel.length} קופות` : `${gemel.length} funds`;
+ const trainingText = I18n.t('myGemel.rt_fundsCount').replace('{n}', training.length);
+ const pensionText = I18n.t('myGemel.rt_fundsCount').replace('{n}', pension.length);
+ const gemelText = I18n.t('myGemel.rt_potsCount').replace('{n}', gemel.length);
 
  document.getElementById('trainingCount').textContent = trainingText;
  document.getElementById('pensionCount').textContent = pensionText;
@@ -340,9 +340,11 @@
  const [year, month] = lastUpdate.split('-');
  const monthNames = {
  he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
- en: { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' }
+ en: { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' },
+ pt: { '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril', '05': 'Maio', '06': 'Junho', '07': 'Julho', '08': 'Agosto', '09': 'Setembro', '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro' },
+ es: { '01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Mayo', '06': 'Junio', '07': 'Julio', '08': 'Agosto', '09': 'Septiembre', '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre' }
  };
- const monthName = monthNames[currentLang][month] || month;
+ const monthName = (monthNames[currentLang] || monthNames.he)[month] || month;
  document.getElementById('lastUpdate').textContent = `${monthName} ${year}`;
  }
  }
@@ -353,9 +355,11 @@
  const [year, month] = lastUpdate.split('-');
  const monthNames = {
  he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
- en: { '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec' }
+ en: { '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec' },
+ pt: { '01': 'Jan', '02': 'Fev', '03': 'Mar', '04': 'Abr', '05': 'Mai', '06': 'Jun', '07': 'Jul', '08': 'Ago', '09': 'Set', '10': 'Out', '11': 'Nov', '12': 'Dez' },
+ es: { '01': 'Ene', '02': 'Feb', '03': 'Mar', '04': 'Abr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Ago', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dic' }
  };
- const monthName = monthNames[currentLang][month] || month;
+ const monthName = (monthNames[currentLang] || monthNames.he)[month] || month;
  document.getElementById('sourceBadge').textContent = `iGemel-Net - ${monthName} ${year}`;
  }
 

@@ -948,8 +948,8 @@
  const { count, minDate, maxDate } = previewStatementInfo(rows, headerIdx, detected);
  const fmt = d => d ? d.split('-').reverse().join('/') : '';
  const preview = count > 0
- ? `נמצאו ${count} תנועות מ-${fmt(minDate)} עד ${fmt(maxDate)}`
- : 'לא נמצאו תנועות בקובץ';
+ ? I18n.t('bank.rt_foundTxRange').replace('{n}', count).replace('{from}', fmt(minDate)).replace('{to}', fmt(maxDate))
+ : I18n.t('bank.rt_noTxFound');
 
  const modal = document.createElement('div');
  modal.className = 'modal-overlay active';
@@ -1179,7 +1179,7 @@
  card.style.display = 'block';
  const toShow = _showAllTx ? _allTransactions : _allTransactions.slice(0, 15);
  showAllBtn.style.display = _allTransactions.length > 15 ? 'block' : 'none';
- showAllBtn.textContent = _showAllTx ? 'הצג פחות' : `הצג הכל (${_allTransactions.length})`;
+ showAllBtn.textContent = _showAllTx ? I18n.t('bank.rt_showLess') : I18n.t('bank.rt_showAllCount').replace('{n}', _allTransactions.length);
 
  tbody.innerHTML = toShow.map(tx => {
  const amountColor = tx.amount < 0 ? 'color: var(--color-danger)' : 'color: var(--color-success)';
@@ -1252,7 +1252,7 @@
 
  if (!match) {
  // No match — offer to create
- if (!confirm(`לא נמצא חשבון "${data.source}". ליצור חשבון חדש?`)) return;
+ if (!confirm(I18n.t('bank.rt_noAccountConfirm').replace('{src}', data.source))) return;
  Storage.addBankAccount({
  nameHe: data.source, nameEn: data.source,
  bank: BANK_CODE_MAP[data.source] || 'other',
@@ -1285,7 +1285,7 @@
  </div>
  <div class="modal-body">
  <p style="color:var(--color-text-secondary);margin-bottom:12px;">
- נמצאו ${data.transactions?.length||0} תנועות מ-${data.source}. לאיזה חשבון לייבא?
+ ${I18n.t('bank.rt_pickAccountPrompt').replace('{n}', data.transactions?.length||0).replace('{src}', data.source)}
  </p>
  <div class="form-group">
  <select id="bankPickerSelect" class="form-control">

@@ -520,7 +520,7 @@
  </div>
  <div class="level-card">
  <div class="level-row">
- <span class="level-name" id="levelName">מתחיל</span>
+ <span class="level-name" id="levelName" data-i18n="healthScore.rt_lvlBeginner">מתחיל</span>
  <span class="level-pts" id="levelPts"></span>
  </div>
  <div class="level-bar-wrap">
@@ -841,23 +841,23 @@
 
  const HISTORY_KEY = 'finance_health_score_history';
  const LEVELS = [
- { name: 'מתחיל', min: 0, max: 30, icon: '🌱' },
- { name: 'מתקדם', min: 30, max: 50, icon: '📗' },
- { name: 'בינוני', min: 50, max: 65, icon: '💼' },
- { name: 'טוב', min: 65, max: 80, icon: '⭐' },
- { name: 'מצוין', min: 80, max: 92, icon: '🏅' },
- { name: 'מאסטר', min: 92, max: 101, icon: '🏆' },
+ { nameKey: 'healthScore.rt_lvlBeginner', min: 0, max: 30, icon: '🌱' },
+ { nameKey: 'healthScore.rt_lvlAdvanced', min: 30, max: 50, icon: '📗' },
+ { nameKey: 'healthScore.rt_lvlIntermediate', min: 50, max: 65, icon: '💼' },
+ { nameKey: 'healthScore.rt_lvlGood', min: 65, max: 80, icon: '⭐' },
+ { nameKey: 'healthScore.rt_lvlExcellent', min: 80, max: 92, icon: '🏅' },
+ { nameKey: 'healthScore.rt_lvlMaster', min: 92, max: 101, icon: '🏆' },
  ];
 
  const ACHIEVEMENTS = [
- { id: 'first_score', icon: '🎯', name: 'צעד ראשון', desc: 'חישבת את הציון הפיננסי שלך', check: (h) => h.length >= 1 },
- { id: 'score_50', icon: '📈', name: 'חצי הדרך', desc: 'הגעת לציון 50+', check: (h) => h.some(e => e.score >= 50) },
- { id: 'score_70', icon: '⭐', name: 'בריאות טובה', desc: 'הגעת לציון 70+', check: (h) => h.some(e => e.score >= 70) },
- { id: 'score_85', icon: '🏅', name: 'מצטיין', desc: 'הגעת לציון 85+', check: (h) => h.some(e => e.score >= 85) },
- { id: 'streak_3', icon: '🔥', name: '3 חודשים בלהבה', desc: '3 חודשים ברצף עם ציון 70+', check: (h, streak) => streak >= 3 },
- { id: 'streak_6', icon: '💎', name: 'יציבות פיננסית', desc: '6 חודשים ברצף עם ציון 70+', check: (h, streak) => streak >= 6 },
- { id: 'improving', icon: '📊', name: 'במגמת עלייה', desc: 'הציון עלה 3 חודשים ברצף', check: (h) => h.length >= 3 && h.slice(-3).every((e,i,a) => i === 0 || e.score >= a[i-1].score) },
- { id: 'consistent', icon: '🗓️', name: 'עקביות', desc: '6 כניסות לציון הבריאות', check: (h) => h.length >= 6 },
+ { id: 'first_score', icon: '🎯', nameKey: 'healthScore.rt_achFirstName', descKey: 'healthScore.rt_achFirstDesc', check: (h) => h.length >= 1 },
+ { id: 'score_50', icon: '📈', nameKey: 'healthScore.rt_achHalfName', descKey: 'healthScore.rt_achHalfDesc', check: (h) => h.some(e => e.score >= 50) },
+ { id: 'score_70', icon: '⭐', nameKey: 'healthScore.rt_achGoodName', descKey: 'healthScore.rt_achGoodDesc', check: (h) => h.some(e => e.score >= 70) },
+ { id: 'score_85', icon: '🏅', nameKey: 'healthScore.rt_achStarName', descKey: 'healthScore.rt_achStarDesc', check: (h) => h.some(e => e.score >= 85) },
+ { id: 'streak_3', icon: '🔥', nameKey: 'healthScore.rt_achStreak3Name', descKey: 'healthScore.rt_achStreak3Desc', check: (h, streak) => streak >= 3 },
+ { id: 'streak_6', icon: '💎', nameKey: 'healthScore.rt_achStreak6Name', descKey: 'healthScore.rt_achStreak6Desc', check: (h, streak) => streak >= 6 },
+ { id: 'improving', icon: '📊', nameKey: 'healthScore.rt_achImprovingName', descKey: 'healthScore.rt_achImprovingDesc', check: (h) => h.length >= 3 && h.slice(-3).every((e,i,a) => i === 0 || e.score >= a[i-1].score) },
+ { id: 'consistent', icon: '🗓️', nameKey: 'healthScore.rt_achConsistentName', descKey: 'healthScore.rt_achConsistentDesc', check: (h) => h.length >= 6 },
  ];
 
  function getScoreHistory() {
@@ -907,7 +907,7 @@
  if (prevHistory.length > 0) {
  const prevScore = prevHistory[prevHistory.length - 1].score;
  const prevLevel = getLevel(prevScore);
- if (level.name !== prevLevel.name && score > prevScore) {
+ if (level.nameKey !== prevLevel.nameKey && score > prevScore) {
  showLevelUpToast(level);
  }
  }
@@ -919,15 +919,15 @@
  document.getElementById('streakNum').textContent = streak;
 
  // Level
- document.getElementById('levelName').textContent = level.icon + ' ' + level.name;
+ document.getElementById('levelName').textContent = level.icon + ' ' + t(level.nameKey);
  const pct = ((score - level.min) / (level.max - level.min) * 100).toFixed(0);
- document.getElementById('levelPts').textContent = `${score}/100 נקודות`;
+ document.getElementById('levelPts').textContent = t('healthScore.rt_scorePoints').replace('{score}', score);
  requestAnimationFrame(() => {
  document.getElementById('levelBarFill').style.width = pct + '%';
  });
  document.getElementById('levelNext').textContent = nextLevel
- ? `עוד ${nextLevel.min - score} נקודות לרמת "${nextLevel.icon} ${nextLevel.name}"`
- : '🏆 הגעת לרמה המקסימלית!';
+ ? t('healthScore.rt_nextLevel').replace('{n}', nextLevel.min - score).replace('{lvl}', nextLevel.icon + ' ' + t(nextLevel.nameKey))
+ : t('healthScore.rt_maxLevel');
 
  // Achievements
  const achGrid = document.getElementById('achievementsGrid');
@@ -937,8 +937,8 @@
  return `<div class="achievement ${unlocked ? 'unlocked' : 'locked'}">
  <span class="ach-icon">${ach.icon}</span>
  <div>
- <div class="ach-name">${ach.name}</div>
- <div class="ach-desc">${ach.desc}</div>
+ <div class="ach-name">${t(ach.nameKey)}</div>
+ <div class="ach-desc">${t(ach.descKey)}</div>
  </div>
  </div>`;
  });
@@ -978,8 +978,8 @@
 
  function showLevelUpToast(level) {
  const toast = document.getElementById('levelupToast');
- document.getElementById('levelupTitle').textContent = `עלית לרמת "${level.name}"! ${level.icon}`;
- document.getElementById('levelupSub').textContent = 'כל הכבוד — אתה מתקדם פיננסית 🎉';
+ document.getElementById('levelupTitle').textContent = t('healthScore.rt_levelUp').replace('{name}', t(level.nameKey)) + ' ' + level.icon;
+ document.getElementById('levelupSub').textContent = t('healthScore.rt_levelUpSub');
  toast.classList.add('show');
  setTimeout(() => toast.classList.remove('show'), 3500);
  }

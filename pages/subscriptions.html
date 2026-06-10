@@ -568,27 +568,22 @@
  panel.classList.add('visible');
 
  if (candidates.length === 0) {
- list.innerHTML = '<div class="no-suggestions">לא נמצאו הוצאות חוזרות חדשות בנתוני האשראי שלך.</div>';
+ list.innerHTML = '<div class="no-suggestions">' + I18n.t('subscriptions.rt_noNewSuggestions') + '</div>';
  return;
  }
-
- const freqLabels = {
- weekly: 'שבועי', monthly: 'חודשי', bimonthly: 'דו-חודשי',
- quarterly: 'רבעוני', semi_annual: 'חצי שנתי', annual: 'שנתי'
- };
 
  list.innerHTML = candidates.map((c, i) => `
  <div class="suggestion-card" id="sug-${i}">
  <div class="sug-info">
  <div class="sug-name">${sanitize(c.name)}</div>
  <div class="sug-meta">
- ${freqLabels[c.frequency] || sanitize(c.frequency)} · הופיע ${c.occurrences} פעמים · אחרון: ${sanitize(c.lastDate)}
+ ${(I18n.t('subscriptions.frequencies.' + c.frequency) || sanitize(c.frequency))}${I18n.t('subscriptions.rt_sugMeta').replace('{n}', c.occurrences).replace('{date}', sanitize(c.lastDate))}
  </div>
  </div>
  <div class="sug-amount">${I18n.formatCurrency(c.amount)}</div>
  <div class="sug-actions">
- <button class="btn-add" onclick="addSuggestion(${i})">הוסף ✓</button>
- <button class="btn-ignore" onclick="ignoreSuggestion(${i}, '${sanitize(c.key).replace(/'/g, '&#39;')}')">התעלם</button>
+ <button class="btn-add" onclick="addSuggestion(${i})">${I18n.t('subscriptions.rt_addBtn')}</button>
+ <button class="btn-ignore" onclick="ignoreSuggestion(${i}, '${sanitize(c.key).replace(/'/g, '&#39;')}')">${I18n.t('subscriptions.rt_ignoreBtn')}</button>
  </div>
  </div>
  `).join('');
@@ -609,12 +604,12 @@
  category: c.category,
  active: true,
  renewalDate: '',
- notes: `זוהה אוטומטית (${c.occurrences} עסקאות)`
+ notes: I18n.t('subscriptions.rt_autoDetected').replace('{n}', c.occurrences)
  });
  document.getElementById('sug-' + index)?.remove();
  if (!document.querySelector('.suggestion-card')) {
  document.getElementById('suggestionsList').innerHTML =
- '<div class="no-suggestions">כל ההצעות טופלו ✓</div>';
+ '<div class="no-suggestions">' + I18n.t('subscriptions.rt_allHandled') + '</div>';
  }
  loadSubscriptions();
  Haptic?.success();
@@ -626,7 +621,7 @@
  document.getElementById('sug-' + index)?.remove();
  if (!document.querySelector('.suggestion-card')) {
  document.getElementById('suggestionsList').innerHTML =
- '<div class="no-suggestions">כל ההצעות טופלו ✓</div>';
+ '<div class="no-suggestions">' + I18n.t('subscriptions.rt_allHandled') + '</div>';
  }
  }
 

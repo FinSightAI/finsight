@@ -382,7 +382,7 @@ function initFood() {
  if (months > 0) {
  const avg = Math.round(total / months / 50) * 50;
  document.getElementById('foodSlider').value = Math.min(3000, Math.max(100, avg));
- document.getElementById('foodSubtitle').textContent = `ממוצע חודשי אמיתי: ${fmt(avg)} (מזון + מסעדות + בידור)`;
+ document.getElementById('foodSubtitle').textContent = I18n.t('sim.rt_foodSubtitle').replace('{avg}', fmt(avg));
  }
  } catch(e) {}
 
@@ -442,7 +442,7 @@ function initSubs() {
  if (s.billingCycle === 'quarterly') amt /= 3;
  return `<div class="sub-row">
  <input type="checkbox" id="sub${i}" data-amt="${amt.toFixed(2)}" onchange="updateSubs()">
- <label for="sub${i}">${_s(s.name || 'מנוי')}</label>
+ <label for="sub${i}">${_s(s.name || I18n.t('sim.rt_subDefault'))}</label>
  <span class="sub-amt">${fmt(amt)}/${I18n.t('sim.month')}</span>
  </div>`;
  }).join('');
@@ -476,7 +476,7 @@ function initPension() {
  return s + m;
  }, 0);
  if (monthlySalary > 0) {
- document.getElementById('pensionSubtitle').textContent = `משכורת חודשית: ${fmt(monthlySalary)}`;
+ document.getElementById('pensionSubtitle').textContent = I18n.t('sim.rt_salarySubtitle').replace('{salary}', fmt(monthlySalary));
  const suggested = Math.round(monthlySalary * 0.02 / 100) * 100;
  document.getElementById('pensionSlider').value = Math.min(5000, Math.max(100, suggested || 500));
  }
@@ -520,7 +520,7 @@ function initLoan() {
  document.getElementById('loanBal').value = Math.min(2000000, bal);
  document.getElementById('loanRate').value = Math.min(12, rate);
  document.getElementById('loanSubtitle').textContent =
- `ההלוואה הגדולה: ${biggest.name || ''} – ${fmt(bal)}`;
+ I18n.t('sim.rt_loanSubtitle').replace('{name}', biggest.name || '').replace('{bal}', fmt(bal));
  }
  }
  } catch(e) {}

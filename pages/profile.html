@@ -899,29 +899,17 @@
  }
 
  const tipMessages = {
- paymentDiscipline: {
- he: 'שמור על תשלומי הלוואות בזמן. פיגורים משפיעים מאוד על הדירוג',
- en: 'Keep loan payments on time. Late payments significantly affect your score'
- },
- creditUtilization: {
- he: 'נסה להוריד את ניצול האשראי מתחת ל-30% מההכנסה',
- en: 'Try to keep credit utilization below 30% of income'
- },
- debtToIncome: {
- he: 'שקול להקטין חובות או להגדיל הכנסה כדי לשפר יחס חוב-הכנסה',
- en: 'Consider reducing debts or increasing income to improve debt-to-income ratio'
- },
- financialStability: {
- he: 'בנה חיסכון חירום ופזר השקעות לשיפור היציבות הפיננסית',
- en: 'Build an emergency fund and diversify investments to improve stability'
- }
+ paymentDiscipline: t('rt_tipPayment', 'שמור על תשלומי הלוואות בזמן. פיגורים משפיעים מאוד על הדירוג'),
+ creditUtilization: t('rt_tipCreditUtil', 'נסה להוריד את ניצול האשראי מתחת ל-30% מההכנסה'),
+ debtToIncome: t('rt_tipDebt', 'שקול להקטין חובות או להגדיל הכנסה כדי לשפר יחס חוב-הכנסה'),
+ financialStability: t('rt_tipStability', 'בנה חיסכון חירום ופזר השקעות לשיפור היציבות הפיננסית')
  };
 
  container.innerHTML = `
  <h3>💡 ${t('improvementTips', 'טיפים לשיפור')}</h3>
  ${weakest.map(([key, val]) => {
  const priority = val < 50 ? 'red' : val < 70 ? 'yellow' : 'green';
- const msg = tipMessages[key]?.[lang] || tipMessages[key]?.he || '';
+ const msg = tipMessages[key] || '';
  return `
  <div class="improvement-tip">
  <span class="priority-dot priority-${priority}"></span>
@@ -939,7 +927,7 @@
 
  const score = parseInt(scoreInput?.value);
  if (!score || score < 1 || score > 100) {
- App.notify(I18n?.currentLanguage === 'en' ? 'Enter a score between 1-100' : 'הזן ציון בין 1-100', 'warning');
+ App.notify(I18n.t('profile.rt_scoreRange'), 'warning');
  return;
  }
 
@@ -1038,16 +1026,16 @@
  tips.sort((a, b) => a.priority - b.priority);
 
  const categoryLabels = {
- spending: { he: 'הוצאות', en: 'Spending' },
- savings: { he: 'חיסכון', en: 'Savings' },
- investment: { he: 'השקעות', en: 'Investment' },
- pension: { he: 'פנסיה', en: 'Pension' },
- family: { he: 'משפחה', en: 'Family' },
- general: { he: 'כללי', en: 'General' }
+ spending: 'profile.rt_catSpending',
+ savings: 'profile.rt_catSavings',
+ investment: 'profile.rt_catInvestment',
+ pension: 'profile.rt_catPension',
+ family: 'profile.rt_catFamily',
+ general: 'profile.rt_catGeneral'
  };
 
  container.innerHTML = tips.map(tip => {
- const badgeLabel = categoryLabels[tip.category]?.[lang] || tip.category;
+ const badgeLabel = categoryLabels[tip.category] ? I18n.t(categoryLabels[tip.category]) : tip.category;
  const title = tip.title[lang] || tip.title.he;
  const desc = tip.description[lang] || tip.description.he;
  return `

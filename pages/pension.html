@@ -369,17 +369,15 @@
  const lastUpdateEl = document.getElementById('lastUpdate');
  if (lastUpdate) {
  const [year, month] = lastUpdate.split('-');
- const monthNamesHe = { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' };
- const monthNamesEn = { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' };
- const monthHe = monthNamesHe[month] || month;
- const monthEn = monthNamesEn[month] || month;
- if (currentLang === 'en') {
- dateEl.textContent = `REAL DATA - ${monthEn} ${year}`;
- lastUpdateEl.textContent = `${monthEn} ${year}`;
- } else {
- dateEl.textContent = `נתונים אמיתיים - ${monthHe} ${year}`;
- lastUpdateEl.textContent = `${monthHe} ${year}`;
- }
+ const monthNames = {
+ he: { '01': 'ינואר', '02': 'פברואר', '03': 'מרץ', '04': 'אפריל', '05': 'מאי', '06': 'יוני', '07': 'יולי', '08': 'אוגוסט', '09': 'ספטמבר', '10': 'אוקטובר', '11': 'נובמבר', '12': 'דצמבר' },
+ en: { '01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December' },
+ pt: { '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril', '05': 'Maio', '06': 'Junho', '07': 'Julho', '08': 'Agosto', '09': 'Setembro', '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro' },
+ es: { '01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Mayo', '06': 'Junio', '07': 'Julio', '08': 'Agosto', '09': 'Septiembre', '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre' }
+ };
+ const monthName = (monthNames[currentLang] || monthNames.he)[month] || month;
+ dateEl.textContent = I18n.t('pension.rt_realDataDate').replace('{month}', monthName).replace('{year}', year);
+ lastUpdateEl.textContent = `${monthName} ${year}`;
  }
  }
 
@@ -459,11 +457,7 @@
  const container = document.getElementById('myPensionFunds');
 
  if (funds.length === 0) {
- if (currentLang === 'en') {
- container.innerHTML = `<p style="text-align: center; color: #8892b0; padding: 30px;">You have no pension funds. Click "Add" to add a pension fund.<br><a href="my-funds.html" style="color: #ff6b6b;">Or go to My Accounts page</a></p>`;
- } else {
- container.innerHTML = `<p style="text-align: center; color: #8892b0; padding: 30px;">אין לך קרנות פנסיה. לחץ על "הוסף" להוספת קרן פנסיה.<br><a href="my-funds.html" style="color: #ff6b6b;">או עבור לדף הקופות שלי</a></p>`;
- }
+ container.innerHTML = `<p style="text-align: center; color: #8892b0; padding: 30px;">${I18n.t('pension.rt_emptyText')}<br><a href="my-funds.html" style="color: #ff6b6b;">${I18n.t('pension.rt_emptyLink')}</a></p>`;
  return;
  }
 
@@ -480,14 +474,14 @@
  <table style="width: 100%; border-collapse: collapse;">
  <thead>
  <tr>
- <th style="padding: 12px; text-align: ${thAlign}; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? 'Fund' : 'קרן'}</th>
- <th style="padding: 12px; text-align: ${thAlign}; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? 'Current Value' : 'שווי נוכחי'}</th>
- <th style="padding: 12px; text-align: ${thAlign}; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? 'Actuarial Balance' : 'איזון אקטוארי'}</th>
- <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? 'Month' : 'חודש'}</th>
- <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? '1 Year' : 'שנה'}</th>
- <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? '3 Years' : '3 שנים'}</th>
- <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? '5 Years' : '5 שנים'}</th>
- <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${isEn ? 'Actions' : 'פעולות'}</th>
+ <th style="padding: 12px; text-align: ${thAlign}; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thFund')}</th>
+ <th style="padding: 12px; text-align: ${thAlign}; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thCurrentValue')}</th>
+ <th style="padding: 12px; text-align: ${thAlign}; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thActuarial')}</th>
+ <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thMonth')}</th>
+ <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thYear1')}</th>
+ <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thYear3')}</th>
+ <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thYear5')}</th>
+ <th style="padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ff6b6b;">${I18n.t('pension.rt_thActions')}</th>
  </tr>
  </thead>
  <tbody>
@@ -520,12 +514,12 @@
  </tbody>
  <tfoot>
  <tr style="background: rgba(255, 107, 107, 0.1);">
- <td style="padding: 12px; font-weight: bold;">${isEn ? 'Total' : 'סה"כ'}</td>
+ <td style="padding: 12px; font-weight: bold;">${I18n.t('pension.rt_total')}</td>
  <td style="padding: 12px; font-weight: bold; color: #feca57;">₪${funds.reduce((s, f) => s + (f.value || 0), 0).toLocaleString()}</td>
  <td colspan="6"></td>
  </tr>
  <tr style="background: rgba(255,255,255,0.02);">
- <td style="padding: 12px; color: #8892b0;">${isEn ? 'Market Avg' : 'ממוצע שוק'}</td>
+ <td style="padding: 12px; color: #8892b0;">${I18n.t('pension.rt_marketAvg')}</td>
  <td style="padding: 12px; color: #8892b0;">-</td>
  <td style="padding: 12px; color: #8892b0;">-</td>
  <td style="padding: 12px; text-align: center; color: #8892b0;">${avgMonth.toFixed(2)}%</td>
@@ -575,12 +569,12 @@
 
  function openAddPensionModal() {
  const isEn = currentLang === 'en';
- const name = prompt(isEn ? 'Pension fund name:' : 'שם קרן הפנסיה:');
+ const name = prompt(I18n.t('pension.rt_promptName'));
  if (!name) return;
- const value = parseFloat(prompt(isEn ? 'Current value (₪):' : 'שווי נוכחי (₪):'));
- if (isNaN(value)) { alert(isEn ? 'Please enter a valid number' : 'יש להזין מספר תקין'); return; }
- const actuarial = parseFloat(prompt(isEn ? 'Actuarial balance (₪) - optional:' : 'איזון אקטוארי (₪) - אופציונלי:')) || null;
- const company = prompt(isEn ? 'Management company (optional):' : 'חברה מנהלת (אופציונלי):') || '';
+ const value = parseFloat(prompt(I18n.t('pension.rt_promptValue')));
+ if (isNaN(value)) { alert(I18n.t('pension.rt_invalidNumber')); return; }
+ const actuarial = parseFloat(prompt(I18n.t('pension.rt_promptActuarial'))) || null;
+ const company = prompt(I18n.t('pension.rt_promptCompany')) || '';
 
  const funds = getMyFunds();
  const now = new Date().toISOString();
@@ -607,7 +601,7 @@
  }
 
  function updatePensionValue(id, currentValue) {
- const newValue = parseFloat(prompt(currentLang === 'en' ? 'New value (₪):' : 'שווי חדש (₪):', currentValue));
+ const newValue = parseFloat(prompt(I18n.t('pension.rt_promptNewValue'), currentValue));
  if (isNaN(newValue)) return;
 
  const funds = getMyFunds();
