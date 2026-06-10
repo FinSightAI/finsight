@@ -598,7 +598,7 @@ function buildChart(results, currentTrackId, yearsLeft, pv, monthlyDep, feeDepos
 }
 
 // Init
-if (typeof I18n !== 'undefined') I18n.apply();
+if (typeof I18n !== 'undefined') I18n.init();
 loadSettings();
 syncFromStorage(false);
 recalc();

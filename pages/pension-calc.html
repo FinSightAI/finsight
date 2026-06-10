@@ -418,7 +418,7 @@
 
  if (typeof I18n !== 'undefined') {
  I18n.currentLanguage = currentLang;
- I18n.apply();
+ I18n.init();
  }
  document.body.classList.toggle('ltr', currentLang !== 'he');
  document.documentElement.lang = currentLang;
