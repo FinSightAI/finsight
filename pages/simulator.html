@@ -180,7 +180,7 @@
  <!-- Hero stat -->
  <div class="sim-hero" id="heroSection">
  <h1 data-i18n="sim.heroTitle">💡 כל ₪1,000 שאתה חוסך היום</h1>
- <p data-i18n="sim.heroDesc">שווה <strong id="heroAmount">₪5,427</strong> בעוד 20 שנה (תשואה שנתית 8.5%)</p>
+ <p data-i18n="sim.heroDesc">כל החלטה פיננסית קטנה מצטברת לסכום גדול. הסימולטור יראה לך בדיוק כמה.</p>
  </div>
 
  <div class="scenario-grid">
@@ -329,7 +329,7 @@
 <script src="../js/idb.js"></script>
 <script src="../js/storage.js"></script>
  <script src="../js/wizeai-sync.js"></script>
- <script src="js/wize-cloud-backup.js"></script>
+ <script src="../js/wize-cloud-backup.js"></script>
 <script src="../js/i18n.js?v=20260610b"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
 <script>
@@ -697,8 +697,11 @@ function initNetWorth() {
 
 // ── Hero stat ────────────────────────────────────────────────
 function updateHero() {
- const fv = fvMonthly(1000, 8.5, 20);
- document.getElementById('heroAmount').textContent = fmtShort(fv);
+ // Hero copy is a translated description (sim.heroDesc) with no inline figure.
+ // Guard so a missing #heroAmount (removed / overwritten by i18n) never throws.
+ const el = document.getElementById('heroAmount');
+ if (!el) return;
+ el.textContent = fmtShort(fvMonthly(1000, 8.5, 20));
 }
 
 // ── Init ─────────────────────────────────────────────────────
