@@ -211,7 +211,7 @@
  <input type="hidden" id="goalId">
 
  <div class="form-group">
- <label data-i18n="goals.goalIcon">אייקון</label>
+ <label for="goalIcon" data-i18n="goals.goalIcon">אייקון</label>
  <select class="form-control" id="goalIcon">
  <option value="🏠" data-i18n="goals.goalIcons.home">🏠 בית</option>
  <option value="🚗" data-i18n="goals.goalIcons.car">🚗 רכב</option>
@@ -227,22 +227,22 @@
  </div>
 
  <div class="form-group">
- <label data-i18n="goals.goalName">שם היעד</label>
+ <label for="goalName" data-i18n="goals.goalName">שם היעד</label>
  <input type="text" class="form-control" id="goalName" required data-i18n-placeholder="goals.goalNamePlaceholder" placeholder="לדוגמה: מקדמה לדירה">
  </div>
 
  <div class="form-group">
- <label data-i18n="goals.targetAmount">סכום יעד</label>
+ <label for="goalTarget" data-i18n="goals.targetAmount">סכום יעד</label>
  <input type="number" class="form-control" id="goalTarget" required min="1" step="100">
  </div>
 
  <div class="form-group">
- <label data-i18n="goals.currentAmount">סכום נוכחי (אופציונלי)</label>
+ <label for="goalCurrent" data-i18n="goals.currentAmount">סכום נוכחי (אופציונלי)</label>
  <input type="number" class="form-control" id="goalCurrent" min="0" step="100" value="0">
  </div>
 
  <div class="form-group">
- <label data-i18n="goals.goalDeadline">תאריך יעד (אופציונלי)</label>
+ <label for="goalDeadline" data-i18n="goals.goalDeadline">תאריך יעד (אופציונלי)</label>
  <input type="date" class="form-control" id="goalDeadline">
  </div>
  </form>
@@ -265,7 +265,7 @@
  <form id="addAmountForm">
  <input type="hidden" id="addAmountGoalId">
  <div class="form-group">
- <label data-i18n="goals.amountToAdd">סכום להוספה</label>
+ <label for="amountToAdd" data-i18n="goals.amountToAdd">סכום להוספה</label>
  <input type="number" class="form-control" id="amountToAdd" required min="1" step="100">
  </div>
  </form>
