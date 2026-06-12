@@ -1,0 +1,20 @@
+# WizeMoney
+
+> Free, private personal-finance dashboard. Track income, expenses, bank accounts, credit cards, stocks, pension and tax in one place. Local-first (data stays in your browser) and available in English, Hebrew, Portuguese and Spanish.
+
+## What it does
+
+- Income, expenses, bank accounts, credit cards, subscriptions and loans tracking
+- Stock portfolio with analytics, alerts and fund-fee comparison
+- Savings simulator, loan amortization, pension and tax optimizers
+- AI money assistant and family/multi-profile dashboards
+- Cloud backup so data follows you across devices when signed in
+
+## Part of WizeLife
+
+- [WizeLife suite](https://wizelife.ai/): five free AI tools for money, tax, real-estate, health and travel.
+
+## Notes
+
+- Privacy: local-first; data is only synced to your own account when signed in.
+- Free tier on every feature; Pro ($4.99/mo) and YOLO ($9.99/mo) raise AI limits and unlock advanced tools.
