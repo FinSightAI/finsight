@@ -268,7 +268,7 @@ const Auth = {
                     <div id="forgotPasswordLink" style="text-align: center; margin-top: 5px;">
                         <a href="#" onclick="Auth.resetPassword(); return false;" style="color: var(--color-training); font-size: 0.85rem; text-decoration: none;">${I18n.t('auth.forgotPassword')}</a>
                         <div style="margin-top:10px; font-size:0.8rem; color:var(--color-text-secondary);">
-                          New here? <a href="https://wizelife.ai/auth.html" target="_blank" style="color: var(--color-training); text-decoration: none; font-weight: 600;">Create an account at WizeLife</a>
+                          New here? <a href="https://wizelife.ai/auth.html" target="_blank" rel="noopener" style="color: var(--color-training); text-decoration: none; font-weight: 600;">Create an account at WizeLife</a>
                         </div>
                     </div>
 

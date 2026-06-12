@@ -276,7 +276,7 @@
  </div>`;
  const _wizeAILang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
  const _wizeAITagline = ({ he: 'יועץ חוצה-אפליקציות', en: 'Cross-app advisor', pt: 'Consultor multi-app', es: 'Asesor entre apps' })[_wizeAILang] || 'Cross-app advisor';
- const wizeAILink = `<a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-inline-start:auto;">${_wizeAITagline}</span></a>`;
+ const wizeAILink = `<a href="https://wizelife.ai/wize-ai.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:10px;text-decoration:none;color:#818cf8;font-size:13px;font-weight:600;">🤖 WizeAI <span style="font-size:10px;opacity:.6;margin-inline-start:auto;">${_wizeAITagline}</span></a>`;
  // Plan pill at bottom removed — top WizeBar already shows plan/nick.
  const _shareLang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
   const _shareLabel = ({ he: 'שתף', en: 'Share', pt: 'Compartilhar', es: 'Compartir' })[_shareLang] || 'Share';
@@ -668,7 +668,7 @@
  </div>
  <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
  <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px">WizeAI</div>
- <a href="https://wizelife.ai/wize-ai.html" target="_blank" style="display:flex;align-items:center;gap:6px;text-decoration:none;color:#a5b4fc;font-size:12px;font-weight:600;padding:8px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:8px">🤖 Cross-app advisor</a>
+ <a href="https://wizelife.ai/wize-ai.html" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;text-decoration:none;color:#a5b4fc;font-size:12px;font-weight:600;padding:8px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:8px">🤖 Cross-app advisor</a>
  </div>
  `;
  document.body.appendChild(panel);
