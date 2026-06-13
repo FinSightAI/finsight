@@ -189,6 +189,22 @@ const DataUpdates = {
                     from { transform: translateX(-50%) translateY(100px); opacity: 0; }
                     to { transform: translateX(-50%) translateY(0); opacity: 1; }
                 }
+                /* Desktop: tuck into a corner instead of dead-center, where the
+                   centered pill floated on top of the asset-card grid (looked like
+                   it was covering the user's data). Bottom-end corner is the
+                   conventional toast slot; flip to the start side for RTL. */
+                @media (min-width: 769px) {
+                    .data-update-banner {
+                        left: auto; right: 24px; bottom: 24px;
+                        transform: none; max-width: 380px;
+                        animation: slideUpCorner 0.3s ease;
+                    }
+                    [dir="rtl"] .data-update-banner { right: auto; left: 24px; }
+                }
+                @keyframes slideUpCorner {
+                    from { transform: translateY(100px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
                 .update-content {
                     display: flex;
                     align-items: center;
@@ -257,8 +273,13 @@ const DataUpdates = {
     dismissUpdate() {
         const banner = document.getElementById('dataUpdateBanner');
         if (banner) {
-            banner.style.animation = 'slideUp 0.3s ease reverse';
-            setTimeout(() => banner.remove(), 300);
+            // Fade out (layout-agnostic) — the old reverse-slideUp used a
+            // translateX(-50%) keyframe that jumped the corner-anchored desktop
+            // toast sideways on exit.
+            banner.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            banner.style.opacity = '0';
+            banner.style.transform += ' translateY(12px)';
+            setTimeout(() => banner.remove(), 260);
         }
 
         // Save current versions so we don't show again
