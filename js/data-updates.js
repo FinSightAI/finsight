@@ -260,6 +260,15 @@ const DataUpdates = {
                         flex-shrink: 0;
                     }
                 }
+                /* When the free-tier pricing pill (sets html[data-wl-pill]) shares
+                   the bottom band on mobile/tablet, lift the toast above it so it
+                   doesn't cover the pill's "See plans →" CTA. Desktop (>=769px)
+                   already corners the toast, so no overlap there. */
+                @media (max-width: 768px) {
+                    html[data-wl-pill] .data-update-banner {
+                        bottom: calc(76px + 56px + 12px + env(safe-area-inset-bottom)) !important;
+                    }
+                }
             `;
             document.head.appendChild(style);
         }
