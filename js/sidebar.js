@@ -726,7 +726,10 @@
  const KEY = 'wl_rp_collapsed';
  const s = document.createElement('style');
  s.id = 'wl-rp-padding-style';
- s.textContent = `@media (min-width: 1280px) { body { ${padProp}: 240px !important; box-sizing: border-box; } #wl-bar { ${padProp}: 256px !important; } }`;
+ // Reserve content space from 1024px — the SAME width the panel is injected at
+ // (see injectRightPanel's `innerWidth < 1024` guard). Was 1280px, which left a
+ // 1024–1279px band where the fixed 240px panel overlapped the asset cards.
+ s.textContent = `@media (min-width: 1024px) { body { ${padProp}: 240px !important; box-sizing: border-box; } #wl-bar { ${padProp}: 256px !important; } }`;
  document.head.appendChild(s);
 
  const setState = (collapsed) => {
