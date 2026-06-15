@@ -52,9 +52,17 @@
     } catch (e) { return 'noss'; }
   }
 
+  // Resolve a Firestore instance. Firestore is lazy-loaded on WizeMoney pages via
+  // window._wlLazy.firestore() (keeps ~600KB off the critical path), so we must
+  // await it before writing — otherwise firebase.firestore is undefined and every
+  // event is silently dropped.
   function db() {
-    try { return (window.firebase && firebase.firestore) ? firebase.firestore() : null; }
-    catch (e) { return null; }
+    try {
+      if (window._wlLazy && typeof window._wlLazy.firestore === 'function') {
+        return Promise.resolve(window._wlLazy.firestore()).catch(function () { return null; });
+      }
+      return Promise.resolve((window.firebase && firebase.firestore) ? firebase.firestore() : null);
+    } catch (e) { return Promise.resolve(null); }
   }
 
   function currentUid() {
@@ -93,27 +101,28 @@
       return this;
     },
 
-    /** Log any funnel event. Fire-and-forget; never throws, never blocks UI. */
+    /** Log any funnel event. Fire-and-forget; never throws, never blocks UI.
+     *  Awaits the lazy-loaded Firestore before writing. */
     track: function (event, meta) {
-      var d = db();
-      if (!d || !event) return Promise.resolve();
-      try {
-        var doc = {
-          app: APP,
-          event: String(event).slice(0, 40),
-          uid: currentUid(),
-          anonId: anonId(),
-          sessionId: sessionId(),
-          ts: firebase.firestore.FieldValue.serverTimestamp(),
-          day: today(),
-          lang: (function () { try { return localStorage.getItem('wl_lang') || 'he'; } catch (e) { return 'he'; } })(),
-          path: (location.pathname || '').slice(0, 120),
-          meta: sanitizeMeta(meta)
-        };
-        return d.collection('events').add(doc).catch(function () { /* never surface */ });
-      } catch (e) {
-        return Promise.resolve();
-      }
+      if (!event) return Promise.resolve();
+      return Promise.resolve(db()).then(function (d) {
+        if (!d) return;
+        try {
+          var doc = {
+            app: APP,
+            event: String(event).slice(0, 40),
+            uid: currentUid(),
+            anonId: anonId(),
+            sessionId: sessionId(),
+            ts: firebase.firestore.FieldValue.serverTimestamp(),
+            day: today(),
+            lang: (function () { try { return localStorage.getItem('wl_lang') || 'he'; } catch (e) { return 'he'; } })(),
+            path: (location.pathname || '').slice(0, 120),
+            meta: sanitizeMeta(meta)
+          };
+          return d.collection('events').add(doc).catch(function () { /* never surface */ });
+        } catch (e) { /* never surface */ }
+      }).catch(function () { /* never surface */ });
     },
 
     /** Convenience: account created. */
@@ -122,8 +131,17 @@
     login: function (meta) { return this.track('login', meta); },
     /** Convenience: a tool/feature was opened. */
     toolOpen: function (meta) { return this.track('tool_open', meta); },
-    /** Convenience: the "aha" — user completed a meaningful, value-delivering action. */
-    activation: function (meta) { return this.track('activation', meta); }
+    /** Convenience: the "aha" — user completed a meaningful, value-delivering action.
+     *  Fires AT MOST ONCE per browser (guarded by the wl_act_<app> flag) so we
+     *  don't double-count activation across page loads. */
+    activation: function (meta) {
+      try {
+        var flag = 'wl_act_' + APP;
+        if (localStorage.getItem(flag)) return Promise.resolve();
+        localStorage.setItem(flag, '1');
+      } catch (e) { /* storage blocked — fall through and fire */ }
+      return this.track('activation', meta);
+    }
   };
 
   window.WizeTrack = WizeTrack;

@@ -68,6 +68,68 @@ const Paywall = (() => {
                 ],
             },
         },
+        pt: {
+            free: {
+                name: "Free",
+                price: "Grátis",
+                color: "#6b7280",
+                perks: ["3 perguntas de IA/dia", "Até 50 transações", "Painel básico", "Metas de poupança"],
+            },
+            pro: {
+                name: "Pro",
+                price: "$4.99",
+                period: "/ mês",
+                color: "#6366f1",
+                highlight: true,
+                perks: ["20 perguntas de IA/dia", "AI Story diário", "Exportar CSV e PDF", "Monitor de ações + alertas", "Relatórios e Otimizador de Impostos", "Previdência, Simulador e Comparação de Fundos", "Transações e metas ilimitadas"],
+            },
+            yolo: {
+                name: "YOLO ⚡",
+                price: "$9.99",
+                period: "/ mês",
+                color: "#f59e0b",
+                perks: [
+                    "40 perguntas de IA/dia — 2× mais que o Pro",
+                    "Consultor de investimentos com dados de mercado ao vivo — preço, RSI, MACD, P/L, notícias",
+                    "IA que conhece toda a sua vida financeira — 5 apps conectados",
+                    "Comparação global de impostos — 20 países, dados PwC/OECD 2025",
+                    "Acesso antecipado a cada novo recurso antes de todos",
+                    "Suporte prioritário — resposta em até 24 horas",
+                    "Tudo do Pro ✓",
+                ],
+            },
+        },
+        es: {
+            free: {
+                name: "Free",
+                price: "Gratis",
+                color: "#6b7280",
+                perks: ["3 preguntas de IA/día", "Hasta 50 transacciones", "Panel básico", "Metas de ahorro"],
+            },
+            pro: {
+                name: "Pro",
+                price: "$4.99",
+                period: "/ mes",
+                color: "#6366f1",
+                highlight: true,
+                perks: ["20 preguntas de IA/día", "AI Story diario", "Exportar CSV y PDF", "Seguimiento de acciones + alertas", "Informes y Optimizador de Impuestos", "Pensión, Simulador y Comparación de Fondos", "Transacciones y metas ilimitadas"],
+            },
+            yolo: {
+                name: "YOLO ⚡",
+                price: "$9.99",
+                period: "/ mes",
+                color: "#f59e0b",
+                perks: [
+                    "40 preguntas de IA/día — 2× más que Pro",
+                    "Asesor de inversiones con datos de mercado en vivo — precio, RSI, MACD, P/E, noticias",
+                    "IA que conoce toda tu vida financiera — 5 apps conectadas",
+                    "Comparación global de impuestos — 20 países, datos PwC/OECD 2025",
+                    "Acceso anticipado a cada nueva función antes que nadie",
+                    "Soporte prioritario — respuesta en menos de 24 horas",
+                    "Todo lo de Pro ✓",
+                ],
+            },
+        },
     };
 
     const AI_FEATURES = new Set(["aiChat", "aiStory", "taxOptimizer", "pensionOptimizer"]);
@@ -97,6 +159,8 @@ const Paywall = (() => {
     const COPY = {
         he: { title: "בחר תוכנית", sub: _smartSub, btn_pro: "שדרג ל-Pro", btn_yolo: "שדרג ל-YOLO", current: "התוכנית שלך", dismiss: "אולי אחר כך", code_placeholder: "יש לך קוד גישה?", code_btn: "אשר" },
         en: { title: "Choose a Plan", sub: _smartSub, btn_pro: "Upgrade to Pro", btn_yolo: "Upgrade to YOLO", current: "Your plan", dismiss: "Maybe later", code_placeholder: "Have an access code?", code_btn: "Apply" },
+        pt: { title: "Escolha um plano", sub: _smartSub, btn_pro: "Atualizar para Pro", btn_yolo: "Atualizar para YOLO", current: "Seu plano", dismiss: "Talvez mais tarde", code_placeholder: "Tem um código de acesso?", code_btn: "Aplicar" },
+        es: { title: "Elige un plan", sub: _smartSub, btn_pro: "Actualizar a Pro", btn_yolo: "Actualizar a YOLO", current: "Tu plan", dismiss: "Quizás más tarde", code_placeholder: "¿Tienes un código de acceso?", code_btn: "Aplicar" },
     };
 
     function _lang() { try { return (I18n && I18n.currentLanguage) || localStorage.getItem("wl_lang") || "he"; } catch { return "he"; } }

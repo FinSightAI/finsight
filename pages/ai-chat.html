@@ -163,6 +163,7 @@
  <script src="../js/app.js?v=2026060903"></script>
 <script src="../js/profiles.js?v=2026060902"></script>
 <script src="../js/storage.js"></script>
+<script src="../js/wize-disclaimer.js?v=2026061501"></script>
 <script src="../js/wize-pii.js"></script>
  <script src="../js/wizeai-sync.js"></script>
  <script src="../js/wize-cloud-backup.js"></script>
@@ -345,7 +346,7 @@
 
  const prompts = {
  he: {
- intro: 'אתה יועץ פיננסי אישי של המשתמש, עם גישה מלאה לנתוניו הפיננסיים האמיתיים.',
+ intro: 'אתה עוזר פיננסי שמספק מידע חינוכי כללי בלבד — לא ייעוץ פיננסי אישי — עם גישה לנתוניו הפיננסיים האמיתיים של המשתמש.',
  date: `תאריך היום: ${today}`,
  rules: [
  'ענה תמיד בעברית',
@@ -359,7 +360,7 @@
  crossNote: 'יש לך גישה לנתונים מכמה כלי WizeLife — השתמש בהם לתמונה פיננסית מלאה',
  },
  pt: {
- intro: 'Você é o consultor financeiro pessoal do usuário, com acesso completo aos seus dados financeiros reais.',
+ intro: 'Você é um assistente financeiro que fornece apenas informações educativas gerais — não aconselhamento financeiro personalizado — com acesso aos dados financeiros reais do usuário.',
  date: `Data de hoje: ${today}`,
  rules: [
  'Responda sempre em português brasileiro',
@@ -373,7 +374,7 @@
  crossNote: 'Você tem acesso a dados de várias ferramentas WizeLife — use-os para uma visão financeira completa',
  },
  es: {
- intro: 'Eres el asesor financiero personal del usuario, con acceso completo a sus datos financieros reales.',
+ intro: 'Eres un asistente financiero que ofrece solo información educativa general — no asesoramiento financiero personalizado — con acceso a los datos financieros reales del usuario.',
  date: `Fecha de hoy: ${today}`,
  rules: [
  'Responde siempre en español',
@@ -387,7 +388,7 @@
  crossNote: 'Tienes acceso a datos de varias herramientas WizeLife — úsalos para una visión financiera completa',
  },
  en: {
- intro: 'You are the user\'s personal financial advisor, with full access to their real financial data.',
+ intro: 'You are a financial assistant providing general educational information only — not personalized financial advice — with access to the user\'s real financial data.',
  date: `Today: ${today}`,
  rules: [
  'Always respond in English',
@@ -432,6 +433,10 @@ ${rules}${groundTruthFooter}`;
  const bubble = document.createElement('div');
  bubble.className = `chat-bubble chat-${role}`;
  bubble.innerHTML = markdownToHtml(text);
+ // Append the AI-output disclaimer footer to EVERY assistant message.
+ if (role === 'assistant' && window.WizeDisclaimer && typeof WizeDisclaimer.aiOutputFooter === 'function') {
+ try { bubble.insertAdjacentHTML('beforeend', WizeDisclaimer.aiOutputFooter({ app: 'money' })); } catch (e) {}
+ }
  row.appendChild(bubble);
  container.appendChild(row);
  container.scrollTop = container.scrollHeight;
@@ -641,6 +646,17 @@ ${rules}${groundTruthFooter}`;
  }
  buildSuggestions();
  loadHistory();
+
+ // ── AI safety disclaimer (wize-disclaimer.js) ──
+ if (window.WizeDisclaimer) {
+ // (a) One-time gate — user must accept before the chat is usable.
+ try { WizeDisclaimer.gate({ app: 'money' }).catch(() => {}); } catch (e) {}
+ // (b) Persistent slim strip at the top of the chat panel.
+ try {
+ const cm = document.getElementById('chatMessages');
+ if (cm) WizeDisclaimer.chatStrip({ app: 'money', container: cm });
+ } catch (e) {}
+ }
  });
 </script>
 <script src="../js/wl-common-i18n.js?v=2026061501" defer></script>

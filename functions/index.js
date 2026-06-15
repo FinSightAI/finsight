@@ -2197,16 +2197,56 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
     const uid = context.auth.uid;
     const fs = admin.firestore();
 
+    // Resolve the account email BEFORE we delete the auth record — `leads` rows
+    // are keyed by email, not uid, so we must capture it while it still exists.
+    let email = null;
+    try {
+        const userRec = await admin.auth().getUser(uid);
+        email = userRec && userRec.email ? userRec.email : null;
+    } catch (e) { console.warn("deleteUserAccount: getUser failed", e.message); }
+
+    // Helper: delete every doc matching a query, in batches (Firestore caps a
+    // batch at 500 writes). Best-effort — never throws.
+    async function purgeQuery(query, label) {
+        try {
+            let removed = 0;
+            // Page through results 400-at-a-time to stay under the batch cap.
+            for (;;) {
+                const snap = await query.limit(400).get();
+                if (snap.empty) break;
+                const batch = fs.batch();
+                snap.docs.forEach((d) => batch.delete(d.ref));
+                await batch.commit();
+                removed += snap.size;
+                if (snap.size < 400) break;
+            }
+            return removed;
+        } catch (e) {
+            console.warn("deleteUserAccount: purge " + label + " failed", e.message);
+            return 0;
+        }
+    }
+
     // recursiveDelete clears the doc AND every nested subcollection.
     await fs.recursiveDelete(fs.collection("users").doc(uid));
     await fs.recursiveDelete(fs.collection("userBackups").doc(uid));
+
+    // Purge the user's rows in top-level collections (GDPR — these are NOT
+    // nested under users/{uid}, so recursiveDelete misses them).
+    const eventsDeleted = await purgeQuery(
+        fs.collection("events").where("uid", "==", uid), "events");
+    let leadsDeleted = 0;
+    if (email) {
+        leadsDeleted = await purgeQuery(
+            fs.collection("leads").where("email", "==", email), "leads");
+    }
 
     // Best-effort Auth deletion (Firestore data is already gone regardless).
     let authDeleted = false;
     try { await admin.auth().deleteUser(uid); authDeleted = true; }
     catch (e) { console.warn("deleteUserAccount: auth delete failed", e.message); }
 
-    return { deleted: true, authDeleted };
+    return { deleted: true, authDeleted, eventsDeleted, leadsDeleted };
 });
 
 // ─── CSP violation report collector ──────────────────────────────────────────

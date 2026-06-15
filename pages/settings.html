@@ -701,7 +701,7 @@
  <span data-i18n="settings.deleteAllData">מחק את כל הנתונים</span>
  <span data-i18n="settings.deleteAllDataDesc">מחיקה מהמכשיר ומהענן - פעולה בלתי הפיכה!</span>
  </div>
- <button class="btn btn-danger" onclick="Auth.deleteAllData()">
+ <button class="btn btn-danger" onclick="deleteAccountFull()">
  <span>🗑️</span>
  <span data-i18n="settings.deleteAllBtn">מחק הכל</span>
  </button>
@@ -1189,6 +1189,45 @@
  var bankLink = document.getElementById('bankBookmarkletLink');
  if (bankLink) bankLink.href = 'javascript:' + bankBm;
  })();
+
+ // ── Full account deletion (server-side, GDPR) ──
+ // Calls the deleteUserAccount callable, which purges users/{uid},
+ // userBackups/{uid}, the user's top-level events + leads rows, and the
+ // Firebase Auth record — not just localStorage.
+ async function deleteAccountFull() {
+   var lang = (typeof I18n !== 'undefined' && I18n.current) ? I18n.current : (localStorage.getItem('wl_lang') || 'he');
+   var MSG = {
+     he: 'פעולה זו תמחק לצמיתות את החשבון ואת כל הנתונים שלך מהשרת ומהמכשיר — ללא אפשרות שחזור. להמשיך?',
+     en: 'This will permanently delete your account and all your data from our servers and this device — with no way to recover. Continue?',
+     pt: 'Isto excluirá permanentemente sua conta e todos os seus dados dos nossos servidores e deste dispositivo — sem possibilidade de recuperação. Continuar?',
+     es: 'Esto eliminará permanentemente tu cuenta y todos tus datos de nuestros servidores y de este dispositivo — sin posibilidad de recuperación. ¿Continuar?'
+   };
+   var DONE = {
+     he: 'החשבון נמחק. מתנתק...', en: 'Account deleted. Signing out...',
+     pt: 'Conta excluída. Saindo...', es: 'Cuenta eliminada. Cerrando sesión...'
+   };
+   var FAIL = {
+     he: 'מחיקת החשבון נכשלה. נסה שוב או צור קשר עם התמיכה.',
+     en: 'Account deletion failed. Please try again or contact support.',
+     pt: 'Falha ao excluir a conta. Tente novamente ou contate o suporte.',
+     es: 'Error al eliminar la cuenta. Inténtalo de nuevo o contacta con soporte.'
+   };
+   var t = function (m) { return m[lang] || m.en; };
+   if (!confirm(t(MSG))) return;
+   try {
+     if (typeof firebase === 'undefined' || !firebase.functions) throw new Error('functions unavailable');
+     var fn = firebase.functions().httpsCallable('deleteUserAccount');
+     await fn({});
+     try { localStorage.clear(); } catch (e) {}
+     try { await firebase.auth().signOut(); } catch (e) {}
+     alert(t(DONE));
+     location.href = '../index.html';
+   } catch (e) {
+     console.error('deleteAccountFull failed', e);
+     alert(t(FAIL));
+   }
+ }
+ window.deleteAccountFull = deleteAccountFull;
  </script>
 <script src="../js/wl-common-i18n.js?v=2026061501" defer></script>
 <script src="../js/wl-text-i18n.js?v=2026061501" defer></script>

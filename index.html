@@ -25,7 +25,7 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
  <link rel="icon" href="./img/logo.svg?v=2026-05-15" type="image/svg+xml">
  <link rel="apple-touch-icon" href="./img/logo.svg?v=2026-05-15">
- <meta name="description" content="Track income, expenses, stocks, pension and tax in one private dashboard. Local-only storage. 4 languages. Free, no signup.">
+ <meta name="description" content="Track income, expenses, stocks, pension and tax in one private dashboard. Core data is stored locally by default; AI features and optional cloud backup send data to our servers — see Privacy Policy. 4 languages. Free, no signup.">
  <meta name="theme-color" content="#10b981">
   <link rel="canonical" href="https://money.wizelife.ai/" />
  <meta property="og:type" content="website" />
@@ -498,9 +498,10 @@
  <script src="js/idb.js" defer></script>
  <script src="js/sidebar.js?v=2026061301" defer></script>
  <script src="js/profiles.js?v=2026060902" defer></script>
+ <script src="js/wize-track.js?v=2026061502"></script>
  <script src="js/storage.js"></script>
- <script src="js/wize-track.js" defer></script>
- <script>try { window.WizeTrack && WizeTrack.init('wizemoney'); } catch (e) {}</script>
+ <!-- Init on window 'load' so WizeTrack is defined and Firestore can lazy-load. -->
+ <script>window.addEventListener('load', function () { try { window.WizeTrack && WizeTrack.init('wizemoney'); } catch (e) {} });</script>
  <script src="js/pin-lock.js" defer></script>
  <script src="js/i18n.js?v=2026061501" defer></script>
  <script defer src="js/charts.js"></script>
@@ -519,7 +520,7 @@
  <script src="js/wizeai-sync.js" defer></script>
  <script src="js/wize-cloud-backup.js" defer></script>
  <script src="js/plan.js" defer></script>
- <script src="js/paywall.js?v=2026061501" defer></script>
+ <script src="js/paywall.js?v=2026061502" defer></script>
  <script src="js/summary-sender.js" defer></script>
   <script src="js/wize-share.js" defer></script>
   <script src="js/wize-pricing-pill.js?v=2026061301" defer></script>
@@ -1081,27 +1082,27 @@
  const t = k => ob?.[k] || k;
  const slides = {
  he: [
- { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'ברוכים הבאים ל-WizeMoney', sub:'הדרך החכמה לנהל את כל הכסף שלך במקום אחד', features:[{e:'📊',t:'תמונה מלאה של כל הנכסים וההתחייבויות'},{e:'🔔',t:'התראות חכמות על חריגות ויעדים'},{e:'🔒',t:'הנתונים שלך נשמרים אצלך בלבד'}] },
+ { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'ברוכים הבאים ל-WizeMoney', sub:'הדרך החכמה לנהל את כל הכסף שלך במקום אחד', features:[{e:'📊',t:'תמונה מלאה של כל הנכסים וההתחייבויות'},{e:'🔔',t:'התראות חכמות על חריגות ויעדים'},{e:'🔒',t:'הנתונים שלך נשמרים מקומית כברירת מחדל ופרטיים לך'}] },
  { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'חשבון בנק ועסקאות', sub:'הוסף את יתרות החשבון ועקוב אחרי כל הכנסה והוצאה', features:[{e:'⚡',t:'ייבוא ישיר מאתר הבנק בסימניית bookmarklet'},{e:'📅',t:'היסטוריית עסקאות עם חיפוש וסינון'},{e:'📉',t:'גרף הוצאות חודשי אוטומטי'}] },
  { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'כרטיסי אשראי בשליטה', sub:'ייבא עסקאות מכאל, מקס וישראכרט בלחיצת כפתור', features:[{e:'🔖',t:'סימניית ייבוא חכם — הגדרה פעם אחת'},{e:'📂',t:'קטגוריות אוטומטיות לכל עסקה'},{e:'🔄',t:'זיהוי מנויים חוזרים אוטומטי'}] },
  { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'מניות, קרנות ופנסיה', sub:'כל ההשקעות שלך — מניות, קרנות נאמנות, גמל ופנסיה', features:[{e:'💹',t:'מחירים בזמן אמת מנתוני TASE ויאהו'},{e:'📊',t:'תשואה לעומת עלות ממוצעת'},{e:'🏆',t:'השוואת קרנות נאמנות וגמל'}] },
- { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'פרטיות מלאה ואבטחה', sub:'כל המידע נשמר במכשיר שלך בלבד — לא עובר לשום שרת', features:[{e:'🔑',t:'נעילת PIN ו-Face ID'},{e:'☁️',t:'גיבוי אופציונלי לענן דרך ההגדרות'},{e:'📤',t:'ייצוא לאקסל בכל עת'}] },
+ { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'פרטיות מלאה ואבטחה', sub:'הנתונים הבסיסיים נשמרים במכשיר שלך כברירת מחדל; פיצ׳רים של AI וגיבוי ענן אופציונלי שולחים נתונים לשרתים שלנו — ראה מדיניות פרטיות', features:[{e:'🔑',t:'נעילת PIN ו-Face ID'},{e:'☁️',t:'גיבוי אופציונלי לענן דרך ההגדרות'},{e:'📤',t:'ייצוא לאקסל בכל עת'}] },
  { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'מוכן להתחיל?', sub:'בחר איפה להתחיל — תמיד אפשר לחזור ולהוסיף עוד', actions:[{e:'🏦',label:'חשבון בנק',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'כרטיס אשראי',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'מניות',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'קרנות',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'גמל ופנסיה',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'לדאשבורד',href:null,color:'#64748b'}] }
  ],
  en: [
- { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Welcome to WizeMoney', sub:'The smart way to manage all your money in one place', features:[{e:'📊',t:'Complete picture of all your assets & liabilities'},{e:'🔔',t:'Smart alerts for budget overruns and goals'},{e:'🔒',t:'Your data stays on your device only'}] },
+ { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Welcome to WizeMoney', sub:'The smart way to manage all your money in one place', features:[{e:'📊',t:'Complete picture of all your assets & liabilities'},{e:'🔔',t:'Smart alerts for budget overruns and goals'},{e:'🔒',t:'Your data is stored locally by default and stays private to you'}] },
  { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Bank Accounts & Transactions', sub:'Add your account balances and track every income and expense', features:[{e:'⚡',t:'Direct import from your bank via bookmarklet'},{e:'📅',t:'Transaction history with search and filters'},{e:'📉',t:'Automatic monthly expense chart'}] },
  { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Credit Cards Under Control', sub:'Import transactions from Cal, Max and Isracard in one click', features:[{e:'🔖',t:'Smart import bookmarklet — set up once'},{e:'📂',t:'Automatic categories for every transaction'},{e:'🔄',t:'Automatic recurring subscription detection'}] },
  { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Stocks, Funds & Pension', sub:'All your investments — stocks, mutual funds, gemel & pension', features:[{e:'💹',t:'Real-time prices from TASE & Yahoo'},{e:'📊',t:'Return vs average cost'},{e:'🏆',t:'Compare mutual funds and gemel'}] },
- { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Full Privacy & Security', sub:'All data stays on your device only — nothing sent to any server', features:[{e:'🔑',t:'PIN lock & Face ID'},{e:'☁️',t:'Optional cloud backup via Settings'},{e:'📤',t:'Export to Excel anytime'}] },
+ { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Full Privacy & Security', sub:'Your core data is stored locally by default; AI features and optional cloud backup send data to our servers — see Privacy Policy', features:[{e:'🔑',t:'PIN lock & Face ID'},{e:'☁️',t:'Optional cloud backup via Settings'},{e:'📤',t:'Export to Excel anytime'}] },
  { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Ready to Start?', sub:'Choose where to begin — you can always add more later', actions:[{e:'🏦',label:'Bank Account',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Credit Card',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Stocks',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Funds',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Pension & Gemel',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Dashboard',href:null,color:'#64748b'}] }
  ],
  pt: [
- { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Bem-vindo ao WizeMoney', sub:'A forma inteligente de gerenciar todo o seu dinheiro em um lugar', features:[{e:'📊',t:'Visão completa de todos os ativos e passivos'},{e:'🔔',t:'Alertas inteligentes para metas e orçamentos'},{e:'🔒',t:'Seus dados ficam apenas no seu dispositivo'}] },
+ { icon:'✨', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.35) 0%, transparent 70%)', title:'Bem-vindo ao WizeMoney', sub:'A forma inteligente de gerenciar todo o seu dinheiro em um lugar', features:[{e:'📊',t:'Visão completa de todos os ativos e passivos'},{e:'🔔',t:'Alertas inteligentes para metas e orçamentos'},{e:'🔒',t:'Seus dados ficam no dispositivo por padrão e são privados a você'}] },
  { icon:'🏦', bg:'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.35) 0%, transparent 70%)', title:'Contas Bancárias e Transações', sub:'Adicione saldos e acompanhe cada receita e despesa', features:[{e:'⚡',t:'Importação direta do banco via bookmarklet'},{e:'📅',t:'Histórico de transações com busca e filtros'},{e:'📉',t:'Gráfico de despesas mensais automático'}] },
  { icon:'💳', bg:'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.35) 0%, transparent 70%)', title:'Cartões de Crédito Sob Controle', sub:'Importe transações com um clique', features:[{e:'🔖',t:'Bookmarklet de importação — configure uma vez'},{e:'📂',t:'Categorias automáticas para cada transação'},{e:'🔄',t:'Detecção automática de assinaturas recorrentes'}] },
  { icon:'📈', bg:'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.35) 0%, transparent 70%)', title:'Ações, Fundos e Previdência', sub:'Todos os seus investimentos em um só lugar', features:[{e:'💹',t:'Preços em tempo real'},{e:'📊',t:'Retorno vs custo médio'},{e:'🏆',t:'Comparar fundos de investimento'}] },
- { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Privacidade e Segurança Total', sub:'Todos os dados ficam apenas no seu dispositivo', features:[{e:'🔑',t:'Bloqueio por PIN e Face ID'},{e:'☁️',t:'Backup opcional na nuvem'},{e:'📤',t:'Exportar para Excel a qualquer momento'}] },
+ { icon:'🔐', bg:'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.3) 0%, transparent 70%)', title:'Privacidade e Segurança Total', sub:'Seus dados principais ficam no seu dispositivo por padrão; recursos de IA e backup opcional na nuvem enviam dados aos nossos servidores — veja a Política de Privacidade', features:[{e:'🔑',t:'Bloqueio por PIN e Face ID'},{e:'☁️',t:'Backup opcional na nuvem'},{e:'📤',t:'Exportar para Excel a qualquer momento'}] },
  { icon:'🚀', bg:'radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.3) 0%, transparent 70%)', title:'Pronto para Começar?', sub:'Escolha por onde começar — sempre dá para adicionar mais', actions:[{e:'🏦',label:'Conta Bancária',href:'pages/bank.html',color:'#3b82f6'},{e:'💳',label:'Cartão de Crédito',href:'pages/credit.html',color:'#8b5cf6'},{e:'📈',label:'Ações',href:'pages/stocks.html',color:'#f59e0b'},{e:'💎',label:'Fundos',href:'pages/my-funds.html',color:'#10b981'},{e:'🏛️',label:'Previdência',href:'pages/gemel.html',color:'#ec4899'},{e:'🏠',label:'Painel',href:null,color:'#64748b'}] }
  ]
  };
