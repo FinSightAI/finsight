@@ -99,7 +99,7 @@ const Paywall = (() => {
         en: { title: "Choose a Plan", sub: _smartSub, btn_pro: "Upgrade to Pro", btn_yolo: "Upgrade to YOLO", current: "Your plan", dismiss: "Maybe later", code_placeholder: "Have an access code?", code_btn: "Apply" },
     };
 
-    function _lang() { try { return (I18n && I18n.current) || "he"; } catch { return "he"; } }
+    function _lang() { try { return (I18n && I18n.currentLanguage) || localStorage.getItem("wl_lang") || "he"; } catch { return "he"; } }
 
     function _paypalUrl(planId) {
         try {
