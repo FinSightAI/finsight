@@ -8542,11 +8542,17 @@ const I18n = {
      */
     t(path) {
         const keys = path.split('.');
-        let result = this.translations[this.currentLanguage];
-        for (const key of keys) {
-            result = result?.[key];
-        }
-        return result || path;
+        const lookup = (lang) => {
+            let r = this.translations[lang];
+            for (const key of keys) r = r?.[key];
+            return r;
+        };
+        // Current language → English → Hebrew → the key itself. Without the en/he
+        // fallback a key missing in the active language (e.g. the whole auth.* block
+        // in pt/es) rendered the raw dot-path ('auth.email') in the UI — making the
+        // login modal unusable. Falling back to a real language keeps it functional
+        // while the missing translations are filled in.
+        return lookup(this.currentLanguage) || lookup('en') || lookup('he') || path;
     },
 
     /**

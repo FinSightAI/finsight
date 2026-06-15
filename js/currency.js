@@ -9,11 +9,16 @@ const CurrencyRates = {
     // Free API for exchange rates (no API key required)
     API_URL: 'https://api.exchangerate-api.com/v4/latest/ILS',
 
-    // Fallback rates if API fails
+    // Fallback rates (ILS per 1 unit) used only when the API is unreachable.
+    // Verified 2026-06-14 (USD/ILS ≈ 2.92). Were stale (~3.65 USD) and BRL was
+    // missing entirely → Brazilian (Nubank/Itaú) balances counted 1 BRL = 1 ILS.
     fallbackRates: {
-        USD: 3.65,
-        EUR: 3.95,
-        GBP: 4.60,
+        USD: 2.92,
+        EUR: 3.16,
+        GBP: 3.68,
+        BRL: 0.53,
+        CAD: 2.13,
+        AUD: 1.90,
         ILS: 1
     },
 
@@ -49,15 +54,14 @@ const CurrencyRates = {
 
         const data = await response.json();
 
-        // API returns rates relative to ILS, we need to invert
-        // e.g., if 1 ILS = 0.27 USD, then 1 USD = 3.70 ILS
-        const rates = {
-            ILS: 1,
-            USD: 1 / data.rates.USD,
-            EUR: 1 / data.rates.EUR,
-            GBP: 1 / data.rates.GBP
-        };
-
+        // API returns rates relative to ILS (rate[X] = X per 1 ILS); we store the
+        // inverse (ILS per 1 X). Invert EVERY currency the API returns — the old code
+        // kept only USD/EUR/GBP, so BRL (and any other held currency) fell through to
+        // 1:1 and silently corrupted multi-currency totals.
+        const rates = { ILS: 1 };
+        for (const [cur, v] of Object.entries(data.rates || {})) {
+            if (typeof v === 'number' && v > 0) rates[cur] = 1 / v;
+        }
         return rates;
     },
 

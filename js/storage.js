@@ -760,11 +760,27 @@ const Storage = {
         if (data.summarySchedule) this.saveSummarySchedule(data.summarySchedule);
     },
 
+    // Normalize a value in its stored currency to ILS before it's summed into a
+    // total / net worth. Without this, multi-currency holdings (the app supports
+    // BRL banks like Nubank/Itaú) were added 1:1 to ILS — a big silent error on a
+    // real-money figure. Uses the synchronously-cached rates (ILS per unit); an
+    // unknown currency falls back to raw (no worse than before).
+    _toILS(value, currency) {
+        if (!value) return 0;
+        if (!currency || currency === 'ILS') return value;
+        try {
+            if (typeof CurrencyRates === 'undefined') return value;
+            const rates = (CurrencyRates.getCachedRates() || {}).rates || CurrencyRates.fallbackRates || {};
+            const rate = rates[currency];   // ILS per 1 `currency`
+            return rate ? value * rate : value;
+        } catch (e) { return value; }
+    },
+
     // Summary calculations
     getTotalBankBalance(excludeSecurities = false) {
         return this.getBankAccounts().reduce((sum, acc) => {
             if (excludeSecurities && acc.type === 'securities') return sum;
-            return sum + (acc.balance || 0);
+            return sum + this._toILS(acc.balance || 0, acc.currency);
         }, 0);
     },
 
@@ -789,15 +805,15 @@ const Storage = {
     },
 
     getTotalAssetsValue() {
-        return this.getAssets().reduce((sum, a) => sum + (a.value || 0), 0);
+        return this.getAssets().reduce((sum, a) => sum + this._toILS(a.value || 0, a.currency), 0);
     },
 
     getTotalFundsValue() {
-        return this.getMyFunds().reduce((sum, f) => sum + (f.value || f.currentValue || 0), 0);
+        return this.getMyFunds().reduce((sum, f) => sum + this._toILS(f.value || f.currentValue || 0, f.currency), 0);
     },
 
     getTotalLoansBalance() {
-        return this.getLoans().reduce((sum, l) => sum + (l.remainingBalance || l.amount || 0), 0);
+        return this.getLoans().reduce((sum, l) => sum + this._toILS(l.remainingBalance || l.amount || 0, l.currency), 0);
     },
 
     getSummarySchedule() {
