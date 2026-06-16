@@ -2281,6 +2281,44 @@ exports.cspReport = functions.https.onRequest(async (req, res) => {
     return res.status(204).send('');
 });
 
+// ─── First-party error tracking (privacy-preserving, no third party) ─────────
+// The wize-error-tracker.js client beacons window errors + unhandled promise
+// rejections here; we store them in `errorLogs` so production failures are
+// visible WITHOUT Sentry/GA. Same hardening as cspReport: open POST (browsers
+// beacon anonymously), capped, PII already stripped client-side, never throws.
+exports.errorReport = functions.https.onRequest(async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') return res.status(204).send('');
+    if (req.method !== 'POST') return res.status(405).send('');
+    try {
+        const body = req.body || {};
+        const errs = Array.isArray(body.errors) ? body.errors : [body];
+        const trunc = (s, n) => (typeof s === 'string' ? s.slice(0, n) : '');
+        const NOISE = /^(chrome|moz|safari|webkit)-extension:|^about:|^chrome:/i;
+        for (const e of errs.slice(0, 8)) { // cap per request — no write-spam
+            if (!e || typeof e !== 'object') continue;
+            const src = trunc(e.source || e.filename, 300);
+            const msg = trunc(e.message, 500);
+            if (!msg || NOISE.test(src)) continue; // need a message; drop extension noise
+            await db.collection('errorLogs').add({
+                app:     trunc(e.app || body.app, 24),
+                kind:    trunc(e.kind, 24),            // 'error' | 'unhandledrejection'
+                message: msg,
+                source:  src,
+                line:    Number(e.line) || null,
+                col:     Number(e.col) || null,
+                stack:   trunc(e.stack, 2000),
+                pageUrl: trunc(e.url, 300),
+                ua:      trunc(req.headers['user-agent'], 240),
+                at: admin.firestore.FieldValue.serverTimestamp(),
+            }).catch(() => {});
+        }
+    } catch (e) { /* never fail a report */ }
+    return res.status(204).send('');
+});
+
 // ─── FinSight Terminal — background price-push alerts ─────────────────────────
 // The FinSight PWA (finsight-terminal.vercel.app) registers a Web-Push
 // subscription + its price-alert rules here; a 5-minute cron checks live prices
