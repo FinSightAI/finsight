@@ -123,21 +123,38 @@ const CurrencyRates = {
     },
 
     /**
-     * Format currency with symbol
+     * Format currency with symbol — locale-aware via Intl.NumberFormat.
+     * Keyed off the active UI language so the number grouping/decimal style
+     * matches the user's locale (e.g. BRL renders 'R$ 1.234,56', ILS '₪ 1,234.56',
+     * USD '$1,234.56', EUR '1.234,56 €'). Falls back to a symbol prefix if the
+     * runtime can't format the requested currency.
      */
     formatCurrency(amount, currency = 'ILS') {
-        const symbols = {
-            ILS: '₪',
-            USD: '$',
-            EUR: '€',
-            GBP: '£'
+        const lang = (typeof I18n !== 'undefined' && I18n?.currentLanguage)
+            || (typeof localStorage !== 'undefined' && localStorage.getItem('wl_lang'))
+            || 'he';
+        const localeByLang = {
+            he: 'he-IL',
+            en: 'en-US',
+            pt: 'pt-BR',
+            es: 'es-ES'
         };
-
-        const symbol = symbols[currency] || currency;
-        return `${symbol}${amount.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        })}`;
+        const locale = localeByLang[lang] || 'he-IL';
+        try {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency,
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        } catch (e) {
+            const symbols = { ILS: '₪', USD: '$', EUR: '€', GBP: '£', BRL: 'R$' };
+            const symbol = symbols[currency] || currency;
+            return `${symbol}${amount.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
+        }
     },
 
     /**

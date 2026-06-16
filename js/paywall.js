@@ -137,23 +137,35 @@ const Paywall = (() => {
 
     function _smartSub(featureKey, name, lang) {
         if (featureKey === "quota") {
-            return lang === "he"
-                ? `השתמשת בכל שאלות ה-AI שלך להיום. <strong>Pro מעניק לך 20 שאלות ביום</strong> — פי 10 מהחינמי.`
-                : `You've used all your free AI questions today. <strong>Pro gives you 20/day</strong> — 10× more.`;
+            switch (lang) {
+                case "he": return `השתמשת בכל שאלות ה-AI שלך להיום. <strong>Pro מעניק לך 20 שאלות ביום</strong> — פי 10 מהחינמי.`;
+                case "pt": return `Você usou todas as suas perguntas de IA gratuitas hoje. <strong>O Pro oferece 20 por dia</strong> — 10× mais.`;
+                case "es": return `Has usado todas tus preguntas de IA gratuitas de hoy. <strong>Pro te da 20 por día</strong> — 10× más.`;
+                default:   return `You've used all your free AI questions today. <strong>Pro gives you 20/day</strong> — 10× more.`;
+            }
         }
         if (AI_FEATURES.has(featureKey)) {
-            return lang === "he"
-                ? `<strong>${name}</strong> זמין בתוכנית Pro — יחד עם 20 שאלות AI ביום, AI Story, ואופטימיזציית מס.`
-                : `<strong>${name}</strong> is on Pro — along with 20 AI questions/day, AI Story, and tax optimizer.`;
+            switch (lang) {
+                case "he": return `<strong>${name}</strong> זמין בתוכנית Pro — יחד עם 20 שאלות AI ביום, AI Story, ואופטימיזציית מס.`;
+                case "pt": return `<strong>${name}</strong> está no Pro — junto com 20 perguntas de IA por dia, AI Story e otimizador de impostos.`;
+                case "es": return `<strong>${name}</strong> está en Pro — junto con 20 preguntas de IA al día, AI Story y optimizador de impuestos.`;
+                default:   return `<strong>${name}</strong> is on Pro — along with 20 AI questions/day, AI Story, and tax optimizer.`;
+            }
         }
         if (DATA_FEATURES.has(featureKey)) {
-            return lang === "he"
-                ? `<strong>${name}</strong> ודוחות מפורטים זמינים בתוכנית Pro בלבד.`
-                : `<strong>${name}</strong> and detailed reports are available on Pro only.`;
+            switch (lang) {
+                case "he": return `<strong>${name}</strong> ודוחות מפורטים זמינים בתוכנית Pro בלבד.`;
+                case "pt": return `<strong>${name}</strong> e relatórios detalhados estão disponíveis apenas no Pro.`;
+                case "es": return `<strong>${name}</strong> y los informes detallados están disponibles solo en Pro.`;
+                default:   return `<strong>${name}</strong> and detailed reports are available on Pro only.`;
+            }
         }
-        return lang === "he"
-            ? `<strong>${name}</strong> זמין בתוכנית Pro ומעלה.`
-            : `<strong>${name}</strong> is available on Pro and above.`;
+        switch (lang) {
+            case "he": return `<strong>${name}</strong> זמין בתוכנית Pro ומעלה.`;
+            case "pt": return `<strong>${name}</strong> está disponível no Pro e acima.`;
+            case "es": return `<strong>${name}</strong> está disponible en Pro y superior.`;
+            default:   return `<strong>${name}</strong> is available on Pro and above.`;
+        }
     }
 
     const COPY = {
@@ -309,16 +321,23 @@ const Paywall = (() => {
         if (!input || !msg) return;
         const code = input.value.trim();
         if (!code) return;
+        const lang = _lang();
+        const M = {
+            checking: { he: "בודק קוד...",            pt: "Verificando código...",        es: "Verificando código...",        en: "Checking..." },
+            ok:       { he: "✓ קוד תקין! גישה הופעלה.", pt: "✓ Código válido! Acesso concedido.", es: "✓ ¡Código válido! Acceso concedido.", en: "✓ Code valid! Access granted." },
+            err:      { he: "קוד לא תקין. נסה שוב.",   pt: "Código inválido. Tente novamente.", es: "Código no válido. Inténtalo de nuevo.", en: "Invalid code. Try again." }
+        };
+        const t = (k) => M[k][lang] || M[k].en;
         msg.className = "pw-code-msg";
-        msg.textContent = _lang() === 'he' ? "בודק קוד..." : "Checking...";
+        msg.textContent = t('checking');
         const success = await Plan.redeemCode(code);
         if (success) {
             msg.className = "pw-code-msg ok";
-            msg.textContent = _lang() === 'he' ? "✓ קוד תקין! גישה הופעלה." : "✓ Code valid! Access granted.";
+            msg.textContent = t('ok');
             setTimeout(() => { hide(); location.reload(); }, 1200);
         } else {
             msg.className = "pw-code-msg err";
-            msg.textContent = _lang() === 'he' ? "קוד לא תקין. נסה שוב." : "Invalid code. Try again.";
+            msg.textContent = t('err');
             input.value = "";
         }
     }
