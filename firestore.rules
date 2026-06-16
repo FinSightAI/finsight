@@ -132,6 +132,16 @@ service cloud.firestore {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // First-party error logs (wize-error-tracker.js → errorReport function).
+    // Written ONLY by the Cloud Function (Admin SDK, bypasses rules); clients
+    // never write here directly. Reads are admin-only — viewed via /errors.html.
+    // ─────────────────────────────────────────────────────────────────────
+    match /errorLogs/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // Catch-all — everything else is denied.
     // ─────────────────────────────────────────────────────────────────────
     match /{document=**} {
