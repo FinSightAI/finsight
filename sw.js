@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finsight-v380';
+const CACHE_NAME = 'finsight-v381';
 
 // Listen for "user clicked Update" message — activate immediately
 self.addEventListener('message', e => {
@@ -14,6 +14,7 @@ const ASSETS_TO_CACHE = [
     '/js/storage.js',
     '/js/wize-track.js',
     '/js/wize-error-tracker.js',
+    '/js/wize-consent.js',
     '/js/pin-lock.js',
     '/js/i18n.js',
     '/js/charts.js',
