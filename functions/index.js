@@ -1629,6 +1629,16 @@ exports.paypalWebhook = functions
                     console.error("Failed to roll back processedWebhooks marker:", eventId, delErr);
                 }
             }
+            // Surface payment-processing failures to the alerting pipeline (errorAlertCron
+            // emails the owner). PII-safe: only the error message + event id.
+            try {
+                await db.collection("errorLogs").add({
+                    app: "wizemoney-billing", kind: "payment-failure",
+                    message: ("paypalWebhook failed: " + (err && err.message ? err.message : "unknown")).slice(0, 500),
+                    source: "paypalWebhook event " + String(eventId || "?"),
+                    at: admin.firestore.FieldValue.serverTimestamp(),
+                });
+            } catch (logErr) { /* never block the 500 */ }
             return res.status(500).send("Internal error");
         }
 
@@ -2332,6 +2342,74 @@ exports.errorReport = functions.https.onRequest(async (req, res) => {
     } catch (e) { /* never fail a report */ }
     return res.status(204).send('');
 });
+
+// ─── Error-spike + payment-failure alerting (first-party, hourly) ────────────
+// errorLogs (from wize-error-tracker.js + the 3 backends' server-side reporters)
+// was capture-only. This hourly cron emails the owner when errors spike or a
+// payment/webhook failure is recorded, so production problems surface within the
+// hour instead of via angry users. Also writes an `alerts` doc for errors.html.
+const ALERT_TO = "ofirshamir57@gmail.com";
+const ERROR_SPIKE_THRESHOLD = 15; // errors across all apps in the last hour
+exports.errorAlertCron = functions
+    .runWith({ secrets: [RESEND_API_KEY] })
+    .pubsub.schedule("0 * * * *")
+    .timeZone("UTC")
+    .onRun(async () => {
+        const since = admin.firestore.Timestamp.fromMillis(Date.now() - 60 * 60 * 1000);
+        const docs = [];
+        try {
+            const snap = await db.collection("errorLogs").where("at", ">=", since).get();
+            snap.forEach((d) => docs.push(d.data()));
+        } catch (e) { console.warn("errorAlertCron: query failed", e.message); return null; }
+
+        const total = docs.length;
+        const byApp = {}, byMsg = {};
+        let paymentFailures = 0;
+        for (const e of docs) {
+            const a = e.app || "?";
+            byApp[a] = (byApp[a] || 0) + 1;
+            const m = (e.message || "?").slice(0, 120);
+            byMsg[m] = (byMsg[m] || 0) + 1;
+            if (e.kind === "payment-failure" || /billing|paypal|payment/i.test(a)) paymentFailures++;
+        }
+        if (total < ERROR_SPIKE_THRESHOLD && paymentFailures === 0) return null; // all quiet
+
+        // Suppress duplicate emails within ~50min (cron is hourly, but be safe).
+        const stateRef = db.collection("alerts").doc("_state");
+        try {
+            const st = (await stateRef.get()).data() || {};
+            if (Date.now() - (st.lastSentMs || 0) < 50 * 60 * 1000) {
+                console.log("errorAlertCron: suppressed (recent alert)"); return null;
+            }
+        } catch (e) { /* ignore */ }
+
+        const esc = (s) => String(s).replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
+        const appLines = Object.keys(byApp).sort((a, b) => byApp[b] - byApp[a]).map((a) => `${esc(a)}: ${byApp[a]}`).join(", ");
+        const topMsgs = Object.keys(byMsg).sort((a, b) => byMsg[b] - byMsg[a]).slice(0, 8)
+            .map((m) => `<li><code>${byMsg[m]}×</code> ${esc(m)}</li>`).join("");
+        const subject = paymentFailures > 0
+            ? `🚨 WizeLife: ${paymentFailures} payment failure(s) + ${total} errors (last hour)`
+            : `⚠️ WizeLife: error spike — ${total} errors (last hour)`;
+        const html = `<h2>${esc(subject)}</h2>
+            <p><b>${total}</b> errors in the last hour${paymentFailures > 0 ? ` · <b style="color:#b91c1c">${paymentFailures} payment/webhook failure(s)</b>` : ""}.</p>
+            <p>By app: ${appLines}</p><p>Top messages:</p><ul>${topMsgs}</ul>
+            <p>Full log: <a href="https://wizelife.ai/errors.html">wizelife.ai/errors.html</a></p>`;
+
+        let resendKey = "";
+        try { resendKey = RESEND_API_KEY.value(); } catch (e) { /* not bound */ }
+        if (resendKey) {
+            try {
+                await new Resend(resendKey).emails.send({ from: "WizeLife <noreply@wizelife.ai>", to: ALERT_TO, subject, html });
+                console.log("errorAlertCron: alert emailed");
+            } catch (e) { console.error("errorAlertCron: email failed", e.message); }
+        } else { console.log("errorAlertCron: RESEND_API_KEY not bound — alert recorded only"); }
+
+        try {
+            await db.collection("alerts").add({ subject, total, paymentFailures, byApp, at: admin.firestore.FieldValue.serverTimestamp() });
+            await stateRef.set({ lastSentMs: Date.now() }, { merge: true });
+        } catch (e) { /* ignore */ }
+        return null;
+    });
 
 // ─── FinSight Terminal — background price-push alerts ─────────────────────────
 // The FinSight PWA (finsight-terminal.vercel.app) registers a Web-Push

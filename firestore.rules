@@ -141,6 +141,13 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Error-spike / payment-failure alerts (errorAlertCron). Admin-only read;
+    // written only by the Cloud Function (Admin SDK).
+    match /alerts/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     // ─────────────────────────────────────────────────────────────────────
     // Catch-all — everything else is denied.
     // ─────────────────────────────────────────────────────────────────────
