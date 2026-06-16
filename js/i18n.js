@@ -4405,7 +4405,9 @@ const I18n = {
                 profitLoss: 'Lucro/Prejuízo',
                 returnPct: 'Retorno',
                 importedFunds: 'fundos importados com sucesso',
-                importError: 'Erro na importação'
+                importError: 'Erro na importação',
+                monthlyUpdate: 'Atualização Mensal',
+                navLink: '📝 Atualização Mensal'
             },
             marketProducts: {
                 title: 'Produtos do Mercado',
@@ -4464,7 +4466,8 @@ const I18n = {
                 openIGemel: 'Abrir iGemel-Net',
                 fundsCount: '{count} fundos',
                 noDataToSave: 'Nenhum dado para salvar',
-                saveError: 'Erro ao salvar os dados'
+                saveError: 'Erro ao salvar os dados',
+                managementFee: 'Taxa de Adm.'
             },
             marketUpdate: {
                 title: 'Atualização de Dados de Mercado',
@@ -4508,7 +4511,8 @@ const I18n = {
                 unknown: 'Desconhecido',
                 noDataToSave: 'Nenhum dado para salvar',
                 savedFunds: 'fundos salvos',
-                saveError: 'Erro ao salvar os dados'
+                saveError: 'Erro ao salvar os dados',
+                navLink: '📊 Atualização de Dados de Mercado'
             },
             reports: {
                 title: 'Relatórios',
@@ -4548,7 +4552,24 @@ const I18n = {
                 change: 'Variação',
                 categoryAverage: 'Média da categoria',
                 deviation: 'Desvio',
-                average: 'Média'
+                average: 'Média',
+                benchmarkComparison: 'Comparação com Índice de Referência',
+                refresh: 'Atualizar',
+                loading: 'Carregando...',
+                loadingBenchmarks: 'Carregando dados de referência...',
+                clickToLoadBenchmarks: 'Clique em "Atualizar" para carregar os dados de referência',
+                yourPortfolio: 'Sua Carteira',
+                portfolioValue: 'Valor',
+                profitLoss: 'Lucro/Prejuízo',
+                noStocksInPortfolio: 'Nenhuma ação na carteira',
+                day: 'Dia',
+                month: 'Mês',
+                sixMonths: '6 Meses',
+                comparison: 'Comparação',
+                beatsIndex: 'Supera o índice',
+                belowIndex: 'Abaixo do índice',
+                benchmarkError: 'Erro ao carregar os dados. Tente novamente mais tarde.',
+                benchmarkNote: 'Classificação com base no desempenho em todos os períodos. Fonte'
             },
             // Navigation
             nav: {
@@ -4870,6 +4891,59 @@ const I18n = {
                     addBtn: '➕ Adicionar'
                 }
             },
+            auth: {
+                email: 'Entrar',
+                signOut: 'Sair',
+                local: '💾 Local',
+                synced: 'Sincronizado',
+                syncing: 'Sincronizando...',
+                emailLogin: 'Entrar com E-mail',
+                password: 'Senha',
+                passwordPlaceholder: 'Senha (mín. 6 caracteres)',
+                signIn: 'Entrar',
+                register: 'Cadastrar',
+                forgotPassword: 'Esqueceu a senha?',
+                resetSent: 'Link de redefinição de senha enviado para o seu e-mail',
+                enterEmailFirst: 'Por favor, insira primeiro o seu endereço de e-mail',
+                resetError: 'Erro ao enviar a redefinição de senha',
+                userNotFound: 'Nenhuma conta encontrada com este e-mail',
+                wrongPassword: 'E-mail ou senha incorretos',
+                invalidEmail: 'Endereço de e-mail inválido',
+                emailInUse: 'Este e-mail já está cadastrado, tente entrar',
+                weakPassword: 'A senha é muito fraca (mín. 6 caracteres)',
+                welcome: 'Bem-vindo',
+                registered: 'Cadastro realizado com sucesso! Bem-vindo',
+                signedOut: 'Sessão encerrada com sucesso',
+                loginCancelled: 'Login cancelado',
+                loginError: 'Erro de login',
+                registerError: 'Erro no cadastro',
+                signOutError: 'Erro ao sair',
+                cloudSaved: 'Salvo',
+                cloudSynced: 'Sincronizado',
+                localOnly: 'Apenas local',
+                cloudSyncError: 'Erro de sincronização na nuvem',
+                cloudSaveError: 'Erro ao salvar na nuvem',
+                decryptError: 'Erro ao descriptografar os dados da nuvem',
+                dataSynced: 'Dados sincronizados da nuvem',
+                loginFirst: 'Por favor, entre primeiro',
+                syncSuccess: 'Dados sincronizados com sucesso',
+                autoLogout: 'Sessão encerrada automaticamente por inatividade',
+                deleteConfirm1: 'Tem certeza? Todos os dados serão excluídos permanentemente do dispositivo e da nuvem.',
+                deleteConfirm2: 'Esta ação é irreversível. Continuar?',
+                allDataDeleted: 'Todos os dados foram excluídos com sucesso',
+                deleteError: 'Erro ao excluir os dados',
+                confirmPassword: 'Confirmar Senha',
+                confirmPasswordPlaceholder: 'Digite a senha novamente',
+                passwordMismatch: 'As senhas não coincidem',
+                passwordMinLength: 'Mínimo de 6 caracteres',
+                passwordTooShort: 'Senha muito curta (mínimo de 6 caracteres)',
+                passwordStrong: 'Senha forte',
+                passwordOk: 'Senha válida',
+                passwordMinLength8: 'Mínimo de 8 caracteres, letra e número',
+                passwordTooShort8: 'A senha deve ter pelo menos 8 caracteres',
+                passwordRequirements: 'A senha deve conter pelo menos uma letra e um número',
+                passwordPlaceholder8: 'Senha (mín. 8 caracteres, letra e número)'
+            },
             // Bank
             bank: {
                 importImage: 'Importar de Imagem',
@@ -5062,6 +5136,15 @@ const I18n = {
                 rt_emptyDesc: 'Adicione um fundo de formação, previdência ou poupança para acompanhar o crescimento',
                 rt_emptyBtn: '+ Adicionar Fundo',
                 rt_perMonth: '/mês',
+                noFundsToShow: 'Nenhum fundo para mostrar',
+                percentage: 'Percentual',
+                clearinghouseProduct: 'Produto',
+                clearinghouseCompany: 'Empresa',
+                clearinghouseBalance: 'Saldo',
+                clearinghouseStatus: 'Status',
+                clearinghouseFee: 'Taxa de Administração',
+                clearinghouseYtd: 'Rentabilidade no Ano',
+                clearinghouseDeposit: 'Depósito Mensal',
             },
             gemel: {
                 rt_realDataDate: 'Dados reais - {month} {year}',
@@ -5364,7 +5447,13 @@ const I18n = {
                 xl_trend: 'Tendência',
                 xl_valueILS: 'Valor atual ₪',
                 xl_profitILS: 'Lucro ₪',
-                xl_changePct: 'Variação %'
+                xl_changePct: 'Variação %',
+                addStockTooltip: 'Adicionar ação',
+                importBroker: 'Importar da Corretora (XLS)',
+                importCSV: 'Importar CSV',
+                removeStock: 'Remover ação selecionada',
+                sellQuantity: 'Quantidade a Vender',
+                toggleMenu: 'Abrir/Fechar Menu'
             },
             // Funds
             funds: {
@@ -5650,6 +5739,7 @@ const I18n = {
             },
             // Months
             months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
             pinLock: {
                 appLock: 'Bloqueio do App',
                 enablePin: 'Ativar PIN',
@@ -6481,7 +6571,9 @@ const I18n = {
                 profitLoss: 'Ganancia/Pérdida',
                 returnPct: 'Rendimiento',
                 importedFunds: 'fondos importados con éxito',
-                importError: 'Error de importación'
+                importError: 'Error de importación',
+                monthlyUpdate: 'Actualización Mensual',
+                navLink: '📝 Actualización Mensual'
             },
             marketProducts: {
                 title: 'Productos del Mercado',
@@ -6540,7 +6632,8 @@ const I18n = {
                 openIGemel: 'Abrir iGemel-Net',
                 fundsCount: '{count} fondos',
                 noDataToSave: 'No hay datos para guardar',
-                saveError: 'Error al guardar los datos'
+                saveError: 'Error al guardar los datos',
+                managementFee: 'Comisión de Gestión'
             },
             marketUpdate: {
                 title: 'Actualización de Datos de Mercado',
@@ -6584,7 +6677,8 @@ const I18n = {
                 unknown: 'Desconocido',
                 noDataToSave: 'No hay datos para guardar',
                 savedFunds: 'fondos guardados',
-                saveError: 'Error al guardar los datos'
+                saveError: 'Error al guardar los datos',
+                navLink: '📊 Actualización de Datos de Mercado'
             },
             reports: {
                 title: 'Informes',
@@ -6624,7 +6718,24 @@ const I18n = {
                 change: 'Cambio',
                 categoryAverage: 'Promedio de la categoría',
                 deviation: 'Desviación',
-                average: 'Promedio'
+                average: 'Promedio',
+                benchmarkComparison: 'Comparación con Índice de Referencia',
+                refresh: 'Actualizar',
+                loading: 'Cargando...',
+                loadingBenchmarks: 'Cargando datos de referencia...',
+                clickToLoadBenchmarks: 'Haga clic en "Actualizar" para cargar los datos de referencia',
+                yourPortfolio: 'Su Cartera',
+                portfolioValue: 'Valor',
+                profitLoss: 'Ganancia/Pérdida',
+                noStocksInPortfolio: 'No hay acciones en la cartera',
+                day: 'Día',
+                month: 'Mes',
+                sixMonths: '6 Meses',
+                comparison: 'Comparación',
+                beatsIndex: 'Supera el índice',
+                belowIndex: 'Por debajo del índice',
+                benchmarkError: 'Error al cargar los datos. Inténtelo de nuevo más tarde.',
+                benchmarkNote: 'Clasificación basada en el rendimiento en todos los períodos. Fuente'
             },
             // Navigation
             nav: {
@@ -6945,6 +7056,59 @@ const I18n = {
                     addBtn: '➕ Agregar'
                 }
             },
+            auth: {
+                email: 'Iniciar Sesión',
+                signOut: 'Cerrar Sesión',
+                local: '💾 Local',
+                synced: 'Sincronizado',
+                syncing: 'Sincronizando...',
+                emailLogin: 'Iniciar sesión con Correo',
+                password: 'Contraseña',
+                passwordPlaceholder: 'Contraseña (mín. 6 caracteres)',
+                signIn: 'Iniciar Sesión',
+                register: 'Registrarse',
+                forgotPassword: '¿Olvidó su contraseña?',
+                resetSent: 'Enlace para restablecer la contraseña enviado a su correo',
+                enterEmailFirst: 'Por favor, ingrese primero su dirección de correo',
+                resetError: 'Error al enviar el restablecimiento de contraseña',
+                userNotFound: 'No se encontró ninguna cuenta con este correo',
+                wrongPassword: 'Correo o contraseña incorrectos',
+                invalidEmail: 'Dirección de correo no válida',
+                emailInUse: 'Este correo ya está registrado, intente iniciar sesión',
+                weakPassword: 'La contraseña es demasiado débil (mín. 6 caracteres)',
+                welcome: 'Bienvenido',
+                registered: '¡Registro exitoso! Bienvenido',
+                signedOut: 'Sesión cerrada con éxito',
+                loginCancelled: 'Inicio de sesión cancelado',
+                loginError: 'Error de inicio de sesión',
+                registerError: 'Error de registro',
+                signOutError: 'Error al cerrar sesión',
+                cloudSaved: 'Guardado',
+                cloudSynced: 'Sincronizado',
+                localOnly: 'Solo local',
+                cloudSyncError: 'Error de sincronización en la nube',
+                cloudSaveError: 'Error al guardar en la nube',
+                decryptError: 'Error al descifrar los datos de la nube',
+                dataSynced: 'Datos sincronizados desde la nube',
+                loginFirst: 'Por favor, inicie sesión primero',
+                syncSuccess: 'Datos sincronizados con éxito',
+                autoLogout: 'Sesión cerrada automáticamente por inactividad',
+                deleteConfirm1: '¿Está seguro? Todos los datos se eliminarán permanentemente del dispositivo y de la nube.',
+                deleteConfirm2: 'Esta acción es irreversible. ¿Continuar?',
+                allDataDeleted: 'Todos los datos se eliminaron con éxito',
+                deleteError: 'Error al eliminar los datos',
+                confirmPassword: 'Confirmar Contraseña',
+                confirmPasswordPlaceholder: 'Ingrese la contraseña de nuevo',
+                passwordMismatch: 'Las contraseñas no coinciden',
+                passwordMinLength: 'Mínimo de 6 caracteres',
+                passwordTooShort: 'Contraseña demasiado corta (mínimo de 6 caracteres)',
+                passwordStrong: 'Contraseña segura',
+                passwordOk: 'Contraseña válida',
+                passwordMinLength8: 'Mínimo de 8 caracteres, letra y número',
+                passwordTooShort8: 'La contraseña debe tener al menos 8 caracteres',
+                passwordRequirements: 'La contraseña debe contener al menos una letra y un número',
+                passwordPlaceholder8: 'Contraseña (mín. 8 caracteres, letra y número)'
+            },
             // Bank
             bank: {
                 importImage: 'Importar desde Imagen',
@@ -7137,6 +7301,15 @@ const I18n = {
                 rt_emptyDesc: 'Agregue un fondo de formación, pensión o fondo de previsión para seguir su crecimiento',
                 rt_emptyBtn: '+ Agregar Fondo',
                 rt_perMonth: '/mes',
+                noFundsToShow: 'No hay fondos para mostrar',
+                percentage: 'Porcentaje',
+                clearinghouseProduct: 'Producto',
+                clearinghouseCompany: 'Empresa',
+                clearinghouseBalance: 'Saldo',
+                clearinghouseStatus: 'Estado',
+                clearinghouseFee: 'Comisión de Gestión',
+                clearinghouseYtd: 'Rentabilidad en el Año',
+                clearinghouseDeposit: 'Depósito Mensual',
             },
             gemel: {
                 rt_realDataDate: 'Datos reales - {month} {year}',
@@ -7439,7 +7612,13 @@ const I18n = {
                 xl_trend: 'Tendencia',
                 xl_valueILS: 'Valor actual ₪',
                 xl_profitILS: 'Ganancia ₪',
-                xl_changePct: 'Cambio %'
+                xl_changePct: 'Cambio %',
+                addStockTooltip: 'Agregar acción',
+                importBroker: 'Importar del Bróker (XLS)',
+                importCSV: 'Importar CSV',
+                removeStock: 'Eliminar acción seleccionada',
+                sellQuantity: 'Cantidad a Vender',
+                toggleMenu: 'Abrir/Cerrar Menú'
             },
             // Funds
             funds: {
@@ -7725,6 +7904,7 @@ const I18n = {
             },
             // Months
             months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
             pinLock: {
                 appLock: 'Bloqueo de la App',
                 enablePin: 'Activar PIN',
