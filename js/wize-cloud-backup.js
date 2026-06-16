@@ -80,6 +80,26 @@
         } catch (e) { console.warn('CloudBackup setLocalKey failed:', e); }
     }
 
+    // PROFILE-AWARE BACKUP (2026-06-15): profiles.js monkey-patches localStorage
+    // to prefix keys when a non-default profile is active, so getLocalKey() above
+    // returns the ACTIVE profile's data. The cloud doc must be namespaced to match,
+    // otherwise a family profile's push overwrites the default profile's backup
+    // (and restore cross-contaminates). Default profile ('') keeps APP_ID unchanged
+    // → existing cloud backups stay valid (backward compatible). Computed per call
+    // so a mid-session profile switch routes to the right doc.
+    function activeDocId() {
+        try {
+            let id = '';
+            if (window.ProfileManager && typeof window.ProfileManager.getActiveId === 'function') {
+                id = window.ProfileManager.getActiveId() || '';
+            } else if (window.__rawLS && typeof window.__rawLS.get === 'function') {
+                id = window.__rawLS.get('finance_active_profile') || '';
+            }
+            id = String(id).replace(/[^A-Za-z0-9_-]/g, '');   // Firestore-safe doc id
+            return id ? (APP_ID + '__' + id) : APP_ID;
+        } catch { return APP_ID; }
+    }
+
     function snapshotLocal() {
         const data = {};
         for (const k of BACKUP_KEYS) {
@@ -136,7 +156,7 @@
         const data = snapshotLocalSafe();
         if (!Object.keys(data).length) return;
 
-        const ref = db.collection('userBackups').doc(_currentUid).collection('data').doc(APP_ID);
+        const ref = db.collection('userBackups').doc(_currentUid).collection('data').doc(activeDocId());
 
         // DATA-LOSS FIX (2026-06-15): previously this wrote the local snapshot with
         // { merge:false }, so any BACKUP_KEYS entry absent locally (PIN-locked,
@@ -201,7 +221,7 @@
 
         let cloudDoc;
         try {
-            cloudDoc = await db.collection('userBackups').doc(uid).collection('data').doc(APP_ID).get();
+            cloudDoc = await db.collection('userBackups').doc(uid).collection('data').doc(activeDocId()).get();
         } catch (e) {
             console.warn('WizeCloudBackup: initial fetch failed', e?.code || e?.message);
             return;
@@ -302,7 +322,7 @@
         const db = await ensureFirestore();
         if (db && _currentUid) {
             try {
-                const d = await db.collection('userBackups').doc(_currentUid).collection('data').doc(APP_ID).get();
+                const d = await db.collection('userBackups').doc(_currentUid).collection('data').doc(activeDocId()).get();
                 if (d.exists) {
                     const c = d.data();
                     out.cloud = {
