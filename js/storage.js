@@ -840,3 +840,22 @@ const Storage = {
 
 // Make available globally
 window.Storage = Storage;
+
+// Cross-tab cache invalidation. Storage._cache is a synchronous in-memory copy of
+// localStorage. The `storage` event fires in OTHER tabs (not the writer) whenever a
+// key changes, so without this a second open tab keeps serving a stale cached value
+// and can clobber finance data written by the first tab. For any 'finance_*' key,
+// drop the cached entry so the next get() re-parses fresh from localStorage.
+// (e.key is null when localStorage.clear() is called — wipe the whole cache then.)
+window.addEventListener('storage', (e) => {
+    try {
+        if (e.storageArea && e.storageArea !== localStorage) return;
+        if (e.key === null) {
+            Storage._cache = Object.create(null);
+            return;
+        }
+        if (typeof e.key === 'string' && e.key.startsWith('finance_')) {
+            delete Storage._cache[e.key];
+        }
+    } catch (err) { /* never throw in an event handler */ }
+});

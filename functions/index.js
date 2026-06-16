@@ -1615,6 +1615,20 @@ exports.paypalWebhook = functions
             }
         } catch (err) {
             console.error("Error processing event:", err);
+            // The replay-protection marker was written BEFORE the side effects above.
+            // If processing failed partway (e.g. the plan grant didn't persist), leaving
+            // the marker in place would make PayPal's retry hit the duplicate guard and
+            // silently drop the user's paid upgrade forever. Delete the marker we just
+            // created so the retry re-processes from scratch. (Best-effort: if the delete
+            // itself fails we still return 500 so PayPal retries.)
+            if (eventId) {
+                try {
+                    await db.collection("processedWebhooks").doc(String(eventId)).delete();
+                    console.log("Rolled back processedWebhooks marker for retry:", eventId);
+                } catch (delErr) {
+                    console.error("Failed to roll back processedWebhooks marker:", eventId, delErr);
+                }
+            }
             return res.status(500).send("Internal error");
         }
 
