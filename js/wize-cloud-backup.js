@@ -136,20 +136,43 @@
         const data = snapshotLocalSafe();
         if (!Object.keys(data).length) return;
 
-        const sizeBytes = jsonSize(data);
+        const ref = db.collection('userBackups').doc(_currentUid).collection('data').doc(APP_ID);
+
+        // DATA-LOSS FIX (2026-06-15): previously this wrote the local snapshot with
+        // { merge:false }, so any BACKUP_KEYS entry absent locally (PIN-locked,
+        // a page not yet opened on THIS device, or simply untouched) was DELETED
+        // from the cloud — a stale/partial push on one device clobbered newer data
+        // from another. Now we merge the local snapshot OVER the existing cloud
+        // map: a key present locally overwrites (a real edit wins), a key absent
+        // locally is PRESERVED from cloud. This can only ever retain more data,
+        // never lose it — the safe direction for a backup. Per-key edit-time
+        // versioning (true CRDT-style merge) is a larger follow-up.
+        let merged = data;
+        try {
+            const snap = await ref.get();
+            const cloudData = snap.exists && snap.data() ? snap.data().data : null;
+            if (cloudData && typeof cloudData === 'object') {
+                merged = Object.assign({}, cloudData, data);  // cloud-only keys kept; local wins per key
+            }
+        } catch (e) {
+            // Read failed — fall back to the local snapshot (no worse than before).
+            console.warn('WizeCloudBackup: pre-merge read failed, pushing local snapshot', e?.code || e?.message);
+        }
+
+        const sizeBytes = jsonSize(merged);
         if (sizeBytes > MAX_DOC_BYTES) {
-            console.warn(`WizeCloudBackup: snapshot ${(sizeBytes/1024).toFixed(0)}KB exceeds safe limit. Backup skipped.`);
+            console.warn(`WizeCloudBackup: snapshot ${(sizeBytes/1024).toFixed(0)}KB exceeds safe limit. Backup skipped (cloud copy left intact).`);
             return;
         }
 
         const ts = nowTs();
         try {
-            await db.collection('userBackups').doc(_currentUid).collection('data').doc(APP_ID).set({
-                data,
+            await ref.set({
+                data: merged,
                 version: 2,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 clientTs: ts,
-                keyCount: Object.keys(data).length,
+                keyCount: Object.keys(merged).length,
             }, { merge: false });
             localStorage.setItem(LOCAL_TS_KEY, String(ts));
             return { ok: true, keys: Object.keys(data).length };
