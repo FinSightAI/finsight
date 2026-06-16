@@ -556,13 +556,29 @@ const App = {
     /**
      * Export all data as JSON file
      */
-    exportData() {
-        const data = Storage.exportData();
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    async exportData() {
+        // GDPR/LGPD DSAR — a COMPLETE export: the local data PLUS everything the
+        // company holds server-side (Firestore). Previously this dumped only
+        // localStorage, so the export was materially incomplete.
+        const bundle = { exportedAt: new Date().toISOString(), localStorage: Storage.exportData() };
+        try {
+            const user = (window.firebase && firebase.auth) ? firebase.auth().currentUser : null;
+            if (user && firebase.functions) {
+                this.notify(I18n.t('common.export') + '…', 'info');
+                const res = await firebase.functions().httpsCallable('exportUserData')();
+                bundle.server = (res && res.data) ? res.data : null;
+            } else {
+                bundle.serverNote = 'Sign in to include the server-side (cloud) data in the export.';
+            }
+        } catch (e) {
+            console.warn('server export failed', e && e.message);
+            bundle.serverError = (e && e.message) || 'unavailable';
+        }
+        const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `finance-backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `wizelife-data-export-${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

@@ -2273,6 +2273,49 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
     return { deleted: true, authDeleted, eventsDeleted, leadsDeleted };
 });
 
+// ─── GDPR/LGPD data export (DSAR — right of access, Art.15/20) ────────────────
+// The client "Export Data" button only dumped localStorage. This callable returns
+// EVERYTHING the company holds about the signed-in user across Firestore so the
+// export is actually complete: the profile doc + all its subcollections, the cloud
+// backups, and the uid-/email-keyed top-level rows (events, leads, feedback) —
+// mirroring exactly what deleteUserAccount erases.
+exports.exportUserData = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        throw new functions.https.HttpsError("unauthenticated", "Sign in first");
+    }
+    const uid = context.auth.uid;
+    const out = { uid, exportedAt: new Date().toISOString(), source: "WizeLife (Firestore)" };
+
+    let email = null;
+    try {
+        const u = await admin.auth().getUser(uid);
+        email = (u && u.email) || null;
+        out.account = { email, displayName: (u && u.displayName) || null,
+            createdAt: u.metadata && u.metadata.creationTime, lastSignIn: u.metadata && u.metadata.lastSignInTime };
+    } catch (e) { /* best-effort */ }
+
+    const grab = async (label, fn) => { try { out[label] = await fn(); } catch (e) { out[label] = { _error: e.message }; } };
+    const docs = (snap) => snap.docs.map((d) => Object.assign({ _id: d.id }, d.data()));
+
+    // The profile doc + every subcollection an owner can write (see firestore.rules).
+    await grab("profile", async () => {
+        const d = await db.collection("users").doc(uid).get();
+        return d.exists ? d.data() : null;
+    });
+    out.subcollections = {};
+    for (const sc of ["context", "cross_app", "checkdeal_deals", "disclaimers"]) {
+        try { out.subcollections[sc] = docs(await db.collection("users").doc(uid).collection(sc).get()); }
+        catch (e) { out.subcollections[sc] = { _error: e.message }; }
+    }
+    // Cloud backups (the localStorage mirror) + uid/email-keyed top-level rows.
+    await grab("cloudBackups", async () => docs(await db.collection("userBackups").doc(uid).collection("data").get()));
+    await grab("events", async () => docs(await db.collection("events").where("uid", "==", uid).limit(5000).get()));
+    await grab("feedback", async () => docs(await db.collection("feedback").where("uid", "==", uid).limit(1000).get()));
+    if (email) await grab("leads", async () => docs(await db.collection("leads").where("email", "==", email).get()));
+
+    return out;
+});
+
 // ─── CSP violation report collector ──────────────────────────────────────────
 // Receives Content-Security-Policy violation reports (report-uri / report-to)
 // from the apps, so genuine XSS / inline-script attempts and CSP misconfig become
