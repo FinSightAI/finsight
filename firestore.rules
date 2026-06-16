@@ -19,7 +19,20 @@ service cloud.firestore {
     // ─────────────────────────────────────────────────────────────────────
     match /users/{userId} {
       allow read:   if isOwner(userId);
-      allow create, update, delete: if isOwner(userId);
+      allow create, delete: if isOwner(userId);
+      // Entitlement (`plan`) is SERVER-AUTHORITATIVE: only Cloud Functions
+      // (validateCode for access codes, paypalWebhook for payments — both via
+      // the Admin SDK, which bypasses these rules) may upgrade a user to a paid
+      // tier. The client may update its own profile freely but may NOT change
+      // `plan` to a paid value — it must stay unchanged or be set to 'free'
+      // (self-downgrade). Closes the free→paid self-grant bypass that the
+      // Money/Travel backends trusted as the only source of entitlement truth.
+      allow update: if isOwner(userId)
+                    && (
+                         !('plan' in request.resource.data)
+                         || request.resource.data.plan == resource.data.plan
+                         || request.resource.data.plan == 'free'
+                       );
 
       // Per-app aggregated summaries — owner read/write
       match /context/{appId} {
