@@ -1300,10 +1300,30 @@ exports.aiProxy = functions
             throw new functions.https.HttpsError("invalid-argument", "messages required");
         }
 
+        // Defence-in-depth PII scrub. The client already strips PII, but we must not
+        // trust the client — scrub user-authored message text here too before it leaves
+        // for the model. Only the user's free text is scrubbed (not model turns); we
+        // strip identity/contact PII (email/phone/national-id/card) while leaving the
+        // actual financial question intact so the model can still answer.
+        const scrubbedMessages = (messages || []).map((m) => {
+            if (!m || typeof m !== "object") return m;
+            // Only scrub user turns; leave model/assistant turns untouched.
+            const role = m.role;
+            if (role && role !== "user") return m;
+            const parts = Array.isArray(m.parts)
+                ? m.parts.map((p) =>
+                    p && typeof p === "object" && typeof p.text === "string"
+                        ? { ...p, text: scrubPII(p.text) }
+                        : p
+                )
+                : m.parts;
+            return { ...m, parts };
+        });
+
         // Wrap user-provided system prompt with anti-hallucination guardrails.
         const wrappedSystem = (system || '') + (system ? '\n\n' : '') + ANTI_HALLUCINATION_PREFIX;
         const body = {
-            contents: messages,
+            contents: scrubbedMessages,
             // Deterministic generation — temperature 0 kills creative drift.
             generationConfig: { maxOutputTokens: maxTokens, temperature: 0, topP: 0.1 },
             system_instruction: { parts: [{ text: wrappedSystem }] },
@@ -1581,9 +1601,54 @@ exports.paypalWebhook = functions
                     break;
                 }
 
-                case "BILLING.SUBSCRIPTION.CANCELLED":
+                case "BILLING.SUBSCRIPTION.CANCELLED": {
+                    // PayPal semantics: CANCELLED means the user turned OFF auto-renew.
+                    // They typically KEEP paid access until the end of the period they
+                    // already paid for. Access actually ends on EXPIRED (or SUSPENDED on
+                    // payment failure). So do NOT downgrade to free here — instead keep
+                    // the current paid plan and mark that it won't renew, recording the
+                    // period-end date if PayPal supplied a next_billing_time.
+                    const sub   = req.body.resource || {};
+                    const subId = sub.id;
+                    if (!subId) break;
+
+                    const snap = await db
+                        .collection("users")
+                        .where("paypalSubscriptionId", "==", subId)
+                        .limit(1)
+                        .get();
+
+                    if (snap.empty) {
+                        console.warn(`No user found for subscription ${subId}`);
+                        break;
+                    }
+
+                    // next_billing_time on a cancelled sub is the moment access lapses
+                    // (the end of the already-paid period). May be absent on some
+                    // cancellations — store null in that case rather than guessing.
+                    const nextBilling = sub.billing_info && sub.billing_info.next_billing_time;
+                    const planEndsAt = nextBilling ? new Date(nextBilling) : null;
+
+                    await snap.docs[0].ref.set(
+                        {
+                            // plan is intentionally NOT changed — keep paid access until EXPIRED.
+                            cancelAtPeriodEnd: true,
+                            planEndsAt: planEndsAt
+                                ? admin.firestore.Timestamp.fromDate(planEndsAt)
+                                : null,
+                            planCancelledAt: admin.firestore.FieldValue.serverTimestamp(),
+                        },
+                        { merge: true }
+                    );
+                    console.log(`⏳ Subscription=${subId} cancelled — auto-renew off, access kept until ${nextBilling || "period end"}`);
+                    break;
+                }
+
                 case "BILLING.SUBSCRIPTION.EXPIRED":
                 case "BILLING.SUBSCRIPTION.SUSPENDED": {
+                    // EXPIRED = the paid period has fully ended (or PayPal terminated it).
+                    // SUSPENDED = payment failure / on hold. Both mean access should stop,
+                    // so this is where we actually downgrade to free.
                     const sub   = req.body.resource || {};
                     const subId = sub.id;
                     if (!subId) break;
@@ -1602,11 +1667,12 @@ exports.paypalWebhook = functions
                     await snap.docs[0].ref.set(
                         {
                             plan: "free",
-                            planCancelledAt: admin.firestore.FieldValue.serverTimestamp(),
+                            cancelAtPeriodEnd: false,
+                            planEndedAt: admin.firestore.FieldValue.serverTimestamp(),
                         },
                         { merge: true }
                     );
-                    console.log(`⬇️  Plan reverted to free for subscription=${subId}`);
+                    console.log(`⬇️  Plan reverted to free for subscription=${subId} (${eventType})`);
                     break;
                 }
 
