@@ -46,6 +46,13 @@ service cloud.firestore {
         allow read, write: if isOwner(userId);
       }
 
+      // Check Deal — owner-only multi-deal COMPARISON (canonical) deals.
+      // Path: /users/{uid}/checkdeal_canonical/{id}. Added 2026-06-17 so the
+      // comparison set survives device switch (was localStorage-only).
+      match /checkdeal_canonical/{id} {
+        allow read, write: if isOwner(userId);
+      }
+
       // Cross-app derived data — Cloud Functions (admin) only
       match /cross_app/{appId} {
         allow read:  if isOwner(userId);
