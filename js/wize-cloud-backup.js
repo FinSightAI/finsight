@@ -182,6 +182,14 @@
         const sizeBytes = jsonSize(merged);
         if (sizeBytes > MAX_DOC_BYTES) {
             console.warn(`WizeCloudBackup: snapshot ${(sizeBytes/1024).toFixed(0)}KB exceeds safe limit. Backup skipped (cloud copy left intact).`);
+            // Surface to the app so it can warn the user that cloud backup stopped
+            // (otherwise the failure is silent). One-time flag + event; non-fatal.
+            try {
+                if (typeof window !== 'undefined' && !window.__wizeBackupOversized) {
+                    window.__wizeBackupOversized = true;
+                    window.dispatchEvent(new CustomEvent('wize-backup-oversized', { detail: { sizeBytes } }));
+                }
+            } catch (e) { /* never block */ }
             return;
         }
 
