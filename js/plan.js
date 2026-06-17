@@ -168,11 +168,13 @@ const Plan = (() => {
     }
 
     async function setPro(uid) {
+        // Local-only: the authoritative plan write is server-side (PayPal webhook
+        // / access-code redemption). Clients can't write users/{uid}.plan — the
+        // Firestore rule denies it, so a client setProwrite would throw
+        // permission-denied. Keep the local plan + cache; server is source of
+        // truth. (uid kept for call-site API compatibility.)
         _plan = "pro";
         localStorage.setItem("wl_plan", "pro");
-        if (uid && typeof firebaseDb !== "undefined") {
-            await firebaseDb.collection("users").doc(uid).set({ plan: "pro" }, { merge: true });
-        }
         _notify();
     }
 

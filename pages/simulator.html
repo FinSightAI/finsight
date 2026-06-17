@@ -344,8 +344,9 @@ const fmtShort = n => {
  return fmt(n);
 };
 
-// Compound future value of monthly contributions
-// FV = PMT × [((1+r)^n − 1) / r] where r = monthly rate, n = months
+// Compound future value of monthly contributions (annuity-DUE: each deposit
+// made at the START of the month, so it earns one extra period of growth).
+// FV = PMT × [((1+r)^n − 1) / r] × (1+r) where r = monthly rate, n = months
 function fvMonthly(monthly, annualRate, years) {
  if (annualRate === 0) return monthly * years * 12;
  const r = annualRate / 100 / 12;
