@@ -2259,6 +2259,10 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
     // nested under users/{uid}, so recursiveDelete misses them).
     const eventsDeleted = await purgeQuery(
         fs.collection("events").where("uid", "==", uid), "events");
+    // feedback rows carry the user's uid + email + free-text — they MUST be purged
+    // too (GDPR/LGPD erasure), mirroring the events purge above. Keyed by uid.
+    const feedbackDeleted = await purgeQuery(
+        fs.collection("feedback").where("uid", "==", uid), "feedback");
     let leadsDeleted = 0;
     if (email) {
         leadsDeleted = await purgeQuery(
@@ -2270,7 +2274,7 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
     try { await admin.auth().deleteUser(uid); authDeleted = true; }
     catch (e) { console.warn("deleteUserAccount: auth delete failed", e.message); }
 
-    return { deleted: true, authDeleted, eventsDeleted, leadsDeleted };
+    return { deleted: true, authDeleted, eventsDeleted, feedbackDeleted, leadsDeleted };
 });
 
 // ─── GDPR/LGPD data export (DSAR — right of access, Art.15/20) ────────────────
