@@ -230,6 +230,39 @@ async function _rateLimit(key, uid, maxPerMin) {
     }
 }
 
+// ─── Per-IP throttle for anonymous beacons ────────────────────────────────────
+// The open POST endpoints (errorReport, cspReport, …) take no uid, so _rateLimit
+// can't gate them. This is a lightweight in-memory sliding-window counter keyed
+// by client IP — caps log-spam / cost-abuse without a Firestore round-trip per
+// beacon. Per-instance only (good enough: one hot instance absorbs a flood), and
+// always fail-open so a legitimate beacon is never dropped on internal error.
+const _ipHits = new Map(); // ip -> number[] (recent hit timestamps, ms)
+function _ipThrottle(req, maxPerMin) {
+    try {
+        const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+        const ip = fwd || req.ip || (req.connection && req.connection.remoteAddress) || '';
+        if (!ip) return true; // can't identify caller — don't punish
+        const now = Date.now();
+        const windowStart = now - 60_000;
+        let hits = (_ipHits.get(ip) || []).filter(t => t > windowStart);
+        if (hits.length >= maxPerMin) {
+            _ipHits.set(ip, hits); // keep pruned window, drop this beacon
+            return false;
+        }
+        hits.push(now);
+        _ipHits.set(ip, hits);
+        // bound memory: occasionally evict stale IPs so the Map can't grow unbounded
+        if (_ipHits.size > 5000) {
+            for (const [k, v] of _ipHits) {
+                if (!v.some(t => t > windowStart)) _ipHits.delete(k);
+            }
+        }
+        return true;
+    } catch (e) {
+        return true; // fail-open — never drop a legitimate beacon on internal error
+    }
+}
+
 // ─── PII scrubber for AI prompts ──────────────────────────────────────────────
 // Replaces emails, Israeli ID numbers, phone numbers, and credit-card-like
 // strings with placeholders before sending text to Gemini. Used by ai-proxy
@@ -2429,6 +2462,10 @@ exports.errorReport = functions.https.onRequest(async (req, res) => {
     res.set('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') return res.status(204).send('');
     if (req.method !== 'POST') return res.status(405).send('');
+    // Per-IP throttle: cap log-spam / cost-abuse from a single source. Still 204
+    // (don't signal to an abuser that they're being dropped); legitimate apps
+    // never hit 60 errors/min from one IP.
+    if (!_ipThrottle(req, 60)) return res.status(204).send('');
     try {
         const body = req.body || {};
         const errs = Array.isArray(body.errors) ? body.errors : [body];
