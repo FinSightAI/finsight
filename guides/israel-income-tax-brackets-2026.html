@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<script>
+(function(){
+  try{
+    var t=localStorage.getItem('wl_theme');
+    if(t==='light'){document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.add('light');}
+  }catch(e){}
+  // language: ?lang= overrides stored; default he
+  var SUP=['he','en','pt','es'];
+  var p=new URLSearchParams(location.search);
+  var lang=p.get('lang');
+  if(!SUP.includes(lang)){ try{lang=localStorage.getItem('wl_lang');}catch(e){} }
+  if(!SUP.includes(lang)) lang='he';
+  window.__LANG=lang;
+  document.documentElement.lang=lang;
+  document.documentElement.dir = (lang==='he')?'rtl':'ltr';
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#10b981">
+<link rel="icon" type="image/png" href="../img/logo.svg">
+<link rel="apple-touch-icon" href="../img/logo.svg">
+<link rel="manifest" href="../manifest.json">
+
+<title>מדרגות מס הכנסה 2026 — טבלה מלאה + מחשבון | WizeMoney</title>
+<meta name="description" content="טבלת מדרגות מס הכנסה 2026 בישראל: שיעורים 10%–50%, ערך נקודת זיכוי ₪2,904 לשנה ודוגמאות חישוב לשכר ₪15k/30k/60k. מבוסס לוח עזר רשות המסים ינואר 2026.">
+
+<link rel="canonical" href="https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html">
+<link rel="alternate" hreflang="he" href="https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html?lang=he">
+<link rel="alternate" hreflang="en" href="https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html?lang=en">
+<link rel="alternate" hreflang="pt" href="https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html?lang=pt">
+<link rel="alternate" hreflang="es" href="https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html?lang=es">
+<link rel="alternate" hreflang="x-default" href="https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="WizeMoney">
+<meta property="og:title" content="Israel Income Tax Brackets 2026 — Full Table + Calculator">
+<meta property="og:description" content="Complete 2026 Israeli income-tax bracket table (10%–50%), the ₪2,904/yr credit point, and worked examples at ₪15k/30k/60k. Sourced from the Tax Authority January 2026 deduction tables.">
+<meta property="og:url" content="https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html">
+<meta property="og:image" content="https://money.wizelife.ai/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Israel Income Tax Brackets 2026 — Full Table + Calculator">
+<meta name="twitter:description" content="2026 Israeli income-tax brackets, credit points, and worked examples. Sourced from the Tax Authority.">
+<meta name="twitter:image" content="https://money.wizelife.ai/img/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="./guides.css?v=2026061801">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Israel Income Tax Brackets 2026 — Full Table, Credit Points and Worked Examples",
+  "inLanguage": "en",
+  "datePublished": "2026-06-18",
+  "dateModified": "2026-06-18",
+  "author": { "@type": "Organization", "name": "WizeMoney", "url": "https://money.wizelife.ai/" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "WizeMoney",
+    "url": "https://money.wizelife.ai/",
+    "logo": { "@type": "ImageObject", "url": "https://money.wizelife.ai/img/logo.svg" }
+  },
+  "image": "https://money.wizelife.ai/img/og-image.png",
+  "mainEntityOfPage": "https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html",
+  "description": "The complete 2026 Israeli income-tax bracket table (10%–50%), the value of a tax credit point (₪2,904/yr), and worked examples for monthly salaries of ₪15,000, ₪30,000 and ₪60,000. Figures sourced from the Israel Tax Authority January 2026 monthly deduction tables.",
+  "citation": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the income tax brackets in Israel for 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For 2026, Israeli monthly income is taxed progressively: 10% up to ₪7,010; 14% from ₪7,010 to ₪10,060; 20% from ₪10,060 to ₪19,000; 31% from ₪19,000 to ₪25,100; 35% from ₪25,100 to ₪35,220; 47% from ₪35,220 to ₪58,190; and 50% above ₪58,190 (47% plus a 3% high-income surtax / mas yesef). Source: Israel Tax Authority monthly deduction tables, January 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much is a tax credit point worth in Israel in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In 2026 one tax credit point (nekudat zikuy) is worth ₪242 per month, which equals ₪2,904 per year. Every Israeli resident receives a basic 2.25 credit points, reducing tax by about ₪544.50 per month (₪6,534 per year). Additional points are granted for children, marriage and other situations. The credit-point value has been frozen since 2025."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much income tax do I pay on a ₪30,000 monthly salary in Israel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a ₪30,000 gross monthly salary in 2026, income tax after the basic 2.25 credit points is about ₪5,978 per month — an effective income-tax rate of roughly 19.9%. This is income tax only; National Insurance (Bituach Leumi) and health-insurance contributions are deducted separately and reduce take-home pay further."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the 50% top tax bracket in Israel real?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The standard top income-tax bracket is 47% on monthly income above ₪58,190, but a 3% high-income surtax (mas yesef) applies on top of high earnings, bringing the effective top marginal rate to 50%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these the gross or net salary figures?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The brackets apply to gross taxable income. The worked examples on this page show income tax only. Your actual net (take-home) salary is lower because National Insurance and health-insurance contributions are also deducted, and higher if you have extra credit points or pension/study-fund deductions."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="guide-nav">
+  <a class="guide-brand" href="/?lang=he"><span class="brand-dot"></span> WizeMoney</a>
+  <nav class="guide-langs" aria-label="Language">
+    <a data-lang-link="he">HE</a><a data-lang-link="en">EN</a><a data-lang-link="pt">PT</a><a data-lang-link="es">ES</a>
+  </nav>
+</header>
+
+<main class="guide-wrap">
+  <article>
+    <p class="crumbs"><a href="/?lang=he" data-i18n="crumbHome">WizeMoney</a> › <span data-i18n="crumbGuides">Guides</span></p>
+    <h1 data-i18n="h1">מדרגות מס הכנסה 2026 בישראל</h1>
+    <p class="lede" data-i18n="lede"></p>
+
+    <p class="updated" data-i18n="updated"></p>
+
+    <h2 data-i18n="h2table">טבלת מדרגות מס 2026 (הכנסה חודשית)</h2>
+    <div class="table-scroll">
+    <table class="tax-table">
+      <thead><tr><th data-i18n="thBand">מדרגה (₪ לחודש)</th><th data-i18n="thRate">שיעור מס</th></tr></thead>
+      <tbody>
+        <tr><td>0 – 7,010</td><td>10%</td></tr>
+        <tr><td>7,010 – 10,060</td><td>14%</td></tr>
+        <tr><td>10,060 – 19,000</td><td>20%</td></tr>
+        <tr><td>19,000 – 25,100</td><td>31%</td></tr>
+        <tr><td>25,100 – 35,220</td><td>35%</td></tr>
+        <tr><td>35,220 – 58,190</td><td>47%</td></tr>
+        <tr><td><span data-i18n="above">מעל</span> 58,190</td><td>50%*</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note" data-i18n="surtaxNote">* 47% + 3% מס יסף על הכנסות גבוהות = 50% שולי בפועל.</p>
+
+    <h2 data-i18n="h2credit">נקודות זיכוי 2026</h2>
+    <p data-i18n="creditBody"></p>
+
+    <h2 data-i18n="h2examples">דוגמאות חישוב (2026)</h2>
+    <p class="note" data-i18n="examplesNote"></p>
+    <div class="table-scroll">
+    <table class="tax-table">
+      <thead><tr>
+        <th data-i18n="exGross">שכר ברוטו / חודש</th>
+        <th data-i18n="exTax">מס הכנסה / חודש</th>
+        <th data-i18n="exNet">נטו אחרי מס הכנסה</th>
+        <th data-i18n="exEff">שיעור אפקטיבי</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>₪15,000</td><td>₪1,572</td><td>₪13,428</td><td>10.5%</td></tr>
+        <tr><td>₪30,000</td><td>₪5,978</td><td>₪24,022</td><td>19.9%</td></tr>
+        <tr><td>₪60,000</td><td>₪19,505</td><td>₪40,495</td><td>32.5%</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note" data-i18n="examplesFoot"></p>
+
+    <div class="cta-row">
+      <a class="cta" href="/pages/tax-optimizer.html" data-i18n="ctaOptimizer">פתח את מחשבון אופטימיזציית המס »</a>
+      <a class="cta cta-ghost" href="/pages/simulator.html" data-i18n="ctaSim">סימולטור חיסכון »</a>
+    </div>
+
+    <div class="disclaimer">
+      <strong data-i18n="discTitle">לא ייעוץ פיננסי או מס.</strong>
+      <span data-i18n="discBody"></span>
+      <a href="https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf" rel="nofollow noopener" target="_blank">רשות המסים — לוח עזר ינואר 2026 (PDF)</a>
+    </div>
+  </article>
+</main>
+
+<footer class="guide-foot">
+  <p>© 2026 WizeMoney · <a href="/?lang=he" data-i18n="footHome">money.wizelife.ai</a> · <a href="https://wizelife.ai/" rel="noopener">WizeLife</a></p>
+</footer>
+
+<script>
+(function(){
+  var L=window.__LANG||'he';
+  var T={
+    he:{
+      crumbHome:'WizeMoney',crumbGuides:'מדריכים',
+      h1:'מדרגות מס הכנסה 2026 בישראל',
+      lede:'טבלה מלאה של מדרגות מס ההכנסה לשנת 2026, ערך נקודת זיכוי, ודוגמאות חישוב לשכר ₪15,000, ₪30,000 ו-₪60,000 — מבוסס על לוח העזר של רשות המסים לינואר 2026.',
+      updated:'הנתונים אומתו ב-18 ביוני 2026 מול לוח העזר של רשות המסים.',
+      h2table:'טבלת מדרגות מס 2026 (הכנסה חודשית)',
+      thBand:'מדרגה (₪ לחודש)',thRate:'שיעור מס',above:'מעל',
+      surtaxNote:'* 47% + 3% מס יסף על הכנסות גבוהות = 50% שולי בפועל.',
+      h2credit:'נקודות זיכוי 2026',
+      creditBody:'בשנת 2026 ערך נקודת זיכוי אחת הוא ₪242 לחודש — כלומר ₪2,904 לשנה. כל תושב ישראל מקבל 2.25 נקודות זיכוי בסיסיות, שמפחיתות את המס בכ-₪544.50 לחודש (₪6,534 לשנה). נקודות נוספות ניתנות בעבור ילדים, נישואין ומצבים נוספים. ערך נקודת הזיכוי מוקפא מאז 2025.',
+      h2examples:'דוגמאות חישוב (2026)',
+      examplesNote:'החישוב כולל את 2.25 נקודות הזיכוי הבסיסיות בלבד.',
+      exGross:'שכר ברוטו / חודש',exTax:'מס הכנסה / חודש',exNet:'נטו אחרי מס הכנסה',exEff:'שיעור אפקטיבי',
+      examplesFoot:'שים לב: זהו מס הכנסה בלבד. ביטוח לאומי ומס בריאות מנוכים בנפרד ומקטינים את הנטו בפועל. נקודות זיכוי נוספות או הפקדות לפנסיה/קרן השתלמות עשויות להקטין את המס.',
+      ctaOptimizer:'פתח את מחשבון אופטימיזציית המס »',ctaSim:'סימולטור חיסכון »',
+      discTitle:'לא ייעוץ פיננסי או מס.',
+      discBody:'דף זה למטרות מידע בלבד. הנתונים אומתו ב-18.6.2026 מול ',
+      footHome:'money.wizelife.ai'
+    },
+    en:{
+      crumbHome:'WizeMoney',crumbGuides:'Guides',
+      h1:'Israel Income Tax Brackets 2026',
+      lede:'The full 2026 Israeli income-tax bracket table, the value of a tax credit point, and worked examples for monthly salaries of ₪15,000, ₪30,000 and ₪60,000 — based on the Israel Tax Authority January 2026 deduction tables.',
+      updated:'Figures verified 18 June 2026 against the Israel Tax Authority deduction tables.',
+      h2table:'2026 Tax Bracket Table (monthly income)',
+      thBand:'Band (₪ / month)',thRate:'Tax rate',above:'Above',
+      surtaxNote:'* 47% + 3% high-income surtax (mas yesef) = 50% effective top marginal rate.',
+      h2credit:'Credit Points 2026',
+      creditBody:'In 2026 one tax credit point (nekudat zikuy) is worth ₪242 per month — ₪2,904 per year. Every Israeli resident gets a basic 2.25 credit points, cutting tax by about ₪544.50 per month (₪6,534 per year). Extra points are granted for children, marriage and other situations. The credit-point value has been frozen since 2025.',
+      h2examples:'Worked Examples (2026)',
+      examplesNote:'Calculation includes the basic 2.25 credit points only.',
+      exGross:'Gross salary / month',exTax:'Income tax / month',exNet:'Net after income tax',exEff:'Effective rate',
+      examplesFoot:'Note: this is income tax only. National Insurance (Bituach Leumi) and health insurance are deducted separately and lower your real take-home pay. Extra credit points or pension/study-fund contributions can reduce the tax.',
+      ctaOptimizer:'Open the Tax Optimizer calculator »',ctaSim:'Savings simulator »',
+      discTitle:'Not financial or tax advice.',
+      discBody:'This page is for information only. Figures verified 18 Jun 2026 against the ',
+      footHome:'money.wizelife.ai'
+    },
+    pt:{
+      crumbHome:'WizeMoney',crumbGuides:'Guias',
+      h1:'Faixas de Imposto de Renda em Israel 2026',
+      lede:'Tabela completa das faixas do imposto de renda de Israel em 2026, o valor do ponto de crédito fiscal e exemplos práticos para salários mensais de ₪15.000, ₪30.000 e ₪60.000 — com base nas tabelas de retenção da Autoridade Tributária de Israel de janeiro de 2026.',
+      updated:'Valores verificados em 18 de junho de 2026 nas tabelas da Autoridade Tributária de Israel.',
+      h2table:'Tabela de faixas 2026 (renda mensal)',
+      thBand:'Faixa (₪ / mês)',thRate:'Alíquota',above:'Acima de',
+      surtaxNote:'* 47% + 3% de sobretaxa para altas rendas (mas yesef) = 50% marginal efetivo.',
+      h2credit:'Pontos de crédito 2026',
+      creditBody:'Em 2026, um ponto de crédito fiscal (nekudat zikuy) vale ₪242 por mês — ₪2.904 por ano. Todo residente em Israel recebe 2,25 pontos básicos, reduzindo o imposto em cerca de ₪544,50 por mês (₪6.534 por ano). Pontos adicionais são concedidos por filhos, casamento e outras situações. O valor está congelado desde 2025.',
+      h2examples:'Exemplos práticos (2026)',
+      examplesNote:'O cálculo inclui apenas os 2,25 pontos de crédito básicos.',
+      exGross:'Salário bruto / mês',exTax:'Imposto / mês',exNet:'Líquido após imposto',exEff:'Alíquota efetiva',
+      examplesFoot:'Observação: este é apenas o imposto de renda. A Previdência (Bituach Leumi) e o seguro-saúde são descontados à parte e reduzem o líquido real. Pontos extras ou contribuições à previdência podem reduzir o imposto.',
+      ctaOptimizer:'Abrir a calculadora de otimização fiscal »',ctaSim:'Simulador de poupança »',
+      discTitle:'Não é aconselhamento financeiro ou fiscal.',
+      discBody:'Esta página é apenas informativa. Valores verificados em 18/06/2026 com base na ',
+      footHome:'money.wizelife.ai'
+    },
+    es:{
+      crumbHome:'WizeMoney',crumbGuides:'Guías',
+      h1:'Tramos del Impuesto sobre la Renta en Israel 2026',
+      lede:'Tabla completa de los tramos del impuesto sobre la renta de Israel en 2026, el valor del punto de crédito fiscal y ejemplos prácticos para salarios mensuales de ₪15.000, ₪30.000 y ₪60.000 — según las tablas de retención de la Autoridad Tributaria de Israel de enero de 2026.',
+      updated:'Cifras verificadas el 18 de junio de 2026 con las tablas de la Autoridad Tributaria de Israel.',
+      h2table:'Tabla de tramos 2026 (renta mensual)',
+      thBand:'Tramo (₪ / mes)',thRate:'Tipo',above:'Más de',
+      surtaxNote:'* 47% + 3% de recargo para rentas altas (mas yesef) = 50% marginal efectivo.',
+      h2credit:'Puntos de crédito 2026',
+      creditBody:'En 2026, un punto de crédito fiscal (nekudat zikuy) vale ₪242 al mes — ₪2.904 al año. Todo residente en Israel recibe 2,25 puntos básicos, lo que reduce el impuesto en unos ₪544,50 al mes (₪6.534 al año). Se otorgan puntos adicionales por hijos, matrimonio y otras situaciones. El valor está congelado desde 2025.',
+      h2examples:'Ejemplos prácticos (2026)',
+      examplesNote:'El cálculo incluye solo los 2,25 puntos de crédito básicos.',
+      exGross:'Salario bruto / mes',exTax:'Impuesto / mes',exNet:'Neto tras impuesto',exEff:'Tipo efectivo',
+      examplesFoot:'Nota: esto es solo el impuesto sobre la renta. La Seguridad Social (Bituach Leumi) y el seguro de salud se descuentan aparte y reducen el neto real. Puntos extra o aportaciones a pensión pueden reducir el impuesto.',
+      ctaOptimizer:'Abrir la calculadora de optimización fiscal »',ctaSim:'Simulador de ahorro »',
+      discTitle:'No es asesoramiento financiero ni fiscal.',
+      discBody:'Esta página es solo informativa. Cifras verificadas el 18/06/2026 con la ',
+      footHome:'money.wizelife.ai'
+    }
+  };
+  var d=T[L]||T.he;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.getAttribute('data-i18n'); if(d[k]!=null) el.textContent=d[k];
+  });
+  document.title = (L==='he')?'מדרגות מס הכנסה 2026 — טבלה מלאה + מחשבון | WizeMoney'
+    : (L==='pt')?'Faixas de Imposto de Renda Israel 2026 — Tabela + Calculadora | WizeMoney'
+    : (L==='es')?'Tramos de Impuesto sobre la Renta Israel 2026 — Tabla + Calculadora | WizeMoney'
+    : 'Israel Income Tax Brackets 2026 — Full Table + Calculator | WizeMoney';
+  // language links preserve path, swap lang, mark active
+  document.querySelectorAll('[data-lang-link]').forEach(function(a){
+    var lg=a.getAttribute('data-lang-link');
+    a.href = location.pathname + '?lang=' + lg;
+    if(lg===L) a.classList.add('active');
+    a.addEventListener('click',function(){ try{localStorage.setItem('wl_lang',lg);}catch(e){} });
+  });
+})();
+</script>
+</body>
+</html>

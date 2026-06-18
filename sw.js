@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finsight-v396';
+const CACHE_NAME = 'finsight-v397';
 
 // Listen for "user clicked Update" message — activate immediately
 self.addEventListener('message', e => {

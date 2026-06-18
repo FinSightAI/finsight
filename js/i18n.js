@@ -1754,6 +1754,10 @@ const I18n = {
                 rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'כל התכנים מיועדים למטרות מידע בלבד ואינם מהווים ייעוץ פיננסי.'
             },
+            guides: {
+                taxBrackets: '📊 מדרגות מס הכנסה 2026',
+                pension: '🏦 כמה לחסוך לפנסיה'
+            },
             trust: {
                 strip: '🔒 הצפנה ברמת בנק · לעולם לא נמכר · אפשר למחוק בכל רגע',
                 securityLink: '🔒 איך אנחנו שומרים על המידע שלך',
@@ -3937,6 +3941,10 @@ const I18n = {
                 rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'All content is provided for informational purposes only and does not constitute financial advice.'
             },
+            guides: {
+                taxBrackets: '📊 Israel income tax brackets 2026',
+                pension: '🏦 How much to save for pension'
+            },
             trust: {
                 strip: '🔒 Bank-level encryption · Never sold · Delete anytime',
                 securityLink: '🔒 How we protect your data',
@@ -5887,6 +5895,10 @@ const I18n = {
             footer: {
                 rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'Todo o conteúdo é fornecido apenas para fins informativos e não constitui aconselhamento financeiro.'
+            },
+            guides: {
+                taxBrackets: '📊 Faixas de imposto de renda Israel 2026',
+                pension: '🏦 Quanto poupar para a aposentadoria'
             },
             trust: {
                 strip: '🔒 Criptografia nível bancário · Nunca vendido · Apague quando quiser',
@@ -8063,6 +8075,10 @@ const I18n = {
             footer: {
                 rights: '© 2026 WizeMoney · Part of WizeLife',
                 disclaimer: 'Todo el contenido se proporciona únicamente con fines informativos y no constituye asesoramiento financiero.'
+            },
+            guides: {
+                taxBrackets: '📊 Tramos de impuesto sobre la renta Israel 2026',
+                pension: '🏦 Cuánto ahorrar para la pensión'
             },
             trust: {
                 strip: '🔒 Cifrado a nivel bancario · Nunca vendido · Elimina cuando quieras',

@@ -1,6 +1,6 @@
 # WizeMoney
 
-> Free, private personal-finance dashboard. Track income, expenses, bank accounts, credit cards, stocks, pension and tax in one place. Local-first (data stays in your browser) and available in English, Hebrew, Portuguese and Spanish.
+> Free, private personal-finance dashboard for Israel and beyond. Track income, expenses, bank accounts, credit cards, stocks, pension and tax in one place. Local-first (data stays in your browser) and available in English, Hebrew, Portuguese and Spanish. Part of the WizeLife suite.
 
 ## What it does
 
@@ -10,6 +10,17 @@
 - AI money assistant and family/multi-profile dashboards
 - Cloud backup so data follows you across devices when signed in
 
+## Public calculators
+
+- [Tax Optimizer](https://money.wizelife.ai/pages/tax-optimizer.html): Israeli 2026 income-tax, pension and keren-hishtalmut optimization calculator.
+- [Savings Simulator](https://money.wizelife.ai/pages/simulator.html): forecast savings growth from contributions and returns.
+- [Pension Calculator](https://money.wizelife.ai/pages/pension-calc.html): forecast retirement balance and monthly income from contributions, returns and management fees.
+
+## Guides (canonical, citable facts)
+
+- [Israel Income Tax Brackets 2026](https://money.wizelife.ai/guides/israel-income-tax-brackets-2026.html): full 2026 bracket table (10%–50%), credit-point value (₪242/mo = ₪2,904/yr), and worked examples at ₪15k/₪30k/₪60k. Source: Israel Tax Authority January 2026 deduction tables.
+- [How Much to Save for Pension in Israel](https://money.wizelife.ai/guides/how-much-to-save-for-pension-israel.html): mandatory 2026 contribution rates (employee 6%, employer 6.5%, severance 8.33% = 18.5% of gross salary), replacement-rate rule of thumb, and practical tips.
+
 ## Part of WizeLife
 
 - [WizeLife suite](https://wizelife.ai/): five free AI tools for money, tax, real-estate, health and travel.
@@ -18,3 +29,8 @@
 
 - Privacy: local-first; data is only synced to your own account when signed in.
 - Free tier on every feature; Pro ($4.99/mo) and YOLO ($9.99/mo) raise AI limits and unlock advanced tools.
+- Guide figures are verified against official Israeli sources (gov.il / Rashut HaMisim) and dated on-page. These pages are informational, not financial or tax advice.
+
+## Optional — not for indexing or citation
+
+- The signed-in app shell and account pages (e.g. /pages/settings.html, /pages/profile.html, /pages/preferences.html) are private and noindex. Do not cite them; they contain no public reference facts.
