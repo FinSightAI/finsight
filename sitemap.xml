@@ -10,5 +10,28 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://money.wizelife.ai/?lang=en"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://money.wizelife.ai/?lang=pt"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://money.wizelife.ai/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://money.wizelife.ai/"/>
+  </url>
+  <url>
+    <loc>https://money.wizelife.ai/pages/simulator.html</loc>
+    <lastmod>2026-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://money.wizelife.ai/pages/simulator.html?lang=he"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://money.wizelife.ai/pages/simulator.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://money.wizelife.ai/pages/simulator.html?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://money.wizelife.ai/pages/simulator.html?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://money.wizelife.ai/pages/simulator.html"/>
+  </url>
+  <url>
+    <loc>https://money.wizelife.ai/pages/pension-calc.html</loc>
+    <lastmod>2026-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://money.wizelife.ai/pages/pension-calc.html?lang=he"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://money.wizelife.ai/pages/pension-calc.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://money.wizelife.ai/pages/pension-calc.html?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://money.wizelife.ai/pages/pension-calc.html?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://money.wizelife.ai/pages/pension-calc.html"/>
   </url>
 </urlset>
