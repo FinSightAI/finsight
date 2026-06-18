@@ -20,6 +20,13 @@
  <meta name="view-transition" content="same-origin">
  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+ <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+ <!-- Perf: fonts discovered directly in HTML (not via CSS @import) → shorter critical chain.
+      preconnect to both Google Font origins; @import removed from app.css. -->
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+ <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
  <meta name="apple-mobile-web-app-capable" content="yes">
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -28,6 +35,11 @@
  <meta name="description" content="Track income, expenses, stocks, pension and tax in one private dashboard. Core data is stored locally by default; AI features and optional cloud backup send data to our servers — see Privacy Policy. 4 languages. Free, no signup.">
  <meta name="theme-color" content="#10b981">
   <link rel="canonical" href="https://money.wizelife.ai/" />
+ <link rel="alternate" hreflang="en" href="https://money.wizelife.ai/?lang=en" />
+ <link rel="alternate" hreflang="he" href="https://money.wizelife.ai/?lang=he" />
+ <link rel="alternate" hreflang="pt" href="https://money.wizelife.ai/?lang=pt" />
+ <link rel="alternate" hreflang="es" href="https://money.wizelife.ai/?lang=es" />
+ <link rel="alternate" hreflang="x-default" href="https://money.wizelife.ai/" />
  <meta property="og:type" content="website" />
  <meta property="og:url" content="https://money.wizelife.ai/" />
  <meta property="og:title" content="Free Personal Finance Tracker — Budget, Stocks, Pension, Tax" />
@@ -60,7 +72,7 @@
  <link rel="manifest" href="manifest.json">
  <title>Free Personal Finance Tracker — Budget, Stocks, Pension, Tax | WizeMoney</title>
  <script>(function(){var T={en:'Free Personal Finance Tracker — Budget, Stocks, Pension, Tax | WizeMoney',he:'ניהול כספים אישי חינם — תקציב, מניות, פנסיה, מס | WizeMoney',pt:'Gestor Financeiro Pessoal Grátis — Orçamento, Ações, Pensão, Impostos | WizeMoney',es:'Gestor Financiero Personal Gratis — Presupuesto, Acciones, Pensión, Impuestos | WizeMoney'};function s(){var l=(localStorage.getItem('wl_lang')||(navigator.language||'en').slice(0,2)||'en').toLowerCase();document.title=T[l]||T.en;}s();window.addEventListener('wl-lang-change',s);})();</script>
- <link rel="stylesheet" href="css/app.css?v=2026060901">
+ <link rel="stylesheet" href="css/app.css?v=2026061801">
  <!-- Lazy-loader for heavy Firebase libs (firestore ~600KB, functions ~30KB).
       Removes ~630KB from the critical render path on the landing page.
       Loaded synchronously so call sites can `await window._wlLazy.firestore()`. -->
@@ -297,7 +309,7 @@
  <span class="icon">💱</span>
  <span data-i18n="dashboard.currencyRates">שערי מטבע</span>
  </h2>
- <button class="btn btn-sm btn-secondary" onclick="loadCurrencyWidget()">🔄</button>
+ <button class="btn btn-sm btn-secondary" onclick="loadCurrencyWidget()" aria-label="עדכן" data-i18n-aria="common.update">🔄</button>
  </div>
  <div class="card-body" id="currencyRatesWidget" style="padding: 20px;">
  <div style="text-align: center; color: var(--color-text-secondary);"><span data-i18n="stocks.loading">טוען...</span></div>
@@ -663,7 +675,7 @@
  <span>${alert.icon}</span>
  <span style="flex:1"><strong>${alert.title}</strong> · ${alert.message}</span>
  <a href="pages/credit.html" style="font-size:13px;color:var(--color-primary);text-decoration:none;white-space:nowrap;">כרטיסי אשראי ←</a>
- <button class="alert-dismiss" onclick="dismissBudgetAlerts()" title="סגור">✕</button>
+ <button class="alert-dismiss" onclick="dismissBudgetAlerts()" title="סגור" aria-label="סגור" data-i18n-aria="common.close" data-i18n-title="common.close">✕</button>
  </div>
  `).join('');
  container.classList.add('has-alerts');

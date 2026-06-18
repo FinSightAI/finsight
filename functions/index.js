@@ -1433,13 +1433,20 @@ exports.syncCrossAppData = functions.https.onCall(async (data, context) => {
     if (typeof summary !== "string" || summary.length > 8000) {
         throw new functions.https.HttpsError("invalid-argument", "summary must be a string ≤ 8000 chars");
     }
+    // appName is later interpolated UNDELIMITED into WizeMoney's AI system prompt
+    // (cross_app context). Bound its length and strip newlines/control chars so a
+    // sister app can't smuggle a multi-line "ignore previous instructions" header
+    // (indirect prompt injection / unbounded-consumption) through the app label.
+    let safeAppName = (typeof appName === "string" ? appName : "") || appId;
+    // Collapse any whitespace/newline/control char to a single space, then cap length.
+    safeAppName = safeAppName.replace(/[\u0000-\u001F\u007F\s]+/g, " ").slice(0, 60).trim() || appId;
 
     await db
         .collection("users").doc(uid)
         .collection("cross_app").doc(appId)
         .set({
             appId,
-            appName: appName || appId,
+            appName: safeAppName,
             summary,
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });

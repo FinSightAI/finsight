@@ -796,11 +796,21 @@ const Storage = {
     getTotalStocksValue() {
         const data = this.getStocks();
         return data.holdings.reduce((sum, h) => {
-            // Use valueILS if available (from broker import), otherwise calculate
+            // Use valueILS only when there's no live price to recompute from — a
+            // broker-imported valueILS is frozen at import time, so once updateStockPrice
+            // refreshes currentPrice we must recompute from the live native-currency price.
+            // CRITICAL: currentPrice/avgPrice are in the holding's NATIVE currency (USD/GBP/EUR
+            // for non-TASE symbols — see stock-api.js). They must be converted to ILS like every
+            // other total, else a US stock (e.g. 10 AAPL @ $200) is summed 1:1 as ₪2000 instead
+            // of ~₪5,900 — a silent ~3x understatement of net worth.
+            const nativeVal = h.quantity * (h.currentPrice || h.avgPrice || 0);
+            if (nativeVal > 0) {
+                return sum + this._toILS(nativeVal, h.currency);
+            }
             if (h.valueILS && h.valueILS > 0) {
                 return sum + h.valueILS;
             }
-            return sum + (h.quantity * (h.currentPrice || h.avgPrice));
+            return sum;
         }, 0);
     },
 

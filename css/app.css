@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Fonts loaded via <link> in HTML head (preconnect + non-blocking) — see index.html.
+   @import removed: it forced a 3-hop critical chain (html→app.css→fonts css→font files). */
 
 /* WizeLife smooth-transition base */
 html { scroll-behavior: smooth; }
@@ -589,6 +590,23 @@ tr:hover {
     border-color: var(--color-dashboard);
 }
 
+/* a11y: visible keyboard focus indicator (WCAG 2.2 — 2.4.7 / 2.4.13). */
+.form-control:focus-visible {
+    outline: 2px solid var(--color-dashboard);
+    outline-offset: 1px;
+    border-color: var(--color-dashboard);
+}
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible,
+[role="button"]:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid var(--color-dashboard);
+    outline-offset: 2px;
+}
+
 .form-control::placeholder {
     color: var(--color-text-secondary);
 }
@@ -710,6 +728,12 @@ select.form-control {
     color: var(--color-text-secondary);
     font-size: 1.5rem;
     cursor: pointer;
+    /* a11y: WCAG 2.2 2.5.8 Target Size — ensure a 44x44 hit area */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0;
     line-height: 1;
 }
@@ -830,8 +854,10 @@ html[dir="rtl"] .mobile-header,
     color: var(--color-text-primary);
     font-size: 1.4rem;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    /* WCAG 2.5.5 / iOS HIG: primary mobile nav trigger must be >=44px.
+       Was 40px; header is 56px tall so 44 fits comfortably. */
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1534,7 +1560,7 @@ html[dir="rtl"] .mobile-header,
 
 
 /* ── WizeLife Design System ── */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+/* (font @import removed — invalid mid-file & duplicate; fonts now load via HTML <link>) */
 
 h1, h2, h3, h4, .sidebar-header h1, .page-title, .card-title, .stat-label, .nav-item span {
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -1968,4 +1994,11 @@ html[dir="ltr"] .main-content small {
 @media (prefers-reduced-motion: reduce) {
     ::view-transition-old(root),
     ::view-transition-new(root) { animation: none; }
+    /* a11y: WCAG 2.2 2.3.3 — honor reduced-motion globally */
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
 }

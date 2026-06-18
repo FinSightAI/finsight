@@ -32,7 +32,11 @@
  <link rel="apple-touch-icon" href="../img/logo.svg">
  <meta name="theme-color" content="#8b5cf6">
  <title>יועץ AI – WizeMoney</title>
- <link rel="stylesheet" href="../css/app.css?v=2026060901">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+ <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
+ <link rel="stylesheet" href="../css/app.css?v=2026061801">
 <meta name="wl-sentry-dsn" content="">
 <meta name="wl-sentry-app" content="wizemoney">
 <script src="/js/wize-sentry.js?v=2026061201" defer></script>
@@ -80,6 +84,8 @@
  <div style="padding:14px 24px 20px;border-top:1px solid var(--color-border);flex-shrink:0;padding-bottom:max(20px,env(safe-area-inset-bottom));">
  <div style="display:flex;gap:10px;align-items:flex-end;">
  <textarea id="chatInput"
+ aria-label="שאל אותי כל שאלה פיננסית"
+ data-i18n-aria="chat.inputPlaceholder"
  placeholder="שאל אותי כל שאלה פיננסית..."
  data-i18n-placeholder="chat.inputPlaceholder"
  rows="1"
@@ -88,6 +94,7 @@
  oninput="autoResize(this)"
  ></textarea>
  <button id="sendBtn" onclick="sendMessage()"
+ aria-label="שלח" data-i18n-aria="chat.send" type="button"
  style="padding:12px 18px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;border-radius:14px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;">
  ➤
  </button>
