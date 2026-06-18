@@ -36,7 +36,7 @@
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
- <link rel="stylesheet" href="../css/app.css?v=2026061801">
+ <link rel="stylesheet" href="../css/app.css?v=2026061802">
 <meta name="wl-sentry-dsn" content="">
 <meta name="wl-sentry-app" content="wizemoney">
 <script src="/js/wize-sentry.js?v=2026061201" defer></script>
@@ -172,12 +172,13 @@
 <script src="../js/sidebar.js?v=2026061301"></script>
  <script src="../js/app.js?v=2026060903"></script>
 <script src="../js/profiles.js?v=2026060902"></script>
-<script src="../js/storage.js"></script>
+<script src="../js/storage.js?v=2026061802"></script>
+<script src="../js/currency.js?v=2026061802"></script>
 <script src="../js/wize-disclaimer.js?v=2026061501"></script>
 <script src="../js/wize-pii.js"></script>
  <script src="../js/wizeai-sync.js"></script>
  <script src="../js/wize-cloud-backup.js"></script>
-<script src="../js/i18n.js?v=2026061801"></script>
+<script src="../js/i18n.js?v=2026061802"></script>
 
 <script>
  const CHAT_HISTORY_KEY = 'finsight_ai_chat_history';
@@ -273,11 +274,21 @@
  bank.forEach(a => lines.push(` • ${a.bankName || a.name || 'Bank'}: ${fmt(parseFloat(a.balance)||0)}`));
  }
 
- const stocks = Storage.getStocks?.() || Storage.get('finance_stocks') || [];
- if (stocks.length) {
- const total = stocks.reduce((s, x) => s + (parseFloat(x.currentValue) || parseFloat(x.value) || 0), 0);
- lines.push(`\n**${L.stocks}:** ${stocks.length} ${L.holdings}, ${L.value} ${fmt(total)}`);
- stocks.slice(0, 6).forEach(x => lines.push(` • ${x.symbol || x.name}: ${fmt(parseFloat(x.currentValue)||parseFloat(x.value)||0)}`));
+ // getStocks() returns {holdings, transactions} — NOT an array. Read holdings,
+ // and value each holding in ILS (native price × qty → _toILS) like getTotalStocksValue(),
+ // so the AI sees the same ILS figure the dashboard shows (was: x.currentValue on the
+ // wrapper object → block skipped, AI told user had no stocks; no FX → would sum 1:1).
+ const _stk = Storage.getStocks?.() || {};
+ const holdings = Array.isArray(_stk) ? _stk : (_stk.holdings || []);
+ const _stkValILS = h => {
+ const nativeVal = (parseFloat(h.quantity)||0) * (parseFloat(h.currentPrice)||parseFloat(h.avgPrice)||0);
+ if (nativeVal > 0) return (Storage._toILS ? Storage._toILS(nativeVal, h.currency) : nativeVal);
+ return parseFloat(h.valueILS) || 0;
+ };
+ if (holdings.length) {
+ const total = holdings.reduce((s, h) => s + _stkValILS(h), 0);
+ lines.push(`\n**${L.stocks}:** ${holdings.length} ${L.holdings}, ${L.value} ${fmt(total)}`);
+ holdings.slice(0, 6).forEach(h => lines.push(`  • ${h.symbol || h.name}: ${fmt(_stkValILS(h))}`));
  }
 
  const funds = Storage.getMyFunds?.() || Storage.get('finance_my_funds') || [];
@@ -669,7 +680,7 @@ ${rules}${groundTruthFooter}`;
  }
  });
 </script>
-<script src="../js/wl-common-i18n.js?v=2026061801" defer></script>
-<script src="../js/wl-text-i18n.js?v=2026061801" defer></script>
+<script src="../js/wl-common-i18n.js?v=2026061802" defer></script>
+<script src="../js/wl-text-i18n.js?v=2026061802" defer></script>
 </body>
 </html>
