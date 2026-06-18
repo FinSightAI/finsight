@@ -1,0 +1,35 @@
+# GitHub Pages (Jekyll) build config — security hardening only.
+#
+# WizeMoney is served from this repo root via GitHub Pages. By default Pages
+# publishes EVERY tracked file, which leaked backend/dev artifacts to the public
+# CDN (verified live 2026-06-17):
+#   /functions/index.js        — full Cloud Functions source (admin uid allow-list,
+#                                 PayPal webhook + plan logic, AI proxy)
+#   /functions/package.json    — server dependency inventory
+#   /firestore.rules           — complete access-control rule structure
+#   /firestore-tests/...       — rules test harness
+#   /DEPLOY.md                 — deploy notes
+#   /package-lock.json         — dependency tree (supply-chain recon)
+#
+# None of these are fetched by the frontend, so excluding them changes nothing
+# user-visible — it only stops handing attackers a free map of the server.
+# `exclude` is additive to Jekyll's defaults and does NOT alter how the
+# published HTML/JS/CSS is rendered.
+exclude:
+  - functions
+  - firestore.rules
+  - firestore-tests
+  - firestore-debug.log
+  - DEPLOY.md
+  - package.json
+  - package-lock.json
+  - node_modules
+  - node_modules.nosync
+  - workers
+  - scripts
+  - qa
+  - "FIN SIGHT DOCS"
+  - "*.md"
+  - LICENSE
+  - .firebaserc
+  - firebase.json
