@@ -6,6 +6,15 @@ const I18n = {
 
     translations: {
         he: {
+            // Summary-sender banner / modal (flat keys used by index.html data-i18n)
+            summary_banner: 'הגיע הזמן לשתף את הסיכום הפיננסי שלך',
+            share_whatsapp: '💬 שתף בוואטסאפ',
+            preview: '👁 תצוגה מקדימה',
+            later: 'אחר כך',
+            financial_summary: '📊 סיכום פיננסי',
+            email: '📧 אימייל',
+            share: '↑ שתף',
+            copy: '📋 העתק',
             // Navigation
             nav: {
                 dashboard: 'דאשבורד',
@@ -2180,6 +2189,15 @@ const I18n = {
             }
         },
         en: {
+            // Summary-sender banner / modal (flat keys used by index.html data-i18n)
+            summary_banner: 'Time to share your financial summary',
+            share_whatsapp: '💬 Share on WhatsApp',
+            preview: '👁 Preview',
+            later: 'Later',
+            financial_summary: '📊 Financial Summary',
+            email: '📧 Email',
+            share: '↑ Share',
+            copy: '📋 Copy',
             // Navigation
             nav: {
                 dashboard: 'Dashboard',
@@ -4354,6 +4372,15 @@ const I18n = {
             }
         },
         pt: {
+            // Summary-sender banner / modal (flat keys used by index.html data-i18n)
+            summary_banner: 'Hora de compartilhar seu resumo financeiro',
+            share_whatsapp: '💬 Compartilhar no WhatsApp',
+            preview: '👁 Pré-visualizar',
+            later: 'Depois',
+            financial_summary: '📊 Resumo Financeiro',
+            email: '📧 E-mail',
+            share: '↑ Compartilhar',
+            copy: '📋 Copiar',
             fundsUpdate: {
                 title: 'Atualização Mensal - Fundos e Contas',
                 subtitle: 'Atualize todos os seus fundos em um só lugar',
@@ -6522,6 +6549,15 @@ const I18n = {
             }
         },
         es: {
+            // Summary-sender banner / modal (flat keys used by index.html data-i18n)
+            summary_banner: 'Es hora de compartir tu resumen financiero',
+            share_whatsapp: '💬 Compartir en WhatsApp',
+            preview: '👁 Vista previa',
+            later: 'Más tarde',
+            financial_summary: '📊 Resumen Financiero',
+            email: '📧 Correo',
+            share: '↑ Compartir',
+            copy: '📋 Copiar',
             fundsUpdate: {
                 title: 'Actualización Mensual - Fondos y Cuentas',
                 subtitle: 'Actualice todos sus fondos en un solo lugar',
