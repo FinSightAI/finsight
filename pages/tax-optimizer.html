@@ -594,7 +594,7 @@
  </div>
 
  <div style="margin-top: 10px; font-size: 0.78rem; color: var(--color-text-secondary);" data-i18n="tax.burdenNote">
- * חישוב מס הכנסה כולל נקודות זיכוי בסיסיות (2.25 נקודות = ₪285/חודש). ביטוח לאומי אינו כלול.
+ * חישוב מס הכנסה כולל נקודות זיכוי בסיסיות (2.25 נקודות = ₪544.5/חודש, ערך נקודה ₪242 לשנת 2026). ביטוח לאומי אינו כלול.
  </div>
  </div>
 
@@ -858,7 +858,7 @@
  </div>
  </div>
  <div style="margin-top: 10px; font-size: 0.78rem; color: var(--color-text-secondary);">
- * INSS calculado pela tabela progressiva 2025. IRPF calculado sobre (salário − INSS − dedução por dependente). Desconto simplificado não aplicado. Consulte um contador.
+ * INSS calculado pela tabela progressiva 2026 (teto R$ 8.475,55). IRPF calculado sobre (salário − INSS − dedução por dependente), com o redutor da Lei 15.270/2025. Desconto simplificado não aplicado. Consulte um contador.
  </div>
  </div>
 
@@ -866,7 +866,7 @@
  <div class="card" style="margin-bottom: 24px;">
  <div class="section-header">
  <span class="section-icon">📊</span>
- <h2>Tabela do IRPF 2025</h2>
+ <h2>Tabela do IRPF 2026</h2>
  </div>
  <table class="irpf-table">
  <thead>
@@ -877,13 +877,18 @@
  </tr>
  </thead>
  <tbody id="br-irpf-table">
- <tr id="br-bracket-0"><td>Até R$ 2.259,20</td><td>Isento</td><td>—</td></tr>
- <tr id="br-bracket-1"><td>R$ 2.259,21 a R$ 2.826,65</td><td>7,5%</td><td>R$ 169,44</td></tr>
- <tr id="br-bracket-2"><td>R$ 2.826,66 a R$ 3.751,05</td><td>15%</td><td>R$ 381,44</td></tr>
- <tr id="br-bracket-3"><td>R$ 3.751,06 a R$ 4.664,68</td><td>22,5%</td><td>R$ 662,77</td></tr>
- <tr id="br-bracket-4"><td>Acima de R$ 4.664,68</td><td>27,5%</td><td>R$ 896,00</td></tr>
+ <tr id="br-bracket-0"><td>Até R$ 2.428,80</td><td>Isento</td><td>—</td></tr>
+ <tr id="br-bracket-1"><td>R$ 2.428,81 a R$ 2.826,65</td><td>7,5%</td><td>R$ 182,16</td></tr>
+ <tr id="br-bracket-2"><td>R$ 2.826,66 a R$ 3.751,05</td><td>15%</td><td>R$ 394,16</td></tr>
+ <tr id="br-bracket-3"><td>R$ 3.751,06 a R$ 4.664,68</td><td>22,5%</td><td>R$ 675,49</td></tr>
+ <tr id="br-bracket-4"><td>Acima de R$ 4.664,68</td><td>27,5%</td><td>R$ 908,73</td></tr>
  </tbody>
  </table>
+ <div style="margin-top: 10px; font-size: 0.75rem; color: var(--color-text-secondary); line-height: 1.5;">
+ Lei 15.270/2025: isenção total até R$ 5.000/mês e redução parcial decrescente
+ até R$ 7.350/mês (redutor = 978,62 − 0,133145 × salário), aplicada após a tabela.
+ Fonte: Receita Federal — Tributação de 2026. Verificado em 18/06/2026.
+ </div>
  </div>
 
  <!-- BR Section 4 — Tips -->
@@ -993,7 +998,7 @@
  <script src="../js/storage.js?v=2026061802"></script>
  <script src="../js/wizeai-sync.js"></script>
  <script src="../js/wize-cloud-backup.js"></script>
- <script src="../js/i18n.js?v=2026061802"></script>
+ <script src="../js/i18n.js?v=2026061803"></script>
 
  <script>
  // ─────────────────────────────────────────────
@@ -1012,27 +1017,51 @@
  }
 
  // ─────────────────────────────────────────────
- // Brazilian Tax Constants (2025)
+ // Brazilian Tax Constants (2026)
+ // verified gov.br Receita Federal "Tributação de 2026" + Lei 15.270/2025 +
+ //   CalculaBrasil/Contabilizei (INSS teto) on 2026-06-18.
  // ─────────────────────────────────────────────
- // INSS progressive table (monthly salary → rate on that slice)
+ const BR_DATA_YEAR = 2026;
+ const BR_DATA_VERIFIED = '2026-06-18';
+ const BR_DATA_SOURCE = 'gov.br Receita Federal 2026 + Lei 15.270/2025';
+ // INSS progressive table 2026 (monthly salary → rate on that slice)
  const INSS_BRACKETS = [
- { upTo: 1412.00, rate: 0.075 },
- { upTo: 2666.68, rate: 0.09 },
- { upTo: 4000.03, rate: 0.12 },
- { upTo: 7786.02, rate: 0.14 },
- { upTo: Infinity, rate: 0 }, // capped
+ { upTo: 1621.00, rate: 0.075 },
+ { upTo: 2902.84, rate: 0.09 },
+ { upTo: 4354.27, rate: 0.12 },
+ { upTo: 8475.55, rate: 0.14 },
+ { upTo: Infinity, rate: 0 }, // capped at teto
  ];
- const INSS_MAX_MONTHLY = 908.85; // teto 2025
+ const INSS_MAX_MONTHLY = 988.09; // teto 2026 (R$8.475,55 × faixas) — desconto máximo CLT
 
- // IRPF monthly table 2025
+ // IRPF monthly progressive table 2026 (Receita Federal "Tributação de 2026")
+ // Exempt band rose to R$2.428,80; bracket edges unchanged; deductions updated.
  const IRPF_BRACKETS = [
- { upTo: 2259.20, rate: 0, deduction: 0 },
- { upTo: 2826.65, rate: 0.075, deduction: 169.44 },
- { upTo: 3751.05, rate: 0.15, deduction: 381.44 },
- { upTo: 4664.68, rate: 0.225, deduction: 662.77 },
- { upTo: Infinity, rate: 0.275, deduction: 896.00 },
+ { upTo: 2428.80, rate: 0, deduction: 0 },
+ { upTo: 2826.65, rate: 0.075, deduction: 182.16 },
+ { upTo: 3751.05, rate: 0.15, deduction: 394.16 },
+ { upTo: 4664.68, rate: 0.225, deduction: 675.49 },
+ { upTo: Infinity, rate: 0.275, deduction: 908.73 },
  ];
  const IRPF_DEPENDENT_DEDUCTION = 189.59; // per dependent per month
+
+ // Lei 15.270/2025 monthly redutor (applied AFTER the progressive table, keyed to
+ // GROSS monthly salary). ≤R$5.000 → fully exempt; R$5.000,01–7.350 → partial:
+ //   redutor = 978,62 − 0,133145 × salário ; >R$7.350 → no reduction.
+ // The redutor is capped at the IRPF due (cannot make tax negative).
+ const IRPF_REDUTOR_FULL_LIMIT = 5000.00;
+ const IRPF_REDUTOR_PARTIAL_LIMIT = 7350.00;
+ const IRPF_REDUTOR_A = 978.62;
+ const IRPF_REDUTOR_B = 0.133145;
+ function calcIRPFRedutor(grossSalary, irpfDue) {
+ let redutor = 0;
+ if (grossSalary <= IRPF_REDUTOR_FULL_LIMIT) {
+ redutor = irpfDue; // zero out the tax entirely
+ } else if (grossSalary <= IRPF_REDUTOR_PARTIAL_LIMIT) {
+ redutor = Math.max(0, IRPF_REDUTOR_A - IRPF_REDUTOR_B * grossSalary);
+ }
+ return Math.min(redutor, irpfDue); // never negative tax
+ }
 
  function calcINSS(salary) {
  let inss = 0;
@@ -1082,7 +1111,10 @@
  const inss = calcINSS(salary);
  const depDeduction = deps * IRPF_DEPENDENT_DEDUCTION;
  const irpfBase = Math.max(0, salary - inss - depDeduction);
- const { tax: irpf, marginalRate } = calcIRPF(irpfBase);
+ const { tax: irpfBeforeRedutor, marginalRate } = calcIRPF(irpfBase);
+ // Lei 15.270/2025: apply the monthly redutor (keyed to gross salary) on top.
+ const redutor = calcIRPFRedutor(salary, irpfBeforeRedutor);
+ const irpf = Math.max(0, irpfBeforeRedutor - redutor);
  const totalTax = inss + irpf;
  const net = salary - totalTax;
  const effRate = salary > 0 ? (totalTax / salary) * 100 : 0;
@@ -1108,18 +1140,25 @@
  }
 
  // ─────────────────────────────────────────────
- // Israeli Tax Constants (2025)
+ // Israeli Tax Constants (2026)
+ // verified Israel Tax Authority monthly-deductions booklet (לוח עזר ינואר 2026,
+ //   gov.il) + Malam-Payroll + CalcFinance on 2026-06-18.
+ // 2026 reform widened the 20% band to ₪19,000/mo and the 31%/35% bands.
  // ─────────────────────────────────────────────
+ const TAX_DATA_YEAR = 2026;
+ const TAX_DATA_VERIFIED = '2026-06-18';
+ const TAX_DATA_SOURCE = 'gov.il / רשות המסים — לוח עזר ינואר 2026';
  const TAX_BRACKETS = [
- { upTo: 6790, rate: 0.10 },
- { upTo: 9730, rate: 0.14 },
- { upTo: 15640, rate: 0.20 },
- { upTo: 21710, rate: 0.31 },
- { upTo: 45180, rate: 0.35 },
- { upTo: Infinity, rate: 0.47 },
+ { upTo: 7010, rate: 0.10 },  // 10% up to ₪7,010/mo
+ { upTo: 10060, rate: 0.14 }, // 14% ₪7,010–10,060
+ { upTo: 19000, rate: 0.20 }, // 20% ₪10,060–19,000 (widened 2026)
+ { upTo: 25100, rate: 0.31 }, // 31% ₪19,000–25,100
+ { upTo: 35220, rate: 0.35 }, // 35% ₪25,100–35,220
+ { upTo: 58190, rate: 0.47 }, // 47% ₪35,220–58,190
+ { upTo: Infinity, rate: 0.50 }, // 50% above ₪58,190 (47% + 3% מס יסף/surtax)
  ];
 
- // Tax credit points: basic 2.25 points for resident. 1 point = ₪242/month (2025).
+ // Tax credit points: basic 2.25 points for resident. 1 point = ₪242/month (2026, = ₪2,904/yr).
  const CREDIT_POINT_VALUE_MONTHLY = 242;
  const BASIC_CREDIT_POINTS = 2.25;
  const MONTHLY_BASIC_CREDIT = BASIC_CREDIT_POINTS * CREDIT_POINT_VALUE_MONTHLY; // ₪544.5
@@ -1179,7 +1218,7 @@
  }
  prev = bracket.upTo;
  }
- return 0.47;
+ return 0.50; // top band incl 3% מס יסף/surtax (2026)
  }
 
  // ─────────────────────────────────────────────
@@ -1425,8 +1464,8 @@
  calcBrazil();
  });
  </script>
-<script src="../js/wl-common-i18n.js?v=2026061802" defer></script>
-<script src="../js/wl-text-i18n.js?v=2026061802" defer></script>
+<script src="../js/wl-common-i18n.js?v=2026061803" defer></script>
+<script src="../js/wl-text-i18n.js?v=2026061803" defer></script>
 <script src="/js/wize-disclaimer.js"></script>
 <script>window.addEventListener('load',function(){setTimeout(function(){if(window.WizeDisclaimer)WizeDisclaimer.gate({app:'money'}).catch(function(){});},600);});</script>
 </body>
