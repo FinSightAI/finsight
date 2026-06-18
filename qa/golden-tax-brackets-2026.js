@@ -27,8 +27,8 @@ const TAX_BRACKETS = [
   { upTo: 10060, rate: 0.14 },
   { upTo: 19000, rate: 0.20 },
   { upTo: 25100, rate: 0.31 },
-  { upTo: 35220, rate: 0.35 },
-  { upTo: 58190, rate: 0.47 },
+  { upTo: 46690, rate: 0.35 },
+  { upTo: 60130, rate: 0.47 },
   { upTo: Infinity, rate: 0.50 },
 ];
 const CREDIT_POINT_VALUE_MONTHLY = 242;
@@ -57,8 +57,8 @@ eq('IL basic credit/mo', MONTHLY_BASIC_CREDIT, 544.5);
 // bracket boundaries (the 2026 reform)
 eq('IL 20% band ceiling', TAX_BRACKETS[2].upTo, 19000);
 eq('IL 31% band ceiling', TAX_BRACKETS[3].upTo, 25100);
-eq('IL 35% band ceiling', TAX_BRACKETS[4].upTo, 35220);
-eq('IL 47% band ceiling', TAX_BRACKETS[5].upTo, 58190);
+eq('IL 35% band ceiling', TAX_BRACKETS[4].upTo, 46690); // 560,280/yr ÷ 12
+eq('IL 47% band ceiling', TAX_BRACKETS[5].upTo, 60130); // 721,560/yr ÷ 12 (matches 3% surtax threshold)
 
 // worked examples (hand-derived above)
 // ₪18,000: 701 + 427 + 0.20*7940(=1588) = 2716 − 544.5 = 2171.5
@@ -67,9 +67,10 @@ eq('IL marginal @18k', marginalIL(18000), 0.20);
 // ₪30,000: 701+427+1788+1891+0.35*4900(=1715)=6522 − 544.5 = 5977.5
 eq('IL tax @30k/mo', calcMonthlyTaxIL(30000), 5977.5);
 eq('IL marginal @30k', marginalIL(30000), 0.35);
-// ₪60,000: 701+427+1788+1891+3542+0.47*22970(=10795.9)+0.50*1810(=905)=20049.9 −544.5 = 19505.4
-eq('IL tax @60k/mo', calcMonthlyTaxIL(60000), 19505.4);
-eq('IL marginal @60k', marginalIL(60000), 0.50);
+// ₪60,000: 701+427+1788+1891+0.35*21590(=7556.5)+0.47*13310(=6255.7)=18619.2 −544.5 = 18074.7
+//   (60,000 falls in the 47% band 46,690–60,130; the 50% surtax band starts at 60,130/mo)
+eq('IL tax @60k/mo', calcMonthlyTaxIL(60000), 18074.7);
+eq('IL marginal @60k', marginalIL(60000), 0.47);
 // default ₪15,000: 701+427+0.20*4940(=988)=2116 − 544.5 = 1571.5
 eq('IL tax @15k default', calcMonthlyTaxIL(15000), 1571.5);
 // boundary: exactly at ₪7,010 → 10%*7010 = 701 gross − 544.5 credit = 156.5
