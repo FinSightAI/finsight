@@ -240,10 +240,8 @@
 <script src="/js/wize-consent.js?v=2026061601"></script>
 </head>
 <body>
- <!-- Sidebar Toggle Button -->
- <button class="sidebar-toggle" onclick="toggleSidebar()" title="פתח/סגור תפריט" data-i18n-title="stocks.toggleMenu">
- <span class="toggle-icon">💰</span>
- </button>
+ <!-- Sidebar toggle removed: the stocks-only collapse pushed the whole desktop
+      nav off-canvas, leaving only a 💰 button users couldn't find to reopen it. -->
 
  <div class="app-container">
  <!-- Sidebar Navigation -->
@@ -879,16 +877,14 @@
  .replace(/"/g, '&quot;');
  }
 
- // Sidebar toggle
- function toggleSidebar() {
- document.body.classList.toggle('sidebar-collapsed');
- const isCollapsed = document.body.classList.contains('sidebar-collapsed');
- localStorage.setItem('stocks_sidebar_collapsed', isCollapsed ? '1' : '0');
- }
- // Restore sidebar state
- if (localStorage.getItem('stocks_sidebar_collapsed') === '1') {
- document.body.classList.add('sidebar-collapsed');
- }
+ // Sidebar collapse removed (UX trap: hid the whole desktop nav behind one 💰
+ // button users couldn't find). No-op kept for any cached reference, and any
+ // user previously stuck in the collapsed state is auto-recovered on load.
+ function toggleSidebar() {}
+ try {
+ document.body.classList.remove('sidebar-collapsed');
+ localStorage.removeItem('stocks_sidebar_collapsed');
+ } catch (e) {}
 
  // State
  let refreshInterval = null;
