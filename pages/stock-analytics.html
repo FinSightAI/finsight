@@ -395,14 +395,22 @@
  }
  return h.valueILS > 0 ? h.valueILS : 0;
  }
+ function getHoldingCostILS(h) {
+ // avgPrice is in the holding's NATIVE currency — convert the cost basis to ILS
+ // so it can be compared against the ILS value/profit (else non-ILS holdings
+ // mix currencies: ILS value − native cost overstates profit by the FX factor).
+ const nativeCost = h.quantity * (h.avgPrice || 0);
+ if (nativeCost <= 0) return 0;
+ return (typeof Storage !== 'undefined' && Storage._toILS) ? Storage._toILS(nativeCost, h.currency) : nativeCost;
+ }
  function getHoldingProfit(h) {
  if (h.profitILS != null) return h.profitILS;
- const cost = h.quantity * (h.avgPrice || 0);
+ const cost = getHoldingCostILS(h);
  const val = getHoldingValue(h);
  return val - cost;
  }
  function getProfitPct(h) {
- const cost = h.quantity * (h.avgPrice || 0);
+ const cost = getHoldingCostILS(h);
  if (!cost) return 0;
  return (getHoldingProfit(h) / cost) * 100;
  }
