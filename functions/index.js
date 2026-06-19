@@ -2140,7 +2140,7 @@ exports.logEvent = functions
 exports.captureLeadEmail = functions
     .runWith({ secrets: [RESEND_API_KEY], memory: '256MB' })
     .https.onRequest(async (req, res) => {
-        const ALLOWED = ['https://wizelife.ai', 'https://finsightai.github.io'];
+        const ALLOWED = ['https://wizelife.ai', 'https://finsightai.github.io', 'https://travel.wizelife.ai', 'https://money.wizelife.ai', 'https://tax.wizelife.ai', 'https://deal.wizelife.ai', 'https://health.wizelife.ai'];
         const origin = req.headers.origin || '';
         if (ALLOWED.includes(origin)) {
             res.set('Access-Control-Allow-Origin', origin);
