@@ -311,7 +311,41 @@
   const _customizeLabel = ({ he: 'התאמה אישית', en: 'Customize', pt: 'Personalizar', es: 'Personalizar' })[_customizeLang] || 'Customize';
   const customizeBtn = !inPages ? '<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:6px;justify-content:center;" onclick="if(typeof WidgetManager!==\'undefined\')WidgetManager.showCustomizeModal()" data-i18n="dashboard.customize"><span>⚙️</span><span>' + _customizeLabel + '</span></button>' : '';
 
-  const footer = sidebarLangRow + customizeBtn + wizeAILink + shareBtn + footerBtns + mktToggle;
+  // ── Persistent "Upgrade to Pro" card (app-local; above the language row) ──
+  // Hidden when the user is already Pro/YOLO, and dismissible (remembered in
+  // localStorage). Links to the existing paywall upgrade flow.
+  const _upLang = localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}());
+  const _upLabels = {
+    he: { txt: 'שדרג ל-Pro', price: '$4.99', dismiss: 'הסתר' },
+    en: { txt: 'Upgrade to Pro', price: '$4.99', dismiss: 'Dismiss' },
+    pt: { txt: 'Atualizar para Pro', price: '$4.99', dismiss: 'Dispensar' },
+    es: { txt: 'Mejorar a Pro', price: '$4.99', dismiss: 'Descartar' },
+  };
+  const _upL = _upLabels[_upLang] || _upLabels.en;
+  // Resolve plan from whatever is readable (Plan API when paywall-active, else raw wl_plan).
+  let _isPaid = false;
+  try {
+    if (typeof Plan !== 'undefined' && Plan.isPaywallActive && Plan.isPaywallActive()) {
+      if (Plan.isPro() || Plan.isYolo()) _isPaid = true;
+    }
+  } catch(e) {}
+  try {
+    var _rawPlan = localStorage.getItem('wl_plan');
+    if (_rawPlan === 'pro' || _rawPlan === 'yolo' || _rawPlan === 'pro_trial') _isPaid = true;
+  } catch(e) {}
+  let _upDismissed = false;
+  try { _upDismissed = localStorage.getItem('wl_upgrade_card_dismissed') === '1'; } catch(e) {}
+  const upgradeCard = (_isPaid || _upDismissed) ? '' :
+    '<div id="wlUpgradeCard" style="display:flex;align-items:center;gap:8px;padding:9px 10px;margin-bottom:8px;background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(16,185,129,0.08));border:1px solid rgba(16,185,129,0.35);border-radius:10px;">' +
+      '<button onclick="if(typeof Paywall!==\'undefined\')Paywall.show(\'upgrade\')" style="flex:1;display:flex;align-items:center;gap:7px;background:none;border:none;color:#34d399;font:700 12.5px Inter,sans-serif;cursor:pointer;text-align:start;padding:0;">' +
+        '<span style="font-size:14px;line-height:1;">⭐</span>' +
+        '<span>' + _upL.txt + '</span>' +
+        '<span style="margin-inline-start:auto;font-weight:800;color:#6ee7b7;">' + _upL.price + '</span>' +
+      '</button>' +
+      '<button aria-label="' + _upL.dismiss + '" title="' + _upL.dismiss + '" onclick="try{localStorage.setItem(\'wl_upgrade_card_dismissed\',\'1\');}catch(e){}var c=document.getElementById(\'wlUpgradeCard\');if(c)c.remove();" style="flex-shrink:0;background:none;border:none;color:rgba(110,231,183,0.55);font-size:15px;line-height:1;cursor:pointer;padding:2px 4px;font-family:inherit;">×</button>' +
+    '</div>';
+
+  const footer = upgradeCard + sidebarLangRow + customizeBtn + wizeAILink + shareBtn + footerBtns + mktToggle;
 
  const html = `
  <nav>
