@@ -172,18 +172,18 @@
  <div class="form-group">
  <label data-i18n="assets.assetType">סוג נכס</label>
  <select class="form-control" id="assetType" required onchange="togglePropertyFields()">
- <option value="car">🚗 רכב</option>
- <option value="property">🏠 נדל״ן</option>
- <option value="savings">💵 חסכונות</option>
- <option value="jewelry">💎 תכשיטים</option>
- <option value="electronics">💻 אלקטרוניקה</option>
- <option value="other">📦 אחר</option>
+ <option value="car" data-i18n="assets.typeOption.car">🚗 רכב</option>
+ <option value="property" data-i18n="assets.typeOption.property">🏠 נדל״ן</option>
+ <option value="savings" data-i18n="assets.typeOption.savings">💵 חסכונות</option>
+ <option value="jewelry" data-i18n="assets.typeOption.jewelry">💎 תכשיטים</option>
+ <option value="electronics" data-i18n="assets.typeOption.electronics">💻 אלקטרוניקה</option>
+ <option value="other" data-i18n="assets.typeOption.other">📦 אחר</option>
  </select>
  </div>
 
  <div class="form-group">
  <label data-i18n="assets.assetName">שם הנכס</label>
- <input type="text" class="form-control" id="assetName" required placeholder="טויוטה קורולה 2022">
+ <input type="text" class="form-control" id="assetName" required placeholder="טויוטה קורולה 2022" data-i18n-placeholder="assets.namePlaceholder">
  </div>
 
  <div class="form-group">
@@ -208,11 +208,11 @@
  </div>
  <div class="form-group">
  <label data-i18n="assets.city">עיר</label>
- <input type="text" class="form-control" id="assetCity" placeholder="תל אביב">
+ <input type="text" class="form-control" id="assetCity" placeholder="תל אביב" data-i18n-placeholder="assets.cityPlaceholder">
  </div>
  <div class="form-group">
  <label data-i18n="assets.neighborhood">שכונה</label>
- <input type="text" class="form-control" id="assetNeighborhood" placeholder="פלורנטין">
+ <input type="text" class="form-control" id="assetNeighborhood" placeholder="פלורנטין" data-i18n-placeholder="assets.neighborhoodPlaceholder">
  </div>
  </div>
  </form>
@@ -257,7 +257,7 @@
  const totalEl = document.getElementById('totalAssetsValue');
 
  if (assets.length === 0) {
- container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏠</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">אין עדיין נכסים</div><div style="font-size:0.85rem;margin-bottom:20px">הוסף דירה, רכב, או כל נכס אחר לחישוב שווי נקי</div><button class="btn btn-primary btn-sm" onclick="openAssetModal()">+ הוסף נכס</button></div>`;
+ container.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--color-text-secondary)"><div style="font-size:2.8rem;margin-bottom:12px">🏠</div><div style="font-weight:600;font-size:1rem;color:var(--color-text-primary);margin-bottom:6px">${sanitize(I18n.t('assets.noAssetsTitle'))}</div><div style="font-size:0.85rem;margin-bottom:20px">${sanitize(I18n.t('assets.noAssetsDesc'))}</div><button class="btn btn-primary btn-sm" onclick="openAssetModal()">${sanitize(I18n.t('assets.addAssetCta'))}</button></div>`;
  totalEl.textContent = I18n.formatCurrency(0);
  return;
  }

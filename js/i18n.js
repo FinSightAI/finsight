@@ -825,7 +825,21 @@ const I18n = {
                     electronics: 'אלקטרוניקה',
                     other: 'אחר'
                 },
+                typeOption: {
+                    car: '🚗 רכב',
+                    property: '🏠 נדל״ן',
+                    savings: '💵 חסכונות',
+                    jewelry: '💎 תכשיטים',
+                    electronics: '💻 אלקטרוניקה',
+                    other: '📦 אחר'
+                },
                 noAssets: 'אין נכסים',
+                noAssetsTitle: 'אין עדיין נכסים',
+                noAssetsDesc: 'הוסף דירה, רכב, או כל נכס אחר לחישוב שווי נקי',
+                addAssetCta: '+ הוסף נכס',
+                namePlaceholder: 'טויוטה קורולה 2022',
+                cityPlaceholder: 'תל אביב',
+                neighborhoodPlaceholder: 'פלורנטין',
                 chartTitle: 'חלוקת נכסים לפי סוג',
                 depreciation: 'פחת',
                 area: 'שטח (מ"ר)',
@@ -3012,7 +3026,21 @@ const I18n = {
                     electronics: 'Electronics',
                     other: 'Other'
                 },
+                typeOption: {
+                    car: '🚗 Car',
+                    property: '🏠 Property',
+                    savings: '💵 Savings',
+                    jewelry: '💎 Jewelry',
+                    electronics: '💻 Electronics',
+                    other: '📦 Other'
+                },
                 noAssets: 'No assets',
+                noAssetsTitle: 'No assets yet',
+                noAssetsDesc: 'Add a property, car, or any other asset to calculate your net worth',
+                addAssetCta: '+ Add Asset',
+                namePlaceholder: 'Toyota Corolla 2022',
+                cityPlaceholder: 'Tel Aviv',
+                neighborhoodPlaceholder: 'Florentin',
                 chartTitle: 'Asset Distribution by Type',
                 depreciation: 'Depreciation',
                 area: 'Area (sqm)',
@@ -5543,7 +5571,21 @@ const I18n = {
                     electronics: 'Eletrônicos',
                     other: 'Outro'
                 },
-                noAssets: 'Nenhum ativo'
+                typeOption: {
+                    car: '🚗 Carro',
+                    property: '🏠 Imóvel',
+                    savings: '💵 Poupança',
+                    jewelry: '💎 Joias',
+                    electronics: '💻 Eletrônicos',
+                    other: '📦 Outro'
+                },
+                noAssets: 'Nenhum ativo',
+                noAssetsTitle: 'Nenhum ativo ainda',
+                noAssetsDesc: 'Adicione um imóvel, carro ou qualquer outro ativo para calcular seu patrimônio líquido',
+                addAssetCta: '+ Adicionar Ativo',
+                namePlaceholder: 'Toyota Corolla 2022',
+                cityPlaceholder: 'São Paulo',
+                neighborhoodPlaceholder: 'Pinheiros'
             },
             // Profile
             profile: {
@@ -7723,7 +7765,21 @@ const I18n = {
                     electronics: 'Electrónicos',
                     other: 'Otro'
                 },
-                noAssets: 'No hay activos'
+                typeOption: {
+                    car: '🚗 Auto',
+                    property: '🏠 Inmueble',
+                    savings: '💵 Ahorro',
+                    jewelry: '💎 Joyas',
+                    electronics: '💻 Electrónicos',
+                    other: '📦 Otro'
+                },
+                noAssets: 'No hay activos',
+                noAssetsTitle: 'Aún no hay activos',
+                noAssetsDesc: 'Agrega un inmueble, auto o cualquier otro activo para calcular tu patrimonio neto',
+                addAssetCta: '+ Agregar Activo',
+                namePlaceholder: 'Toyota Corolla 2022',
+                cityPlaceholder: 'Buenos Aires',
+                neighborhoodPlaceholder: 'Palermo'
             },
             // Profile
             profile: {
