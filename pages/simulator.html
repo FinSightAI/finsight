@@ -464,9 +464,11 @@ function initSubs() {
  } else {
  const _s = (v) => (window.sanitize ? window.sanitize(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
  listEl.innerHTML = subs.map((s, i) => {
- let amt = s.amount || 0;
- if (s.billingCycle === 'yearly') amt /= 12;
- if (s.billingCycle === 'quarterly') amt /= 3;
+ // Normalize to monthly via s.frequency (field stored by subscriptions.html).
+ // Old code used s.billingCycle which is never set — annual/quarterly subs were
+ // 12×/3× inflated in the simulator. Fixed 2026-06-20.
+ const _FREQ = { weekly: 52/12, monthly: 1, bimonthly: 0.5, quarterly: 1/3, semi_annual: 1/6, annual: 1/12 };
+ const amt = (s.amount || 0) * (_FREQ[s.frequency] || 1);
  return `<div class="sub-row">
  <input type="checkbox" id="sub${i}" data-amt="${amt.toFixed(2)}" onchange="updateSubs()">
  <label for="sub${i}">${_s(s.name || I18n.t('sim.rt_subDefault'))}</label>
