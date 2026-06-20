@@ -2188,6 +2188,19 @@ exports.captureLeadEmail = functions
         const source     = typeof b.source === 'string' ? b.source.slice(0, 60) : 'landing';
         const savingsRaw = (typeof b.savingsUSD === 'number' && isFinite(b.savingsUSD)) ? Math.round(b.savingsUSD) : 0;
         const country    = (typeof b.country === 'string') ? b.country.slice(0, 40).replace(/[^a-z]/g, '') : '';
+        // Optional first-touch attribution forwarded from wl_attribution.first in the browser.
+        // Accept only a plain object with known scalar fields — discard anything else.
+        let attr = null;
+        if (b.attr && typeof b.attr === 'object' && !Array.isArray(b.attr)) {
+            const ATTR_FIELDS = ['ref', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'landing_url', 'referrer', 'ts'];
+            const filtered = {};
+            for (const k of ATTR_FIELDS) {
+                if (b.attr[k] !== undefined && b.attr[k] !== null && (typeof b.attr[k] === 'string' || typeof b.attr[k] === 'number')) {
+                    filtered[k] = typeof b.attr[k] === 'string' ? b.attr[k].slice(0, 200) : b.attr[k];
+                }
+            }
+            if (Object.keys(filtered).length > 0) attr = filtered;
+        }
 
         const fmt = n => n >= 1e6 ? '$' + (n/1e6).toFixed(1) + 'M' : '$' + Math.round(n).toLocaleString();
         const savingsStr = savingsRaw > 1000 ? fmt(savingsRaw) : null;
@@ -2282,6 +2295,7 @@ exports.captureLeadEmail = functions
                 drip1_sent: false,
                 drip2_sent: false,
                 drip3_sent: false,
+                ...(attr ? { attr } : {}),
             });
         } catch (e) { console.warn('lead save failed', e.message); }
 

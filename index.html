@@ -102,15 +102,18 @@
  };
  </script>
  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
- <!-- Firebase SDK — firestore + functions are lazy-loaded via window._wlLazy. -->
- <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
- <script  src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+ <!-- Firebase SDK — firestore + functions are lazy-loaded via window._wlLazy.
+      NOTE: firebase-app + firebase-auth cannot be deferred here because auth.js (body)
+      is not deferred and executes synchronously during parse — it expects firebase to
+      already be defined. Flagged for a future refactor (defer all firebase + auth.js together). -->
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
 <meta name="wl-sentry-dsn" content="">
 <meta name="wl-sentry-app" content="wizemoney">
 <script src="/js/wize-sentry.js?v=2026061201" defer></script>
 <script>window.WIZE_APP='wizemoney';</script>
-<script src="/js/wize-error-tracker.js?v=2026062001"></script>
-<script src="/js/wize-consent.js?v=2026061601"></script>
+<script src="/js/wize-error-tracker.js?v=2026062001" defer></script>
+<script src="/js/wize-consent.js?v=2026061601" defer></script>
 <script src="/js/wize-attribution.js?v=2026061901" defer></script>
 </head>
 <body>
@@ -518,8 +521,8 @@
  <script src="js/idb.js" defer></script>
  <script src="js/sidebar.js?v=2026062001" defer></script>
  <script src="js/profiles.js?v=2026060902" defer></script>
- <script src="js/wize-track.js?v=2026061601"></script>
- <script src="js/storage.js?v=2026061802"></script>
+ <script src="js/wize-track.js?v=2026061601" defer></script>
+ <script src="js/storage.js?v=2026061802" defer></script>
  <!-- Init on window 'load' so WizeTrack is defined and Firestore can lazy-load. -->
  <script>window.addEventListener('load', function () { try { window.WizeTrack && WizeTrack.init('wizemoney'); } catch (e) {} });</script>
  <script src="js/pin-lock.js" defer></script>
