@@ -162,7 +162,7 @@ const Plan = (() => {
             : `🎁 Pro trial — <strong>${daysLeft}</strong> day${daysLeft !== 1 ? "s" : ""} left. <a href="#" onclick="Paywall.show('trial');return false;" style="color:#fff;text-decoration:underline;">Upgrade to keep Pro →</a>`;
         const banner = document.createElement("div");
         banner.id = "wlTrialBanner";
-        banner.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:2000;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;text-align:center;padding:9px 40px;font-size:0.82rem;font-weight:600;line-height:1.4;";
+        banner.style.cssText = "position:fixed;top:calc(36px + env(safe-area-inset-top, 0px));left:0;right:0;z-index:2000;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;text-align:center;padding:9px 40px;font-size:0.82rem;font-weight:600;line-height:1.4;";
         banner.innerHTML = msg + `<button onclick="this.parentElement.remove()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:1.1rem;line-height:1;">×</button>`;
         document.body.prepend(banner);
     }
@@ -209,7 +209,7 @@ const Plan = (() => {
             if (document.getElementById(id)) return;
             const el = document.createElement("div");
             el.id = id;
-            el.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:3000;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;text-align:center;padding:10px 50px;font-size:0.85rem;line-height:1.5;";
+            el.style.cssText = "position:fixed;top:calc(36px + env(safe-area-inset-top, 0px));left:0;right:0;z-index:3000;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;text-align:center;padding:10px 50px;font-size:0.85rem;line-height:1.5;";
             el.innerHTML = msg + `<button onclick="this.parentElement.remove()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.8);cursor:pointer;font-size:1.2rem;">×</button>`;
             document.body.prepend(el);
             setTimeout(() => el.remove(), 6000);

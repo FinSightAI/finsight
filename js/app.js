@@ -539,7 +539,7 @@ const App = {
         notification.textContent = message;
         notification.style.cssText = `
             position: fixed;
-            top: 20px;
+            top: calc(40px + env(safe-area-inset-top, 0px));
             left: 50%;
             transform: translateX(-50%);
             padding: 12px 24px;
