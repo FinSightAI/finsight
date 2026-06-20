@@ -597,10 +597,6 @@ const Storage = {
         this.saveLoans(loans);
     },
 
-    getTotalLoansBalance() {
-        return this.getLoans().reduce((sum, l) => sum + (l.remainingBalance || 0), 0);
-    },
-
     getTotalMonthlyLoanPayments() {
         return this.getLoans().reduce((sum, l) => sum + (l.monthlyPayment || 0), 0);
     },

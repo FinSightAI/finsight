@@ -555,7 +555,7 @@
  <tr>
  <td>${row.age}</td>
  <td>${formatCurrency(row.deposits)}</td>
- <td style="color: var(--color-positive);">${formatCurrency(row.returns)}</td>
+ <td style="color: ${row.returns < 0 ? 'var(--color-negative)' : 'var(--color-positive)'};">${formatCurrency(row.returns)}</td>
  <td style="font-weight: 600;">${formatCurrency(row.balance)}</td>
  </tr>
  `).join('');
