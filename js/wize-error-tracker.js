@@ -36,9 +36,16 @@
     return s.replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '[email]').replace(/\b\d{7,}\b/g, '[num]');
   }
 
+  // Benign noise we must NOT log: aborted/cancelled promises (navigation away,
+  // cancelled fetches, Firebase auth popup/redirect cancels). These are not bugs
+  // and, left unfiltered, they flooded the error log (~430 "cancelled" rows) and
+  // tripped the hourly "error spike" alert, masking real errors.
+  var BENIGN = /^(cancell?ed|aborterror|the (user aborted a request|operation was aborted)|signal is aborted without reason|load failed|navigation cancelled)\.?$/i;
+
   function report(rec) {
     try {
       if (sent >= MAX_PER_SESSION) return;
+      if (rec && rec.message && BENIGN.test(String(rec.message).trim())) return;
       var key = (rec.message || '') + '|' + (rec.source || '') + '|' + (rec.line || '');
       if (seen[key]) return;
       seen[key] = 1;
@@ -48,15 +55,25 @@
       rec.message = strip(rec.message);
       rec.stack = strip(rec.stack);
       var payload = JSON.stringify(rec);
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(ENDPOINT, new Blob([payload], { type: 'application/json' }));
-      } else if (typeof fetch === 'function') {
+      // NOTE: navigator.sendBeacon() with an application/json Blob triggers a
+      // CORS *preflight* that the browser then refuses for beacons
+      // ("blocked by CORS policy: Response to preflight request doesn't pass")
+      // even though the errorReport function answers OPTIONS with 204 + ACAO:*.
+      // Verified: raw curl/fetch preflight succeeds, sendBeacon's does not — so
+      // every error report from wizelife.ai was silently dropped with a console
+      // CORS error. fetch(keepalive) with the same JSON body returns 204
+      // reliably, so prefer it. Fall back to text/plain sendBeacon (a CORS
+      // "simple" request → no preflight) only if fetch is unavailable.
+      if (typeof fetch === 'function') {
         fetch(ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: payload,
           keepalive: true,
+          mode: 'cors',
         }).catch(function () {});
+      } else if (navigator.sendBeacon) {
+        navigator.sendBeacon(ENDPOINT, new Blob([payload], { type: 'text/plain' }));
       }
     } catch (e) { /* the tracker must never throw */ }
   }
