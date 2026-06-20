@@ -37,6 +37,20 @@
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
  <link rel="stylesheet" href="../css/app.css?v=2026061802">
+<style>
+/* Mobile fix — the inline style on <main> sets height:100vh + padding:0 which
+   hides the chat header behind the wl-bar (36px) + mobile-header (~56px + safe-area).
+   Mirror the same fix used in investment-advisor.html. */
+@media (max-width: 1024px) {
+  main.main-content {
+    height: auto !important;
+    min-height: calc(100vh - 36px - 56px - env(safe-area-inset-top, 0px));
+    padding-top: calc(36px + 56px + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow: visible !important;
+  }
+}
+</style>
 <meta name="wl-sentry-dsn" content="">
 <meta name="wl-sentry-app" content="wizemoney">
 <script src="/js/wize-sentry.js?v=2026061201" defer></script>
@@ -170,7 +184,7 @@
 <script src="../js/firebase-config.js"></script>
 <script src="../js/idb.js"></script>
 <script src="../js/sidebar.js?v=2026061301"></script>
- <script src="../js/app.js?v=2026060903"></script>
+ <script src="../js/app.js?v=2026062001"></script>
 <script src="../js/profiles.js?v=2026060902"></script>
 <script src="../js/storage.js?v=2026061802"></script>
 <script src="../js/currency.js?v=2026061802"></script>
