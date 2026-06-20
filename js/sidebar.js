@@ -63,7 +63,7 @@
  var _ssoTok;
  try { _ssoTok = (JSON.parse(localStorage.getItem('wl_sso') || '{}')).token; } catch (e) {}
  if (!_ssoTok) return;
- if (typeof firebase === 'undefined' || !firebase.auth) { setTimeout(_wlEstablishSession, 400); return; }
+ if (typeof firebase === 'undefined' || !firebase.auth || !(firebase.apps && firebase.apps.length)) { setTimeout(_wlEstablishSession, 400); return; }
  firebase.auth().onAuthStateChanged(function (u) {
  if (u) return; // already signed in (direct or already bridged)
  fetch('https://us-central1-finzilla-7f1f9.cloudfunctions.net/issueCustomToken', {
@@ -480,7 +480,7 @@
 
  // Hook Firebase auth state to refresh link status
  try {
- if (typeof firebase !== 'undefined' && firebase.auth) {
+ if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.auth) {
  firebase.auth().onAuthStateChanged(function() {
  setTimeout(function(){ updateWizeBarPlan(); updateWizeBarLink(); }, 100);
  });
@@ -530,7 +530,7 @@
  // a user OR an SSO token exists in localStorage.
  let isAuthed = false;
  try {
- if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) isAuthed = true;
+ if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.auth && firebase.auth().currentUser) isAuthed = true;
  } catch(e) {}
  try {
  const sso = JSON.parse(localStorage.getItem('wl_sso') || '{}');
@@ -597,7 +597,7 @@
  ssoEmail = sso.email || null;
  } catch(e) {}
  try {
- if (typeof firebase !== 'undefined' && firebase.auth) {
+ if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.auth) {
  const u = firebase.auth().currentUser;
  if (u) { fbEmail = u.email; fbUid = u.uid; }
  }
@@ -642,7 +642,7 @@
  const el = document.getElementById('wl-bar-nick');
  if (!el) return;
  const stored = localStorage.getItem('wl_nickname');
- const cu = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser : null;
+ const cu = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser : null;
  let nick = stored || (cu && cu.displayName) || null;
  if (!nick && cu && cu.email) {
  nick = cu.email.includes('@') ? cu.email.split('@')[0] : cu.email;
@@ -795,10 +795,16 @@
  updateWizeBarPlan(); updateWizeBarLink();
  // Re-update plan when localStorage changes
  window.addEventListener('storage', function(e){if(e.key==='wl_plan')updateWizeBarPlan(); updateWizeBarLink();});
- // re-check once Firebase Auth resolves
- if (typeof firebase !== 'undefined' && firebase.auth) {
- firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); });
- }
+ // re-check once Firebase Auth resolves. Firebase may initialise AFTER sidebar.js
+ // on some pages (the race that threw "No Firebase App '[DEFAULT]'"), so poll
+ // briefly until an app exists, then attach the listener — the nick updates then.
+ (function attachAuthListener(tries){
+   if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.auth) {
+     firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); });
+   } else if ((tries || 0) < 40) {
+     setTimeout(function(){ attachAuthListener((tries || 0) + 1); }, 250);
+   }
+ })(0);
  const aside = document.querySelector('aside.sidebar');
  if (aside) {
  aside.innerHTML = html;
