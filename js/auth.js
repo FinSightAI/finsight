@@ -147,11 +147,14 @@ const Auth = {
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     App.notify(T('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉'), 'success');
+                    try { window.WizeTrack && WizeTrack.signup({ method: 'google' }); } catch (_) {}
                 } else {
                     App.notify(`${I18n.t('auth.welcome')}, ${result.user.displayName}!`, 'success');
+                    try { window.WizeTrack && WizeTrack.login({ method: 'google' }); } catch (_) {}
                 }
             } else {
                 App.notify(`${I18n.t('auth.welcome')}, ${result.user.displayName}!`, 'success');
+                try { window.WizeTrack && WizeTrack.login({ method: 'google' }); } catch (_) {}
             }
             return result.user;
         } catch (error) {
@@ -172,6 +175,7 @@ const Auth = {
         try {
             const result = await firebaseAuth.signInWithEmailAndPassword(email, password);
             App.notify(`${I18n.t('auth.welcome')}, ${result.user.email}!`, 'success');
+            try { window.WizeTrack && WizeTrack.login({ method: 'email' }); } catch (_) {}
             this.closeEmailModal();
             return result.user;
         } catch (error) {
@@ -205,6 +209,7 @@ const Auth = {
                 }, { merge: true });
             }
             App.notify(T('ברוכים הבאים! 3 ימי Pro חינם מופעלים 🎉'), 'success');
+            try { window.WizeTrack && WizeTrack.signup({ method: 'email' }); } catch (_) {}
             this.closeEmailModal();
             return result.user;
         } catch (error) {

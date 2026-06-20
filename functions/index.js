@@ -1328,6 +1328,23 @@ exports.aiProxy = functions
         const uid = context.auth.uid;
         await checkAiRateLimit(uid);
 
+        // Suite-wide AI cost cap — same Firestore doc all apps share (aiQuota/{date}__GLOBAL).
+        // Checked AFTER the per-user limit so rejected callers don't drain the global budget.
+        // Fails open if Firestore errors (GCP budget alert is the hard backstop).
+        {
+            const _today = new Date().toISOString().slice(0, 10);
+            const _capRef = db.collection("aiQuota").doc(`${_today}__GLOBAL`);
+            const _CAP = parseInt(process.env.AI_GLOBAL_DAILY_CAP || "800", 10);
+            const _ok = await db.runTransaction(async (txn) => {
+                const s = await txn.get(_capRef);
+                const c = s.exists ? (s.data().count || 0) : 0;
+                if (c >= _CAP) return false;
+                txn.set(_capRef, { count: c + 1, date: _today }, { merge: true });
+                return true;
+            }).catch(() => true);
+            if (!_ok) throw new functions.https.HttpsError("resource-exhausted", "ה-AI הגיע לקיבולת היומית — נסה שוב מחר.");
+        }
+
         const { messages, system, maxTokens = 2048 } = data;
         if (!messages || !Array.isArray(messages)) {
             throw new functions.https.HttpsError("invalid-argument", "messages required");
@@ -1375,6 +1392,12 @@ exports.aiProxy = functions
         if (!res.ok) {
             const err = await res.text().catch(() => "");
             console.error("Gemini error:", res.status, err.slice(0, 200));
+            // 429 = Gemini provider rate-limit hit → surface as resource-exhausted so
+            // the client shows a friendly "try again in a moment" message instead of a
+            // generic crash. All other errors remain "internal" (generic safe message).
+            if (res.status === 429) {
+                throw new functions.https.HttpsError("resource-exhausted", "AI עמוס כרגע — נסה שוב עוד רגע.");
+            }
             throw new functions.https.HttpsError("internal", "AI error");
         }
 
@@ -2652,7 +2675,7 @@ exports.finsightCheckAlerts = functions
         // min-instance, no extra Scheduler job. Lives here purely because this
         // is the only thing already running every 5 min.
         try {
-            await fetch("https://wizehealth-1027614800253.us-central1.run.app/api/config", { signal: AbortSignal.timeout(8000) });
+            await fetch("https://wizehealth-3ol2retcla-uc.a.run.app/api/config", { signal: AbortSignal.timeout(8000) });
         } catch (_) { /* keepalive is best-effort; never blocks alert delivery */ }
 
         const snap = await db.collection("finsightPush").get();

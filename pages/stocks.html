@@ -1704,13 +1704,17 @@
  return;
  }
 
- resultsDiv.innerHTML = results.map(r => `
- <div class="search-result-item" onclick="selectSearchResult('${r.symbol}', '${r.name.replace(/'/g, "\\'")}', '${r.market}')">
- <span class="result-symbol">${r.symbol}</span>
- <span class="result-name">${r.name}</span>
- <span class="result-market">${r.market === 'IL' ? '🇮🇱' : '🇺🇸'}</span>
- </div>
- `).join('');
+ resultsDiv.innerHTML = '';
+ results.forEach(r => {
+   const item = document.createElement('div');
+   item.className = 'search-result-item';
+   item.addEventListener('click', () => selectSearchResult(r.symbol, r.name, r.market));
+   const sym = document.createElement('span'); sym.className = 'result-symbol'; sym.textContent = r.symbol;
+   const nm  = document.createElement('span'); nm.className  = 'result-name';   nm.textContent = r.name;
+   const mkt = document.createElement('span'); mkt.className = 'result-market'; mkt.textContent = r.market === 'IL' ? '🇮🇱' : '🇺🇸';
+   item.appendChild(sym); item.appendChild(nm); item.appendChild(mkt);
+   resultsDiv.appendChild(item);
+ });
  } catch (error) {
  resultsDiv.innerHTML = `<div class="search-error">${I18n.t('stocks.rt_searchError')}</div>`;
  }
