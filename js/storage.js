@@ -759,16 +759,23 @@ const Storage = {
     // Normalize a value in its stored currency to ILS before it's summed into a
     // total / net worth. Without this, multi-currency holdings (the app supports
     // BRL banks like Nubank/Itaú) were added 1:1 to ILS — a big silent error on a
-    // real-money figure. Uses the synchronously-cached rates (ILS per unit); an
-    // unknown currency falls back to raw (no worse than before).
+    // real-money figure.
+    // Priority: live/cached rates → hardcoded fallbackRates (verified 2026-06-21)
+    // → null (value excluded from total rather than silently counted 1:1).
     _toILS(value, currency) {
         if (!value) return 0;
         if (!currency || currency === 'ILS') return value;
         try {
             if (typeof CurrencyRates === 'undefined') return value;
-            const rates = (CurrencyRates.getCachedRates() || {}).rates || CurrencyRates.fallbackRates || {};
-            const rate = rates[currency];   // ILS per 1 `currency`
-            return rate ? value * rate : value;
+            const cachedRates = (CurrencyRates.getCachedRates() || {}).rates || {};
+            // 1. Live/cached rates
+            let rate = cachedRates[currency];
+            // 2. Hardcoded last-known fallbacks
+            if (rate == null) rate = (CurrencyRates.fallbackRates || {})[currency];
+            if (rate != null) return value * rate;
+            // 3. Truly unknown currency — warn and exclude rather than distort total
+            console.warn(`[Storage._toILS] no rate for unknown currency ${currency} — value excluded from total`);
+            return 0;
         } catch (e) { return value; }
     },
 

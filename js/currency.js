@@ -100,6 +100,25 @@ const CurrencyRates = {
     },
 
     /**
+     * Resolve the ILS-per-unit rate for a currency, never silently 1:1 for
+     * cross-currency pairs.  Priority: live/cached rates → fallbackRates →
+     * undefined (caller must guard).  Same-currency short-circuit handles ILS→ILS.
+     */
+    _resolveRate(rates, currency) {
+        if (!currency || currency === 'ILS') return 1;
+        // Live/cached rates take precedence
+        if (rates[currency] != null) return rates[currency];
+        // Hardcoded last-known fallback (verified 2026-06-21, see fallbackRates above)
+        if (this.fallbackRates[currency] != null) {
+            console.warn(`[CurrencyRates] live rate missing for ${currency} — using hardcoded fallback ${this.fallbackRates[currency]}`);
+            return this.fallbackRates[currency];
+        }
+        // Unknown currency: return null so callers can decide (never silently 1:1)
+        console.error(`[CurrencyRates] no rate at all for unknown currency ${currency} — conversion skipped`);
+        return null;
+    },
+
+    /**
      * Convert amount between currencies
      */
     async convert(amount, fromCurrency, toCurrency) {
@@ -107,19 +126,34 @@ const CurrencyRates = {
 
         const rates = await this.getRates();
 
-        // Convert to ILS first, then to target currency
-        const inILS = amount * (rates[fromCurrency] || 1);
-        const result = inILS / (rates[toCurrency] || 1);
+        const fromRate = this._resolveRate(rates, fromCurrency);
+        const toRate   = this._resolveRate(rates, toCurrency);
 
-        return result;
+        // If either rate is unknown, return the raw amount with a warning rather
+        // than silently distorting the figure with a 1:1 rate.
+        if (fromRate == null || toRate == null) {
+            console.error(`[CurrencyRates] convert(${fromCurrency}→${toCurrency}) incomplete — returning raw amount`);
+            return amount;
+        }
+
+        // Convert to ILS first, then to target currency
+        const inILS = amount * fromRate;
+        return inILS / toRate;
     },
 
     /**
      * Get rate for a specific currency (in ILS)
      */
     async getRate(currency) {
+        if (!currency || currency === 'ILS') return 1;
         const rates = await this.getRates();
-        return rates[currency] || 1;
+        const rate = this._resolveRate(rates, currency);
+        if (rate != null) return rate;
+        // Truly unknown currency: approximate via USD rather than 1:1 ILS,
+        // which would be wildly wrong for any real currency.
+        const usdFallback = rates.USD ?? this.fallbackRates.USD ?? 2.92;
+        console.error(`[CurrencyRates] getRate(${currency}) — no data, approximating via USD ${usdFallback}`);
+        return usdFallback;
     },
 
     /**

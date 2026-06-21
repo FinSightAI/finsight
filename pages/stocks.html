@@ -917,8 +917,11 @@
  }
  }
 
- // Currency rates cache
- let currencyRates = { USD: 3.65, EUR: 3.95, GBP: 4.60, ILS: 1 };
+ // Currency rates cache — seed from CurrencyRates.fallbackRates (verified 2026-06-21)
+ // so a cold start never applies silent 1:1 across currencies.
+ let currencyRates = (typeof CurrencyRates !== 'undefined' && CurrencyRates.fallbackRates)
+   ? { ...CurrencyRates.fallbackRates }
+   : { USD: 2.92, EUR: 3.16, GBP: 3.68, BRL: 0.53, CAD: 2.13, AUD: 1.90, ILS: 1 };
 
  document.addEventListener('DOMContentLoaded', async () => {
  App.currentPage = 'stocks';
@@ -984,7 +987,11 @@
  const holdingsWithCalc = data.holdings.map(h => {
  const cached = priceCache[h.symbol] || {};
  const currency = h.currency || 'USD';
- const rate = currencyRates[currency] || 1;
+ // Use fallback table, never silent 1:1 for cross-currency holdings
+ const rate = currencyRates[currency]
+   ?? (CurrencyRates?.fallbackRates?.[currency])
+   ?? currencyRates.USD  // unknown currency: approximate via USD as last resort
+   ?? 2.92;
 
  // Use cached price if available, otherwise use imported currentPrice
  const currentPrice = cached.currentPrice || h.currentPrice || h.avgPrice;
@@ -1903,7 +1910,11 @@
  const rows = data.holdings.map(h => {
  const cached = priceCache[h.symbol] || {};
  const currency = h.currency || 'USD';
- const rate = currencyRates[currency] || 1;
+ // Use fallback table, never silent 1:1 for cross-currency holdings (export)
+ const rate = currencyRates[currency]
+   ?? (CurrencyRates?.fallbackRates?.[currency])
+   ?? currencyRates.USD
+   ?? 2.92;
  const currentPrice = cached.currentPrice || h.currentPrice || h.avgPrice;
 
  let valueILS, profitILS;
@@ -2884,8 +2895,11 @@
  const holdings = stockData.holdings || [];
  if (holdings.length === 0) return { series: referenceDates.map(() => 0), finalReturn: 0 };
 
- const usdRate = currencyRates.USD || 3.65;
- const getRate = (currency) => currency === 'ILS' ? 1 : (currencyRates[currency] || usdRate);
+ // Prefer live rate, then module fallback, then USD as last-resort approximation.
+ // The old seed (3.65) was stale by ~0.73 ILS/USD — never fall back to a stale constant.
+ const usdRate = currencyRates.USD ?? CurrencyRates?.fallbackRates?.USD ?? 2.92;
+ const getRate = (currency) => currency === 'ILS' ? 1
+   : (currencyRates[currency] ?? CurrencyRates?.fallbackRates?.[currency] ?? usdRate);
 
  // Mirror the main portfolio view logic (uses broker-imported valueILS/profitILS when available)
  const calcHolding = (h) => {
