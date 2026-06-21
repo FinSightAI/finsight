@@ -33,14 +33,14 @@
       }
     } catch (e) { /* ignore */ }
     // Belt-and-suspenders even if WizePII is absent: redact emails + long digit runs.
-    return s.replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '[email]').replace(/\b\d{7,}\b/g, '[num]');
+    return s.replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '[email]').replace(/\d{7,}/g, '[num]');
   }
 
   // Benign noise we must NOT log: aborted/cancelled promises (navigation away,
   // cancelled fetches, Firebase auth popup/redirect cancels). These are not bugs
   // and, left unfiltered, they flooded the error log (~430 "cancelled" rows) and
   // tripped the hourly "error spike" alert, masking real errors.
-  var BENIGN = /^(cancell?ed|aborterror|the (user aborted a request|operation was aborted)|signal is aborted without reason|load failed|navigation cancelled)\.?$/i;
+  var BENIGN = /^(cancell?ed|aborterror|the (user aborted a request|operation was aborted)|signal is aborted without reason|navigation cancelled)\.?$/i;
 
   function report(rec) {
     try {
@@ -103,4 +103,24 @@
       });
     } catch (x) { /* ignore */ }
   });
+})();
+// Gainer — lead capture + AI chat (consent-gated, skips auth/dashboard)
+(function(){
+  var blocked = /^\/(auth|dashboard|account|login|signup)/;
+  if (blocked.test(location.pathname)) return;
+  function load() {
+    if (window.WizeConsent && !window.WizeConsent.analyticsAllowed()) return;
+    ["track","chat"].forEach(function(n){
+      var s=document.createElement("script");
+      s.src="https://gainer-eight.vercel.app/"+n+".js";
+      s.setAttribute("data-tenant","wizelife");
+      s.defer=true;
+      document.head.appendChild(s);
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", load);
+  } else {
+    load();
+  }
 })();
