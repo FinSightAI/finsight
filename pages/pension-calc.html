@@ -669,7 +669,7 @@
  // Load saved values from funds if available
  function loadFromExistingData() {
  try {
- const funds = Storage.getFunds();
+ const funds = Storage.getMyFunds();
  const pensionFunds = funds.filter(f => f.type === 'pension');
 
  if (pensionFunds.length > 0) {
