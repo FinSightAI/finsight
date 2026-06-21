@@ -673,7 +673,7 @@
  const pensionFunds = funds.filter(f => f.type === 'pension');
 
  if (pensionFunds.length > 0) {
- const totalBalance = pensionFunds.reduce((sum, f) => sum + (f.currentValue || 0), 0);
+ const totalBalance = pensionFunds.reduce((sum, f) => sum + (f.currentValue || f.value || 0), 0);
  const totalDeposit = pensionFunds.reduce((sum, f) => sum + (f.monthlyDeposit || 0), 0);
 
  if (totalBalance > 0) {
