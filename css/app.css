@@ -2067,6 +2067,9 @@ body:not(.ltr) #wl-nav-reopen { border-radius: 8px 0 0 8px; border-inline-end: n
    nav tabs (it lives on the opposite edge: right in LTR, left in he/RTL). */
 #wl-rp-reopen::before { content: '‹'; }            /* he/RTL: tab on the left edge → points left */
 body.ltr #wl-rp-reopen::before { content: '›'; }   /* LTR: tab on the right edge → points right */
+/* AI-panel collapse tab — arrow points INWARD (toward content), like the nav collapse tab */
+#wl-rp-collapse::before { content: '›'; }            /* he/RTL: panel on left → inward = right */
+body.ltr #wl-rp-collapse::before { content: '‹'; }   /* LTR: panel on right → inward = left */
 
 @media (min-width: 769px) {
     body.nav-collapsed .sidebar { transform: translateX(-100%); }

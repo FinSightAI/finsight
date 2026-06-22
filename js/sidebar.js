@@ -697,8 +697,7 @@
  panel.style.cssText = `position:fixed;top:36px;${panelSide}width:240px;height:calc(100vh - 36px);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:${panelDir};text-align:${isLtr?'left':'right'};`;
  panel.classList.add('wl-rpanel-themed');
  panel.innerHTML = `
- <button id="wl-rp-collapse" aria-label="Collapse panel" style="position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0">×</button>
- <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px;padding-right:30px">AI Insights</div>
+ <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px">AI Insights</div>
  <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
  <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px" id="wl-rp-net-label">Net Worth</div>
  <div id="wl-rp-networth" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:900;color:#10b981;letter-spacing:-0.5px">—</div>
@@ -766,8 +765,15 @@
  // language (he/RTL vs LTR), consistent with the nav tabs — see app.css.
  document.body.appendChild(reopenTab);
 
- // Wire collapse/reopen
- const collapseBtn = panel.querySelector('#wl-rp-collapse');
+ // Collapse tab — an arrow tab on the panel's content-facing edge (mirror of the
+ // nav collapse tab), replacing the old × so BOTH sidebars use the same tab pattern.
+ // Sits 240px (panel width) in from the panel's screen edge; arrow via CSS ::before.
+ const cSide = isLtr ? 'right:228px;left:auto;border-radius:8px 0 0 8px;' : 'left:228px;right:auto;border-radius:0 8px 8px 0;';
+ const collapseBtn = document.createElement('button');
+ collapseBtn.id = 'wl-rp-collapse';
+ collapseBtn.setAttribute('aria-label', 'Collapse panel');
+ collapseBtn.style.cssText = `position:fixed;top:50%;${cSide}transform:translateY(-50%);width:24px;height:60px;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:52;display:none`;
+ document.body.appendChild(collapseBtn);
  const KEY = 'wl_rp_collapsed';
  const s = document.createElement('style');
  s.id = 'wl-rp-padding-style';
@@ -779,6 +785,7 @@
 
  const setState = (collapsed) => {
  panel.style.display = collapsed ? 'none' : 'flex';
+ collapseBtn.style.display = collapsed ? 'none' : 'block';
  reopenTab.style.display = collapsed ? 'block' : 'none';
  s.disabled = collapsed;
  localStorage.setItem(KEY, collapsed ? '1' : '0');
