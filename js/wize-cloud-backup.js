@@ -302,7 +302,9 @@
      * Initialize: wait for Firebase auth → trigger restore + instrument writes.
      */
     function init() {
-        if (typeof firebase === 'undefined' || !firebase.auth) return;
+        // Also require an initialized app — pages that load the SDK but not
+        // firebase-config.js would throw "No Firebase App '[DEFAULT]'" otherwise.
+        if (typeof firebase === 'undefined' || !firebase.auth || !firebase.apps || !firebase.apps.length) return;
         firebase.auth().onAuthStateChanged((user) => {
             if (!user) { _currentUid = null; return; }
             _currentUid = user.uid;

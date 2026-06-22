@@ -10,7 +10,10 @@ const WizeAISync = {
     scheduleSync() {
         clearTimeout(this._debounceTimer);
         this._debounceTimer = setTimeout(async () => {
-            const user = typeof firebase !== 'undefined' && firebase.auth().currentUser;
+            // Guard firebase.apps.length too: pages that load the SDK but not
+            // firebase-config.js (no initializeApp) would otherwise throw
+            // "No Firebase App '[DEFAULT]'" from firebase.auth().
+            const user = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) ? firebase.auth().currentUser : null;
             if (user) await this.sync(user.uid);
         }, 8000); // 8s debounce — batch rapid changes
     },
