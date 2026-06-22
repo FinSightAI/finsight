@@ -2003,34 +2003,35 @@ html[dir="ltr"] .main-content small {
     }
 }
 
-/* ── Desktop nav collapse — hide the sidebar to give content full width ──────── */
+/* ── Desktop nav collapse — vertically-centered side tabs (no top button) ─────── */
+/* Collapse tab: on the sidebar's content-facing edge, arrow points OUTWARD. */
 #wl-nav-collapse {
-    position: absolute;
-    top: 14px;
-    inset-inline-end: 12px;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
-    color: var(--color-text-secondary, #94a3b8);
+    display: none;
+    position: fixed;
+    top: 50%;
+    inset-inline-start: 217px;   /* 230px sidebar − 13px → centered on its inner edge */
+    transform: translateY(-50%);
+    z-index: 261;
+    width: 26px;
+    height: 64px;
+    background: rgba(99, 102, 241, 0.18);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
     cursor: pointer;
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1;
-    display: flex;
     align-items: center;
     justify-content: center;
-    font-family: inherit;
     padding: 0;
-    z-index: 3;
-    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+    transition: background 0.15s;
 }
-#wl-nav-collapse:hover {
-    background: rgba(255, 255, 255, 0.14);
-    color: var(--color-text-primary, #fff);
-}
-/* RTL: sidebar sits on the right, so the collapse chevron should point the other way */
-body:not(.ltr) #wl-nav-collapse { transform: scaleX(-1); }
+#wl-nav-collapse:hover { background: rgba(99, 102, 241, 0.32); }
+#wl-nav-collapse::before { content: '›'; }            /* RTL: collapse toward the right edge */
+body.ltr #wl-nav-collapse::before { content: '‹'; }   /* LTR: collapse toward the left edge */
+/* rounded on the content-facing side (mirror of the reopen tab) */
+body.ltr #wl-nav-collapse { border-radius: 0 8px 8px 0; }
+body:not(.ltr) #wl-nav-collapse { border-radius: 8px 0 0 8px; }
 
 /* Reopen tab — vertically-centered side tab (mirrors the right-panel reopen tab) */
 #wl-nav-reopen {
@@ -2067,6 +2068,8 @@ body:not(.ltr) #wl-nav-reopen { border-radius: 8px 0 0 8px; border-inline-end: n
     body:not(.ltr).nav-collapsed .sidebar { transform: translateX(100%); }
     /* reclaim the 230px: center the (max-width) content instead of offsetting it */
     body.nav-collapsed .main-content { margin-inline-start: auto; }
+    /* show the collapse tab while open, the reopen tab while collapsed */
+    body:not(.nav-collapsed) #wl-nav-collapse { display: flex; }
     body.nav-collapsed #wl-nav-reopen { display: flex; }
 }
 /* Mobile uses the hamburger — these desktop controls must never show there */

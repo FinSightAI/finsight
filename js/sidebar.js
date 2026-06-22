@@ -358,7 +358,6 @@
   const footer = upgradeCard + sidebarLangRow + customizeBtn + wizeAILink + shareBtn + footerBtns + mktToggle;
 
  const html = `
- <button id="wl-nav-collapse" type="button" aria-label="הסתר תפריט" title="הסתר תפריט / Hide menu">«</button>
  <nav>
  <ul class="nav-menu">
  ${NAV.filter(item => !item.market || localStorage.getItem('wl_market') === item.market).map(buildItem).join('\n')}
@@ -831,29 +830,35 @@
  else setTimeout(() => { if (typeof I18n !== 'undefined') I18n.translatePage(); }, 200);
  }
 
- // Desktop-only nav collapse: the « button hides the sidebar so the content gets
- // full width; a floating WizeLife-logo button re-opens it. Persisted per device.
- // (Mobile already uses the hamburger; both controls are CSS-hidden below 769px.)
- function setupNavCollapse(imgPrefix) {
+ // Desktop-only nav collapse. Both controls are vertically-centered side tabs (no
+ // top button): the COLLAPSE tab sits on the sidebar's content-facing edge (arrow
+ // points outward) and the REOPEN tab on the screen edge (arrow points inward) —
+ // they occupy the same vertical spot and just swap as you toggle. Arrows + side
+ // come from CSS so they stay correct in he/RTL and LTR. Body-level (not inside the
+ // transformed <aside>) so the transformed-ancestor containing-block trap can't bite.
+ // (Mobile keeps the hamburger; both tabs are CSS-hidden below 769px.)
+ function setupNavCollapse() {
    try {
      var KEY = 'wl_nav_collapsed';
-     var collapseBtn = document.getElementById('wl-nav-collapse');
-     var reopen = document.getElementById('wl-nav-reopen');
-     if (!reopen) {
-       reopen = document.createElement('button');
-       reopen.id = 'wl-nav-reopen';
-       reopen.type = 'button';
-       reopen.setAttribute('aria-label', 'פתח תפריט');
-       reopen.title = 'פתח תפריט / Show menu';
-       // Arrow glyph comes from CSS ::before (direction-aware) so it stays correct
-       // even if the body.ltr class is set after this runs.
-       document.body.appendChild(reopen);
+     function mkTab(id, label) {
+       var el = document.getElementById(id);
+       if (!el) {
+         el = document.createElement('button');
+         el.id = id;
+         el.type = 'button';
+         el.setAttribute('aria-label', label);
+         el.title = label;
+         document.body.appendChild(el);
+       }
+       return el;
      }
+     var collapseBtn = mkTab('wl-nav-collapse', 'הסתר תפריט / Hide menu');
+     var reopen      = mkTab('wl-nav-reopen', 'פתח תפריט / Show menu');
      function apply(collapsed) {
        document.body.classList.toggle('nav-collapsed', collapsed);
        try { localStorage.setItem(KEY, collapsed ? '1' : '0'); } catch (e) {}
      }
-     if (collapseBtn && !collapseBtn._wlWired) { collapseBtn._wlWired = 1; collapseBtn.addEventListener('click', function () { apply(true); }); }
+     if (!collapseBtn._wlWired) { collapseBtn._wlWired = 1; collapseBtn.addEventListener('click', function () { apply(true); }); }
      if (!reopen._wlWired) { reopen._wlWired = 1; reopen.addEventListener('click', function () { apply(false); }); }
      var saved = '0'; try { saved = localStorage.getItem(KEY) || '0'; } catch (e) {}
      document.body.classList.toggle('nav-collapsed', saved === '1');
