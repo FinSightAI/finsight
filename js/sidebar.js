@@ -4,6 +4,9 @@
  * Determines root vs pages/ prefix from window.location, marks the active item.
  */
 (function () {
+ // Restore the desktop nav-collapsed state ASAP (the <aside> is already in the
+ // page, empty) so a collapsed user doesn't see the sidebar flash before render.
+ try { if (document.body && localStorage.getItem('wl_nav_collapsed') === '1') document.body.classList.add('nav-collapsed'); } catch (e) {}
  // ── WL SSO bridge: read wl_token + wl_nick from URL, save to wl_sso ──
  // wl_token moved from ?query to #fragment so it never reaches server logs /
  // Cloudflare logs / Referer headers. We still accept ?wl_token= for ~30 days
@@ -355,6 +358,7 @@
   const footer = upgradeCard + sidebarLangRow + customizeBtn + wizeAILink + shareBtn + footerBtns + mktToggle;
 
  const html = `
+ <button id="wl-nav-collapse" type="button" aria-label="הסתר תפריט" title="הסתר תפריט / Hide menu">«</button>
  <nav>
  <ul class="nav-menu">
  ${NAV.filter(item => !item.market || localStorage.getItem('wl_market') === item.market).map(buildItem).join('\n')}
@@ -817,6 +821,7 @@
  aside.innerHTML = html;
   // sidebar-lang-row is now inlined in sidebar-footer via sidebarLangRow (see footer assembly above)
  attachProGates(aside);
+ setupNavCollapse(imgPrefix);
  }
  injectThemeToggle();
  injectTrustFooter();
@@ -824,6 +829,34 @@
  // Apply current language to sidebar labels
  if (typeof I18n !== 'undefined') I18n.translatePage();
  else setTimeout(() => { if (typeof I18n !== 'undefined') I18n.translatePage(); }, 200);
+ }
+
+ // Desktop-only nav collapse: the « button hides the sidebar so the content gets
+ // full width; a floating WizeLife-logo button re-opens it. Persisted per device.
+ // (Mobile already uses the hamburger; both controls are CSS-hidden below 769px.)
+ function setupNavCollapse(imgPrefix) {
+   try {
+     var KEY = 'wl_nav_collapsed';
+     var collapseBtn = document.getElementById('wl-nav-collapse');
+     var reopen = document.getElementById('wl-nav-reopen');
+     if (!reopen) {
+       reopen = document.createElement('button');
+       reopen.id = 'wl-nav-reopen';
+       reopen.type = 'button';
+       reopen.setAttribute('aria-label', 'פתח תפריט');
+       reopen.title = 'פתח תפריט / Show menu';
+       reopen.innerHTML = '<img src="' + imgPrefix + 'img/logo.svg" alt="" width="24" height="24" style="display:block;pointer-events:none">';
+       document.body.appendChild(reopen);
+     }
+     function apply(collapsed) {
+       document.body.classList.toggle('nav-collapsed', collapsed);
+       try { localStorage.setItem(KEY, collapsed ? '1' : '0'); } catch (e) {}
+     }
+     if (collapseBtn && !collapseBtn._wlWired) { collapseBtn._wlWired = 1; collapseBtn.addEventListener('click', function () { apply(true); }); }
+     if (!reopen._wlWired) { reopen._wlWired = 1; reopen.addEventListener('click', function () { apply(false); }); }
+     var saved = '0'; try { saved = localStorage.getItem(KEY) || '0'; } catch (e) {}
+     document.body.classList.toggle('nav-collapsed', saved === '1');
+   } catch (e) { /* never let the toggle break the nav render */ }
  }
 
  function attachProGates(aside) {

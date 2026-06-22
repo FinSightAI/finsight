@@ -2002,3 +2002,66 @@ html[dir="ltr"] .main-content small {
         scroll-behavior: auto !important;
     }
 }
+
+/* ── Desktop nav collapse — hide the sidebar to give content full width ──────── */
+#wl-nav-collapse {
+    position: absolute;
+    top: 14px;
+    inset-inline-end: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+    color: var(--color-text-secondary, #94a3b8);
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    padding: 0;
+    z-index: 3;
+    transition: background 0.15s, color 0.15s;
+}
+#wl-nav-collapse:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--color-text-primary, #fff);
+}
+/* RTL: sidebar sits on the right, so the collapse chevron should point the other way */
+body:not(.ltr) #wl-nav-collapse { transform: scaleX(-1); }
+
+#wl-nav-reopen {
+    display: none;
+    position: fixed;
+    top: 14px;
+    inset-inline-start: 14px;
+    z-index: 260;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--color-bg-card, rgba(15, 23, 42, 0.85));
+    border: 1px solid var(--color-border, rgba(255, 255, 255, 0.12));
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+#wl-nav-reopen:hover { transform: scale(1.06); box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45); }
+
+@media (min-width: 769px) {
+    body.nav-collapsed .sidebar { transform: translateX(-100%); }
+    body:not(.ltr).nav-collapsed .sidebar { transform: translateX(100%); }
+    /* reclaim the 230px: center the (max-width) content instead of offsetting it */
+    body.nav-collapsed .main-content { margin-inline-start: auto; }
+    body.nav-collapsed #wl-nav-reopen { display: flex; }
+}
+/* Mobile uses the hamburger — these desktop controls must never show there */
+@media (max-width: 768px) {
+    #wl-nav-collapse, #wl-nav-reopen { display: none !important; }
+}
