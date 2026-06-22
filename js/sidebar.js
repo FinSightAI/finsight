@@ -845,7 +845,8 @@
        reopen.type = 'button';
        reopen.setAttribute('aria-label', 'פתח תפריט');
        reopen.title = 'פתח תפריט / Show menu';
-       reopen.innerHTML = '<img src="' + imgPrefix + 'img/logo.svg" alt="" width="24" height="24" style="display:block;pointer-events:none">';
+       // Arrow glyph comes from CSS ::before (direction-aware) so it stays correct
+       // even if the body.ltr class is set after this runs.
        document.body.appendChild(reopen);
      }
      function apply(collapsed) {

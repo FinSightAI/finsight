@@ -2032,27 +2032,35 @@ html[dir="ltr"] .main-content small {
 /* RTL: sidebar sits on the right, so the collapse chevron should point the other way */
 body:not(.ltr) #wl-nav-collapse { transform: scaleX(-1); }
 
+/* Reopen tab — vertically-centered side tab (mirrors the right-panel reopen tab) */
 #wl-nav-reopen {
     display: none;
     position: fixed;
-    top: 14px;
-    inset-inline-start: 14px;
+    top: 50%;
+    inset-inline-start: 0;
+    transform: translateY(-50%);
     z-index: 260;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: var(--color-bg-card, rgba(15, 23, 42, 0.85));
-    border: 1px solid var(--color-border, rgba(255, 255, 255, 0.12));
+    width: 26px;
+    height: 64px;
+    background: rgba(99, 102, 241, 0.18);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
     cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
     align-items: center;
     justify-content: center;
     padding: 0;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    transition: background 0.15s;
 }
-#wl-nav-reopen:hover { transform: scale(1.06); box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45); }
+#wl-nav-reopen:hover { background: rgba(99, 102, 241, 0.32); }
+/* arrow points INWARD (toward content); flips with direction automatically */
+#wl-nav-reopen::before { content: '‹'; }            /* RTL: nav on right → points left */
+body.ltr #wl-nav-reopen::before { content: '›'; }   /* LTR: nav on left → points right */
+/* flat against the screen edge, rounded on the content-facing side */
+body.ltr #wl-nav-reopen { border-radius: 0 8px 8px 0; border-inline-start: none; }
+body:not(.ltr) #wl-nav-reopen { border-radius: 8px 0 0 8px; border-inline-end: none; }
 
 @media (min-width: 769px) {
     body.nav-collapsed .sidebar { transform: translateX(-100%); }
