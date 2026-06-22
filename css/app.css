@@ -2071,6 +2071,15 @@ body.ltr #wl-rp-reopen::before { content: '›'; }   /* LTR: tab on the right ed
 #wl-rp-collapse::before { content: '›'; }            /* he/RTL: panel on left → inward = right */
 body.ltr #wl-rp-collapse::before { content: '‹'; }   /* LTR: panel on right → inward = left */
 
+/* AI panel + its tabs positioned via body.ltr so they react to a language switch
+   WITHOUT a reload — was inline isLtr, which went stale and overlapped the nav in LTR. */
+body.ltr #wl-money-rpanel { right: 0; left: auto; direction: ltr; text-align: left; }
+body:not(.ltr) #wl-money-rpanel { left: 0; right: auto; direction: rtl; text-align: right; }
+body.ltr #wl-rp-reopen { right: 0; left: auto; border-right: none; border-radius: 8px 0 0 8px; }
+body:not(.ltr) #wl-rp-reopen { left: 0; right: auto; border-left: none; border-radius: 0 8px 8px 0; }
+body.ltr #wl-rp-collapse { right: 228px; left: auto; border-radius: 8px 0 0 8px; }
+body:not(.ltr) #wl-rp-collapse { left: 228px; right: auto; border-radius: 0 8px 8px 0; }
+
 @media (min-width: 769px) {
     body.nav-collapsed .sidebar { transform: translateX(-100%); }
     body:not(.ltr).nav-collapsed .sidebar { transform: translateX(100%); }

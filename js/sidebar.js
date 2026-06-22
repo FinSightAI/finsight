@@ -689,12 +689,14 @@
  const _wlLang = (function(){ try { return (localStorage.getItem('wl_lang') || (function(){var n=(navigator.language||'en').slice(0,2).toLowerCase();return ['he','en','pt','es'].indexOf(n)>=0?n:'en';}())).slice(0,2); } catch(e) { return 'he'; } })();
  const isLtr = _wlLang !== 'he';
  const panelSide = isLtr ? 'right:0;left:auto;' : 'left:0;right:auto;';
- const padProp = isLtr ? 'padding-right' : 'padding-left';
+ const padProp = 'padding-inline-end'; // logical → flips with direction on language switch
 
  const panel = document.createElement('aside');
  panel.id = 'wl-money-rpanel';
  const panelDir = isLtr ? 'ltr' : 'rtl';
- panel.style.cssText = `position:fixed;top:36px;${panelSide}width:240px;height:calc(100vh - 36px);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;direction:${panelDir};text-align:${isLtr?'left':'right'};`;
+ // Position (right/left), direction + text-align live in CSS keyed on body.ltr so
+ // they react to a runtime language switch (no reload) — see app.css.
+ panel.style.cssText = `position:fixed;top:36px;width:240px;height:calc(100vh - 36px);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:50;overflow-y:auto;font-family:Inter,-apple-system,sans-serif;`;
  panel.classList.add('wl-rpanel-themed');
  panel.innerHTML = `
  <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#eef2ff;margin-bottom:4px">AI Insights</div>
@@ -760,7 +762,7 @@
  reopenTab.id = 'wl-rp-reopen';
  reopenTab.setAttribute('aria-label', 'Open AI panel');
  const rSide = isLtr ? 'right:0;left:auto;border-right:none;border-radius:8px 0 0 8px;' : 'left:0;right:auto;border-left:none;border-radius:0 8px 8px 0;';
- reopenTab.style.cssText = `position:fixed;top:50%;${rSide}transform:translateY(-50%);width:24px;height:60px;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:51;display:none`;
+ reopenTab.style.cssText = `position:fixed;top:50%;transform:translateY(-50%);width:24px;height:60px;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:51;display:none`;
  // Arrow glyph via CSS ::before (#wl-rp-reopen) so it stays direction-correct per
  // language (he/RTL vs LTR), consistent with the nav tabs — see app.css.
  document.body.appendChild(reopenTab);
@@ -772,7 +774,7 @@
  const collapseBtn = document.createElement('button');
  collapseBtn.id = 'wl-rp-collapse';
  collapseBtn.setAttribute('aria-label', 'Collapse panel');
- collapseBtn.style.cssText = `position:fixed;top:50%;${cSide}transform:translateY(-50%);width:24px;height:60px;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:52;display:none`;
+ collapseBtn.style.cssText = `position:fixed;top:50%;transform:translateY(-50%);width:24px;height:60px;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:52;display:none`;
  document.body.appendChild(collapseBtn);
  const KEY = 'wl_rp_collapsed';
  const s = document.createElement('style');
