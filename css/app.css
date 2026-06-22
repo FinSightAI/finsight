@@ -2027,8 +2027,8 @@ html[dir="ltr"] .main-content small {
     transition: background 0.15s;
 }
 #wl-nav-collapse:hover { background: rgba(99, 102, 241, 0.32); }
-#wl-nav-collapse::before { content: '›'; }            /* RTL: collapse toward the right edge */
-body.ltr #wl-nav-collapse::before { content: '‹'; }   /* LTR: collapse toward the left edge */
+#wl-nav-collapse::before { content: '‹'; }            /* RTL */
+body.ltr #wl-nav-collapse::before { content: '›'; }   /* LTR */
 /* rounded on the content-facing side (mirror of the reopen tab) */
 body.ltr #wl-nav-collapse { border-radius: 0 8px 8px 0; }
 body:not(.ltr) #wl-nav-collapse { border-radius: 8px 0 0 8px; }
@@ -2057,8 +2057,8 @@ body:not(.ltr) #wl-nav-collapse { border-radius: 8px 0 0 8px; }
 }
 #wl-nav-reopen:hover { background: rgba(99, 102, 241, 0.32); }
 /* arrow points INWARD (toward content); flips with direction automatically */
-#wl-nav-reopen::before { content: '‹'; }            /* RTL: nav on right → points left */
-body.ltr #wl-nav-reopen::before { content: '›'; }   /* LTR: nav on left → points right */
+#wl-nav-reopen::before { content: '›'; }            /* RTL */
+body.ltr #wl-nav-reopen::before { content: '‹'; }   /* LTR */
 /* flat against the screen edge, rounded on the content-facing side */
 body.ltr #wl-nav-reopen { border-radius: 0 8px 8px 0; border-inline-start: none; }
 body:not(.ltr) #wl-nav-reopen { border-radius: 8px 0 0 8px; border-inline-end: none; }
