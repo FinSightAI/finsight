@@ -762,7 +762,8 @@
  reopenTab.setAttribute('aria-label', 'Open AI panel');
  const rSide = isLtr ? 'right:0;left:auto;border-right:none;border-radius:8px 0 0 8px;' : 'left:0;right:auto;border-left:none;border-radius:0 8px 8px 0;';
  reopenTab.style.cssText = `position:fixed;top:50%;${rSide}transform:translateY(-50%);width:24px;height:60px;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;cursor:pointer;font-size:14px;line-height:60px;text-align:center;font-family:inherit;padding:0;z-index:51;display:none`;
- reopenTab.innerHTML = isLtr ? '‹' : '›';
+ // Arrow glyph via CSS ::before (#wl-rp-reopen) so it stays direction-correct per
+ // language (he/RTL vs LTR), consistent with the nav tabs — see app.css.
  document.body.appendChild(reopenTab);
 
  // Wire collapse/reopen

@@ -2063,6 +2063,11 @@ body.ltr #wl-nav-reopen::before { content: '‹'; }   /* LTR */
 body.ltr #wl-nav-reopen { border-radius: 0 8px 8px 0; border-inline-start: none; }
 body:not(.ltr) #wl-nav-reopen { border-radius: 8px 0 0 8px; border-inline-end: none; }
 
+/* Right (AI) panel reopen tab — arrow points OUTWARD, direction-aware, matching the
+   nav tabs (it lives on the opposite edge: right in LTR, left in he/RTL). */
+#wl-rp-reopen::before { content: '‹'; }            /* he/RTL: tab on the left edge → points left */
+body.ltr #wl-rp-reopen::before { content: '›'; }   /* LTR: tab on the right edge → points right */
+
 @media (min-width: 769px) {
     body.nav-collapsed .sidebar { transform: translateX(-100%); }
     body:not(.ltr).nav-collapsed .sidebar { transform: translateX(100%); }
