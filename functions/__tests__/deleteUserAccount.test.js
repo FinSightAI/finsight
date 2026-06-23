@@ -26,6 +26,9 @@ async function seedUser(uid) {
   }
   await db.doc(`userBackups/${uid}`).set({ updatedAt: 1 });
   await db.doc(`userBackups/${uid}/data/wizemoney`).set({ blob: 'x' });
+  // WizeHealth public share stamped with this user's uid (special-category health
+  // data — must be erased on account delete, see the wizehealth_shares purge).
+  await db.doc(`wizehealth_shares/share_${uid}`).set({ uid, payload: { messages: [] } });
 }
 
 async function residualPaths(uid) {
@@ -38,6 +41,8 @@ async function residualPaths(uid) {
   if ((await db.doc(`userBackups/${uid}`).get()).exists) left.push(`userBackups/${uid}`);
   const bk = await db.collection(`userBackups/${uid}/data`).get();
   if (!bk.empty) left.push(`userBackups/${uid}/data`);
+  const hs = await db.collection('wizehealth_shares').where('uid', '==', uid).get();
+  if (!hs.empty) left.push('wizehealth_shares');
   return left;
 }
 
