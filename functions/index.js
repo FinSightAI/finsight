@@ -2421,13 +2421,19 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
         leadsDeleted = await purgeQuery(
             fs.collection("leads").where("email", "==", email), "leads");
     }
+    // WizeHealth public shares carry the user's health conversation. The Health
+    // backend stamps the sharer's uid on each doc (when signed in), so erase those
+    // too — special-category data must not survive account deletion. Anonymous
+    // shares (uid:null) have no account link and auto-expire via the TTL policy.
+    const healthSharesDeleted = await purgeQuery(
+        fs.collection("wizehealth_shares").where("uid", "==", uid), "wizehealth_shares");
 
     // Best-effort Auth deletion (Firestore data is already gone regardless).
     let authDeleted = false;
     try { await admin.auth().deleteUser(uid); authDeleted = true; }
     catch (e) { console.warn("deleteUserAccount: auth delete failed", e.message); }
 
-    return { deleted: true, authDeleted, eventsDeleted, feedbackDeleted, leadsDeleted };
+    return { deleted: true, authDeleted, eventsDeleted, feedbackDeleted, leadsDeleted, healthSharesDeleted };
 });
 
 // ─── GDPR/LGPD data export (DSAR — right of access, Art.15/20) ────────────────
@@ -2469,6 +2475,7 @@ exports.exportUserData = functions.https.onCall(async (data, context) => {
     await grab("events", async () => docs(await db.collection("events").where("uid", "==", uid).limit(5000).get()));
     await grab("feedback", async () => docs(await db.collection("feedback").where("uid", "==", uid).limit(1000).get()));
     if (email) await grab("leads", async () => docs(await db.collection("leads").where("email", "==", email).get()));
+    await grab("healthShares", async () => docs(await db.collection("wizehealth_shares").where("uid", "==", uid).limit(1000).get()));
 
     return out;
 });
