@@ -524,7 +524,7 @@
  el.innerHTML = '<button onclick="if(typeof Paywall!==\'undefined\')Paywall.show(\'upgrade\')" style="width:100%;padding:7px 12px;background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(239,68,68,0.12));border:1px solid rgba(245,158,11,0.25);border-radius:10px;font-size:0.78rem;font-weight:700;color:#f59e0b;cursor:pointer;font-family:inherit;">'
  + (lang === 'he' ? '⚡ שדרג ל-YOLO' : lang === 'pt' ? '⚡ Atualizar para YOLO' : lang === 'es' ? '⚡ Mejorar a YOLO' : '⚡ Upgrade to YOLO') + '</button>';
  } else {
- el.innerHTML = '<button onclick="if(typeof Paywall!==\'undefined\')Paywall.show(\'upgrade\')" style="width:100%;padding:7px 12px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.3);border-radius:10px;font-size:0.78rem;font-weight:700;color:#818cf8;cursor:pointer;font-family:inherit;">'
+ el.innerHTML = '<button onclick="if(typeof Paywall!==\'undefined\')Paywall.show(\'upgrade\')" style="width:100%;padding:7px 12px;background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(5,150,105,0.15));border:1px solid rgba(16,185,129,0.3);border-radius:10px;font-size:0.78rem;font-weight:700;color:#34d399;cursor:pointer;font-family:inherit;">'
  + (lang === 'he' ? '💎 שדרג ל-Pro' : lang === 'pt' ? '💎 Atualizar para Pro' : lang === 'es' ? '💎 Mejorar a Pro' : '💎 Upgrade to Pro') + '</button>';
  }
  }
@@ -909,8 +909,8 @@
  s.setAttribute('data-' + marker, '1');
  document.head.appendChild(s);
  }
- loadOnce('wize-bottom-nav.js', 'wbn');
- loadOnce('wize-onboarding.js', 'wob');
- loadOnce('wize-hamburger.js', 'wha');
+ loadOnce('wize-bottom-nav.js?v=2026062301', 'wbn');
+ loadOnce('wize-onboarding.js?v=2026062301', 'wob');
+ loadOnce('wize-hamburger.js?v=2026062301', 'wha');
  } catch(e) { console.warn('shared nav scripts failed to load', e); }
 })();
