@@ -19,7 +19,13 @@ service cloud.firestore {
     // ─────────────────────────────────────────────────────────────────────
     match /users/{userId} {
       allow read:   if isOwner(userId);
-      allow create, delete: if isOwner(userId);
+      // A new user doc may only be created as 'free' (or with no plan field). A paid
+      // tier on CREATE was a server-side paywall bypass — the UPDATE rule below blocks
+      // plan escalation but CREATE didn't. Paid upgrades happen ONLY via Cloud Functions.
+      allow create: if isOwner(userId)
+                    && (!('plan' in request.resource.data)
+                        || request.resource.data.plan == 'free');
+      allow delete: if isOwner(userId);
       // Entitlement (`plan`) is SERVER-AUTHORITATIVE: only Cloud Functions
       // (validateCode for access codes, paypalWebhook for payments — both via
       // the Admin SDK, which bypasses these rules) may upgrade a user to a paid
