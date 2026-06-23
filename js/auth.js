@@ -443,10 +443,12 @@ const Auth = {
             App.notify(I18n.t('auth.resetSent'), 'success');
         } catch (error) {
             console.error('Password reset error:', error);
-            if (error.code === 'auth/user-not-found') {
-                App.notify(I18n.t('auth.userNotFound'), 'error');
-            } else if (error.code === 'auth/invalid-email') {
+            if (error.code === 'auth/invalid-email') {
                 App.notify(I18n.t('auth.invalidEmail'), 'error');
+            } else if (error.code === 'auth/user-not-found') {
+                // Anti-enumeration: never confirm whether an account exists — show the
+                // same "reset sent" message as a real reset.
+                App.notify(I18n.t('auth.resetSent'), 'success');
             } else {
                 App.notify(I18n.t('auth.resetError') + ': ' + error.message, 'error');
             }
