@@ -910,7 +910,7 @@
  document.head.appendChild(s);
  }
  loadOnce('wize-bottom-nav.js', 'wbn');
- loadOnce('wize-onboarding.js', 'wob');
+ loadOnce('wize-onboarding.js?v=2026062303', 'wob');
  loadOnce('wize-hamburger.js', 'wha');
  } catch(e) { console.warn('shared nav scripts failed to load', e); }
 })();
