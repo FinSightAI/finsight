@@ -24,21 +24,35 @@ service cloud.firestore {
       // plan escalation but CREATE didn't. Paid upgrades happen ONLY via Cloud Functions.
       allow create: if isOwner(userId)
                     && (!('plan' in request.resource.data)
-                        || request.resource.data.plan == 'free');
+                        || request.resource.data.plan == 'free')
+                    && !('planExpiresAt'   in request.resource.data)
+                    && !('referralRewards' in request.resource.data)
+                    && !('referralCount'   in request.resource.data)
+                    && !('isAdmin'         in request.resource.data);
       allow delete: if isOwner(userId);
-      // Entitlement (`plan`) is SERVER-AUTHORITATIVE: only Cloud Functions
-      // (validateCode for access codes, paypalWebhook for payments — both via
-      // the Admin SDK, which bypasses these rules) may upgrade a user to a paid
-      // tier. The client may update its own profile freely but may NOT change
-      // `plan` to a paid value — it must stay unchanged or be set to 'free'
-      // (self-downgrade). Closes the free→paid self-grant bypass that the
-      // Money/Travel backends trusted as the only source of entitlement truth.
+      // Entitlement fields are SERVER-AUTHORITATIVE: only Cloud Functions
+      // (validateCode for access codes, paypalWebhook for payments, and the
+      // applyReferralRewards/awardReferral callables — all via the Admin SDK,
+      // which bypasses these rules) may write entitlement state.
+      // The client may update its own profile freely but may NOT change:
+      //   `plan`              — the paid tier
+      //   `planExpiresAt`     — expiry timestamp (setting far-future bypasses expiry)
+      //   `referralRewards`   — reward queue consumed by applyReferralRewards cron
+      //   `referralCount`     — counter that triggers the cron query
+      //   `isAdmin`           — admin flag used by isAdmin() helper
+      // SECURITY FIX (2026-06-25): referralRewards/referralCount/planExpiresAt/isAdmin
+      // were not blocked, allowing a free user to forge a referral-reward array and
+      // wait for the 03:00 UTC cron to apply it — granting themselves YOLO for free.
       allow update: if isOwner(userId)
                     && (
                          !('plan' in request.resource.data)
                          || request.resource.data.plan == resource.data.plan
                          || request.resource.data.plan == 'free'
-                       );
+                       )
+                    && !('planExpiresAt'   in request.resource.data)
+                    && !('referralRewards' in request.resource.data)
+                    && !('referralCount'   in request.resource.data)
+                    && !('isAdmin'         in request.resource.data);
 
       // Per-app aggregated summaries — owner read/write
       match /context/{appId} {

@@ -112,15 +112,45 @@ const Plan = (() => {
         } catch { return 0; }
     }
 
+    // Background check: if localStorage claims pro/yolo but Firestore (source of
+    // truth) says the user is NOT paid, downgrade the local plan. Only ever
+    // downgrades — real upgrades flow through redeemCode()/load(). Stays silent
+    // on offline/transient errors so a flaky network never locks out a paid user.
+    let _reverified = false;
+    async function _reverifyAgainstServer() {
+        if (_reverified) return;
+        _reverified = true;
+        try {
+            if (typeof firebaseAuth === "undefined" || !firebaseAuth.currentUser || !window.firebaseDb) return;
+            const uid = firebaseAuth.currentUser.uid;
+            const doc = await window.firebaseDb.collection("users").doc(uid).get();
+            const serverPlan = (doc.exists && doc.data().plan) || "free";
+            const paid = serverPlan === "pro" || serverPlan === "yolo" || serverPlan === "pro_trial";
+            if (!paid) {
+                _plan = "free";
+                localStorage.setItem("wl_plan", "free"); // keep wl_access_code so a transient read can re-sync
+                _notify();
+            } else if (serverPlan !== _plan) {
+                _plan = serverPlan;
+                localStorage.setItem("wl_plan", serverPlan);
+                _notify();
+            }
+        } catch (e) { /* offline/transient — trust the cached plan */ }
+    }
+
     async function load() {
         if (!PAYWALL_ACTIVE) { _plan = "pro"; _notify(); return "pro"; }
 
-        // Honor previously-redeemed access code — don't make user re-enter
+        // Honor previously-redeemed access code — don't make user re-enter.
+        // Instant return for UX, but kick off a background re-verify against
+        // Firestore so a stale or DevTools-tampered localStorage value can't keep
+        // a non-paying client unlocked: the server is the source of truth.
         const _storedCode = localStorage.getItem("wl_access_code");
         const _storedPlan = localStorage.getItem("wl_plan");
         if (_storedCode && (_storedPlan === "pro" || _storedPlan === "yolo")) {
             _plan = _storedPlan;
             _notify();
+            _reverifyAgainstServer();
             return _plan;
         }
 
