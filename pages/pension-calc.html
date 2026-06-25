@@ -54,7 +54,7 @@
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
- <link rel="stylesheet" href="../css/app.css?v=2026062207">
+ <link rel="stylesheet" href="../css/app.css?v=2026062503">
  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
  <style>
  .calc-container {
@@ -427,7 +427,7 @@
  <script src="../js/app.js?v=2026062001"></script>
  <script src="../js/firebase-config.js"></script>
  <script src="../js/crypto.js"></script>
- <script src="../js/auth.js?v=2026062501"></script>
+ <script src="../js/auth.js?v=2026062503"></script>
  <script>
  let currentLang = 'he';
  let projectionChartInstance = null;
@@ -534,8 +534,18 @@
 
  const totalReturns = balance - totalDeposits;
 
- // Calculate monthly pension (simple annuity)
+ // Calculate monthly pension (simple annuity). Guard against a
+ // life-expectancy ≤ retirement-age input, which would divide by zero or a
+ // negative and render "₪∞" / a negative payout.
  const retirementYears = lifeExpectancy - retirementAge;
+ if (retirementYears <= 0) {
+ const _le = document.getElementById('lifeExpectancy');
+ if (_le) { _le.focus(); }
+ alert(typeof I18n !== 'undefined' && I18n.t('pensionCalc.lifeExpError') !== 'pensionCalc.lifeExpError'
+ ? I18n.t('pensionCalc.lifeExpError')
+ : 'תוחלת החיים חייבת להיות גדולה מגיל הפרישה / Life expectancy must be greater than retirement age');
+ return;
+ }
  const monthlyPension = balance / (retirementYears * 12);
 
  // Update results

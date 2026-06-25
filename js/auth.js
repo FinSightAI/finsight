@@ -555,16 +555,25 @@ const Auth = {
                 dismissedTips: Storage.getDismissedTips(),
                 loans: Storage.getLoans(),
                 creditScore: Storage.getCreditScore(),
-                subscriptions: Storage.getSubscriptions()
+                subscriptions: Storage.getSubscriptions(),
+                // BUG FIX: income/goals/summarySchedule were absent from auth.js cloud
+                // sync — a restore that ran through syncFromCloud() silently dropped them.
+                income: Storage.get('finance_income') || [],
+                goals: Storage.get('finance_goals') || [],
+                summarySchedule: Storage.getSummarySchedule()
             };
 
-            // Trim old transactions to prevent exceeding Firestore 1MB limit
+            // Trim old transactions to prevent exceeding Firestore 1MB limit.
+            // BUG FIX: cap raised 200 -> 2000 so realistic transaction histories are
+            // never permanently lost here. The full untrimmed history is also stored
+            // by the wize-cloud-backup path (raw JSON), and the 900KB doc-size guard
+            // below still protects this write from ever exceeding Firestore's 1MB cap.
             if (sensitiveData.stocks && Array.isArray(sensitiveData.stocks.transactions)) {
                 const txs = sensitiveData.stocks.transactions;
-                if (txs.length > 200) {
+                if (txs.length > 2000) {
                     sensitiveData.stocks.transactions = txs
                         .sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .slice(0, 200);
+                        .slice(0, 2000);
 
                 }
             }
@@ -760,6 +769,10 @@ const Auth = {
                     if (data.loans) Storage.saveLoans(data.loans);
                     if (data.creditScore) Storage.saveCreditScore(data.creditScore);
                     if (data.subscriptions) Storage.saveSubscriptions(data.subscriptions);
+                    // BUG FIX: restore income/goals/summarySchedule (were never synced before)
+                    if (data.income) Storage.set('finance_income', data.income);
+                    if (data.goals) Storage.set('finance_goals', data.goals);
+                    if (data.summarySchedule) Storage.saveSummarySchedule(data.summarySchedule);
 
                     localStorage.setItem('finance_last_update', new Date().toISOString());
 
@@ -790,6 +803,10 @@ const Auth = {
                         if (data.loans) Storage.saveLoans(data.loans);
                         if (data.creditScore) Storage.saveCreditScore(data.creditScore);
                         if (data.subscriptions) Storage.saveSubscriptions(data.subscriptions);
+                        // BUG FIX: restore income/goals/summarySchedule (were never synced before)
+                        if (data.income) Storage.set('finance_income', data.income);
+                        if (data.goals) Storage.set('finance_goals', data.goals);
+                        if (data.summarySchedule) Storage.saveSummarySchedule(data.summarySchedule);
                         localStorage.setItem('finance_last_update', new Date().toISOString());
 
                         // Refresh all page data after cloud sync
@@ -876,13 +893,26 @@ const Auth = {
         if (!confirm(I18n.t('auth.deleteConfirm2'))) return;
 
         try {
-            // Delete from Firestore — ensure firestore-compat is loaded (lazy on landing)
+            // GDPR FIX: a client-side users/{uid} delete leaves userBackups/{uid} (and the
+            // Auth record) intact, so the cloud-backup path resurrects all data on the next
+            // login. Delegate to the deleteUserAccount callable, which recursively purges
+            // users/{uid}, userBackups/{uid}, the user's events/leads rows, and the Auth
+            // record. The local wipe below stays as a fallback so a function failure never
+            // leaves stale data on this device.
             if (this.currentUser) {
-                if (typeof window.ensureFirestore === 'function') {
-                    try { await window.ensureFirestore(); } catch (e) {}
-                }
-                if (window.firebaseDb) {
-                    await window.firebaseDb.collection('users').doc(this.currentUser.uid).delete();
+                if (typeof firebase !== 'undefined' && firebase.functions) {
+                    try {
+                        await firebase.functions().httpsCallable('deleteUserAccount')({});
+                    } catch (cfErr) {
+                        console.error('deleteUserAccount callable failed, falling back to client-side delete', cfErr);
+                        // Fallback: at least remove the users/{uid} doc client-side.
+                        if (typeof window.ensureFirestore === 'function') {
+                            try { await window.ensureFirestore(); } catch (e) {}
+                        }
+                        if (window.firebaseDb) {
+                            await window.firebaseDb.collection('users').doc(this.currentUser.uid).delete();
+                        }
+                    }
                 }
             }
 

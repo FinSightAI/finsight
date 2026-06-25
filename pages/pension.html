@@ -359,7 +359,7 @@
  <script src="../js/firebase-config.js"></script>
  <script src="../js/wize-cloud-backup.js?v=2026062201"></script>
  <script src="../js/crypto.js"></script>
- <script src="../js/auth.js?v=2026062501"></script>
+ <script src="../js/auth.js?v=2026062503"></script>
  <script>
  let currentLang = 'he';
 
@@ -453,7 +453,18 @@
  }
 
  function saveMyFunds(funds) {
+ // BUG FIX: route through Storage.set (patched by wize-cloud-backup.js) so the
+ // cloud-backup trigger fires; a raw localStorage.setItem here was invisible to it.
+ // pension.html does NOT load storage.js, so fall back to a raw write + an explicit
+ // scheduleBackup() nudge so the fund still reaches userBackups.
+ if (typeof Storage !== 'undefined' && Storage && typeof Storage.saveMyFunds === 'function') {
+ Storage.saveMyFunds(funds);
+ } else {
  localStorage.setItem(FUNDS_KEY, JSON.stringify(funds));
+ if (window.WizeCloudBackup && typeof window.WizeCloudBackup.scheduleBackup === 'function') {
+ window.WizeCloudBackup.scheduleBackup();
+ }
+ }
  }
 
  function loadMyPensionFunds() {

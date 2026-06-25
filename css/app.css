@@ -952,7 +952,7 @@ html[dir="rtl"] .mobile-header,
 }
 
 .tab-item.active {
-    color: #00d2ff;
+    color: #10b981; /* WizeMoney green (was #00d2ff — WizeTravel cyan leak) */
 }
 
 .tab-item .tab-icon {
