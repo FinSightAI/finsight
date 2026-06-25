@@ -46,7 +46,10 @@ const CurrencyRates = {
      * Fetch rates from API
      */
     async fetchRates() {
-        const response = await fetch(this.API_URL);
+        // 5s timeout so a stalled exchange-rate API can't hang every
+        // multi-currency total forever — on abort/timeout this fetch rejects
+        // and getRates()'s catch falls back to cached/fallbackRates.
+        const response = await fetch(this.API_URL, { signal: AbortSignal.timeout(5000) });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

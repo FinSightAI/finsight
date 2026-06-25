@@ -34,7 +34,7 @@
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
- <link rel="stylesheet" href="../css/app.css?v=2026062207">
+ <link rel="stylesheet" href="../css/app.css?v=2026062503">
  <style>
  .nav-link.active { background: var(--color-stocks) !important; }
  .sec-toolbar {
@@ -420,6 +420,7 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
 });
 
 // kick off
+if (typeof I18n !== 'undefined') I18n.init();
 loadAll().catch(err => {
  console.error('Sectors load error:', err);
  document.getElementById('secGrid').innerHTML = '<div class="sec-loading">' + tx().error + '</div>';

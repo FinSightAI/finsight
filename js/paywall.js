@@ -213,7 +213,7 @@ const Paywall = (() => {
           .pw-plan {
             border-radius: 14px; padding: 18px 14px;
             border: 1px solid rgba(255,255,255,0.08);
-            background: #161b27; text-align: right; position: relative;
+            background: #161b27; text-align: start; position: relative;
           }
           .pw-plan.highlight { border-color: #6366f1; background: rgba(99,102,241,0.08); }
           .pw-plan .badge {
@@ -285,6 +285,7 @@ const Paywall = (() => {
 
         const overlay = document.createElement("div");
         overlay.id = "paywallOverlay";
+        overlay.setAttribute('dir', (localStorage.getItem('wl_lang')||'he').slice(0,2)==='he' ? 'rtl' : 'ltr');
         overlay.innerHTML = `
           <div id="paywallBox">
             <h2>✨ ${c.title}</h2>

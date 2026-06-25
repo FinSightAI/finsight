@@ -44,7 +44,8 @@ const ExportManager = {
         const printWindow = window.open('', '_blank');
         const lang = I18n?.currentLanguage || 'he';
         const dir = lang === 'he' ? 'rtl' : 'ltr';
-        const dateStr = new Date().toLocaleDateString(lang === 'he' ? 'he-IL' : 'en-US', {
+        const _locale = (I18n && I18n.getLocale) ? I18n.getLocale() : (lang === 'he' ? 'he-IL' : 'en-US');
+        const dateStr = new Date().toLocaleDateString(_locale, {
             year: 'numeric', month: 'long', day: 'numeric'
         });
 
@@ -337,7 +338,9 @@ const ExportManager = {
     generateFullReport() {
         const lang = I18n?.currentLanguage || 'he';
         const isHebrew = lang === 'he';
-        const fmt = v => I18n?.formatCurrency(v) ?? Number(v).toLocaleString('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 });
+        const _locale = (I18n && I18n.getLocale) ? I18n.getLocale() : (isHebrew ? 'he-IL' : 'en-US');
+        const _currency = (I18n && I18n.getCurrency) ? I18n.getCurrency() : 'ILS';
+        const fmt = v => I18n?.formatCurrency(v) ?? Number(v).toLocaleString(_locale, { style: 'currency', currency: _currency, maximumFractionDigits: 0 });
         // XSS-safe HTML escape for user-supplied strings (bank names, symbols, etc.)
         const esc = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
 
@@ -363,7 +366,7 @@ const ExportManager = {
         const loansTotal  = loansData.reduce((s, l) => s + (l.remainingBalance || l.balance || 0), 0);
         const netWorth    = storedNetWorth != null ? storedNetWorth : (bankTotal + stocksTotal + fundsTotal + assetsTotal - loansTotal);
 
-        const dateStr = now.toLocaleDateString(isHebrew ? 'he-IL' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const dateStr = now.toLocaleDateString(_locale, { year: 'numeric', month: 'long', day: 'numeric' });
 
         // ── Helper: section wrapper ──
         const section = (icon, titleHe, titleEn, tableHtml) => `

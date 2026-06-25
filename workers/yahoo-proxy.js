@@ -37,6 +37,7 @@ async function handleRequest(request) {
 
         try {
             const response = await fetch(mayaUrl, {
+                signal: AbortSignal.timeout(8000), // fail fast instead of hitting the 30s CPU limit
                 headers: {
                     'X-Maya-With': 'allow',
                     'User-Agent': 'Mozilla/5.0 (compatible; FinSightBot/1.0)',
@@ -66,6 +67,7 @@ async function handleRequest(request) {
 
     try {
         const response = await fetch(yahooUrl, {
+            signal: AbortSignal.timeout(8000), // fail fast instead of hitting the 30s CPU limit
             headers: {
                 'User-Agent': 'Mozilla/5.0 (compatible; FinSightBot/1.0)',
                 'Accept': 'application/json',

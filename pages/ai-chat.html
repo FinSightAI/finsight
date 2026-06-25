@@ -36,7 +36,7 @@
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
- <link rel="stylesheet" href="../css/app.css?v=2026062207">
+ <link rel="stylesheet" href="../css/app.css?v=2026062503">
 <style>
 /* Mobile fix — the inline style on <main> sets height:100vh + padding:0 which
    hides the chat header behind the wl-bar (36px) + mobile-header (~56px + safe-area).
@@ -187,11 +187,11 @@
  <script src="../js/app.js?v=2026062001"></script>
 <script src="../js/profiles.js?v=2026060902"></script>
 <script src="../js/storage.js?v=2026061802"></script>
-<script src="../js/currency.js?v=2026061802"></script>
+<script src="../js/currency.js?v=2026062504"></script>
 <script src="../js/wize-disclaimer.js?v=2026062303"></script>
 <script src="../js/wize-pii.js"></script>
  <script src="../js/wizeai-sync.js?v=2026062201"></script>
- <script src="../js/wize-cloud-backup.js?v=2026062201"></script>
+ <script src="../js/wize-cloud-backup.js?v=2026062504"></script>
 <script src="../js/i18n.js?v=2026061803"></script>
 
 <script>
@@ -538,10 +538,19 @@ ${rules}${groundTruthFooter}`;
  const _scrub = (window.WizePII?.scrubString) || (x => x);
  const _system = await buildSystemPrompt();
  // Keep history as Gemini format; last message already added above
- const result = await aiProxy({
+ // Client-side 30s timeout: a slow/hung backend would otherwise leave the
+ // spinner stuck and the send button disabled with the input already cleared.
+ // Race the call against a timer; on timeout we surface errGeneral and restore
+ // the user's typed text (see catch) so they can retry without retyping.
+ const _timeout = new Promise((_, reject) =>
+ setTimeout(() => reject({ __wizeTimeout: true }), 30000));
+ const result = await Promise.race([
+ aiProxy({
  messages: _strip(conversationHistory),
  system: typeof _system === 'string' ? _scrub(_system) : _strip(_system),
- });
+ }),
+ _timeout,
+ ]);
 
  removeTyping();
  const reply = result.data.text;
@@ -551,7 +560,15 @@ ${rules}${groundTruthFooter}`;
  } catch(e) {
  removeTyping();
  const code = e.code || '';
- if (code === 'functions/unauthenticated') {
+ if (e && e.__wizeTimeout) {
+ // Timed out: drop the unanswered user turn, restore the typed text so
+ // the user can resend, and remove its rendered bubble.
+ conversationHistory.pop();
+ document.querySelector('#chatMessages .chat-row.user:last-child')?.remove();
+ const inputEl = document.getElementById('chatInput');
+ if (inputEl && !inputEl.value.trim()) { inputEl.value = text; autoResize(inputEl); }
+ renderMessage('assistant', I18n.t('chat.errGeneral'));
+ } else if (code === 'functions/unauthenticated') {
  renderMessage('assistant', I18n.t('chat.errUnauthenticated'));
  } else if (code === 'functions/resource-exhausted') {
  renderMessage('assistant', '⏳ ' + (e.message || I18n.t('chat.errRateLimit')));

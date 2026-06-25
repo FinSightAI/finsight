@@ -42,6 +42,18 @@
             es: { dir: 'ltr', title: 'Función Pro', body: 'Esta función está disponible en el plan Pro. Mejora tu plan para desbloquearla.', up: 'Mejorar ahora →', back: 'Volver al panel' }
         };
         var T = TR[lang] || TR.en;
+        var FEAT = {
+            simulator:        { he: 'סימולטור', en: 'Simulator', pt: 'Simulador', es: 'Simulador' },
+            stocks:           { he: 'מניות', en: 'Stocks', pt: 'Ações', es: 'Acciones' },
+            compareFunds:     { he: 'השוואת קרנות', en: 'Compare Funds', pt: 'Comparar Fundos', es: 'Comparar Fondos' },
+            taxOptimizer:     { he: 'אופטימיזציית מס', en: 'Tax Optimizer', pt: 'Otimizador de Impostos', es: 'Optimizador de Impuestos' },
+            pensionOptimizer: { he: 'אופטימיזציית פנסיה', en: 'Pension Optimizer', pt: 'Otimizador de Previdência', es: 'Optimizador de Pensiones' },
+            aiStory:          { he: 'AI Story', en: 'AI Story', pt: 'AI Story', es: 'AI Story' },
+            reports:          { he: 'דוחות', en: 'Reports', pt: 'Relatórios', es: 'Informes' },
+            multiProfile:     { he: 'פרופילים מרובים', en: 'Multiple Profiles', pt: 'Vários Perfis', es: 'Múltiples Perfiles' }
+        };
+        var fName = (FEAT[feature] && (FEAT[feature][lang] || FEAT[feature].en)) || '';
+        var title = fName ? (fName + ' — ' + T.title) : T.title;
         var ov = document.createElement('div');
         ov.id = 'wlPageLock';
         ov.setAttribute('dir', T.dir);
@@ -49,7 +61,7 @@
         ov.innerHTML =
             '<div style="max-width:380px;width:100%;text-align:center;background:#11151f;border:1px solid rgba(52,211,153,0.28);border-radius:18px;padding:34px 26px;color:#e5e7eb;box-shadow:0 20px 60px rgba(0,0,0,0.5);">' +
             '<div style="font-size:2.4rem;margin-bottom:10px;">🔒</div>' +
-            '<h2 style="margin:0 0 8px;font-size:1.18rem;font-weight:800;color:#fff;">' + T.title + '</h2>' +
+            '<h2 style="margin:0 0 8px;font-size:1.18rem;font-weight:800;color:#fff;">' + title + '</h2>' +
             '<p style="margin:0 0 22px;font-size:0.9rem;opacity:0.82;line-height:1.55;">' +
             T.body + '</p>' +
             '<a href="../?upgrade=' + encodeURIComponent(feature) + '" style="display:block;background:linear-gradient(135deg,#34d399,#10b981);color:#04130c;font-weight:800;padding:13px;border-radius:12px;text-decoration:none;margin-bottom:11px;">' +

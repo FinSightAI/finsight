@@ -1289,7 +1289,11 @@ async function checkAiRateLimit(uid) {
         db.collection("users").doc(uid).get(),
     ]);
 
-    const plan  = userSnap.exists ? (userSnap.data().plan || "free") : "free";
+    let plan  = userSnap.exists ? (userSnap.data().plan || "free") : "free";
+    // Backstop a missed PayPal EXPIRED webhook: an expired paid plan must not keep
+    // granting paid-tier AI quota. If planExpiresAt is in the past, treat as free.
+    const _exp = userSnap.exists ? userSnap.data().planExpiresAt : null;
+    if ((plan === "pro" || plan === "yolo") && _exp && _exp.toMillis && _exp.toMillis() < Date.now()) plan = "free";
     const limit = AI_LIMIT[plan] ?? AI_LIMIT.free;
     const isPaid = plan === "pro" || plan === "yolo";
 
@@ -1326,7 +1330,7 @@ async function checkAiRateLimit(uid) {
 }
 
 exports.aiProxy = functions
-    .runWith({ secrets: [GEMINI_API_KEY, RESEND_API_KEY] })
+    .runWith({ secrets: [GEMINI_API_KEY, RESEND_API_KEY], timeoutSeconds: 30 })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError("unauthenticated", "יש להתחבר כדי להשתמש ביועץ ה-AI");
@@ -1405,6 +1409,7 @@ exports.aiProxy = functions
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
+                signal: AbortSignal.timeout(25000),
             }
         );
 
@@ -2512,6 +2517,7 @@ exports.cspReport = functions.https.onRequest(async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     if (req.method === 'OPTIONS') return res.status(204).send('');
     if (req.method !== 'POST') return res.status(405).send('');
+    if (!_ipThrottle(req, 60)) return res.status(204).send('');
     try {
         const body = req.body || {};
         // report-uri → { "csp-report": {...} } ; report-to → [ { body: {...} }, ... ]

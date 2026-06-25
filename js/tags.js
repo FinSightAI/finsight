@@ -5,15 +5,25 @@ const Tags = {
     STORAGE_KEY: 'finance_custom_tags',
 
     defaultCategories: [
-        { id: 'food', nameHe: 'מזון ומסעדות', nameEn: 'Food & Restaurants', icon: '🍕', color: '#ef4444' },
-        { id: 'transport', nameHe: 'תחבורה ודלק', nameEn: 'Transportation', icon: '🚗', color: '#3b82f6' },
-        { id: 'shopping', nameHe: 'קניות', nameEn: 'Shopping', icon: '🛍️', color: '#8b5cf6' },
-        { id: 'entertainment', nameHe: 'בילויים', nameEn: 'Entertainment', icon: '🎬', color: '#f59e0b' },
-        { id: 'bills', nameHe: 'חשבונות קבועים', nameEn: 'Bills', icon: '📄', color: '#10b981' },
-        { id: 'health', nameHe: 'בריאות', nameEn: 'Health', icon: '💊', color: '#ec4899' },
-        { id: 'education', nameHe: 'חינוך', nameEn: 'Education', icon: '📚', color: '#6366f1' },
-        { id: 'other', nameHe: 'אחר', nameEn: 'Other', icon: '📦', color: '#6b7280' }
+        { id: 'food', nameHe: 'מזון ומסעדות', nameEn: 'Food & Restaurants', namePt: 'Alimentação e Restaurantes', nameEs: 'Comida y Restaurantes', icon: '🍕', color: '#ef4444' },
+        { id: 'transport', nameHe: 'תחבורה ודלק', nameEn: 'Transportation', namePt: 'Transporte', nameEs: 'Transporte', icon: '🚗', color: '#3b82f6' },
+        { id: 'shopping', nameHe: 'קניות', nameEn: 'Shopping', namePt: 'Compras', nameEs: 'Compras', icon: '🛍️', color: '#8b5cf6' },
+        { id: 'entertainment', nameHe: 'בילויים', nameEn: 'Entertainment', namePt: 'Entretenimento', nameEs: 'Entretenimiento', icon: '🎬', color: '#f59e0b' },
+        { id: 'bills', nameHe: 'חשבונות קבועים', nameEn: 'Bills', namePt: 'Contas Fixas', nameEs: 'Cuentas Fijas', icon: '📄', color: '#10b981' },
+        { id: 'health', nameHe: 'בריאות', nameEn: 'Health', namePt: 'Saúde', nameEs: 'Salud', icon: '💊', color: '#ec4899' },
+        { id: 'education', nameHe: 'חינוך', nameEn: 'Education', namePt: 'Educação', nameEs: 'Educación', icon: '📚', color: '#6366f1' },
+        { id: 'other', nameHe: 'אחר', nameEn: 'Other', namePt: 'Outros', nameEs: 'Otros', icon: '📦', color: '#6b7280' }
     ],
+
+    /**
+     * Resolve a category's display name for the current language (he/en/pt/es) with en fallback.
+     */
+    localizedName(category) {
+        if (!category) return '';
+        const lang = (typeof I18n !== 'undefined' && I18n.currentLanguage) || 'he';
+        const byLang = { he: category.nameHe, en: category.nameEn, pt: category.namePt, es: category.nameEs };
+        return byLang[lang] || category.nameEn || category.nameHe || '';
+    },
 
     /**
      * Get all categories (default + custom)
@@ -85,7 +95,7 @@ const Tags = {
     getCategoryName(id) {
         const category = this.getCategory(id);
         if (!category) return id;
-        return I18n.currentLanguage === 'he' ? category.nameHe : category.nameEn;
+        return this.localizedName(category);
     },
 
     /**
@@ -140,7 +150,7 @@ const Tags = {
     renderCategoryOptions(selectedId = null) {
         const categories = this.getCategories();
         return categories.map(cat => {
-            const name = I18n.currentLanguage === 'he' ? cat.nameHe : cat.nameEn;
+            const name = this.localizedName(cat);
             const selected = cat.id === selectedId ? 'selected' : '';
             return `<option value="${cat.id}" ${selected}>${cat.icon} ${name}</option>`;
         }).join('');
@@ -153,7 +163,7 @@ const Tags = {
         const category = this.getCategory(id);
         if (!category) return id;
 
-        const name = I18n.currentLanguage === 'he' ? category.nameHe : category.nameEn;
+        const name = this.localizedName(category);
         return `<span class="category-badge" style="background: ${category.color}20; color: ${category.color}; border: 1px solid ${category.color};">
             ${category.icon} ${name}
         </span>`;

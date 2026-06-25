@@ -52,7 +52,7 @@
         'finance_my_gemel',
     ];
 
-    const DEBOUNCE_MS = 8000;
+    const DEBOUNCE_MS = 3000;
     const LOCAL_TS_KEY = 'wize_backup_local_ts';
     const RESTORED_FLAG = 'wize_backup_restored_once';
     const MAX_DOC_BYTES = 900 * 1024; // Firestore limit is 1MB; leave room for metadata
@@ -311,12 +311,23 @@
             instrumentStorage();
             initialRestore(user.uid).catch(() => {});
         });
-        // Push on tab close (best-effort)
-        window.addEventListener('beforeunload', () => {
+        // Flush a pending debounced write immediately on tab close / backgrounding.
+        // iOS Safari (and mobile browsers generally) do NOT reliably fire
+        // 'beforeunload' when the user switches apps or closes the tab, so a
+        // pending 3s debounce would silently lose the last edit. 'pagehide' and
+        // 'visibilitychange'→hidden DO fire on mobile, so we mirror the
+        // beforeunload flush on all three.
+        const flushPending = () => {
             if (_debounceTimer) {
                 clearTimeout(_debounceTimer);
+                _debounceTimer = null;
                 pushNow();
             }
+        };
+        window.addEventListener('beforeunload', flushPending);
+        window.addEventListener('pagehide', flushPending);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') flushPending();
         });
     }
 
