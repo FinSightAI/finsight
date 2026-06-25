@@ -27,9 +27,11 @@
  } catch(e) {}
  }
  if (_n) _st.nick = decodeURIComponent(_n);
- // Read wl_plan from URL too
+ // Read wl_plan from URL — ONLY when a signed wl_token (_t) accompanies it. The
+ // real SSO bridge always sends the token with the plan; gating on it stops a
+ // bare ?wl_plan=yolo (or ?wl_nick=x&wl_plan=yolo) from elevating entitlement.
  var _plan = _hp.get('wl_plan') || _p.get('wl_plan');
- if (_plan && ['pro', 'yolo', 'free'].includes(_plan)) {
+ if (_t && _plan && ['pro', 'yolo', 'free'].includes(_plan)) {
  _st.plan = _plan;
  localStorage.setItem('wl_plan', _plan);
  // Set a synthetic access code so plan persists

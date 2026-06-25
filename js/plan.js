@@ -128,7 +128,11 @@ const Plan = (() => {
             const paid = serverPlan === "pro" || serverPlan === "yolo" || serverPlan === "pro_trial";
             if (!paid) {
                 _plan = "free";
-                localStorage.setItem("wl_plan", "free"); // keep wl_access_code so a transient read can re-sync
+                localStorage.setItem("wl_plan", "free");
+                // Drop synthetic SSO-bridge codes (WL_SSO_*) when the server says
+                // free, so a URL-injected ?wl_plan can't keep re-passing the
+                // page-guard. Real redeemed codes are kept so a transient read can re-sync.
+                try { const _c = localStorage.getItem("wl_access_code"); if (_c && _c.indexOf("WL_SSO_") === 0) localStorage.removeItem("wl_access_code"); } catch (e) {}
                 _notify();
             } else if (serverPlan !== _plan) {
                 _plan = serverPlan;
