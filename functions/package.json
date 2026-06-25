@@ -14,7 +14,7 @@
     "@emnapi/runtime": "^1.11.1",
     "@google-cloud/firestore": "^7.11.6",
     "firebase-admin": "^13.0.0",
-    "firebase-functions": "^6.0.0",
+    "firebase-functions": "^7.2.5",
     "resend": "^6.12.3",
     "web-push": "^3.6.7"
   },
