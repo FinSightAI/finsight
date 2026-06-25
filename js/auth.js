@@ -602,6 +602,22 @@ const Auth = {
                 };
             }
 
+            // CRITICAL: this is a merge:false overwrite (it intentionally clears any
+            // stale plaintext from before encryption). Without preserving them, it
+            // also WIPES the entitlement/account fields — which silently downgrades a
+            // paying customer to free on every cloud-save. Re-read and carry them over.
+            try {
+                const _cur = await window.firebaseDb.collection('users').doc(userId).get();
+                if (_cur.exists) {
+                    const _d = _cur.data() || {};
+                    ['plan', 'accessCode', 'accessCodeRedeemedAt', 'createdAt', 'planExpiresAt',
+                     'paypalSubscriptionId', 'referredBy', 'referralRewardSent', 'referralRewards',
+                     'referralCount', 'referralCode'].forEach(function (k) {
+                        if (_d[k] !== undefined && data[k] === undefined) data[k] = _d[k];
+                    });
+                }
+            } catch (e) { /* if the read fails, fall through — plan rule still guards elevation */ }
+
             await window.firebaseDb.collection('users').doc(userId).set(data, { merge: false });
 
             // Update sync status
