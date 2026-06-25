@@ -356,7 +356,7 @@
 <script src="../js/storage.js?v=2026061802"></script>
  <script src="../js/wizeai-sync.js?v=2026062201"></script>
  <script src="../js/wize-cloud-backup.js?v=2026062504"></script>
-<script src="../js/i18n.js?v=2026061803"></script>
+<script src="../js/i18n.js?v=2026062505"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
 <script>
 // ── Utilities ──────────────────────────────────────────────
@@ -367,14 +367,16 @@ const fmtShort = n => {
  return fmt(n);
 };
 
-// Compound future value of monthly contributions (annuity-DUE: each deposit
-// made at the START of the month, so it earns one extra period of growth).
-// FV = PMT × [((1+r)^n − 1) / r] × (1+r) where r = monthly rate, n = months
+// Compound future value of monthly contributions (ORDINARY annuity: each deposit
+// made at the END of the month — the Israeli-fund convention, matching
+// pension-calc.html and pension-optimizer.html so the same inputs give the
+// same balance across every WizeMoney page).
+// FV = PMT × [((1+r)^n − 1) / r] where r = monthly rate, n = months
 function fvMonthly(monthly, annualRate, years) {
  if (annualRate === 0) return monthly * years * 12;
  const r = annualRate / 100 / 12;
  const n = years * 12;
- return monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+ return monthly * ((Math.pow(1 + r, n) - 1) / r);
 }
 
 // ── CHARTS registry (destroy before recreate) ──────────────
@@ -693,9 +695,16 @@ function initNetWorth() {
  const base = [], withSavings = [];
  let b0 = nw, b1 = nw;
  base.push(b0); withSavings.push(b1);
+ // Extra savings compound MONTHLY within each year (ordinary annuity, deposits
+ // at END of month) — consistent with fvMonthly() and the pension pages, rather
+ // than the old year-end lump (extra * 12), which understated growth by ~1.6%.
+ const rMonthly = rate / 100 / 12;
+ const yearSavingsFV = rMonthly === 0
+ ? extra * 12
+ : extra * ((Math.pow(1 + rMonthly, 12) - 1) / rMonthly);
  for (let i = 0; i < YEARS; i++) {
  b0 = b0 * (1 + rate/100);
- b1 = b1 * (1 + rate/100) + extra * 12;
+ b1 = b1 * (1 + rate/100) + yearSavingsFV;
  base.push(b0);
  withSavings.push(b1);
  }
@@ -745,8 +754,8 @@ document.addEventListener('DOMContentLoaded', () => {
  initNetWorth();
 });
 </script>
-<script src="../js/wl-common-i18n.js?v=2026061803" defer></script>
-<script src="../js/wl-text-i18n.js?v=2026061803" defer></script>
+<script src="../js/wl-common-i18n.js?v=2026062505" defer></script>
+<script src="../js/wl-text-i18n.js?v=2026062505" defer></script>
 <script src="../js/page-guard.js?v=2026062504" data-feature="simulator"></script>
 </body>
 </html>
