@@ -1622,12 +1622,12 @@ exports.verifyPaypalSubscription = functions
         });
 
         if (!subData || subData.status !== "ACTIVE") {
-            throw new functions.https.HttpsError("failed-precondition", "Subscription not active: " + (subData && subData.status));
+            throw new functions.https.HttpsError("failed-precondition", "Subscription not active");
         }
 
         // Verify the subscription belongs to this user
         if (subData.custom_id !== uid) {
-            console.warn(`verifyPaypal: custom_id mismatch — expected ${uid}, got ${subData.custom_id}`);
+            console.warn(`verifyPaypal: custom_id mismatch for uid=${uid}`);
             throw new functions.https.HttpsError("permission-denied", "Subscription does not belong to this account");
         }
 
