@@ -180,8 +180,7 @@ const Paywall = (() => {
     function _paypalUrl(planId) {
         try {
             const uid = firebaseAuth && firebaseAuth.currentUser && firebaseAuth.currentUser.uid;
-            const returnUrl = encodeURIComponent('https://finsightai.github.io/finsight/pages/paypal-return.html');
-            const base = `https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=${planId}&return_url=${returnUrl}`;
+            const base = `https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=${planId}`;
             return uid ? `${base}&custom_id=${encodeURIComponent(uid)}` : base;
         } catch (_) {
             return `https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=${planId}`;
