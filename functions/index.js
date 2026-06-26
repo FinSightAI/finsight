@@ -1518,7 +1518,10 @@ function getAccessToken(clientId, secret) {
             let data = "";
             res.on("data", (c) => data += c);
             res.on("end", () => {
-                try { resolve(JSON.parse(data).access_token); }
+                try {
+                    const parsed = JSON.parse(data);
+                    resolve(parsed.access_token);
+                }
                 catch (e) { reject(e); }
             });
         });
@@ -1592,7 +1595,11 @@ exports.verifyPaypalSubscription = functions
         try {
             token = await getAccessToken(PAYPAL_CLIENT_ID.value(), PAYPAL_SECRET.value());
         } catch (e) {
+            console.error("verifyPaypal: getAccessToken threw:", e.message);
             throw new functions.https.HttpsError("internal", "PayPal auth failed");
+        }
+        if (!token) {
+            throw new functions.https.HttpsError("internal", "PayPal auth returned no token");
         }
 
         // Fetch subscription from PayPal
@@ -1615,7 +1622,7 @@ exports.verifyPaypalSubscription = functions
         });
 
         if (!subData || subData.status !== "ACTIVE") {
-            throw new functions.https.HttpsError("failed-precondition", "Subscription not active");
+            throw new functions.https.HttpsError("failed-precondition", "Subscription not active: " + (subData && subData.status));
         }
 
         // Verify the subscription belongs to this user
