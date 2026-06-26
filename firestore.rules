@@ -131,7 +131,8 @@ service cloud.firestore {
     // 2026-05-15 during the Supabase → Firebase migration.
     // ─────────────────────────────────────────────────────────────────────
     match /shared_deals/{token} {
-      allow read:                 if true;
+      allow get:                  if true;   // read a single shared deal by its token (the share-link)
+      allow list:                 if false;  // block enumerating the whole collection (was read:if true → all deals listable)
       allow create, update, delete: if false;
     }
 
