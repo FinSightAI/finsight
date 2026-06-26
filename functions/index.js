@@ -1567,6 +1567,82 @@ function verifyWebhook(token, webhookId, headers, body) {
     });
 }
 
+// ─── Client-side subscription verifier ───────────────────────────────────────
+// Called from paypal-return.html after PayPal redirects back with subscription_id.
+// Queries PayPal API directly, verifies custom_id == caller uid, updates plan.
+exports.verifyPaypalSubscription = functions
+    .runWith({ secrets: [PAYPAL_CLIENT_ID, PAYPAL_SECRET] })
+    .https.onCall(async (data, context) => {
+        if (!context.auth) {
+            throw new functions.https.HttpsError("unauthenticated", "Sign in first");
+        }
+        const uid = context.auth.uid;
+        const subscriptionId = data && data.subscriptionId;
+        if (!subscriptionId || typeof subscriptionId !== "string" || !/^I-[A-Z0-9]+$/.test(subscriptionId)) {
+            throw new functions.https.HttpsError("invalid-argument", "Invalid subscription ID");
+        }
+
+        // Rate-limit: 5 verifications per minute per user
+        if (!(await _rateLimit("verifyPaypal", uid, 5))) {
+            throw new functions.https.HttpsError("resource-exhausted", "Too many requests");
+        }
+
+        // Get PayPal access token
+        let token;
+        try {
+            token = await getAccessToken(PAYPAL_CLIENT_ID.value(), PAYPAL_SECRET.value());
+        } catch (e) {
+            throw new functions.https.HttpsError("internal", "PayPal auth failed");
+        }
+
+        // Fetch subscription from PayPal
+        const subData = await new Promise((resolve, reject) => {
+            const req = https.request({
+                hostname: "api-m.paypal.com",
+                path: `/v1/billing/subscriptions/${subscriptionId}`,
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }, (res) => {
+                let d = "";
+                res.on("data", c => d += c);
+                res.on("end", () => { try { resolve(JSON.parse(d)); } catch (e) { reject(e); } });
+            });
+            req.on("error", reject);
+            req.end();
+        });
+
+        if (!subData || subData.status !== "ACTIVE") {
+            throw new functions.https.HttpsError("failed-precondition", "Subscription not active");
+        }
+
+        // Verify the subscription belongs to this user
+        if (subData.custom_id !== uid) {
+            console.warn(`verifyPaypal: custom_id mismatch — expected ${uid}, got ${subData.custom_id}`);
+            throw new functions.https.HttpsError("permission-denied", "Subscription does not belong to this account");
+        }
+
+        // Detect tier from plan_id
+        const YOLO_PLAN_ID = "P-3WT61990FP2103335NH32GVA";
+        const tier = (subData.plan_id === YOLO_PLAN_ID) ? "yolo" : "pro";
+
+        await db.collection("users").doc(uid).set(
+            {
+                plan: tier,
+                paypalSubscriptionId: subscriptionId,
+                planActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+        );
+
+        console.log(`✅ verifyPaypalSubscription: ${tier.toUpperCase()} for uid=${uid}, sub=${subscriptionId}`);
+        try { await _grantReferrerReward(uid, tier); } catch (e) { console.warn("referral grant failed", e); }
+
+        return { success: true, plan: tier };
+    });
+
 // ─── Webhook handler ──────────────────────────────────────────────────────────
 
 exports.paypalWebhook = functions
