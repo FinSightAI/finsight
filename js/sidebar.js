@@ -933,6 +933,14 @@
      var h = (a.getAttribute('href') || '').split('/').pop().split('?')[0];
      a.classList.toggle('active', h === f);
     });
+    // Swap page-specific <style> blocks (each page may have custom CSS in <head>)
+    document.querySelectorAll('style[data-wl-spa]').forEach(function(s){ s.remove(); });
+    doc.querySelectorAll('style').forEach(function(s){
+     var c = s.textContent.trim(); if (!c) return;
+     var el = document.createElement('style');
+     el.textContent = c; el.setAttribute('data-wl-spa','1');
+     document.head.appendChild(el);
+    });
     // Load any external scripts the new page needs that aren't already loaded
     // (e.g. stock-api.js on sectors/stock-analytics when arriving from bank.html)
     var _loaded = new Set(Array.from(document.querySelectorAll('script[src]')).map(function(s){return s.src;}));
