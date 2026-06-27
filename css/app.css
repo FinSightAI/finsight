@@ -1979,14 +1979,8 @@ html[dir="ltr"] .main-content small {
     text-align: left;
 }
 
-/* ===== Page transitions (View Transitions API) ===== */
-@view-transition { navigation: auto; }
-
-@keyframes vt-fade-in  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes vt-fade-out { from { opacity: 1; } to { opacity: 0; } }
-
-::view-transition-old(root) { animation: 80ms ease-out both vt-fade-out; }
-::view-transition-new(root) { animation: 100ms ease-in  both vt-fade-in; }
+/* Page transitions: View Transitions API removed — caused sidebar/wl-bar to
+   disappear after Chrome captured shared elements mid-transition. */
 
 
 /* Reduce motion for accessibility */

@@ -81,19 +81,14 @@
  // Exchange the SSO ID token for a custom token (issueCustomToken CF) and sign
  // in, so currentUser is set — same bridge WizeTax uses. Skip if already signed
  // in (direct login). Waits for the firebase SDK to load.
- (function _wlEstablishSession() {
+ try { (function _wlEstablishSession() {
  var _ssoTok;
  try { _ssoTok = (JSON.parse(localStorage.getItem('wl_sso') || '{}')).token; } catch (e) {}
  if (!_ssoTok) return;
  if (typeof firebase === 'undefined' || !firebase.auth || !firebase.apps || !firebase.apps.length) { setTimeout(_wlEstablishSession, 400); return; }
- // firebase-config.js (initializeApp) loads AFTER this script, so firebase.auth()
- // can still throw "No Firebase App '[DEFAULT]'" in a race even when the guard
- // above passes. This try/catch is CRITICAL: an uncaught throw here halts the
- // rest of sidebar.js — including the nav render below — so a logged-in user got
- // a blank sidebar on every page. Swallow + retry; never break the render.
  try {
  firebase.auth().onAuthStateChanged(function (u) {
- if (u) return; // already signed in (direct or already bridged)
+ if (u) return;
  fetch('https://us-central1-finzilla-7f1f9.cloudfunctions.net/issueCustomToken', {
  method: 'POST',
  headers: { 'Content-Type': 'application/json' },
@@ -105,10 +100,10 @@
  try { firebase.auth().signInWithCustomToken(j.result.customToken).catch(function () {}); } catch(e) {}
  }
  })
- .catch(function () { /* non-fatal */ });
+ .catch(function () {});
  });
  } catch (e) { setTimeout(_wlEstablishSession, 400); }
- })();
+ })(); } catch(e) {}
 
  // Detect whether we're at root or inside pages/
  const path = window.location.pathname;
