@@ -941,14 +941,21 @@
      el.textContent = c; el.setAttribute('data-wl-spa','1');
      document.head.appendChild(el);
     });
-    // Load any external scripts the new page needs that aren't already loaded
-    // (e.g. stock-api.js on sectors/stock-analytics when arriving from bank.html)
-    var _loaded = new Set(Array.from(document.querySelectorAll('script[src]')).map(function(s){return s.src;}));
+    // Load external scripts the new page needs that aren't already loaded.
+    // Compare by FILENAME only (strip path+version) — URL comparison breaks across
+    // pages that load the same file with different relative paths.
+    var _loadedNames = new Set(Array.from(document.querySelectorAll('script[src]')).map(function(s){
+     return s.src.split('/').pop().split('?')[0];
+    }));
     var _missing = Array.from(doc.querySelectorAll('script[src]')).filter(function(s){
-     return !_loaded.has(new URL(s.getAttribute('src'), absHref).href);
+     var name = (s.getAttribute('src') || '').split('/').pop().split('?')[0];
+     return name && !_loadedNames.has(name);
     });
     function _runInline() {
-     window.__wlDcl = function(fn) { try { fn(); } catch(e) { console.warn('[spa]', e); } };
+     // Use setTimeout(fn,0) so the callback fires AFTER the current IIFE finishes.
+     // Without it, `let` variables declared after the DOMContentLoaded listener
+     // are in TDZ when the callback runs inline (e.g. _allTransactions in bank.html).
+     window.__wlDcl = function(fn) { setTimeout(function(){ try { fn(); } catch(e) { console.warn('[spa]', e); } }, 0); };
      doc.querySelectorAll('script:not([src])').forEach(function(s) {
       var c = s.textContent.trim(); if (!c) return;
       var el = document.createElement('script');
@@ -957,7 +964,7 @@
       ) + '\n})();';
       document.head.appendChild(el); document.head.removeChild(el);
      });
-     window.__wlDcl = null;
+     setTimeout(function(){ window.__wlDcl = null; }, 50);
      window.scrollTo(0, 0); _busy = false;
     }
     if (!_missing.length) { _runInline(); return; }
