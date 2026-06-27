@@ -8,13 +8,21 @@
  // page, empty) so a collapsed user doesn't see the sidebar flash before render.
  try { if (document.body && localStorage.getItem('wl_nav_collapsed') === '1') document.body.classList.add('nav-collapsed'); } catch (e) {}
  // ── Instant sidebar restore from sessionStorage cache ──
- // sidebar.js runs synchronously at parse time — the <aside class="sidebar"> is
- // already in the DOM (above this script tag). Restoring cached HTML here means
- // the sidebar appears with zero delay on every navigation, eliminating the flash.
- // inject() still runs on DOMContentLoaded and corrects the active-item highlight.
  try {
    var _sc = sessionStorage.getItem('wl-sb');
-   if (_sc) { var _sa = document.querySelector('aside.sidebar'); if (_sa) _sa.innerHTML = _sc; }
+   if (_sc) {
+     var _sa = document.querySelector('aside.sidebar');
+     if (_sa) {
+       _sa.innerHTML = _sc;
+       // Fix active item immediately so there's no flash of the wrong item
+       var _cf = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+       _sa.querySelectorAll('a.nav-link').forEach(function(a) {
+         var _h = (a.getAttribute('href') || '').split('?')[0].split('/').pop();
+         if (_h && _h === _cf) { a.classList.add('active'); }
+         else { a.classList.remove('active'); }
+       });
+     }
+   }
  } catch(e) {}
  // ── WL SSO bridge: read wl_token + wl_nick from URL, save to wl_sso ──
  // wl_token moved from ?query to #fragment so it never reaches server logs /
