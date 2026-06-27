@@ -909,6 +909,55 @@
  waitForPlan();
  }
 
+ // SPA navigation — only .main-content swaps; sidebar/wl-bar stay in place
+ (function _initSPANav() {
+  var _busy = false;
+  function _go(href, push) {
+   if (_busy) return; _busy = true;
+   fetch(href)
+   .then(function(r) { return r.text(); })
+   .then(function(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    // Swap main content
+    var nM = doc.querySelector('.main-content'), cM = document.querySelector('.main-content');
+    if (nM && cM) cM.innerHTML = nM.innerHTML;
+    if (doc.title) document.title = doc.title;
+    if (push !== false) history.pushState({ href: href }, doc.title || '', href);
+    // Update active nav item
+    var f = href.split('/').pop().split('?')[0];
+    document.querySelectorAll('a.nav-link').forEach(function(a) {
+     var h = (a.getAttribute('href') || '').split('/').pop().split('?')[0];
+     a.classList.toggle('active', h === f);
+    });
+    // Run page-specific inline scripts; shim DOMContentLoaded → immediate call
+    window.__wlDcl = function(fn) { try { fn(); } catch(e) { console.warn('[spa]', e); } };
+    doc.querySelectorAll('script:not([src])').forEach(function(s) {
+     var c = s.textContent.trim(); if (!c) return;
+     var el = document.createElement('script');
+     el.textContent = '(function(){\n' + c.replace(
+      /(document|window)\.addEventListener\(\s*['"]DOMContentLoaded['"]\s*,\s*/g, '__wlDcl('
+     ) + '\n})();';
+     document.head.appendChild(el); document.head.removeChild(el);
+    });
+    window.__wlDcl = null;
+    window.scrollTo(0, 0); _busy = false;
+   })
+   .catch(function() { _busy = false; location.href = href; });
+  }
+  // Capture sidebar link clicks
+  document.addEventListener('click', function(e) {
+   var a = e.target.closest('a.nav-link'); if (!a) return;
+   var href = a.getAttribute('href');
+   if (!href || !/pages\/[^/]+\.html/.test(href)) return;
+   e.preventDefault(); _go(href, true);
+  }, true);
+  // Browser back/forward
+  window.addEventListener('popstate', function(e) {
+   if (e.state && e.state.href) _go(e.state.href, false);
+  });
+  history.replaceState({ href: location.href }, document.title, location.href);
+ })();
+
  // Cross-app bottom navigation + first-visit onboarding (mobile only).
  // (Reuses the `inPages`/`prefix` consts declared at the top of this IIFE
  // — earlier we had a duplicate `var inPages` here which broke the whole
