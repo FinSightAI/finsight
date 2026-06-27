@@ -908,10 +908,93 @@
  }
 
  if (document.readyState === 'loading') {
- document.addEventListener('DOMContentLoaded', () => { inject(); waitForPlan(); });
+ document.addEventListener('DOMContentLoaded', () => { inject(); waitForPlan(); _initSPANav(); });
  } else {
  inject();
  waitForPlan();
+ _initSPANav();
+ }
+
+ // ── SPA-style navigation: intercept sidebar link clicks → AJAX content swap ──
+ // The sidebar and WizeBar never unmount. Only .main-content is replaced.
+ var _spaLock = false;
+ function _initSPANav() {
+   var sb = document.querySelector('aside.sidebar');
+   if (!sb) return;
+   // popstate (browser back/forward)
+   window.addEventListener('popstate', function() { _spaGo(location.href, false); });
+   // click on any sidebar nav link
+   sb.addEventListener('click', function(e) {
+     var a = e.target.closest('a.nav-link');
+     if (!a) return;
+     var href = a.getAttribute('href');
+     if (!href || href.startsWith('http') || href.startsWith('#') || a.target || a.classList.contains('locked')) return;
+     var url = new URL(href, location.href).href;
+     if (url === location.href) return;
+     e.preventDefault();
+     _spaGo(url, true);
+   });
+ }
+
+ function _spaGo(url, push) {
+   if (_spaLock) return;
+   _spaLock = true;
+   var main = document.querySelector('.main-content');
+   if (main) { main.style.transition = 'opacity .08s'; main.style.opacity = '0'; }
+   fetch(url)
+     .then(function(r) { return r.text(); })
+     .then(function(html) {
+       var doc = new DOMParser().parseFromString(html, 'text/html');
+       var newMain = doc.querySelector('.main-content');
+       var curMain = document.querySelector('.main-content');
+       if (!newMain || !curMain) { location.href = url; return; }
+       if (push) history.pushState(null, doc.title || '', url);
+       document.title = doc.title || '';
+       // Destroy Chart.js instances to avoid "canvas already in use"
+       try {
+         if (typeof Chart !== 'undefined') {
+           var ci = Chart.instances || {};
+           Object.keys(ci).forEach(function(k) { try { ci[k].destroy(); } catch(x) {} });
+         }
+       } catch(x) {}
+       curMain.innerHTML = newMain.innerHTML;
+       // Fade content back in
+       requestAnimationFrame(function() {
+         curMain.style.opacity = '1';
+         setTimeout(function() { curMain.style.transition = ''; }, 120);
+       });
+       // Update active sidebar item
+       var file = url.split('/').pop().split('?')[0] || 'index.html';
+       document.querySelectorAll('aside.sidebar a.nav-link').forEach(function(a) {
+         a.classList.toggle('active', (a.getAttribute('href') || '').split('/').pop().split('?')[0] === file);
+       });
+       // Execute page-specific inline script — intercept DOMContentLoaded so it runs now
+       Array.from(doc.body.querySelectorAll('script:not([src])')).forEach(function(s) {
+         var code = s.textContent;
+         if (!code.trim()) return;
+         // skip theme / WIZE_APP / i18n-only snippets that already ran
+         if (code.includes("classList.add('light')") || code.includes('WIZE_APP')) return;
+         _execWithDCL(code);
+       });
+       // Re-apply i18n
+       try { if (typeof I18n !== 'undefined') I18n.translatePage(); } catch(x) {}
+     })
+     .catch(function() { location.href = url; })
+     ['finally'](function() { _spaLock = false; });
+ }
+
+ // Execute code that wraps its init in document.addEventListener('DOMContentLoaded', fn)
+ // by intercepting the registration and calling fn() immediately.
+ function _execWithDCL(code) {
+   var orig = document.addEventListener.bind(document);
+   var dcl = null;
+   document.addEventListener = function(type, fn) {
+     if (type === 'DOMContentLoaded') { dcl = fn; }
+     else { orig(type, fn); }
+   };
+   try { (new Function(code))(); } catch(e) {}
+   document.addEventListener = orig;
+   if (dcl) { try { dcl(); } catch(e) {} }
  }
 
  // Cross-app bottom navigation + first-visit onboarding (mobile only).
