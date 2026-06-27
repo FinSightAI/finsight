@@ -160,9 +160,9 @@ body.ltr {
     border-left: 1px solid var(--color-border);
     padding: var(--spacing-lg);
     position: fixed;
-    top: 0;
+    top: 36px;
     right: 0;
-    height: 100vh;
+    height: calc(100vh - 36px);
     overflow-y: auto;
     z-index: 100;
     /* transition gated by body.app-ready so the sidebar doesn't animate from
