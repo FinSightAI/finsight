@@ -912,9 +912,9 @@
  // SPA navigation — only .main-content swaps; sidebar/wl-bar stay in place
  (function _initSPANav() {
   var _busy = false;
-  function _go(href, push) {
+  function _go(absHref, push) {
    if (_busy) return; _busy = true;
-   fetch(href)
+   fetch(absHref)
    .then(function(r) { return r.text(); })
    .then(function(html) {
     var doc = new DOMParser().parseFromString(html, 'text/html');
@@ -922,9 +922,9 @@
     var nM = doc.querySelector('.main-content'), cM = document.querySelector('.main-content');
     if (nM && cM) cM.innerHTML = nM.innerHTML;
     if (doc.title) document.title = doc.title;
-    if (push !== false) history.pushState({ href: href }, doc.title || '', href);
-    // Update active nav item
-    var f = href.split('/').pop().split('?')[0];
+    if (push !== false) history.pushState({ href: absHref }, doc.title || '', absHref);
+    // Update active nav item by filename
+    var f = absHref.split('/').pop().split('?')[0];
     document.querySelectorAll('a.nav-link').forEach(function(a) {
      var h = (a.getAttribute('href') || '').split('/').pop().split('?')[0];
      a.classList.toggle('active', h === f);
@@ -942,14 +942,16 @@
     window.__wlDcl = null;
     window.scrollTo(0, 0); _busy = false;
    })
-   .catch(function() { _busy = false; location.href = href; });
+   .catch(function() { _busy = false; location.href = absHref; });
   }
-  // Capture sidebar link clicks
+  // Capture ALL .html sidebar link clicks (href may be relative: "bank.html", "../index.html", "pages/bank.html")
   document.addEventListener('click', function(e) {
    var a = e.target.closest('a.nav-link'); if (!a) return;
    var href = a.getAttribute('href');
-   if (!href || !/pages\/[^/]+\.html/.test(href)) return;
-   e.preventDefault(); _go(href, true);
+   if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('javascript')) return;
+   if (!href.match(/\.html$/)) return;
+   e.preventDefault();
+   _go(new URL(href, location.href).href, true);
   }, true);
   // Browser back/forward
   window.addEventListener('popstate', function(e) {
