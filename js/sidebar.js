@@ -822,7 +822,7 @@
  // briefly until an app exists, then attach the listener — the nick updates then.
  (function attachAuthListener(tries){
    if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.auth) {
-     firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); });
+     firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); updateWizeBarPlan(); updateWizeBarLink(); });
    } else if ((tries || 0) < 40) {
      setTimeout(function(){ attachAuthListener((tries || 0) + 1); }, 250);
    }
