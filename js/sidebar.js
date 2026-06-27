@@ -933,18 +933,35 @@
      var h = (a.getAttribute('href') || '').split('/').pop().split('?')[0];
      a.classList.toggle('active', h === f);
     });
-    // Run page-specific inline scripts; shim DOMContentLoaded → immediate call
-    window.__wlDcl = function(fn) { try { fn(); } catch(e) { console.warn('[spa]', e); } };
-    doc.querySelectorAll('script:not([src])').forEach(function(s) {
-     var c = s.textContent.trim(); if (!c) return;
-     var el = document.createElement('script');
-     el.textContent = '(function(){\n' + c.replace(
-      /(document|window)\.addEventListener\(\s*['"]DOMContentLoaded['"]\s*,\s*/g, '__wlDcl('
-     ) + '\n})();';
-     document.head.appendChild(el); document.head.removeChild(el);
+    // Load any external scripts the new page needs that aren't already loaded
+    // (e.g. stock-api.js on sectors/stock-analytics when arriving from bank.html)
+    var _loaded = new Set(Array.from(document.querySelectorAll('script[src]')).map(function(s){return s.src;}));
+    var _missing = Array.from(doc.querySelectorAll('script[src]')).filter(function(s){
+     return !_loaded.has(new URL(s.getAttribute('src'), absHref).href);
     });
-    window.__wlDcl = null;
-    window.scrollTo(0, 0); _busy = false;
+    function _runInline() {
+     window.__wlDcl = function(fn) { try { fn(); } catch(e) { console.warn('[spa]', e); } };
+     doc.querySelectorAll('script:not([src])').forEach(function(s) {
+      var c = s.textContent.trim(); if (!c) return;
+      var el = document.createElement('script');
+      el.textContent = '(function(){\n' + c.replace(
+       /(document|window)\.addEventListener\(\s*['"]DOMContentLoaded['"]\s*,\s*/g, '__wlDcl('
+      ) + '\n})();';
+      document.head.appendChild(el); document.head.removeChild(el);
+     });
+     window.__wlDcl = null;
+     window.scrollTo(0, 0); _busy = false;
+    }
+    if (!_missing.length) { _runInline(); return; }
+    var _mi = 0;
+    function _nextScript() {
+     if (_mi >= _missing.length) { _runInline(); return; }
+     var el = document.createElement('script');
+     el.src = new URL(_missing[_mi++].getAttribute('src'), absHref).href;
+     el.onload = el.onerror = _nextScript;
+     document.head.appendChild(el);
+    }
+    _nextScript();
    })
    .catch(function() { _busy = false; location.href = absHref; });
   }
