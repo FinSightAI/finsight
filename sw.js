@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finsight-v461';
+const CACHE_NAME = 'finsight-v462';
 
 // Listen for "user clicked Update" message — activate immediately
 self.addEventListener('message', e => {
@@ -158,11 +158,12 @@ self.addEventListener('fetch', (event) => {
         // Stale-while-revalidate for JS/CSS/images: serve cache instantly, update in background
         event.respondWith(
             caches.open(CACHE_NAME).then((cache) => {
-                // ignoreSearch: the precache stores bare URLs (/js/app.js) but the
-                // HTML requests versioned ones (/js/app.js?v=...). Without this the
-                // offline match misses and the script loads as null — breaking the
-                // whole app offline. Matching ignoring the query fixes offline mode.
-                return cache.match(event.request, { ignoreSearch: true }).then((cached) => {
+                // For versioned URLs (?v=…) use EXACT match — ignoreSearch would serve the
+                // old precache entry and defeat version bumps entirely (the root cause of
+                // sidebar.js always running stale code). Unversioned URLs use ignoreSearch
+                // so offline mode can still match the precached bare URL.
+                const matchOpts = url.search ? {} : { ignoreSearch: true };
+                return cache.match(event.request, matchOpts).then((cached) => {
                     const networkFetch = fetch(event.request).then((response) => {
                         if (response && response.status === 200 && response.type === 'basic') {
                             cache.put(event.request, response.clone());
