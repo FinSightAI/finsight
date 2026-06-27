@@ -85,7 +85,7 @@
  .then(function (r) { return r.json(); })
  .then(function (j) {
  if (j && j.result && j.result.customToken) {
- firebase.auth().signInWithCustomToken(j.result.customToken).catch(function () {});
+ try { firebase.auth().signInWithCustomToken(j.result.customToken).catch(function () {}); } catch(e) {}
  }
  })
  .catch(function () { /* non-fatal */ });
@@ -822,7 +822,7 @@
  // briefly until an app exists, then attach the listener — the nick updates then.
  (function attachAuthListener(tries){
    if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.auth) {
-     firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); updateWizeBarPlan(); updateWizeBarLink(); });
+     try { firebase.auth().onAuthStateChanged(function() { updateWizeBarNick(); updateWizeBarPlan(); updateWizeBarLink(); }); } catch(e) { if ((tries||0)<40) setTimeout(function(){ attachAuthListener((tries||0)+1); },250); return; }
    } else if ((tries || 0) < 40) {
      setTimeout(function(){ attachAuthListener((tries || 0) + 1); }, 250);
    }
