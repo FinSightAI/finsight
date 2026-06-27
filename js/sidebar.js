@@ -7,6 +7,15 @@
  // Restore the desktop nav-collapsed state ASAP (the <aside> is already in the
  // page, empty) so a collapsed user doesn't see the sidebar flash before render.
  try { if (document.body && localStorage.getItem('wl_nav_collapsed') === '1') document.body.classList.add('nav-collapsed'); } catch (e) {}
+ // ── Instant sidebar restore from sessionStorage cache ──
+ // sidebar.js runs synchronously at parse time — the <aside class="sidebar"> is
+ // already in the DOM (above this script tag). Restoring cached HTML here means
+ // the sidebar appears with zero delay on every navigation, eliminating the flash.
+ // inject() still runs on DOMContentLoaded and corrects the active-item highlight.
+ try {
+   var _sc = sessionStorage.getItem('wl-sb');
+   if (_sc) { var _sa = document.querySelector('aside.sidebar'); if (_sa) _sa.innerHTML = _sc; }
+ } catch(e) {}
  // ── WL SSO bridge: read wl_token + wl_nick from URL, save to wl_sso ──
  // wl_token moved from ?query to #fragment so it never reaches server logs /
  // Cloudflare logs / Referer headers. We still accept ?wl_token= for ~30 days
@@ -830,6 +839,7 @@
  const aside = document.querySelector('aside.sidebar');
  if (aside) {
  aside.innerHTML = html;
+ try { sessionStorage.setItem('wl-sb', html); } catch(e) {}
   // sidebar-lang-row is now inlined in sidebar-footer via sidebarLangRow (see footer assembly above)
  attachProGates(aside);
  setupNavCollapse(imgPrefix);

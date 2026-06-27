@@ -1993,21 +1993,10 @@ html[dir="ltr"] .main-content small {
     animation: 150ms ease-in  both vt-fade-in;
 }
 
-/* Sidebar + WizeBar are shared elements — they stay in place across navigations */
-.sidebar   { view-transition-name: sidebar; }
-#wl-bar    { view-transition-name: wl-bar;  }
-
-/* Shared-element transitions: quick cross-fade in place (no position morph needed) */
-::view-transition-old(sidebar),
-::view-transition-new(sidebar),
+/* WizeBar stays in place across navigations */
+#wl-bar { view-transition-name: wl-bar; }
 ::view-transition-old(wl-bar),
-::view-transition-new(wl-bar) {
-    animation: 120ms ease both vt-fade-in;
-}
-::view-transition-old(sidebar),
-::view-transition-old(wl-bar) {
-    animation: 80ms ease both vt-fade-out;
-}
+::view-transition-new(wl-bar) { animation: none; }
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
