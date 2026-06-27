@@ -1980,9 +1980,6 @@ html[dir="ltr"] .main-content small {
 }
 
 /* ===== Page transitions (View Transitions API) ===== */
-/* Enable automatic cross-page transitions (Chrome 111+ via meta tag, 126+ via CSS) */
-@view-transition { navigation: auto; }
-
 @keyframes vt-fade-in  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes vt-fade-out { from { opacity: 1; } to { opacity: 0; } }
 
@@ -1992,11 +1989,6 @@ html[dir="ltr"] .main-content small {
 ::view-transition-new(root) {
     animation: 150ms ease-in  both vt-fade-in;
 }
-
-/* WizeBar stays in place across navigations */
-#wl-bar { view-transition-name: wl-bar; }
-::view-transition-old(wl-bar),
-::view-transition-new(wl-bar) { animation: none; }
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
