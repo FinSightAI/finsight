@@ -918,9 +918,13 @@
    .then(function(r) { return r.text(); })
    .then(function(html) {
     var doc = new DOMParser().parseFromString(html, 'text/html');
-    // Swap main content
+    // Swap main content + sync inline style (some pages set style directly on <main>)
     var nM = doc.querySelector('.main-content'), cM = document.querySelector('.main-content');
-    if (nM && cM) cM.innerHTML = nM.innerHTML;
+    if (nM && cM) {
+     cM.innerHTML = nM.innerHTML;
+     var ns = nM.getAttribute('style');
+     if (ns) cM.setAttribute('style', ns); else cM.removeAttribute('style');
+    }
     if (doc.title) document.title = doc.title;
     if (push !== false) history.pushState({ href: absHref }, doc.title || '', absHref);
     // Update active nav item by filename
