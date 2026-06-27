@@ -154,7 +154,6 @@ body.ltr {
 }
 
 .sidebar {
-    view-transition-name: wl-sidebar;
     width: 230px;
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
@@ -1989,9 +1988,6 @@ html[dir="ltr"] .main-content small {
 ::view-transition-old(root) { animation: 80ms ease-out both vt-fade-out; }
 ::view-transition-new(root) { animation: 100ms ease-in  both vt-fade-in; }
 
-/* Sidebar stays fixed — instant cross-fade, no slide/fade */
-::view-transition-old(wl-sidebar),
-::view-transition-new(wl-sidebar) { animation: none; }
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
